@@ -99,3 +99,27 @@
     @apply bg-background text-foreground;
   }
 }
+
+.dropDownProfile {
+  position: absolute;
+  top: 4rem;
+  right: 0;
+  width: 160px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.dropDownProfile::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  transform: rotate(45deg);
+  background-color: white;
+  border-left: 1px solid gray;
+  border-top: 1px solid gray;
+}
