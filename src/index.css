@@ -8,6 +8,9 @@
   }
 }
 @layer components {
+  .container {
+    @apply max-w-screen-2xl px-10 mx-auto py-[75px];
+  }
   .text__heading {
     @apply text-[44px] leading-[54px] font-[700] text-light-text dark:text-dark-text;
   }
@@ -21,10 +24,17 @@
   section {
     @apply py-[35px] px-6;
   }
+  .container {
+    @apply py-[35px] px-6;
+  }
+
 }
 
 @media only screen and (max-width: 768px) {
   section {
+    @apply px-3
+  }
+ .container {
     @apply px-3
   }
   .text__heading {
@@ -100,26 +110,15 @@
   }
 }
 
-.dropDownProfile {
-  position: absolute;
-  top: 4rem;
-  right: 0;
-  width: 160px;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: white;
-  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
-}
 
-.dropDownProfile::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  right: 20px;
-  width: 20px;
-  height: 20px;
-  transform: rotate(45deg);
-  background-color: white;
-  border-left: 1px solid gray;
-  border-top: 1px solid gray;
+.newFont{
+  font-family: "Sixtyfour Convergence", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "BLED" 0,
+    "SCAN" 47,
+    "XELA" 52,
+    "YELA" 40;
 }
