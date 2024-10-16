@@ -8,6 +8,9 @@
   }
 }
 @layer components {
+  .container {
+    @apply max-w-screen-2xl px-10 mx-auto py-[75px];
+  }
   .text__heading {
     @apply text-[44px] leading-[54px] font-[700] text-light-text dark:text-dark-text;
   }
@@ -21,10 +24,17 @@
   section {
     @apply py-[35px] px-6;
   }
+  .container {
+    @apply py-[35px] px-6;
+  }
+
 }
 
 @media only screen and (max-width: 768px) {
   section {
+    @apply px-3
+  }
+ .container {
     @apply px-3
   }
   .text__heading {
@@ -98,4 +108,17 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+.newFont{
+  font-family: "Sixtyfour Convergence", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "BLED" 0,
+    "SCAN" 47,
+    "XELA" 52,
+    "YELA" 40;
 }
