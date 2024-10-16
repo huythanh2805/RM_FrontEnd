@@ -1,10 +1,15 @@
-import { useLogin } from "@/hooks/auth/useLogin";
+import { usePassword } from "@/hooks/auth/usePassword";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export const LoginPage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { register, handleSubmit, handleLoginSubmit, error } = useLogin(setIsLoggedIn);
+export const ForgotPasswordPage = () => {
+  const [email, setEmail] = useState("");
+  const { loading, message, error, requestPasswordReset } = usePassword();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    requestPasswordReset(email);
+  };
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -14,13 +19,11 @@ export const LoginPage = () => {
           src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
           alt="Your Company"
         />
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Đăng nhập tài khoản của bạn
-        </h2>
+        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Quên mật khẩu</h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" onSubmit={handleSubmit(handleLoginSubmit)}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
               Email
@@ -28,26 +31,10 @@ export const LoginPage = () => {
             <div className="mt-2">
               <input
                 type="email"
-                {...register("email")}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                Mật khẩu
-              </label>
-              <div className="text-sm">
-                <Link to="/forgot-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                  Quên mật khẩu ?
-                </Link>
-              </div>
-            </div>
-            <div className="mt-2">
-              <input
-                type="password"
-                {...register("password")}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Nhập email của bạn"
+                required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -55,20 +42,22 @@ export const LoginPage = () => {
           <div>
             <button
               type="submit"
+              disabled={loading}
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Đăng nhập
+              {loading ? "Đang gửi..." : "Gửi yêu cầu đặt lại mật khẩu"}
             </button>
           </div>
           {error && ( // Hiển thị thông báo lỗi nếu có
             <div className="mt-2 text-red-600">{error}</div>
           )}
+          {message && <p className="mt-2 text-green-600">{message}</p>}
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">
-          Bạn chưa có tài khoản?&nbsp;
-          <Link to="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-            Đăng kí ngay
+          Quay lại trang&nbsp;
+          <Link to="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+            Đăng nhập
           </Link>
         </p>
       </div>
