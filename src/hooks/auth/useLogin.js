@@ -13,9 +13,14 @@ export const useLogin = (setIsLoggedIn) => {
     try {
       const response = await loginService(data);
       const token = response.data.token;
+      const role = response.data.result.role;
       localStorage.setItem("token", token);
       setIsLoggedIn(true);
-      navigate("/");
+      if (role === "ADMIN") {
+        navigate("/dashboard"); // Đường dẫn cho quản trị viên
+      } else {
+        navigate("/"); // Đường dẫn cho người dùng bình thường
+      }
     } catch (error) {
       setError(error.response?.data?.message || "Đăng nhập thất bại");
       console.error(error);

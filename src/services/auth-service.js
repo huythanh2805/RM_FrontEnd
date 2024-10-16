@@ -11,7 +11,6 @@ export const registerService = async (request = {}) => {
 };
 
 export const loginService = async (request = {}) => {
-  console.log(request);
   try {
     const response = await apiClient.post("users/login", request);
     return response; // Trả về phản hồi khi đăng nhập thành công
