@@ -1,4 +1,5 @@
 import { useLogin } from "@/hooks/auth/useLogin";
+import { GoogleLogin } from "@react-oauth/google";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -63,6 +64,7 @@ export const LoginPage = () => {
           {error && ( // Hiển thị thông báo lỗi nếu có
             <div className="mt-2 text-red-600">{error}</div>
           )}
+          <GoogleLogin></GoogleLogin>
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">

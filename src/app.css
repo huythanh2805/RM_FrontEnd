@@ -1,77 +1,77 @@
-* {
-  font-family: "Alegreya", serif; /* Đổi từ Poppins sang Alegreya */
-  font-weight: 400;
-  font-style: normal;
+*{
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
-.alegreya-light {
-  font-family: "Alegreya", serif;
-  font-weight: 300;
-  font-style: normal;
-}
-
-.alegreya-regular {
-  font-family: "Alegreya", serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.alegreya-medium {
-  font-family: "Alegreya", serif;
-  font-weight: 500;
-  font-style: normal;
-}
-
-.alegreya-semibold {
-  font-family: "Alegreya", serif;
-  font-weight: 600;
-  font-style: normal;
-}
-
-.alegreya-bold {
-  font-family: "Alegreya", serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.alegreya-extrabold {
-  font-family: "Alegreya", serif;
-  font-weight: 800;
-  font-style: normal;
-}
-
-.alegreya-light-italic {
-  font-family: "Alegreya", serif;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.alegreya-regular-italic {
-  font-family: "Alegreya", serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.alegreya-medium-italic {
-  font-family: "Alegreya", serif;
-  font-weight: 500;
-  font-style: italic;
-}
-
-.alegreya-semibold-italic {
-  font-family: "Alegreya", serif;
-  font-weight: 600;
-  font-style: italic;
-}
-
-.alegreya-bold-italic {
-  font-family: "Alegreya", serif;
-  font-weight: 700;
-  font-style: italic;
-}
-
-.alegreya-extrabold-italic {
-  font-family: "Alegreya", serif;
-  font-weight: 800;
-  font-style: italic;
-}
+.poppins-light {
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  .poppins-regular {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .poppins-medium {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  .poppins-semibold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+  }
+  
+  .poppins-bold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  .poppins-extrabold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+  }
+  
+  .poppins-light-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+    font-style: italic;
+  }
+  
+  .poppins-regular-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+  
+  .poppins-medium-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: italic;
+  }
+  
+  .poppins-semibold-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: italic;
+  }
+  
+  .poppins-bold-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+  
+  .poppins-extrabold-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+    font-style: italic;
+  }
