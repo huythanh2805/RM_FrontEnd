@@ -112,13 +112,8 @@
 
 
 .newFont{
-  font-family: "Sixtyfour Convergence", sans-serif;
+  font-family: "Alegreya", serif;
   font-optical-sizing: auto;
-  font-weight: 400;
+  font-weight: 600;
   font-style: normal;
-  font-variation-settings:
-    "BLED" 0,
-    "SCAN" 47,
-    "XELA" 52,
-    "YELA" 40;
 }

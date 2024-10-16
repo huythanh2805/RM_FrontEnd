@@ -14,12 +14,12 @@ import { PiShoppingCartSimpleDuotone } from "react-icons/pi";
 import { Link } from "react-router-dom";
 
 const headerLink = [
-  { name: "HOME", link: "/" },
-  { name: "ABOUT", link: "/about" },
-  { name: "MENU", link: "/menu" },
-  { name: "RESERVATION", link: "/reservation" },
-  { name: "CONTACT", link: "/contact" },
-  { name: "BLOG", link: "/blog" },
+  { name: "TRANG CHỦ", link: "/" },
+  { name: "GIỚI THIỆU", link: "/about" },
+  { name: "THỰC ĐƠN", link: "/menu" },
+  { name: "ĐẶT BÀN", link: "/reservation" },
+  { name: "LIÊN HỆ", link: "/contact" },
+  { name: "BÀI VIẾT", link: "/blog" },
 ];
 
 const Header = () => {
@@ -92,9 +92,9 @@ const Header = () => {
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Thông tin cá nhân</DropdownMenuItem>
                 {!isLoggedIn ? (
                   <>
                     <Link to="/register">
