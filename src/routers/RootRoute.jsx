@@ -4,6 +4,8 @@ import { RegisterPage } from "@/pages/auth/Register";
 import About from "@/pages/home/About";
 import Home from "@/pages/home/Home";
 import { createBrowserRouter } from "react-router-dom";
+import TableComponent from "@/components/Admin/table/TableComponent";
+import TableManagement from "@/components/Admin/TableManagement";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,13 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+    children: [
+      {
+        path: "tables",
+        element: <TableManagement />,
+        // loader: teamLoader,
+      },
+    ],
   },
 ]);
 
