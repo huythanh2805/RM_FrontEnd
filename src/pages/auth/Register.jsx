@@ -1,9 +1,31 @@
 import { useRegister } from "@/hooks/auth/useRegister";
-import { Link } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 export const RegisterPage = () => {
+  const navigate = useNavigate();
   const { register, handleSubmit, handleRegisterSubmit, error } = useRegister();
+  const onSuccess = async (response) => {
+    const { credential } = response;
+    console.log("Google login success:", response);
+    try {
+      // Gửi token đến server để xác thực bằng Axios
+      const res = await axios.post("http://localhost:1111/users/google-login", { token: credential });
+      localStorage.setItem("token", res.data.token);
+      console.log("Login successful:", res.data);
 
+      // Điều hướng về trang home sau khi đăng nhập thành công
+      navigate("/");
+    } catch (error) {
+      console.error("Error during Google login:", error.response?.data?.message || error.message);
+    }
+  };
+  // Xử lý token nhận được từ Google, ví dụ: gửi token đến server backend để xác thực
+
+  const onError = () => {
+    console.log("Google login failed.");
+  };
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -83,7 +105,18 @@ export const RegisterPage = () => {
             </button>
           </div>
         </form>
-
+        <div className="relative mt-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="bg-white px-2 text-gray-500">hoặc</span>
+          </div>
+        </div>{" "}
+        <br />
+        <div className="flex items-center justify-center">
+          <GoogleLogin onSuccess={onSuccess} onError={onError}></GoogleLogin>
+        </div>
         <p className="mt-10 text-center text-sm text-gray-500">
           Bạn đã có tài khoản?&nbsp;
           <Link to="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
