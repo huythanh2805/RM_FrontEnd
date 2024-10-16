@@ -7,7 +7,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useEffect, useState } from "react";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { PiShoppingCartSimpleDuotone } from "react-icons/pi";
@@ -71,7 +76,10 @@ const Header = () => {
                   <nav className="flex flex-col items-center text-lg font-medium gap-8">
                     {headerLink.map((item) => (
                       <SheetClose asChild key={item.name}>
-                        <Link to={item.link} className="group hover:text-orange-500 transition-all cursor-pointer ">
+                        <Link
+                          to={item.link}
+                          className="group hover:text-orange-500 transition-all cursor-pointer "
+                        >
                           {item.name}
                           <div className="h-[2px] bg-orange-1 w-0 group-hover:w-full transition-all ease-in duration-300"></div>
                         </Link>
@@ -92,11 +100,10 @@ const Header = () => {
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Thông tin cá nhân</DropdownMenuItem>
                 {!isLoggedIn ? (
                   <>
+                    {/* <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel> */}
+                    <DropdownMenuSeparator />
                     <Link to="/register">
                       <DropdownMenuItem>Đăng kí</DropdownMenuItem>
                     </Link>
@@ -106,7 +113,12 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+                    <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Thông tin cá nhân</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>
+                      Đăng xuất
+                    </DropdownMenuItem>
                   </>
                 )}
               </DropdownMenuContent>
