@@ -19,3 +19,32 @@ export const loginService = async (request = {}) => {
     throw error; // Ném lỗi để có thể xử lý ở nơi gọi hàm
   }
 };
+export const PasswordService = {
+  requestPasswordReset: async (request = {}) => {
+    try {
+      const response = await apiClient.post("users/forgot-password", request, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response;
+    } catch (error) {
+      console.error("Error in requestPasswordReset:", error);
+      throw error;
+    }
+  },
+
+  resetPassword: async (request = {}) => {
+    try {
+      const response = await apiClient.post("users/reset-password", request, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response;
+    } catch (error) {
+      console.error("Error in resetPassword:", error);
+      throw error;
+    }
+  },
+};
