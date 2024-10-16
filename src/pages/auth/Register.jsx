@@ -2,7 +2,7 @@ import { useRegister } from "@/hooks/auth/useRegister";
 import { Link } from "react-router-dom";
 
 export const RegisterPage = () => {
-  const { register, handleSubmit, handleRegisterSubmit } = useRegister();
+  const { register, handleSubmit, handleRegisterSubmit, error } = useRegister();
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -18,6 +18,11 @@ export const RegisterPage = () => {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        {error && (
+          <div className="mb-4 rounded-md bg-red-50 p-4">
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
+        )}
         <form className="space-y-6" onSubmit={handleSubmit(handleRegisterSubmit)}>
           <div>
             <label htmlFor="userName" className="block text-sm font-medium leading-6 text-gray-900">
