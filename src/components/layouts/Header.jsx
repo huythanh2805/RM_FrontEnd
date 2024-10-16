@@ -102,7 +102,7 @@ const Header = () => {
               <DropdownMenuContent>
                 {!isLoggedIn ? (
                   <>
-                    <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
+                    {/* <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel> */}
                     <DropdownMenuSeparator />
                     <Link to="/register">
                       <DropdownMenuItem>Đăng kí</DropdownMenuItem>
