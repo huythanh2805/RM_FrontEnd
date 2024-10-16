@@ -40,9 +40,9 @@ const Header = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+    <div className="fixed top-0 left-0 w-full bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-50">
       <div className="max-w-screen-2xl mx-auto">
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-row justify-between items-center p-4">
           <Link to="/" className="flex flex-row items-center cursor-pointer">
             <span>
               <img
@@ -66,6 +66,7 @@ const Header = () => {
               </Link>
             ))}
           </nav>
+          
           <div className="flex items-center gap-5">
             <div className="flex md:hidden items-center justify-center">
               <Sheet>
@@ -102,7 +103,6 @@ const Header = () => {
               <DropdownMenuContent>
                 {!isLoggedIn ? (
                   <>
-                    {/* <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel> */}
                     <DropdownMenuSeparator />
                     <Link to="/register">
                       <DropdownMenuItem>Đăng kí</DropdownMenuItem>
