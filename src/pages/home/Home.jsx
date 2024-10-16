@@ -11,8 +11,8 @@ const Home = () => {
       <main className="mt-[100px]">
         <section>
           <ReservationForm />
-        </section>
         <Outlet />
+        </section>
       </main>
       <Footer />
     </div>
