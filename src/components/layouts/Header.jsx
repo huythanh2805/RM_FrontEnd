@@ -113,7 +113,7 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    <DropdownMenuLabel>Thông tin người dùng</DropdownMenuLabel>
+                    <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Thông tin cá nhân</DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout}>
