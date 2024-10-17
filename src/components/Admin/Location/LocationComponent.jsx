@@ -1,5 +1,12 @@
 import React from 'react'
 import TableComponent from '../table/TableComponent'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 const LocationComponent = (Props) => {
   const { location, tables, addNewTable, deleteLocation,updateLocation, deleteTable, updateTable} = Props
@@ -58,6 +65,29 @@ const LocationComponent = (Props) => {
     </div>
     )
   }
+    
+    const handleDelete = async (_id) => {
+      deleteLocation(_id)
+    }
+  //  For change title location
+    const handleupdateLocation = (e)=>{
+      e.preventDefault()
+      setEditModelForTextInput(false)
+      updateLocation(inputValue)
+    }
+    const handleOnKeyDown = (e) =>{
+      if(e.key === "Enter"){
+        setEditModelForTextInput(false)
+        updateLocation(inputValue)
+      }
+    }
+    const handleChangeInput = (e)=>{
+      setInputValue(pre=>({
+        ...pre,
+        [e.target.name]: e.target.value
+       }))
+    }
+  
   return (
     <div
       ref={setNodeRef}
