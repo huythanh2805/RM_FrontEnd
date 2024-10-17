@@ -13,13 +13,14 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useThemeContext } from "@/contexts/ThemeProvider";
 import { useEffect, useState } from "react";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { PiShoppingCartSimpleDuotone } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const headerLink = [
-  { name: "TRANG CHỦ", link: "/" },
+  { name: "TRANG CHỦ", link: "/" }, 
   { name: "GIỚI THIỆU", link: "/about" },
   { name: "THỰC ĐƠN", link: "/menu" },
   { name: "ĐẶT BÀN", link: "/reservation" },
@@ -28,19 +29,23 @@ const headerLink = [
 ];
 
 const Header = () => {
+  const {colorCode, setColorCode} = useThemeContext()
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token); // Nếu có token thì người dùng đang đăng nhập
   }, []);
 
+  const location = useLocation();
+
   const handleLogout = () => {
     localStorage.removeItem("token"); // Xóa token khi đăng xuất
     setIsLoggedIn(false); // Cập nhật trạng thái đăng nhập
   };
+console.log(colorCode);
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-50">
+    <div className="sticky rounded-br-xl rounded-bl-xl top-0 left-0 w-full bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-50">
       <div className="max-w-screen-2xl mx-auto">
         <div className="flex flex-row justify-between items-center p-4">
           <Link to="/" className="flex flex-row items-center cursor-pointer">
@@ -59,10 +64,10 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.link}
-                className="group hover:text-orange-500 transition-all cursor-pointer "
+                className="group transition-all cursor-pointer "
               >
                 {item.name}
-                <div className="h-[2px] bg-orange-1 w-0 group-hover:w-full transition-all ease-in duration-300"></div>
+                <div style={{backgroundColor: colorCode}} className={`h-[2px] w-0 group-hover:w-full ${location.pathname === item.link ? "w-full" : ""} transition-all ease-in duration-300`}></div>
               </Link>
             ))}
           </nav>
