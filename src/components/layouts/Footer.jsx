@@ -2,16 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
+import { useThemeContext } from "@/contexts/ThemeProvider";
 
 const Footer = () => {
+  const { colorCode } = useThemeContext();
+
   return (
     <div className="relative bg-black text-white mt-8 md:mt-0">
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-40"
-        style={{
-          backgroundImage:
-            "url('https://media.istockphoto.com/id/1836907127/photo/roasted-lamb-on-green-beans-with-potato.jpg?s=612x612&w=0&k=20&c=tpdRhv_7sbUxHrhMXw32ReqgxuGOuEw06WIXjtA68uM=')",
-        }}
+        className="absolute w-full h-full bg-cover bg-center bg-no-repeat opacity-40 bg-[url('https://media.istockphoto.com/id/1836907127/photo/roasted-lamb-on-green-beans-with-potato.jpg?s=612x612&w=0&k=20&c=tpdRhv_7sbUxHrhMXw32ReqgxuGOuEw06WIXjtA68uM=')]"
+ 
       ></div>
       <div className="relative flex flex-col md:flex-row justify-between p-8 md:px-32 px-5 z-10">
         <div className="w-full md:w-1/4">
@@ -85,7 +85,7 @@ const Footer = () => {
               "Chủ Nhật",
             ].map((day, index) => (
               <div className="flex items-center" key={index}>
-                <CiClock2 className="mr-2 text-orange-500" />
+                <CiClock2 className="mr-2" style={{ color: colorCode }} />
                 <li>
                   {day}:{" "}
                   {day === "Thứ Bảy" || day === "Chủ Nhật"
@@ -160,7 +160,7 @@ const Footer = () => {
         <div className="pt-4">
           <p className="text-center text-sm text-white">
             Copyright © 2024{" "}
-            <span className="text-orange-500">GOLDEN FORK</span>. All Rights
+            <span style={{color: colorCode}}>GOLDEN FORK</span>. All Rights
             Reserved
           </p>
         </div>
