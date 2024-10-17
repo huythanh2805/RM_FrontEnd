@@ -1,21 +1,13 @@
-import Footer from "@/components/layouts/Footer";
-import Header from "@/components/layouts/Header";
 import ReservationForm from "@/components/layouts/Reservation";
+import { useThemeContext } from "@/contexts/ThemeProvider";
 import React from "react";
-import { Outlet } from "react-router-dom";
 
 const Home = () => {
+  const {isBoxed} = useThemeContext()
   return (
-    <div>
-      <Header />
-      <main className="mt-[100px]">
-        <section>
-          <ReservationForm />
-        <Outlet />
-        </section>
-      </main>
-      <Footer />
-    </div>
+    <section className={`${isBoxed ? 'px-0' : ''} relative z-10 bg-white mx-auto`}>
+      <ReservationForm />
+    </section>
   );
 };
 
