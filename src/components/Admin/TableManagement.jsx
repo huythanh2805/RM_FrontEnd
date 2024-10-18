@@ -1,5 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import LocationComponent from './Location/LocationComponent'
+import { DndContext, DragOverlay } from '@dnd-kit/core'
+import { SortableContext } from '@dnd-kit/sortable'
+import { Plus } from 'lucide-react'
+import TableComponent from './table/TableComponent'
+import { toast } from '@/hooks/use-toast'
 
 const TableManagement = () => {
     const [locations, setLocations] = useState(null)
@@ -63,6 +68,228 @@ const TableManagement = () => {
       }
       fetData()
     }, [])
+      // Update for location orders
+  const updateForLocationOrder = (newArray) => {
+    const fetData = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch("/api/reservations/locations", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store", // Disable caching
+          },
+          body: JSON.stringify({ newArray: newArray }),
+        })
+
+        if (!res.ok) {
+          toast({
+            variant: "destructive",
+            title: "Can't update location orders",
+          })
+        }
+      } catch (error) {
+        setLoading(false)
+        toast({
+          variant: "destructive",
+          title: "Something wrong with update Location!",
+        })
+      }
+    }
+    fetData()
+  }
+  // Update for table orders
+  const updateForTableOrder = (newArray) => {
+    const fetData = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch("/api/reservations/tables", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store", // Disable caching
+          },
+          body: JSON.stringify({ newArray: newArray }),
+        })
+
+        if (!res.ok) {
+          toast({
+            variant: "destructive",
+            title: "Can't update location orders",
+          })
+        }
+      } catch (error) {
+        setLoading(false)
+        toast({
+          variant: "destructive",
+          title: "Something wrong with update Location!",
+        })
+      }
+    }
+    fetData()
+  }
+  // Delete location
+  const deleteLocation = (_id) => {
+    const fetData = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch("/api/reservations/locations/" + _id, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store", // Disable caching
+          },
+        })
+
+        if (!res.ok) {
+          toast({
+            variant: "destructive",
+            title: "Can't delete this location location orders",
+          })
+        }
+        const data = await res.json()
+        toast({
+          variant: "sucess",
+          title: data.message,
+        })
+        // After updating table order trigger useState for fetching newest data
+
+        //  Update useState currently to re-render
+        setLocations((pre) => {
+          if (pre === null) return null
+          return [...pre.filter((item) => item._id !== _id)]
+        })
+      } catch (error) {
+        setLoading(false)
+        console.log(error)
+        toast({
+          variant: "destructive",
+          title: "Something wrong with delete Location!",
+        })
+      }
+    }
+    fetData()
+  }
+  // Delete table
+  const deleteTable = (_id) => {
+    const fetData = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch("/api/reservations/tables/" + _id, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store", // Disable caching
+          },
+        })
+
+        if (!res.ok) {
+          toast({
+            variant: "destructive",
+            title: "Can't delete this location location orders",
+          })
+        }
+        // After updating table order trigger useState for fetching newest data
+
+        // Update useState currently to re-render
+        setTables((pre) => {
+          if (pre === null) return null
+          return [...pre.filter((item) => item._id !== _id)]
+        })
+      } catch (error) {
+        setLoading(false)
+        console.log(error)
+        toast({
+          variant: "destructive",
+          title: "Something wrong with delete Location!",
+        })
+      }
+    }
+    fetData()
+  }
+  // Update information for table
+  const updateTable = ({
+    number_of_seats,
+    name,
+    table_id,
+  }) => {
+    const fetData = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch("/api/reservations/tables/" + table_id, {
+          method: "PATCH",
+          body: JSON.stringify({ number_of_seats, name }),
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store", // Disable caching
+          },
+        })
+
+        if (!res.ok) {
+          return toast({
+            variant: "destructive",
+            title: "Can't update this table",
+          })
+        }
+        // Get new tables after add table
+        const refreshData = await fetch("/api/reservations/tables", {
+          method: "GET",
+        })
+        const freshTables = await refreshData.json()
+        setTables(freshTables.tables)
+        setNumberOfTable(freshTables.numberOfTable)
+      } catch (error) {
+        setLoading(false)
+        console.log(error)
+        toast({
+          variant: "destructive",
+          title: "Something wrong with update this table!",
+        })
+      }
+    }
+    fetData()
+  }
+  // Update information for location
+  const updateLocation = ({
+    locationInRestaurant,
+    location_id,
+  }) => {
+    const fetData = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch("/api/reservations/locations/" + location_id, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store", // Disable caching
+          },
+          body: JSON.stringify({ locationInRestaurant }),
+        })
+
+        if (!res.ok) {
+          return toast({
+            variant: "destructive",
+            title: "Can't update this location",
+          })
+        }
+        // Get new locations after add location
+        const refreshData = await fetch("/api/reservations/locations", {
+          method: "GET",
+        })
+        const freshLocations = await refreshData.json()
+        setLocations(freshLocations.locations)
+        setNumberOfLocation(freshLocations.numberOfLocation)
+      } catch (error) {
+        setLoading(false)
+        console.log(error)
+        toast({
+          variant: "destructive",
+          title: "Something wrong with update this location!",
+        })
+      }
+    }
+    fetData()
+  }
      // Get id array for sortableContext items
   const locationsIds = useMemo(
     () => locations?.map((location) => location._id),
@@ -102,7 +329,7 @@ const TableManagement = () => {
               >
                 {locations.map((location) => {
                   return (
-                    <Location
+                    <LocationComponent
                       key={location._id}
                       location={location}
                       tables={tables?.filter(
@@ -131,7 +358,7 @@ const TableManagement = () => {
             createPortal(
               <DragOverlay>
                 {activedLocation && tables && (
-                  <Location
+                  <LocationComponent
                     location={activedLocation}
                     tables={tables?.filter(
                       (item) => item.location_id === activedLocation._id
@@ -141,10 +368,10 @@ const TableManagement = () => {
                     updateLocation={updateLocation}
                     deleteTable={deleteTable}
                     updateTable={updateTable}
-                  ></Location>
+                  ></LocationComponent>
                 )}
                 {activeTable && (
-                  <Item
+                  <TableComponent
                     table={activeTable}
                     deleteTable={deleteTable}
                     updateTable={updateTable}
@@ -231,6 +458,85 @@ const TableManagement = () => {
         updateForLocationOrder(newArray)
         return newArray
       })
+  }
+   // Add new Location
+   function addNewLocation() {
+    const addLocation = async () => {
+      try {
+        const res = await fetch("/api/reservations/locations", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store", // Disable caching
+          },
+          body: JSON.stringify({ numberOfLocation }),
+        })
+        if (!res.ok) {
+          return toast({
+            variant: "destructive",
+            title: "Can't get any data!",
+          })
+        }
+        const data = await res.json()
+        // Get new locations after add location
+        const refreshData = await fetch("/api/reservations/locations", {
+          method: "GET",
+        })
+        const freshLocations = await refreshData.json()
+        setLocations(freshLocations.locations)
+        setNumberOfLocation(freshLocations.numberOfLocation)
+        toast({
+          variant: "sucess",
+          title: "Add location successfully!",
+        })
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Something wrong with get all dishes!",
+        })
+      }
+    }
+    addLocation()
+  }
+  // Add new Table
+  function addNewTable(location_id) {
+    const addTable = async () => {
+      try {
+        const res = await fetch("/api/reservations/tables", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store", // Disable caching
+          },
+          body: JSON.stringify({ order: numberOfTable, location_id }),
+        })
+
+        if (!res.ok) {
+          return toast({
+            variant: "destructive",
+            title: "Can't add table",
+          })
+        }
+        const data = await res.json()
+        // Get new tables after add table
+        const refreshData = await fetch("/api/reservations/tables", {
+          method: "GET",
+        })
+        const freshTables = await refreshData.json()
+        setTables(freshTables.tables)
+        setNumberOfTable(freshTables.numberOfTable)
+        toast({
+          variant: "sucess",
+          title: "Add table successfully",
+        })
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Something wrong with add table!",
+        })
+      }
+    }
+    addTable()
   }
 }
 

@@ -7,12 +7,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-
+import { CSS } from "@dnd-kit/utilities"
 const LocationComponent = (Props) => {
   const { location, tables, addNewTable, deleteLocation,updateLocation, deleteTable, updateTable} = Props
-    const [editModelForTextInput , setEditModelForTextInput] = useState(false)
-      // Overlay for drag
-      const tablesId = useMemo(() => tables.map((table) => table._id), [tables])
+  const [inputValue , setInputValue] = useState({
+      locationInRestaurant: location.locationInRestaurant,
+      location_id: location._id
+    })
+  const [editModelForTextInput , setEditModelForTextInput] = useState(false)
+  const tablesId = useMemo(() => tables.map((table) => table._id), [tables])
   const {
     setNodeRef,
     transform,
@@ -31,6 +34,29 @@ const LocationComponent = (Props) => {
     transform: CSS.Transform.toString(transform),
     transition,
   }
+
+  const handleDelete = async (_id) => {
+    deleteLocation(_id)
+  }
+//  For change title location
+  const handleupdateLocation = (e)=>{
+    e.preventDefault()
+    setEditModelForTextInput(false)
+    updateLocation(inputValue)
+  }
+  const handleOnKeyDown = (e) =>{
+    if(e.key === "Enter"){
+      setEditModelForTextInput(false)
+      updateLocation(inputValue)
+    }
+  }
+  const handleChangeInput = (e)=>{
+    setInputValue(pre=>({
+      ...pre,
+      [e.target.name]: e.target.value
+     }))
+  }
+
 
   if (isDragging) {
     return (
@@ -65,29 +91,6 @@ const LocationComponent = (Props) => {
     </div>
     )
   }
-    
-    const handleDelete = async (_id) => {
-      deleteLocation(_id)
-    }
-  //  For change title location
-    const handleupdateLocation = (e)=>{
-      e.preventDefault()
-      setEditModelForTextInput(false)
-      updateLocation(inputValue)
-    }
-    const handleOnKeyDown = (e) =>{
-      if(e.key === "Enter"){
-        setEditModelForTextInput(false)
-        updateLocation(inputValue)
-      }
-    }
-    const handleChangeInput = (e)=>{
-      setInputValue(pre=>({
-        ...pre,
-        [e.target.name]: e.target.value
-       }))
-    }
-  
   return (
     <div
       ref={setNodeRef}

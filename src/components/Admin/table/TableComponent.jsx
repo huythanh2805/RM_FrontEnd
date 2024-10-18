@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { CSS } from "@dnd-kit/utilities"
 import {
   Dialog,
   DialogContent,
@@ -7,12 +8,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { useSortable } from '@dnd-kit/sortable'
+import { Button } from '@/components/ui/button'
 
-const TableComponent = () => {
-  const [editModelForTextInput, setEditModelForTextInput] = useState<boolean>(false)
-  const [editModleForNumberInput, setEditModleForNumberInput] = useState<boolean>(false)
-  const [reservationStartTime, setReservationStartTime] = useState<string>('')
-  const [getTimeLoading, setGetTimeLoading] = useState<boolean>(false)
+const TableComponent = (Props) => {
+  const {
+    table,
+    deleteTable,
+    updateTable
+  } = Props
+  const [editModelForTextInput, setEditModelForTextInput] = useState(false)
+  const [editModleForNumberInput, setEditModleForNumberInput] = useState(false)
+  const [reservationStartTime, setReservationStartTime] = useState('')
+  const [getTimeLoading, setGetTimeLoading] = useState(false)
+    // input for updating
+    const [inputValue, setInputValue] = useState({
+      number_of_seats: table.number_of_seats,
+      name: table.name,
+      table_id: table._id
+    })
   const router = useRouter()
   const {
     setNodeRef,
@@ -32,7 +46,38 @@ const TableComponent = () => {
       transform: CSS.Transform.toString(transform),
       transition,
     }
-
+  // update information
+  const handleUpdateTable = (e)=>{
+    e.preventDefault()
+    setEditModelForTextInput(false)
+    setEditModleForNumberInput(false)
+    updateTable(inputValue)
+  }
+  const handleOnKeyDown = (e) =>{
+    if(e.key === "Enter"){
+      setEditModelForTextInput(false)
+      setEditModleForNumberInput(false)
+      updateTable(inputValue)
+    }
+  }
+  const handleChangeInput = (e)=>{
+    if(e.target.name === 'number_of_seats'){
+       if(parseInt(e.target.value) < 1){
+        return toast({
+          variant: "destructive",
+          title: "At least 1"
+        })
+       }
+      return setInputValue(pre=>({
+        ...pre,
+        [e.target.name]: parseInt(e.target.value)
+       }))
+    }
+   setInputValue(pre=>({
+    ...pre,
+    [e.target.name]: e.target.value
+   }))
+  }
   return (
     <div
     ref={setNodeRef}
