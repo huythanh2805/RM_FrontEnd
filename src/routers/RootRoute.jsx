@@ -7,6 +7,7 @@ import { createBrowserRouter } from "react-router-dom";
 import TableComponent from "@/components/Admin/table/TableComponent";
 import TableManagement from "@/components/Admin/TableManagement";
 import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
+import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,11 @@ const router = createBrowserRouter([
       {
         path: "createReservation/:tableId",
         element: <CreateReservation />,
+        // loader: teamLoader,
+      },
+      {
+        path: "foodOrder/:reservationId",
+        element: <FoodOrder />,
         // loader: teamLoader,
       },
     ],

@@ -4,7 +4,7 @@ import { toast } from "@/components/ui/use-toast"
 import { useThemeContext } from "@/lib/context/ThemeContextProvider"
 import React, { useEffect, useState } from "react"
 import { FadeLoader } from "react-spinners"
-import { TableType } from "../../page"
+import { useParams } from "react-router-dom"
 
 export default function CreateReservation() {
 
