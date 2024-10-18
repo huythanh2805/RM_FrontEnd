@@ -20,9 +20,13 @@ import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { format } from "date-fns"; // format date
 import { vi } from "date-fns/locale"; // Import locale tiếng Việt
+import ButtonCustome from "../ButtonCustome";
+import { useThemeContext } from "@/contexts/ThemeProvider";
+
 
 const ReservationForm = () => {
   const [personCount, setPersonCount] = useState(1);
+  const { colorCode } = useThemeContext();
   const [date, setDate] = useState();
   const [time, setTime] = useState("7:00 AM");
   const availableTimes = [
@@ -57,45 +61,45 @@ const ReservationForm = () => {
   ];
 
   return (
-    <div>
+    <div className="w-full">
       {/* Book Table */}
-      <div className="text-orange-600 text-xl font-semibold mb-2 flex justify-center items-center">
-        <div className="border-t border-orange-600 w-12 mr-2" />
+      <div className=" text-xl font-semibold mb-2 flex justify-center items-center" style={{ color: colorCode }}>
+        <div className="border-t  w-12 mr-2" style={{ borderColor: colorCode }}/>
         ĐẶT BÀN
-        <div className="border-t border-orange-600 w-12 ml-2" />
+        <div className="border-t  w-12 ml-2" style={{ borderColor: colorCode }}/>
       </div>
-      <div className="pt-10">
-        <div className="flex flex-col lg:flex-row justify-between items-start gap-10 px-10 py-12 border border-gray-200 shadow-lg rounded-md bg-white">
-          <div className="hidden lg:block lg:w-1/3">
+      <div className="pt-10 w-full">
+        <div className="relative w-full flex flex-col lg:flex-row justify-between items-start gap-10 px-10 py-12 border border-gray-200 shadow-lg rounded-md bg-white">
+          <div className="relative flex-1 hidden lg:block">
             <img
               src="https://sun-themes.com/html/fooday/assets/images/pages/home3-deco-1.png"
               alt="Chef"
-              className="w-full h-auto"
+              className=" absolute -left-[150px] -translate-y-11 max-w-[500px]"
             />
           </div>
 
           {/* Form */}
-          <div className="w-full lg:w-2/3">
+          <div className="w-full lg:w-2/3 flex-[2]">
             <p className="text-gray-800 text-center lg:text-left mb-6 newFont text-[20px]">
               Chúng tôi rất vui được hỗ trợ bạn đặt chỗ trực tuyến thông qua hệ
               thống hiện đại và tiện lợi của chúng tôi. <br /> Nếu bạn cần sự hỗ
               trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng
               tôi qua số điện thoại{" "}
-              <span className="text-orange-600 font-bold"> 666-88888</span>.
+              <span className="font-bold" style={{ color: colorCode }}> 666-88888</span>.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="relative">
                 <FaUser className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <Input placeholder="Họ và Tên" className="pl-10" />
+                <Input placeholder="Họ và Tên" className="pl-10 focus-visible:ring-0 focus-visible:ring-offset-0" />
               </div>
               <div className="relative">
                 <MdEmail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <Input placeholder="Email" type="email" className="pl-10" />
+                <Input placeholder="Email" type="email" className="pl-10 focus-visible:ring-0 focus-visible:ring-offset-0" />
               </div>
               <div className="relative">
                 <FaPhoneAlt className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <Input placeholder="Số điện thoại" className="pl-10" />
+                <Input placeholder="Số điện thoại" className="pl-10 focus-visible:ring-0 focus-visible:ring-offset-0" />
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -103,7 +107,7 @@ const ReservationForm = () => {
                     <FaPerson className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                     <Input
                       value={`${personCount} người`}
-                      className="cursor-pointer pl-10"
+                      className="cursor-pointer pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
                       readOnly
                     />
                     <IoMdArrowDropdown className="absolute right-3 top-3 h-5 w-5 text-gray-400" />{" "}
@@ -177,13 +181,11 @@ const ReservationForm = () => {
               <div className="col-span-2">
                 <textarea
                   placeholder="Nhập ghi chú ..."
-                  className="w-full h-24 p-3 border rounded-md"
+                  className="w-full h-24 p-3 border rounded-md focus-visible:outline-none"
                 />
               </div>
               <div className="col-span-2">
-                <Button className="w-full bg-orange-500 text-white hover:bg-orange-600 newFont text-[25px]">
-                  Đặt Bàn
-                </Button>
+                <ButtonCustome/>
               </div>
             </div>
           </div>

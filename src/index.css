@@ -4,7 +4,7 @@
 
 @layer base {
   section {
-    @apply max-w-screen-2xl min-h-screen px-10 mx-auto py-[75px];
+    @apply max-w-screen-2xl min-h-screen mx-auto py-[75px];
   }
 }
 @layer components {
@@ -21,17 +21,15 @@
 
 @media only screen and (max-width: 1024px) {
   section {
-    @apply py-[35px] px-6;
+    @apply py-[35px];
   }
   .container {
-    @apply py-[35px] px-6;
+    @apply py-[35px];
   }
 }
 
 @media only screen and (max-width: 768px) {
-  section {
-    @apply px-3;
-  }
+  
   .container {
     @apply px-3;
   }
