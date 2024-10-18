@@ -22,7 +22,9 @@ const headerLink = [
   { name: "LIÊN HỆ", link: "/contact" },
   { name: "BÀI VIẾT", link: "/blog" },
 ];
+
 const Header = () => {
+  const location = useLocation();
   const { colorCode } = useThemeContext();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -32,13 +34,9 @@ const Header = () => {
     setIsLoggedIn(!!token);
     if (token) {
       setShowToast(true);
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
+      setTimeout(() => setShowToast(false), 3000);
     }
   }, []);
-
-  const location = useLocation();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -50,13 +48,11 @@ const Header = () => {
       <div className="max-w-screen-2xl mx-auto">
         <div className="flex flex-row justify-between items-center p-4">
           <Link to="/" className="flex flex-row items-center cursor-pointer">
-            <span>
-              <img
-                src="https://restaurant-management-app-ten.vercel.app/_next/image?url=%2Fimages%2Flogo2.png&w=256&q=75"
-                alt="Golden Fork Logo"
-                className="h-16 w-16 object-cover rounded-full"
-              />
-            </span>
+            <img
+              src="/imgs/logoGolden.webp"
+              alt="Golden Fork Logo"
+              className="h-16 w-16 object-cover rounded-full"
+            />
             <h1 className="text-xl font-semibold font-serif">Golden Fork</h1>
           </Link>
 
@@ -84,7 +80,7 @@ const Header = () => {
                   <nav className="flex flex-col items-center text-lg font-medium gap-8">
                     {headerLink.map((item) => (
                       <SheetClose asChild key={item.name}>
-                        <Link to={item.link} className="group hover:text-orange-500 transition-all cursor-pointer ">
+                        <Link to={item.link} className="group hover:text-orange-500 transition-all cursor-pointer">
                           {item.name}
                           <div className="h-[2px] bg-orange-1 w-0 group-hover:w-full transition-all ease-in duration-300"></div>
                         </Link>
@@ -94,38 +90,38 @@ const Header = () => {
                 </SheetContent>
               </Sheet>
             </div>
-            <div className="flex items-center justify-center ">
+
+            <div className="flex items-center justify-center">
               <PiShoppingCartSimpleDuotone className="text-[30px]" />
             </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger className="h-fit w-fit border-none outline-none ring-0 ring-offset-0">
-                {isLoggedIn ? (
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src="https://github.com/shadcn.png" className="rounded-full" />
-                  </Avatar>
-                ) : (
+                <Avatar>
+                  <AvatarImage src="imgs/avatar.jpg" />
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel className="text-gray-500">Tài khoản của tôi</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {!isLoggedIn ? (
                   <>
-                    <Link to="/register" className="mr-4 button">
-                      Đăng kí
+                    <Link to="/register">
+                      <DropdownMenuItem>Đăng kí</DropdownMenuItem>
                     </Link>
-                    <Link to="/login" className="button">
-                      Đăng nhập
+                    <Link to="/login">
+                      <DropdownMenuItem>Đăng nhập</DropdownMenuItem>
                     </Link>
                   </>
+                ) : (
+                  <>
+                    <DropdownMenuItem className="hover:bg-gray-100 text-gray-800">Thông tin cá nhân</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout} className="hover:bg-red-100 text-red-600">
+                      Đăng xuất
+                    </DropdownMenuItem>
+                  </>
                 )}
-              </DropdownMenuTrigger>
-
-              {isLoggedIn && (
-                <DropdownMenuContent className="bg-white shadow-md rounded-md mt-2">
-                  <DropdownMenuLabel className="text-gray-500">Tài khoản của tôi</DropdownMenuLabel>
-                  <DropdownMenuSeparator className="my-1" />
-                  <DropdownMenuItem className="hover:bg-gray-100 text-gray-800">Thông tin cá nhân</DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout} className="hover:bg-red-100 text-red-600">
-                    Đăng xuất
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              )}
+              </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>

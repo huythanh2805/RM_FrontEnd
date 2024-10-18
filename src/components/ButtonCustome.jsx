@@ -1,7 +1,7 @@
 import { useThemeContext } from "@/contexts/ThemeProvider";
 import React from "react";
 
-const ButtonCustome = () => {
+const ButtonCustome = ({ buttonText }) => {
   const { colorCode } = useThemeContext();
   return (
     <div className="w-full flex items-center justify-center">
@@ -10,7 +10,7 @@ const ButtonCustome = () => {
         style={{ backgroundColor: colorCode }}
       >
         <div className="flex flex-col">
-          <p>Đặt Bàn</p>
+          <p>{buttonText}</p>
           <div className="w-full h-[1px] bg-white"></div>
         </div>
       </button>

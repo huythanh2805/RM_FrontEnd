@@ -10,14 +10,14 @@ const Footer = () => {
   return (
     <div className="relative bg-black text-white mt-8 md:mt-0">
       <div
-        className="absolute w-full h-full bg-cover bg-center bg-no-repeat opacity-40 bg-[url('https://media.istockphoto.com/id/1836907127/photo/roasted-lamb-on-green-beans-with-potato.jpg?s=612x612&w=0&k=20&c=tpdRhv_7sbUxHrhMXw32ReqgxuGOuEw06WIXjtA68uM=')]"
+        className="absolute w-full h-full bg-cover bg-center bg-no-repeat opacity-100 bg-[url('/imgs/logoFooter.jpg')]"
  
       ></div>
       <div className="relative flex flex-col md:flex-row justify-between p-8 md:px-32 px-5 z-10">
         <div className="w-full md:w-1/4">
           <Link to="/" className="flex flex-row items-center cursor-pointer">
             <img
-              src="https://restaurant-management-app-ten.vercel.app/_next/image?url=%2Fimages%2Flogo2.png&w=256&q=75"
+              src="/imgs/logoGolden.webp"
               alt="Golden Fork Logo"
               className="h-[125px] w-16 object-cover rounded-full"
             />

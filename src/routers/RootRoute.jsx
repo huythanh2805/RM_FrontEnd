@@ -6,6 +6,7 @@ import Dashboard from "@/pages/dashboard/Dashboard";
 import About from "@/pages/home/About";
 import Home from "@/pages/home/Home";
 import HomeLayout from "@/pages/home/HomeLayout";
+import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -21,6 +22,11 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <About />,
+        // loader: teamLoader,
+      },
+      {
+        path: "reservation",
+        element: <Reservation />,
         // loader: teamLoader,
       },
     ],
