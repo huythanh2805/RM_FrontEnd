@@ -6,6 +6,7 @@ import Home from "@/pages/home/Home";
 import { createBrowserRouter } from "react-router-dom";
 import TableComponent from "@/components/Admin/table/TableComponent";
 import TableManagement from "@/components/Admin/TableManagement";
+import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,11 @@ const router = createBrowserRouter([
       {
         path: "tables",
         element: <TableManagement />,
+        // loader: teamLoader,
+      },
+      {
+        path: "createReservation/:tableId",
+        element: <CreateReservation />,
         // loader: teamLoader,
       },
     ],
