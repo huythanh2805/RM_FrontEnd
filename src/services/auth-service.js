@@ -48,3 +48,12 @@ export const PasswordService = {
     }
   },
 };
+export const googleAuthService = async (credential) => {
+  try {
+    const response = await apiClient.post("users/google-login", { token: credential });
+    return response.data;
+  } catch (error) {
+    console.error("Error in googleAuthService:", error);
+    throw error;
+  }
+};
