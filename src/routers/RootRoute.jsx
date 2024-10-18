@@ -23,25 +23,25 @@ const router = createBrowserRouter([
         element: <About />,
         // loader: teamLoader,
       },
-      {
-        path: "/register",
-        element: <RegisterPage />,
-        // loader: rootLoader,
-      },
-      {
-        path: "/login",
-        element: <LoginPage />,
-        // loader: rootLoader,
-      },
-      {
-        path: "/forgot-password",
-        element: <ForgotPasswordPage />,
-      },
-      {
-        path: "/reset-password/:token",
-        element: <ResetPasswordPage />,
-      },
     ],
+  },
+  {
+    path: "/register",
+    element: <RegisterPage />,
+    // loader: rootLoader,
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+    // loader: rootLoader,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: "/reset-password/:token",
+    element: <ResetPasswordPage />,
   },
   {
     path: "/dashboard",
