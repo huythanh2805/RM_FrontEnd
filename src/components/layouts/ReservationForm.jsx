@@ -22,7 +22,7 @@ import { format } from "date-fns"; // format date
 import { vi } from "date-fns/locale"; // Import locale tiếng Việt
 import ButtonCustome from "../ButtonCustome";
 import { useThemeContext } from "@/contexts/ThemeProvider";
-
+import { motion } from "framer-motion";
 
 const ReservationForm = () => {
   const [personCount, setPersonCount] = useState(1);
@@ -60,31 +60,38 @@ const ReservationForm = () => {
     "8:30 PM",
   ];
 
+  // Thiết lập animation cho hình ảnh
+  const imgAnimation = {
+    hidden: { x: -200, opacity: 0 }, // Vị trí ban đầu bên trái
+    visible: { x: 0, opacity: 1, transition: { duration: 0.5 } }, // Vị trí cuối cùng
+  };
+
   return (
     <div className="w-full">
-      {/* Book Table */}
-      <div className=" text-xl font-semibold mb-2 flex justify-center items-center" style={{ color: colorCode }}>
-        <div className="border-t  w-12 mr-2" style={{ borderColor: colorCode }}/>
+      <div className="text-xl font-semibold mb-2 flex justify-center items-center" style={{ color: colorCode }}>
+        <div className="border-t w-12 mr-2" style={{ borderColor: colorCode }} />
         ĐẶT BÀN
-        <div className="border-t  w-12 ml-2" style={{ borderColor: colorCode }}/>
+        <div className="border-t w-12 ml-2" style={{ borderColor: colorCode }} />
       </div>
       <div className="pt-10 w-full">
         <div className="relative w-full flex flex-col lg:flex-row justify-between items-start gap-10 px-10 py-12 border border-gray-200 shadow-lg rounded-md bg-white">
-          <div className="relative flex-1 hidden lg:block">
+          <motion.div
+            className="relative flex-1 hidden lg:block"
+            initial="hidden"
+            animate="visible"
+            variants={imgAnimation}
+          >
             <img
               src="https://sun-themes.com/html/fooday/assets/images/pages/home3-deco-1.png"
               alt="Chef"
-              className=" absolute -left-[150px] -translate-y-11 max-w-[500px]"
+              className="absolute -left-[150px] -translate-y-7 max-w-[500px] transition-transform transform hover:scale-105 hover:-translate-x-5 hover:-translate-y-2"  // Hiệu ứng hover
             />
-          </div>
+          </motion.div>
 
           {/* Form */}
           <div className="w-full lg:w-2/3 flex-[2]">
             <p className="text-gray-800 text-center lg:text-left mb-6 newFont text-[20px]">
-              Chúng tôi rất vui được hỗ trợ bạn đặt chỗ trực tuyến thông qua hệ
-              thống hiện đại và tiện lợi của chúng tôi. <br /> Nếu bạn cần sự hỗ
-              trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng
-              tôi qua số điện thoại{" "}
+              Chúng tôi rất vui được hỗ trợ bạn đặt chỗ trực tuyến thông qua hệ thống hiện đại và tiện lợi của chúng tôi. <br /> Nếu bạn cần sự hỗ trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng tôi qua số điện thoại{" "}
               <span className="font-bold" style={{ color: colorCode }}> 666-88888</span>.
             </p>
 
@@ -185,7 +192,7 @@ const ReservationForm = () => {
                 />
               </div>
               <div className="col-span-2">
-                <ButtonCustome/>
+                <ButtonCustome buttonText="Đặt Bàn" />
               </div>
             </div>
           </div>

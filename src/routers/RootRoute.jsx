@@ -6,6 +6,7 @@ import Dashboard from "@/pages/dashboard/Dashboard";
 import About from "@/pages/home/About";
 import Home from "@/pages/home/Home";
 import HomeLayout from "@/pages/home/HomeLayout";
+import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -24,24 +25,29 @@ const router = createBrowserRouter([
         // loader: teamLoader,
       },
       {
-        path: "/register",
-        element: <RegisterPage />,
-        // loader: rootLoader,
-      },
-      {
-        path: "/login",
-        element: <LoginPage />,
-        // loader: rootLoader,
-      },
-      {
-        path: "/forgot-password",
-        element: <ForgotPasswordPage />,
-      },
-      {
-        path: "/reset-password/:token",
-        element: <ResetPasswordPage />,
+        path: "reservation",
+        element: <Reservation />,
+        // loader: teamLoader,
       },
     ],
+  },
+  {
+    path: "/register",
+    element: <RegisterPage />,
+    // loader: rootLoader,
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+    // loader: rootLoader,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: "/reset-password/:token",
+    element: <ResetPasswordPage />,
   },
   {
     path: "/dashboard",

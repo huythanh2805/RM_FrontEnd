@@ -29,20 +29,19 @@ const headerLink = [
 ];
 
 const Header = () => {
-  const {colorCode, setColorCode} = useThemeContext()
+  const {colorCode} = useThemeContext()
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token); // Nếu có token thì người dùng đang đăng nhập
   }, []);
 
-  const location = useLocation();
-
   const handleLogout = () => {
     localStorage.removeItem("token"); // Xóa token khi đăng xuất
     setIsLoggedIn(false); // Cập nhật trạng thái đăng nhập
   };
-console.log(colorCode);
 
   return (
     <div className="sticky rounded-br-xl rounded-bl-xl top-0 left-0 w-full bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-50">
@@ -51,7 +50,7 @@ console.log(colorCode);
           <Link to="/" className="flex flex-row items-center cursor-pointer">
             <span>
               <img
-                src="https://restaurant-management-app-ten.vercel.app/_next/image?url=%2Fimages%2Flogo2.png&w=256&q=75"
+                src="/imgs/logoGolden.webp"
                 alt="Golden Fork Logo"
                 className="h-16 w-16 object-cover rounded-full"
               />
@@ -102,7 +101,7 @@ console.log(colorCode);
             <DropdownMenu>
               <DropdownMenuTrigger className="h-fit w-fit border-none outline-none ring-0 ring-offset-0">
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src="imgs/avatar.jpg" />
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
