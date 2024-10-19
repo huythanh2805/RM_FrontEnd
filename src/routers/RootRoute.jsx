@@ -6,6 +6,7 @@ import Dashboard from "@/pages/dashboard/Dashboard";
 import About from "@/pages/home/About";
 import Home from "@/pages/home/Home";
 import HomeLayout from "@/pages/home/HomeLayout";
+import { Profile } from "@/pages/home/Profile";
 import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -27,6 +28,11 @@ const router = createBrowserRouter([
       {
         path: "reservation",
         element: <Reservation />,
+        // loader: teamLoader,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
         // loader: teamLoader,
       },
     ],
