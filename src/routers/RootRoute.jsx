@@ -8,6 +8,10 @@ import Home from "@/pages/home/Home";
 import HomeLayout from "@/pages/home/HomeLayout";
 import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
+import TableComponent from "@/components/Admin/table/TableComponent";
+import TableManagement from "@/components/Admin/TableManagement";
+import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
+import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +56,23 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+    children: [
+      {
+        path: "tables",
+        element: <TableManagement />,
+        // loader: teamLoader,
+      },
+      {
+        path: "createReservation/:tableId",
+        element: <CreateReservation />,
+        // loader: teamLoader,
+      },
+      {
+        path: "foodOrder/:reservationId",
+        element: <FoodOrder />,
+        // loader: teamLoader,
+      },
+    ],
   },
 ]);
 
