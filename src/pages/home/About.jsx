@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button"
 
 const About = () => {
   return (
-    <div>
+    <section>
       <Drawer>
         <DrawerTrigger>
             <Button>Open</Button>
@@ -31,7 +31,7 @@ const About = () => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-    </div>
+    </section>
   )
 }
 

@@ -1,28 +1,20 @@
-import Footer from "@/components/layouts/Footer";
-import Header from "@/components/layouts/Header";
-import { Toaster } from "@/components/ui/toaster";
+import ReservationForm from "@/components/layouts/ReservationForm";
+import { useThemeContext } from "@/contexts/ThemeProvider";
 import React from "react";
-import { Outlet } from "react-router-dom";
+import OurStory from "./OurStory";
 
 const Home = () => {
+  const { isBoxed } = useThemeContext();
+
   return (
-    <div>
-      <Header />
-      <main className="mt-[100px]">
-      <section>
-        <h1>Welcome to our website!</h1>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vel sapien
-          nec massa euismod condimentum. Integer vel sem vel ligula fermentum
-          condimentum. Donec interdum, nunc vel consectetur dignissim, ligula
-          eros tempus felis, eu consectetur ligula velit vel velit.
-        </p>
+    <>
+      <section className={`${isBoxed ? "px-0" : ""} relative z-10 bg-white mx-auto`}>
+        <OurStory />
       </section>
-      <Outlet />
-      </main>
-      <Footer />
-      <Toaster />
-    </div>
+      <section className={`${isBoxed ? "px-0" : ""} relative z-10 bg-white mx-auto`}>
+        <ReservationForm />
+      </section>
+    </>
   );
 };
 

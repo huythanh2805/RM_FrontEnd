@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  section{
-   @apply max-w-screen-2xl min-h-screen px-10 mx-auto py-[75px];
+  section {
+    @apply max-w-screen-2xl min-h-screen mx-auto py-[75px];
   }
 }
 @layer components {
@@ -19,23 +19,19 @@
   }
 }
 
-
 @media only screen and (max-width: 1024px) {
   section {
-    @apply py-[35px] px-6;
+    @apply py-[35px];
   }
   .container {
-    @apply py-[35px] px-6;
+    @apply py-[35px];
   }
-
 }
 
 @media only screen and (max-width: 768px) {
-  section {
-    @apply px-3
-  }
- .container {
-    @apply px-3
+  
+  .container {
+    @apply px-3;
   }
   .text__heading {
     @apply text-[26px] leading-[36px];
@@ -71,7 +67,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
   .dark {
     --background: 224 71.4% 4.1%;
@@ -97,7 +93,7 @@
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 }
 /* Shadcn config */
@@ -110,15 +106,9 @@
   }
 }
 
-
-.newFont{
-  font-family: "Sixtyfour Convergence", sans-serif;
+.newFont {
+  font-family: "Alegreya", serif;
   font-optical-sizing: auto;
-  font-weight: 400;
+  font-weight: 600;
   font-style: normal;
-  font-variation-settings:
-    "BLED" 0,
-    "SCAN" 47,
-    "XELA" 52,
-    "YELA" 40;
 }
