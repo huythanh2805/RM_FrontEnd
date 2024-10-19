@@ -1,11 +1,6 @@
-import { CategoryType } from '@/app/(admin)/dashboard/inventories/categories/page'
-import { DishType } from '@/app/(admin)/dashboard/inventories/page'
 import { Check } from 'lucide-react'
-import Image from 'next/image'
-import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
-import OneSelect from './OneSelect'
+import React, { useMemo, useState } from 'react'
 import { cn } from '@/lib/utils'
-import { OrderedFoodType } from '@/types/type'
 
 
  const AdminMenu =({dishes, categories, reservation_id, orderedFoods, setOrderedFoods, deleteOrderedFood})=>{
@@ -80,11 +75,9 @@ import { OrderedFoodType } from '@/types/type'
            onClick={()=>hanleChooseDish(dish._id)}
            className='relative rounded-md overflow-hidden cursor-pointer hover:scale-95 transition-transform duration-200 ease-in'
           >
-            <Image 
+            <img 
             src={dish.image[0]} 
-            alt={dish.title} 
-            width={1000} 
-            height={1000}
+            alt={dish.title}
             className='w-full h-full object-cover'
              />
             <h2 className='absolute z-20 left-0 bottom-0 w-full h-[50px] flex items-center justify-center bg-blur_bg text-white'>{dish.title}</h2>

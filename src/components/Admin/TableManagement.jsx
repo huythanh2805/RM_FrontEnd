@@ -1,79 +1,106 @@
-import React, { useEffect, useState } from 'react'
-import LocationComponent from './Location/LocationComponent'
-import { DndContext, DragOverlay } from '@dnd-kit/core'
-import { SortableContext } from '@dnd-kit/sortable'
-import { Plus } from 'lucide-react'
-import TableComponent from './table/TableComponent'
-import { toast } from '@/hooks/use-toast'
+import React, { useEffect, useMemo, useState } from "react"
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  MouseSensor,
+  DragOverlay,
+} from "@dnd-kit/core"
+import {
+  arrayMove,
+  rectSortingStrategy,
+  SortableContext,
+} from "@dnd-kit/sortable"
+import { Plus } from "lucide-react"
+import { createPortal } from "react-dom"
+import { FadeLoader } from "react-spinners"
+import LocationComponent from "./Location/LocationComponent"
+import TableComponent from "./table/TableComponent"
+import { toast } from "@/hooks/use-toast"
 
-const TableManagement = () => {
-    const [locations, setLocations] = useState(null)
-    const [loadingFirstOne, setLoadingFirstOne] = useState(false)
-    const [tables, setTables] = useState(null)
-        // Fetch all locations
-    useEffect(() => {
-      const fetData = async () => {
-        setLoadingFirstOne(true)
-        try {
-          const res = await fetch("/api/reservations/locations", {
-            method: "GET",
-          })
-  
-          if (!res.ok) {
-            toast({
-              variant: "destructive",
-              title: "Can't get any locations data!",
-            })
-          }
-          const data = await res.json()
-          setLocations(data.locations)
-          setNumberOfLocation(data.numberOfLocation)
-          setLoadingFirstOne(false)
-        } catch (error) {
-          setLoadingFirstOne(false)
+
+const ServerUrl = import.meta.env.VITE_SERVER_URL;
+
+
+export default function TableManagement() {
+  const [activedLocation, setActivedLocation] = useState(
+    null
+  )
+  const [activeTable, setActiveTable] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [loadingFirstOne, setLoadingFirstOne] = useState(false)
+  const [locations, setLocations] = useState(null)
+  const [numberOfLocation, setNumberOfLocation] = useState()
+  const [tables, setTables] = useState(null)
+  const [numberOfTable, setNumberOfTable] = useState()
+
+  // Fetch all locations
+  useEffect(() => {
+    const fetData = async () => {
+      setLoadingFirstOne(true)
+      try {
+        const res = await fetch(ServerUrl+"/api/reservations/locations", {
+          method: "GET",
+        })
+
+        if (!res.ok) {
           toast({
             variant: "destructive",
-            title: "Something wrong with get all Locations!",
+            title: "Can't get any locations data!",
           })
         }
+        const data = await res.json()
+        setLocations(data.locations)
+        setNumberOfLocation(data.numberOfLocation)
+        setLoadingFirstOne(false)
+      } catch (error) {
+        setLoadingFirstOne(false)
+        toast({
+          variant: "destructive",
+          title: "Something wrong with get all Locations!",
+        })
       }
-      fetData()
-    }, [])
-    // Fetch all tables
-    useEffect(() => {
-      const fetData = async () => {
-        setLoadingFirstOne(true)
-        try {
-          const res = await fetch("/api/reservations/tables", {
-            method: "GET",
-          })
-  
-          if (!res.ok) {
-            toast({
-              variant: "destructive",
-              title: "Can't get any tables data!",
-            })
-          }
-          const data = await res.json()
-          setTables(data.tables)
-          setNumberOfTable(data.numberOfTable)
-          setLoadingFirstOne(false)
-        } catch (error) {
-          setLoadingFirstOne(false)
+    }
+    fetData()
+  }, [])
+  // Fetch all tables
+  useEffect(() => {
+    const fetData = async () => {
+      setLoadingFirstOne(true)
+      try {
+        const res = await fetch(ServerUrl+"/api/reservations/tables", {
+          method: "GET",
+        })
+
+        if (!res.ok) {
           toast({
             variant: "destructive",
-            title: "Something wrong with get all Tables!",
+            title: "Can't get any tables data!",
           })
         }
+        const data = await res.json()
+        setTables(data.tables)
+        setNumberOfTable(data.numberOfTable)
+        setLoadingFirstOne(false)
+      } catch (error) {
+        setLoadingFirstOne(false)
+        toast({
+          variant: "destructive",
+          title: "Something wrong with get all Tables!",
+        })
       }
-      fetData()
-    }, [])
-      // Update for location orders
+    }
+    fetData()
+  }, [])
+  // Update for location orders
   const updateForLocationOrder = (newArray) => {
     const fetData = async () => {
       setLoading(true)
       try {
-        const res = await fetch("/api/reservations/locations", {
+        const res = await fetch(ServerUrl+"/api/reservations/locations", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -103,7 +130,7 @@ const TableManagement = () => {
     const fetData = async () => {
       setLoading(true)
       try {
-        const res = await fetch("/api/reservations/tables", {
+        const res = await fetch(ServerUrl+"/api/reservations/tables", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -133,7 +160,7 @@ const TableManagement = () => {
     const fetData = async () => {
       setLoading(true)
       try {
-        const res = await fetch("/api/reservations/locations/" + _id, {
+        const res = await fetch(ServerUrl+"/api/reservations/locations/" + _id, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -175,7 +202,7 @@ const TableManagement = () => {
     const fetData = async () => {
       setLoading(true)
       try {
-        const res = await fetch("/api/reservations/tables/" + _id, {
+        const res = await fetch(ServerUrl+"/api/reservations/tables/" + _id, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -216,7 +243,7 @@ const TableManagement = () => {
     const fetData = async () => {
       setLoading(true)
       try {
-        const res = await fetch("/api/reservations/tables/" + table_id, {
+        const res = await fetch(ServerUrl+"/api/reservations/tables/" + table_id, {
           method: "PATCH",
           body: JSON.stringify({ number_of_seats, name }),
           headers: {
@@ -257,7 +284,7 @@ const TableManagement = () => {
     const fetData = async () => {
       setLoading(true)
       try {
-        const res = await fetch("/api/reservations/locations/" + location_id, {
+        const res = await fetch(ServerUrl+"/api/reservations/locations/" + location_id, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -273,7 +300,7 @@ const TableManagement = () => {
           })
         }
         // Get new locations after add location
-        const refreshData = await fetch("/api/reservations/locations", {
+        const refreshData = await fetch(ServerUrl+"/api/reservations/locations", {
           method: "GET",
         })
         const freshLocations = await refreshData.json()
@@ -290,7 +317,8 @@ const TableManagement = () => {
     }
     fetData()
   }
-     // Get id array for sortableContext items
+
+  // Get id array for sortableContext items
   const locationsIds = useMemo(
     () => locations?.map((location) => location._id),
     [locations]
@@ -303,87 +331,89 @@ const TableManagement = () => {
       },
     })
   )
+
+  console.log({locations, locationsIds})
   return (
     <div>
-    {loadingFirstOne ? (
-      <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center">
-        <FadeLoader
-          color={sideBarColor ? sideBarColor : "#11cdef"}
-          loading={loadingFirstOne}
-        />
-      </div>
-    ) : (
-      <div className="bg-light-bg_2 dark:bg-dark-bg_2 px-3 lg:px-5 py-4 lg:py-6 rounded-md min-h-fit w-full">
-        <DndContext
-          sensors={sensors}
-          // collisionDetection={closestCenter}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
-          onDragStart={handleDragStart}
-        >
-          {locations && locationsIds && tables && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-11 lg:gap-14 ">
-              <SortableContext
-                items={locationsIds}
-                strategy={rectSortingStrategy}
-              >
-                {locations.map((location) => {
-                  return (
+      {loadingFirstOne ? (
+        <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center">
+          <FadeLoader
+            color={"#11cdef"}
+            loading={loadingFirstOne}
+          />
+        </div>
+      ) : (
+        <div className="bg-light-bg_2 dark:bg-dark-bg_2 px-3 lg:px-5 py-4 lg:py-6 rounded-md min-h-fit w-full">
+          <DndContext
+            sensors={sensors}
+            // collisionDetection={closestCenter}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+            onDragStart={handleDragStart}
+          >
+            {locations && locationsIds && tables && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-11 lg:gap-14 ">
+                <SortableContext
+                  items={locationsIds}
+                  strategy={rectSortingStrategy}
+                >
+                  {locations.map((location) => {
+                    return (
+                      <LocationComponent
+                        key={location._id}
+                        location={location}
+                        tables={tables?.filter(
+                          (item) => item.location_id === location._id
+                        )}
+                        deleteLocation={deleteLocation}
+                        updateLocation={updateLocation}
+                        addNewTable={addNewTable}
+                        deleteTable={deleteTable}
+                        updateTable={updateTable}
+                      />
+                    )
+                  })}
+                </SortableContext>
+                <div
+                  onClick={addNewLocation}
+                  className="h-[550px] flex items-center justify-center border border-dashed border-light-primaryColor dark:border-dark-primaryColor opacity-45"
+                >
+                  <button className="w-[50px] h-[50px] flex items-center justify-center rounded-full border border-dashed border-light-primaryColor dark:border-dark-primaryColor">
+                    <Plus />
+                  </button>
+                </div>
+              </div>
+            )}
+            {typeof window === "object" &&
+              createPortal(
+                <DragOverlay>
+                  {activedLocation && tables && (
                     <LocationComponent
-                      key={location._id}
-                      location={location}
+                      location={activedLocation}
                       tables={tables?.filter(
-                        (item) => item.location_id === location._id
+                        (item) => item.location_id === activedLocation._id
                       )}
+                      addNewTable={addNewTable}
                       deleteLocation={deleteLocation}
                       updateLocation={updateLocation}
-                      addNewTable={addNewTable}
+                      deleteTable={deleteTable}
+                      updateTable={updateTable}
+                    ></LocationComponent>
+                  )}
+                  {activeTable && (
+                    <TableComponent
+                      table={activeTable}
                       deleteTable={deleteTable}
                       updateTable={updateTable}
                     />
-                  )
-                })}
-              </SortableContext>
-              <div
-                onClick={addNewLocation}
-                className="h-[550px] flex items-center justify-center border border-dashed border-light-primaryColor dark:border-dark-primaryColor opacity-45"
-              >
-                <button className="w-[50px] h-[50px] flex items-center justify-center rounded-full border border-dashed border-light-primaryColor dark:border-dark-primaryColor">
-                  <Plus />
-                </button>
-              </div>
-            </div>
-          )}
-          {typeof window === "object" &&
-            createPortal(
-              <DragOverlay>
-                {activedLocation && tables && (
-                  <LocationComponent
-                    location={activedLocation}
-                    tables={tables?.filter(
-                      (item) => item.location_id === activedLocation._id
-                    )}
-                    addNewTable={addNewTable}
-                    deleteLocation={deleteLocation}
-                    updateLocation={updateLocation}
-                    deleteTable={deleteTable}
-                    updateTable={updateTable}
-                  ></LocationComponent>
-                )}
-                {activeTable && (
-                  <TableComponent
-                    table={activeTable}
-                    deleteTable={deleteTable}
-                    updateTable={updateTable}
-                  />
-                )}
-              </DragOverlay>,
-              document.body
-            )}
-        </DndContext>
-      </div>
-    )}
-  </div>
+                  )}
+                </DragOverlay>,
+                document.body
+              )} 
+          </DndContext>
+        </div>
+      )}
+    </div>
   )
   function handleDragStart(event) {
     const { active } = event
@@ -459,11 +489,11 @@ const TableManagement = () => {
         return newArray
       })
   }
-   // Add new Location
-   function addNewLocation() {
+  // Add new Location
+  function addNewLocation() {
     const addLocation = async () => {
       try {
-        const res = await fetch("/api/reservations/locations", {
+        const res = await fetch(ServerUrl+"/api/reservations/locations", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -479,7 +509,7 @@ const TableManagement = () => {
         }
         const data = await res.json()
         // Get new locations after add location
-        const refreshData = await fetch("/api/reservations/locations", {
+        const refreshData = await fetch(ServerUrl+"/api/reservations/locations", {
           method: "GET",
         })
         const freshLocations = await refreshData.json()
@@ -502,7 +532,7 @@ const TableManagement = () => {
   function addNewTable(location_id) {
     const addTable = async () => {
       try {
-        const res = await fetch("/api/reservations/tables", {
+        const res = await fetch(ServerUrl+"/api/reservations/tables", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -519,7 +549,7 @@ const TableManagement = () => {
         }
         const data = await res.json()
         // Get new tables after add table
-        const refreshData = await fetch("/api/reservations/tables", {
+        const refreshData = await fetch(ServerUrl+"/api/reservations/tables", {
           method: "GET",
         })
         const freshTables = await refreshData.json()
@@ -539,5 +569,3 @@ const TableManagement = () => {
     addTable()
   }
 }
-
-export default TableManagement

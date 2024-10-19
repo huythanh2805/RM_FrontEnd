@@ -12,31 +12,18 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useThemeContext } from "@/lib/context/ThemeContextProvider"
 import { Textarea } from "@/components/ui/textarea"
 import { useEffect, useState } from "react"
-import { useToast } from "@/components/ui/use-toast"
-import { useRouter } from "next/navigation"
 import ClipLoader from "react-spinners/ClipLoader"
 
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+
+import { useNavigation } from "react-router-dom"
 const formSchemaFunc = (maxSeats) =>
   z.object({
     userName: z.string().min(2).max(50),
     detailAddress: z.string().min(2).max(50),
-    province: z.string().nonempty("Please select a province"),
-    district: z.string().nonempty("Please select a district"),
-    ward: z.string().nonempty("Please select a ward"),
     party_size: z
       .number()
       .min(1)
@@ -57,11 +44,8 @@ export default function ReservationForm({
   const [loading, setLoading] = useState(false)
   const [createdReservation, setCreatedReservation] =
     useState(null)
-  const { toast } = useToast()
-  const router = useRouter()
-  // Get values were passed in context
-  const value = useThemeContext()
-  const { sideBarColor } = value
+  const router = useNavigation()
+
   // 1. Define your form.
   const formSchema = formSchemaFunc(numberOfSeats)
   const form = useForm({
@@ -69,9 +53,6 @@ export default function ReservationForm({
     defaultValues: {
       userName: reservation ? reservation?.userName : "",
       detailAddress: reservation ? reservation.addres_id.detailAddress : "",
-      district: reservation ? reservation.addres_id.district : "",
-      province: reservation ? reservation.addres_id.province : "",
-      ward: reservation ? reservation.addres_id.ward : "",
       party_size: reservation ? reservation.party_size : 0,
       payment_method: reservation ? reservation.payment_method : "CASHPAYMENT",
     },
@@ -147,105 +128,6 @@ export default function ReservationForm({
           }}
         />
 
-        <div className="flex flex-col md:flex-row gap-5">
-          <FormField
-            control={form.control}
-            name="province"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Tỉnh/Thành phố</FormLabel>
-                <FormControl className="bg-light-bg_2 dark:bg-dark-bg_2">
-                  <Select
-                    defaultValue={field.value}
-                    onValueChange={(value) => field.onChange(value)}
-                  >
-                    <SelectTrigger className="flex-1 bg-transparent dark:bg-transparent">
-                      <SelectValue placeholder="Tỉnh/Thành phố" />
-                    </SelectTrigger>
-
-                    <SelectContent className="bg-light-bg dark:bg-dark-bg">
-                      <SelectGroup>
-                        <SelectLabel className="font-extrabold">
-                          Tỉnh/Thành phố
-                        </SelectLabel>
-                        {provinces.map((item, index) => (
-                          <SelectItem key={index} value={item.province_id}>
-                            {item.province_name}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="district"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Huyện</FormLabel>
-                <FormControl className="bg-light-bg_2 dark:bg-dark-bg_2">
-                  <Select
-                    defaultValue={field.value}
-                    onValueChange={(value) => field.onChange(value)}
-                  >
-                    <SelectTrigger className="flex-1 bg-transparent dark:bg-transparent">
-                      <SelectValue placeholder="Huyện" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-light-bg dark:bg-dark-bg">
-                      <SelectGroup>
-                        <SelectLabel className="font-extrabold">
-                          Huyện
-                        </SelectLabel>
-                        {districts.map((item, index) => (
-                          <SelectItem key={index} value={item.district_id}>
-                            {item.district_name}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="ward"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Xã</FormLabel>
-                <FormControl className="bg-light-bg_2 dark:bg-dark-bg_2">
-                  <Select
-                    defaultValue={field.value}
-                    onValueChange={(value) => field.onChange(value)}
-                  >
-                    <SelectTrigger className="bg-transparent dark:bg-transparent">
-                      <SelectValue placeholder="Xã" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-light-bg dark:bg-dark-bg">
-                      <SelectGroup>
-                        <SelectLabel className="font-extrabold">Xã</SelectLabel>
-                        {wards.map((item, index) => (
-                          <SelectItem key={index} value={item.ward_id}>
-                            {item.ward_name}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
         <FormField
           control={form.control}
           name="detailAddress"
@@ -319,7 +201,7 @@ export default function ReservationForm({
           >
             {loading ? (
               <ClipLoader
-                color={sideBarColor ? sideBarColor : "#11cdef"}
+                color={"#11cdef"}
                 loading={loading}
                 size={35}
                 aria-label="Loading Spinner"

@@ -40,7 +40,7 @@ export default function CreateReservation() {
         {loading && (
           <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
             <FadeLoader
-              color={sideBarColor ? sideBarColor : "#11cdef"}
+              color={"#11cdef"}
               loading={loading}
             />
           </div>

@@ -1,11 +1,9 @@
-import Calculator from "@/components/custom_ui/Calculator";
 import { useEffect, useState } from "react";
-import { DishType } from "../../../inventories/page";
-import { toast } from "@/components/ui/use-toast";
-import { OrderedFoodType } from "@/types/type";
 import { useParams } from "react-router-dom";
 import { useFetchData } from "@/hooks/useFetchData";
 import AdminMenu from "./AdminMenu";
+import Calculator from "./Calculator";
+import { toast } from "@/hooks/use-toast";
 
 export default function FoodOrder() {
   const { reservationId } = useParams()

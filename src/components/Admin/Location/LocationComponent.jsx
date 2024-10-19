@@ -1,14 +1,23 @@
-import React from 'react'
-import TableComponent from '../table/TableComponent'
+import { useMemo, useState } from "react"
+import {
+  SortableContext,
+  rectSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { Plus, Trash } from "lucide-react"
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { CSS } from "@dnd-kit/utilities"
-const LocationComponent = (Props) => {
+import { Button } from "@/components/ui/button"
+import TableComponent from "../table/TableComponent"
+
+export default function LocationComponent(Props) {
   const { location, tables, addNewTable, deleteLocation,updateLocation, deleteTable, updateTable} = Props
   const [inputValue , setInputValue] = useState({
       locationInRestaurant: location.locationInRestaurant,
@@ -57,7 +66,7 @@ const LocationComponent = (Props) => {
      }))
   }
 
-
+  // Overlay for drag
   if (isDragging) {
     return (
       <div
@@ -70,7 +79,7 @@ const LocationComponent = (Props) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 auto-rows-max gap-6 md:gap-10 rounded-md bg-light-bg dark:bg-dark-bg overflow-auto px-8 py-6 h-[550px] text-light-text dark:text-dark-text">
         <SortableContext items={tablesId} strategy={rectSortingStrategy}>
           {tables.map((table) => (
-            <Item 
+            <TableComponent 
             key={table._id} 
             table={table} 
             deleteTable={deleteTable}
@@ -91,6 +100,7 @@ const LocationComponent = (Props) => {
     </div>
     )
   }
+
   return (
     <div
       ref={setNodeRef}
@@ -156,7 +166,7 @@ const LocationComponent = (Props) => {
 
         <SortableContext items={tablesId} strategy={rectSortingStrategy}>
           {tables.map((table) => (
-            <Item 
+            <TableComponent 
             key={table._id} 
             table={table} 
             deleteTable={deleteTable}
@@ -177,5 +187,3 @@ const LocationComponent = (Props) => {
     </div>
   )
 }
-
-export default LocationComponent

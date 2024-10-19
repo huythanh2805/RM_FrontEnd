@@ -1,10 +1,8 @@
-"use client"
-import ReservationForm from "@/components/custom_ui/ReservationForm"
-import { toast } from "@/components/ui/use-toast"
-import { useThemeContext } from "@/lib/context/ThemeContextProvider"
 import React, { useEffect, useState } from "react"
 import { FadeLoader } from "react-spinners"
 import { useParams } from "react-router-dom"
+import ReservationForm from "./ReservationForm"
+import { toast } from "@/hooks/use-toast"
 
 export default function CreateReservation() {
 
@@ -12,9 +10,6 @@ export default function CreateReservation() {
   const [loading, setLoading] = useState(false)
   const [numberOfSeats, setNumberOfSeats] = useState()
 
-  // Get values were passed in context
-  const value = useThemeContext()
-  const { sideBarColor } = value
   useEffect(() => {
     const fetData = async () => {
       setLoading(true)
@@ -50,7 +45,7 @@ export default function CreateReservation() {
           {loading && (
             <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
               <FadeLoader
-                color={sideBarColor ? sideBarColor : "#11cdef"}
+                color={"#11cdef"}
                 loading={loading}
               />
             </div>
