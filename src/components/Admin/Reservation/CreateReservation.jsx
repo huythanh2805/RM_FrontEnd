@@ -3,6 +3,7 @@ import { FadeLoader } from "react-spinners"
 import { useParams } from "react-router-dom"
 import ReservationForm from "./ReservationForm"
 import { toast } from "@/hooks/use-toast"
+import { ServerUrl } from "@/utilities/utils"
 
 export default function CreateReservation() {
 
@@ -14,7 +15,7 @@ export default function CreateReservation() {
     const fetData = async () => {
       setLoading(true)
       try {
-        const res = await fetch("/api/reservations/tables/" + tableId, {
+        const res = await fetch(ServerUrl+"/api/reservations/tables/" + tableId, {
           method: "GET",
         })
 
@@ -26,6 +27,7 @@ export default function CreateReservation() {
         }
         const data = await res.json()
         const table = data.table 
+        console.log({table})
         setNumberOfSeats(table.number_of_seats)
         setLoading(false)
       } catch (error) {
@@ -34,10 +36,13 @@ export default function CreateReservation() {
           variant: "destructive",
           title: "Something wrong with get detail table in create reservation!",
         })
+      } finally {
+        setLoading(false)
       }
     }
     fetData()
   }, [])
+
   return (
     <div className="flex flex-col xl:flex-row gap-5 w-full h-full pb-[80px]">
       <div className="w-full bg-light-bg_2 dark:bg-dark-bg_2 rounded-md flex justify-start">
