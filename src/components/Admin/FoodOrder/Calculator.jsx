@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react"
 import {
   Table,
@@ -20,12 +19,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import CurrencyInput from 'react-currency-input-field';
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+import CurrencyInput from "react-currency-input-field"
 import { Check } from "lucide-react"
-import { formatCurrency } from "@/utilities/utils"
+import { formatCurrency, ServerUrl } from "@/utilities/utils"
 import { toast } from "@/hooks/use-toast"
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+
+const statusOptions = ["ISPREPARED", "ISCOMPLETED", "ISCANCELED"]
 
 const Calculator = ({
   reservation_id,
@@ -35,48 +45,23 @@ const Calculator = ({
   updateOrderedFood,
 }) => {
   const [isPaid, setIsPaid] = useState(false)
-  const [prePay, setPrePay] = useState(0)
   const [neededPaid, setNeededPaid] = useState(0)
   const [paidMoney, setPaidMoney] = useState(0)
   const [change, setChange] = useState(0)
-  
+
+  const [selectedRows, setSelectedRows] = useState([])
+
   const totalPrice = orderedFoods.reduce((sum, item) => {
     return sum + item.quantity * item.dish_id.price
   }, 0)
-  // Get prepay
-  useEffect(() => {
-    const fetData = async () => {
-      try {
-        const res = await fetch("/api/reservations/" + reservation_id, {
-          method: "GET",
-        })
-        if (!res.ok) {
-          return toast({
-            variant: "destructive",
-            title: "Something wrong with get prePay",
-          })
-        }
-        const data = await res.json()
-        const reservationDetail = data.reservationDetail 
-        console.log('reservationDetail', reservationDetail)
-        setPrePay(reservationDetail.prepay)
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Something wrong with get prePay",
-        })
-      }
-    }
-    fetData()
-  }, [reservation_id])
+
   // calculate neededPaid and Check whenever paidMoney change to calculate client'change
-  useEffect(()=>{
-    setNeededPaid(totalPrice - prePay)
+  useEffect(() => {
+    setNeededPaid(totalPrice)
     setChange(paidMoney - neededPaid)
-  },[paidMoney, totalPrice, prePay])
+  }, [paidMoney, totalPrice])
   // delete orderedFood
-  const handleDeleteOrderedFood = async (e, orderedFood_id) => {
-    e.preventDefault()
+  const handleDeleteOrderedFood = async (orderedFood_id) => {
     const { res, data } = await deleteOrderedFood(orderedFood_id)
     if (
       res.status === 201 &&
@@ -90,10 +75,8 @@ const Calculator = ({
   // Update orderedFood
   const handleMinus = async (orderedFood_id, quantity) => {
     if (quantity < 2) return
-    const orderedFood = (await updateOrderedFood(
-      orderedFood_id,
-      quantity - 1
-    )) 
+    // handleDeleteOrderedFood(orderedFood_id)
+    await updateOrderedFood(orderedFood_id, quantity - 1)
     if (!setOrderedFoods) return
     setOrderedFoods((prevOrderedFoods) =>
       prevOrderedFoods.map((item) =>
@@ -102,10 +85,7 @@ const Calculator = ({
     )
   }
   const handlePlus = async (orderedFood_id, quantity) => {
-    const orderedFood = (await updateOrderedFood(
-      orderedFood_id,
-      quantity + 1
-    )) 
+    await updateOrderedFood(orderedFood_id, quantity + 1)
     if (!setOrderedFoods) return
     setOrderedFoods((prevOrderedFoods) =>
       prevOrderedFoods.map((item) =>
@@ -120,8 +100,8 @@ const Calculator = ({
   const handleGoBack = () => {
     router.back()
   }
-  const handlePayment = ()=>{
-    if(change < 0) {
+  const handlePayment = () => {
+    if (change < 0) {
       return toast({
         variant: "destructive",
         title: "Please pay all for bill",
@@ -131,10 +111,14 @@ const Calculator = ({
       try {
         const res = await fetch("/api/reservations/completedBill", {
           method: "POST",
-          body: JSON.stringify({reservation_id, total_money: totalPrice, paid_money: paidMoney })
-        }) 
+          body: JSON.stringify({
+            reservation_id,
+            total_money: totalPrice,
+            paid_money: paidMoney,
+          }),
+        })
         const data = await res.json()
-        if(res.status === 401){
+        if (res.status === 401) {
           return toast({
             variant: "destructive",
             title: data.message,
@@ -157,16 +141,76 @@ const Calculator = ({
       }
     }
     fetchData()
-   
   }
+
+  // Xử lí trạng thái của món ăn
+  // Xử lý khi checkbox được chọn hoặc bỏ chọn
+  const handleCheckboxChange = (id) => {
+    if (selectedRows.includes(id)) {
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== id))
+    } else {
+      setSelectedRows([...selectedRows, id])
+    }
+  }
+
+  // Xử lý khi checkbox "chọn tất cả" được thay đổi
+  const handleSelectAll = () => {
+    if (selectedRows.length === orderedFoods.length) {
+      setSelectedRows([])
+    } else {
+      const allIds = orderedFoods.map((orderedFood) => orderedFood._id)
+      setSelectedRows(allIds)
+    }
+  }
+
+  const updateOrderedDishesStatus = async (status) => {
+    if(selectedRows.length < 1) return
+    try {
+      const res = await fetch(ServerUrl+"/api/orderedFood", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          selectedRows: selectedRows,
+          statusValue: status
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        return toast({
+          variant: "destructive",
+          title: "Something wrong with update status",
+        })
+      }
+      setOrderedFoods( currenntStatus=>
+      currenntStatus.map(item=> selectedRows.includes(item._id) ? {...item, status: status} : item)
+      )
+      setSelectedRows([])
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Something wrong with update status",
+      })
+    }
+  }
+
   return (
-    <div className="px-3 py-4">
+    <div className="px-3 py-4 max-h-[800px] overflow-scroll">
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow onClick={handleSelectAll}>
+            <TableHead className="min-w-[20px]">
+              <input
+                type="checkbox"
+                onChange={handleSelectAll}
+                checked={selectedRows.length === orderedFoods.length}
+              />
+            </TableHead>
             <TableHead className="min-w-[200px]">Tên</TableHead>
             <TableHead>Số lượng</TableHead>
-            <TableHead className="text-right min-w-[135px]">
+            <TableHead>Trạng thái</TableHead>
+            <TableHead className="text-right min-w-[105px]">
               Thành tiền
             </TableHead>
             <TableHead className="max-w-[50px]"></TableHead>
@@ -174,21 +218,40 @@ const Calculator = ({
         </TableHeader>
         <TableBody>
           {orderedFoods.map((orderedFood) => (
-            <TableRow key={orderedFood._id}>
+            <TableRow
+              onClick={() => handleCheckboxChange(orderedFood._id)}
+              key={orderedFood._id}
+            >
+              <TableCell>
+                <input
+                  type="checkbox"
+                  checked={selectedRows.includes(orderedFood._id)}
+                  onChange={() => handleCheckboxChange(orderedFood._id)}
+                />
+              </TableCell>
               <TableCell className="font-medium">
-                <div className="flex flex-col leading-7 truncate">
-                  <h2>{orderedFood.dish_id.title}</h2>
-                  <p className="text-light-textSoft dark:text-dark-textSoft font-thin">
-                    {formatCurrency(orderedFood.dish_id.price)}
-                  </p>
+                <div className="flex items-center justify-start gap-2 md:gap-4">
+                  <div className="w-16 h-16 flex items-center justify-center overflow-hidden rounded-full">
+                    <img
+                      src={orderedFood.dish_id.images[0]}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col leading-7 truncate">
+                    <h2>{orderedFood.dish_id.name}</h2>
+                    <p className="text-light-textSoft dark:text-dark-textSoft font-thin">
+                      {formatCurrency(orderedFood.dish_id.price)}
+                    </p>
+                  </div>
                 </div>
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() =>
+                    onClick={(e) => {
+                      e.stopPropagation()
                       handleMinus(orderedFood._id, orderedFood.quantity)
-                    }
+                    }}
                     className="px-3 py-2 text-white bg-blur_bg dark:bg-blur_bg rounded-lg cursor-pointer hover:scale-[80%] transition-all ease-in hover:shadow-button_shadow"
                   >
                     {" "}
@@ -196,9 +259,10 @@ const Calculator = ({
                   </button>
                   <span>{orderedFood.quantity}</span>
                   <button
-                    onClick={() =>
+                    onClick={(e) => {
+                      e.stopPropagation()
                       handlePlus(orderedFood._id, orderedFood.quantity)
-                    }
+                    }}
                     className="px-3 py-2 text-white bg-blur_bg dark:bg-blur_bg rounded-lg cursor-pointer hover:scale-[80%] transition-all ease-in hover:shadow-button_shadow"
                   >
                     {" "}
@@ -206,28 +270,60 @@ const Calculator = ({
                   </button>
                 </div>
               </TableCell>
-              
+
+              <TableCell>
+                <div
+                  className={`
+                  py-1 px-3 text-white rounded-full
+                   ${
+                     orderedFood.status === "ISPREPARED"
+                       ? "bg-gray-1"
+                       : orderedFood.status === "ISCOMPLETED"
+                       ? "bg-yellow-1"
+                       : "bg-red-1"
+                   }
+                  `}
+                >
+                  {orderedFood.status}
+                </div>
+              </TableCell>
+
               <TableCell className="text-right">
                 {formatCurrency(
                   orderedFood.quantity * orderedFood.dish_id.price
                 )}
-              </TableCell>
-              <TableCell className="text-right max-w-[50px]">
-                <button
-                  onClick={(e) => handleDeleteOrderedFood(e, orderedFood._id)}
-                  className="text-red-500"
-                >
-                  X
-                </button>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
         <TableFooter>
           <TableRow className="bg-light-bg_2 dark:bg-dark-bg_2">
+            <TableCell>
+
+            </TableCell>
+            <TableCell className="text-right">
+              <Select onValueChange={value=> updateOrderedDishesStatus(value)}>
+                <SelectTrigger className="w-full focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none">
+                  <SelectValue placeholder="Status"  className="focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none"/>
+                </SelectTrigger>
+                <SelectContent className="focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none">
+                  {statusOptions.map((option) => (
+                    <SelectItem key={option} value={option} className="focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none">
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </TableCell>
+          </TableRow>
+
+          <TableRow className="bg-light-bg_2 dark:bg-dark-bg_2 w-full">
             <TableCell colSpan={2} className="text-[20px] font-medium">
               Tổng
             </TableCell>
+
+           <TableCell/>
+
             <TableCell colSpan={2} className="text-right">
               {formatCurrency(totalPrice)}
             </TableCell>
@@ -237,7 +333,7 @@ const Calculator = ({
 
       <div className="w-full py-4 flex gap-5">
         <Button
-          onClick={() => router.push('/dashboard/reservations')}
+          onClick={() => router.push("/dashboard/reservations")}
           className="flex-1 py-6 text-[17px] text-white dark:text-white bg-red-1 dark:bg-red-1 hover:scale-95 transition-transform duration-150 ease-linear"
         >
           Quay lại
@@ -260,18 +356,6 @@ const Calculator = ({
                 disabled
                 type="number"
                 placeholder={formatCurrency(totalPrice)}
-              />
-            </div>
-            <div className="w-full flex items-center py-2">
-              <p className="flex-1 h-full bg-light-bg_2 dark:bg-dark-bg_2 flex items-center justify-start px-2">
-                Trả trước
-              </p>
-              <Input
-                className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
-                 placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
-                disabled
-                type="number"
-                placeholder={formatCurrency(prePay)}
               />
             </div>
             <div className="w-full flex items-center py-2">
@@ -307,7 +391,7 @@ const Calculator = ({
             </div>
             <div className="w-full flex items-center py-2">
               <p className="flex-1 h-full bg-light-bg_2 dark:bg-dark-bg_2 flex items-center justify-start px-2">
-                Tiền thừa
+                {change < 0 ? "Tiền thiếu" : "Tiền thừa"}
               </p>
               <Input
                 className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
@@ -328,51 +412,59 @@ const Calculator = ({
               </DialogClose>
               <DialogClose asChild>
                 <Button
-                onClick={()=>handlePayment()}
-                className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
+                  onClick={() => handlePayment()}
+                  className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
               text-white dark:text-white hover:scale-90 transition-all ease-in"
                 >
                   Thanh toán
                 </Button>
-                </DialogClose>
+              </DialogClose>
             </div>
           </DialogContent>
         </Dialog>
       </div>
 
-
       <Dialog open={isPaid} onOpenChange={setIsPaid}>
-      <DialogContent className="max-w-[330px] md:max-w-[450px] bg-light-bg_2 dark:bg-dark-bg_2 rounded-md text-white dark:text-white">
-        <DialogHeader className="w-full flex flex-col items-center justify-center gap-3 ">
-          <DialogTitle className="text-[25px] font-normal">Thank You!</DialogTitle>
-          <div className="px-2 py-2 rounded-full border-[6px] border-green-1 ">
-          <Check width={85} height={85} className="text-green-1" />
+        <DialogContent className="max-w-[330px] md:max-w-[450px] bg-light-bg_2 dark:bg-dark-bg_2 rounded-md text-white dark:text-white">
+          <DialogHeader className="w-full flex flex-col items-center justify-center gap-3 ">
+            <DialogTitle className="text-[25px] font-normal">
+              Thank You!
+            </DialogTitle>
+            <div className="px-2 py-2 rounded-full border-[6px] border-green-1 ">
+              <Check width={85} height={85} className="text-green-1" />
+            </div>
+          </DialogHeader>
+          <div className="w-full">
+            <h2 className="leading-6 text-center">
+              Cảm ơn cháu đã dùng dịch vụ nhà hàng của chúng ta. Check your
+              bill?
+            </h2>
           </div>
-        </DialogHeader>
-        <div className="w-full">
-            <h2 className="leading-6 text-center">Cảm ơn cháu đã dùng dịch vụ nhà hàng của chúng ta. Check your bill?</h2>
-        </div>
-        <div className="flex items-center justify-end py-2 gap-5">
-              <DialogClose asChild>
-                <Button
-                  className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
+          <div className="flex items-center justify-end py-2 gap-5">
+            <DialogClose asChild>
+              <Button
+                className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
                 text-white dark:text-white hover:scale-90 transition-all ease-in"
-                >
-                  Đóng
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button
-                onClick={()=> router.push('/dashboard/reservations/completedBill/'+ reservation_id)}
+              >
+                Đóng
+              </Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button
+                onClick={() =>
+                  router.push(
+                    "/dashboard/reservations/completedBill/" + reservation_id
+                  )
+                }
                 className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
               text-white dark:text-white hover:scale-90 transition-all ease-in"
-                >
-                  Check bill
-                </Button>
-                </DialogClose>
-            </div>
-      </DialogContent>
-    </Dialog>
+              >
+                Check bill
+              </Button>
+            </DialogClose>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

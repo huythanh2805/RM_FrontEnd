@@ -19,11 +19,14 @@ import ClipLoader from "react-spinners/ClipLoader"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-import { useNavigation } from "react-router-dom"
+import { useNavigate, useNavigation } from "react-router-dom"
+import { ServerUrl } from "@/utilities/utils"
+import { toast } from "@/hooks/use-toast"
 const formSchemaFunc = (maxSeats) =>
   z.object({
     userName: z.string().min(2).max(50),
     detailAddress: z.string().min(2).max(50),
+    phoneNumber: z.string().min(8).max(13),
     party_size: z
       .number()
       .min(1)
@@ -38,13 +41,13 @@ const formSchemaFunc = (maxSeats) =>
 // Form reusable for update and add reservation
 export default function ReservationForm({
   reservation,
-  table_id,
+  tableId,
   numberOfSeats,
 }) {
   const [loading, setLoading] = useState(false)
   const [createdReservation, setCreatedReservation] =
     useState(null)
-  const router = useNavigation()
+  const router = useNavigate()
 
   // 1. Define your form.
   const formSchema = formSchemaFunc(numberOfSeats)
@@ -52,6 +55,7 @@ export default function ReservationForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       userName: reservation ? reservation?.userName : "",
+      phoneNumber: reservation ? reservation?.phoneNumber : "",
       detailAddress: reservation ? reservation.addres_id.detailAddress : "",
       party_size: reservation ? reservation.party_size : 0,
       payment_method: reservation ? reservation.payment_method : "CASHPAYMENT",
@@ -61,15 +65,17 @@ export default function ReservationForm({
 
 
   async function onSubmit(values) {
-    console.log(values)
     const url = reservation
-      ? "/api/reservations/" + reservation._id
-      : "/api/reservations"
+      ? ServerUrl+"/api/reservations/" + reservation._id
+      : ServerUrl+"/api/reservations"
     setLoading(true)
     try {
       const res = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json"
+        },
         method: reservation ? "PATCH" : "POST",
-        body: JSON.stringify({ ...values, table_id, startTime: new Date() }),
+        body: JSON.stringify({ ...values, table_id:tableId, startTime: new Date()}),
       })
       if (!res.ok) {
         return toast({
@@ -88,7 +94,7 @@ export default function ReservationForm({
           ? data.message
           : "You added new reservation succesfully",
       })
-      reservation && router.push("/dashboard/reservations")
+      router("/dashboard/tables")
       setLoading(false)
     } catch (error) {
       console.log(error)
@@ -107,7 +113,7 @@ export default function ReservationForm({
     const reservation_id = createdReservation
       ? createdReservation._id
       : reservation?._id
-    router.push("/dashboard/reservations/orderedFood/" + reservation_id)
+    router("/dashboard/reservations/orderedFood/" + reservation_id)
   }
   return (
     <Form {...form}>
@@ -120,7 +126,22 @@ export default function ReservationForm({
               <FormItem>
                 <FormLabel>Tên khách hàng</FormLabel>
                 <FormControl className="bg-light-bg_2 dark:bg-dark-bg_2">
-                  <Input placeholder="Customer's name" {...field} />
+                  <Input placeholder="Customer's name" {...field}  className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )
+          }}
+        />
+        <FormField
+          control={form.control}
+          name="phoneNumber"
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormLabel>Số điện thoại</FormLabel>
+                <FormControl className="bg-light-bg_2 dark:bg-dark-bg_2">
+                  <Input placeholder="Customer's name" {...field} className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -135,7 +156,7 @@ export default function ReservationForm({
             <FormItem>
               <FormLabel>Địa chỉ chi tiết</FormLabel>
               <FormControl className="bg-light-bg_2 dark:bg-dark-bg_2">
-                <Textarea placeholder="Customer's address" {...field} />
+                <Textarea placeholder="Customer's address" {...field} className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -150,6 +171,7 @@ export default function ReservationForm({
               <FormLabel>Số lượng khách</FormLabel>
               <FormControl className="bg-light-bg_2 dark:bg-dark-bg_2">
                 <Input
+                 className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"
                   type="number"
                   placeholder="Party size"
                   {...field}
@@ -225,13 +247,13 @@ export default function ReservationForm({
           <Button
             onClick={() => handleOrderedMenu()}
             type="button"
-            className={cn(
-              "font-medium text-[16px]",
-              (reservation && reservation?.status === "SEATED") ||
+            className={`
+            font-medium text-[16px],
+              ${(reservation && reservation?.status === "SEATED") ||
                 (createdReservation && createdReservation.status === "SEATED")
                 ? "opacity-100"
-                : "opacity-55 pointer-events-none"
-            )}
+                : "opacity-55 pointer-events-none" } 
+            `}
           >
             Chọn món
           </Button>

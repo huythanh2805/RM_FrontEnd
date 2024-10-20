@@ -1,8 +1,9 @@
 import { toast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
 
 export function useFetchData(url){
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useViewTransitionState(null);
+    const [error, setError] = useState(null);
     const [data, setData] = useState(null);
     useEffect(() => {
       const fetData = async () => {
@@ -17,14 +18,14 @@ export function useFetchData(url){
             })
           }
           const data = await res.json()
-          setData(data)
+          setData(data.data)
           setLoading(false)
         } catch (error) {
           setError(error)
           setLoading(false)
           toast({
             variant: "destructive",
-            title: "Something wrong with add new collection!",
+            title: "Something wrong with useFetchData!",
           })
         }
       }

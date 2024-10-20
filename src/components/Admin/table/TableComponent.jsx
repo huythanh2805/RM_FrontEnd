@@ -13,8 +13,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useNavigation, useParams } from 'react-router-dom'
+import { useNavigate, useNavigation, useParams } from 'react-router-dom'
 import { toast } from '@/hooks/use-toast'
+import { ServerUrl } from '@/utilities/utils'
 
 
 export default function TableComponent({
@@ -30,9 +31,9 @@ export default function TableComponent({
   })
   const [editModelForTextInput, setEditModelForTextInput] = useState(false)
   const [editModleForNumberInput, setEditModleForNumberInput] = useState(false)
-  const [reservationStartTime, setReservationStartTime] = useState('')
+  const [reservationDetail, setReservationDetail] = useState({})
   const [getTimeLoading, setGetTimeLoading] = useState(false)
-  const router = useNavigation()
+  const router = useNavigate()
 
   const { reservationId, type } = useParams();
 
@@ -64,7 +65,7 @@ export default function TableComponent({
     setGetTimeLoading(true)
     try {
       const res = await fetch(
-        "/api/reservations/seatedReservation/" +
+        ServerUrl+"/api/reservations/" +
           table._id,
         {
           method: "GET",
@@ -73,7 +74,7 @@ export default function TableComponent({
       const data = await res.json()
       const reservationDetail = data.reservationDetail 
       console.log({reservationDetail})
-      setReservationStartTime(reservationDetail.startTime)
+      setReservationDetail(reservationDetail)
       setGetTimeLoading(false)
     } catch (error) {
       setGetTimeLoading(false)
@@ -124,7 +125,7 @@ export default function TableComponent({
   // Func pick up reservation for reser which didn't order table online and reselect table
   const updateReservation = async (reservationId, type, table_id)=>{
         try {
-          const res = await fetch('/api/reservations/selectTable/' + reservationId,{
+          const res = await fetch(ServerUrl+'/api/reservations/selectTable/' + reservationId,{
             method: "PATCH",
             body: JSON.stringify({table_id, type})
           })
@@ -158,6 +159,9 @@ export default function TableComponent({
   }
   const editReservation = (table_id)=>{
    router('/dashboard/reservations/updateReservation/'+ table_id)
+ }
+  const OrderFood = (reservation_id)=>{
+   router('/dashboard/foodOrder/'+ reservation_id)
  }
   // Overlayout
   if(isDragging) return (
@@ -315,14 +319,65 @@ export default function TableComponent({
       !(table.status === "AVAILABLE") && (
         <>
           { table.status === "ISSERVING" ? (
-          <div 
-          onClick={()=>editReservation(table._id)}
+         
+        <Dialog>
+        <DialogTrigger>
+        <div 
+          
           className='absolute z-30 inset-0 top-0 left-0 w-full h-full bg-blur_bg dark:bg-blur_bg flex items-center justify-center rounded-md'>
             <div className='w-full h-full flex flex-col gap-1 items-center justify-center'>
             <h1 className='font-semibold text-[19px] text-light-warning dark:text-dark-warning'>Đang phục vụ </h1>
-            {getTimeLoading ? <div>00:00:00</div>: <TimeInterval reservationStartTime={reservationStartTime}/>} 
+            {getTimeLoading ? <div>00:00:00</div>: <TimeInterval reservationStartTime={reservationDetail.startTime}/>} 
             </div>
         </div>
+        </DialogTrigger>
+        <DialogContent className="bg-light-bg_2 dark:bg-dark-bg_2 text-light-text dark:text-dark-text">
+          <DialogHeader>
+            <DialogTitle className='text-light-textSoft dark:text-dark-textSoft font-normal'>
+             What are you looking for? 
+            </DialogTitle>
+            <div className='flex items-center gap-2 py-2 text-light-textSoft dark:text-dark-textSoft font-normal'>
+             This table has been serving for:
+            <div className='text-light-text dark:text-dark-text'>
+            {getTimeLoading ? <div>00:00:00</div>: <TimeInterval reservationStartTime={reservationDetail.startTime}/>} 
+            </div>
+            </div>
+          </DialogHeader>
+          <div className="flex items-center justify-end py-2 gap-5">
+
+           <DialogClose>
+            <Button
+              onClick={()=>editReservation(reservationDetail._id)}
+              className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
+              text-white dark:text-white hover:scale-90 transition-all ease-in"
+            >
+              Update
+            </Button>
+            </DialogClose>
+
+           <DialogClose>
+            <Button
+              onClick={()=>OrderFood(reservationDetail._id)}
+              className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
+              text-white dark:text-white hover:scale-90 transition-all ease-in"
+            >
+              Order food
+            </Button>
+            </DialogClose>
+
+
+            <DialogClose asChild>
+              <Button
+               className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
+            text-white dark:text-white hover:scale-90 transition-all ease-in"
+              >
+                Close
+              </Button>
+            </DialogClose>
+            
+          </div>
+        </DialogContent>
+      </Dialog>
         ): ( 
           <Dialog>
           <DialogTrigger>
@@ -330,7 +385,7 @@ export default function TableComponent({
               className='absolute z-30 inset-0 top-0 left-0 w-full h-full bg-blur_bg dark:bg-blur_bg flex items-center justify-center rounded-md'>
               <div className='w-full h-full flex flex-col gap-1 items-center justify-center'>
               <h1 className='font-semibold text-[19px] text-light-error dark:text-dark-error'>Đã được đặt</h1> 
-              {getTimeLoading ? <div>00:00:00</div>: <TimeIntervalCountDown reservationStartTime={reservationStartTime}/>} 
+              {getTimeLoading ? <div>00:00:00</div>: <TimeIntervalCountDown reservationStartTime={reservationDetail.startTime}/>} 
               </div>
               </div> 
           </DialogTrigger>
@@ -342,7 +397,7 @@ export default function TableComponent({
               <div className='flex items-center gap-2 py-2 text-light-textSoft dark:text-dark-textSoft font-normal'>
                Book gần nhất:
               <div className='text-light-text dark:text-dark-text'>
-              {getTimeLoading ? <div>00:00:00</div>: <TimeIntervalCountDown reservationStartTime={reservationStartTime}/>} 
+              {getTimeLoading ? <div>00:00:00</div>: <TimeIntervalCountDown reservationStartTime={reservationDetail.startTime}/>} 
               </div>
               </div>
             </DialogHeader>
