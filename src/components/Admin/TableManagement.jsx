@@ -20,9 +20,8 @@ import { FadeLoader } from "react-spinners"
 import LocationComponent from "./Location/LocationComponent"
 import TableComponent from "./table/TableComponent"
 import { toast } from "@/hooks/use-toast"
+import { ServerUrl } from "@/utilities/utils"
 
-
-const ServerUrl = import.meta.env.VITE_SERVER_URL;
 
 
 export default function TableManagement() {
