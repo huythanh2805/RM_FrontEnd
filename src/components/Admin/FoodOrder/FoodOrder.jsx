@@ -5,7 +5,6 @@ import AdminMenu from "./AdminMenu";
 import Calculator from "./Calculator";
 import { toast } from "@/hooks/use-toast";
 import { ServerUrl } from "@/utilities/utils";
-import ButtonCustom from "@/components/custom_ui/ButtonCustom";
 
 export default function FoodOrder() {
   const { reservationId } = useParams()
@@ -57,7 +56,6 @@ export default function FoodOrder() {
   }
   return (
     <div className="px-3 md:px-5 py-2 md:py-4 flex flex-col xl:flex-row gap-5 w-full h-full pb-[80px]">
-      <ButtonCustom/>
       <div className="flex-[2] bg-light-bg_2 dark:bg-dark-bg_2 rounded-md">
         {
           categories && dishes && (
