@@ -247,7 +247,6 @@ export default function TableManagement() {
           body: JSON.stringify({ number_of_seats, name }),
           headers: {
             "Content-Type": "application/json",
-            "Cache-Control": "no-store", // Disable caching
           },
         })
 
@@ -258,12 +257,12 @@ export default function TableManagement() {
           })
         }
         // Get new tables after add table
-        const refreshData = await fetch("/api/reservations/tables", {
-          method: "GET",
-        })
-        const freshTables = await refreshData.json()
-        setTables(freshTables.tables)
-        setNumberOfTable(freshTables.numberOfTable)
+        // const refreshData = await fetch("/api/reservations/tables", {
+        //   method: "GET",
+        // })
+        // const freshTables = await refreshData.json()
+        // setTables(freshTables.tables)
+        // setNumberOfTable(freshTables.numberOfTable)
       } catch (error) {
         setLoading(false)
         console.log(error)
@@ -287,7 +286,6 @@ export default function TableManagement() {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            "Cache-Control": "no-store", // Disable caching
           },
           body: JSON.stringify({ locationInRestaurant }),
         })
@@ -298,13 +296,13 @@ export default function TableManagement() {
             title: "Can't update this location",
           })
         }
-        // Get new locations after add location
-        const refreshData = await fetch(ServerUrl+"/api/reservations/locations", {
-          method: "GET",
-        })
-        const freshLocations = await refreshData.json()
-        setLocations(freshLocations.locations)
-        setNumberOfLocation(freshLocations.numberOfLocation)
+        // Get new locations after update location
+        // const refreshData = await fetch(ServerUrl+"/api/reservations/locations", {
+        //   method: "GET",
+        // })
+        // const freshLocations = await refreshData.json()
+        // setLocations(freshLocations.locations)
+        // setNumberOfLocation(freshLocations.numberOfLocation)
       } catch (error) {
         setLoading(false)
         console.log(error)

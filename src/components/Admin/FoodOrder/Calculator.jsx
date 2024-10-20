@@ -34,6 +34,8 @@ import { formatCurrency, ServerUrl } from "@/utilities/utils"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useNavigate } from "react-router-dom"
+import CompletedBill from "../Bill/CompletedBill"
 
 const statusOptions = ["ISPREPARED", "ISCOMPLETED", "ISCANCELED"]
 
@@ -50,11 +52,13 @@ const Calculator = ({
   const [change, setChange] = useState(0)
 
   const [selectedRows, setSelectedRows] = useState([])
+  const [billId, setBillId] = useState('')
+  const [isOpenBillDetail, setIsOpenBillDetail] = useState(false)
 
   const totalPrice = orderedFoods.reduce((sum, item) => {
     return sum + item.quantity * item.dish_id.price
   }, 0)
-
+  const router = useNavigate()
   // calculate neededPaid and Check whenever paidMoney change to calculate client'change
   useEffect(() => {
     setNeededPaid(totalPrice)
@@ -109,28 +113,24 @@ const Calculator = ({
     }
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/reservations/completedBill", {
+        const res = await fetch(ServerUrl+"/api/bills", {
           method: "POST",
+          headers: {
+           "Content-Type": "application/json"
+          },
           body: JSON.stringify({
             reservation_id,
-            total_money: totalPrice,
-            paid_money: paidMoney,
+            original_money: totalPrice,
           }),
         })
         const data = await res.json()
-        if (res.status === 401) {
-          return toast({
-            variant: "destructive",
-            title: data.message,
-          })
-        }
         if (!res.ok) {
           return toast({
             variant: "destructive",
             title: "Something wrong with create Bill",
           })
         }
-        const completedBill = data.completedBill
+        setBillId(data.bill_id)
         // when create bill successfully, trigger thanks dialog
         setIsPaid(!isPaid)
       } catch (error) {
@@ -333,7 +333,7 @@ const Calculator = ({
 
       <div className="w-full py-4 flex gap-5">
         <Button
-          onClick={() => router.push("/dashboard/reservations")}
+          onClick={() => router("/dashboard/tables")}
           className="flex-1 py-6 text-[17px] text-white dark:text-white bg-red-1 dark:bg-red-1 hover:scale-95 transition-transform duration-150 ease-linear"
         >
           Quay lại
@@ -427,7 +427,7 @@ const Calculator = ({
       <Dialog open={isPaid} onOpenChange={setIsPaid}>
         <DialogContent className="max-w-[330px] md:max-w-[450px] bg-light-bg_2 dark:bg-dark-bg_2 rounded-md text-white dark:text-white">
           <DialogHeader className="w-full flex flex-col items-center justify-center gap-3 ">
-            <DialogTitle className="text-[25px] font-normal">
+            <DialogTitle className="text-[25px] font-normal text-light-text dark:text-dark-text">
               Thank You!
             </DialogTitle>
             <div className="px-2 py-2 rounded-full border-[6px] border-green-1 ">
@@ -435,7 +435,7 @@ const Calculator = ({
             </div>
           </DialogHeader>
           <div className="w-full">
-            <h2 className="leading-6 text-center">
+            <h2 className="leading-6 text-center text-light-text dark:text-dark-text">
               Cảm ơn cháu đã dùng dịch vụ nhà hàng của chúng ta. Check your
               bill?
             </h2>
@@ -451,11 +451,7 @@ const Calculator = ({
             </DialogClose>
             <DialogClose asChild>
               <Button
-                onClick={() =>
-                  router.push(
-                    "/dashboard/reservations/completedBill/" + reservation_id
-                  )
-                }
+                onClick={()=> router(`/dashboard/completedBill/${billId}`)}
                 className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
               text-white dark:text-white hover:scale-90 transition-all ease-in"
               >
@@ -465,6 +461,7 @@ const Calculator = ({
           </div>
         </DialogContent>
       </Dialog>
+          
     </div>
   )
 }
