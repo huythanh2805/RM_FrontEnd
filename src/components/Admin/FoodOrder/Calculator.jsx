@@ -56,6 +56,7 @@ const Calculator = ({
   const [isOpenBillDetail, setIsOpenBillDetail] = useState(false)
 
   const totalPrice = orderedFoods.reduce((sum, item) => {
+    if(item.status === "ISCANCELED") return sum + 0
     return sum + item.quantity * item.dish_id.price
   }, 0)
   const router = useNavigate()

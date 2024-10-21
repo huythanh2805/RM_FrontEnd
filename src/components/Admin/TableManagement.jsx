@@ -256,13 +256,10 @@ export default function TableManagement() {
             title: "Can't update this table",
           })
         }
-        // Get new tables after add table
-        // const refreshData = await fetch("/api/reservations/tables", {
-        //   method: "GET",
-        // })
-        // const freshTables = await refreshData.json()
-        // setTables(freshTables.tables)
-        // setNumberOfTable(freshTables.numberOfTable)
+        // Update Ui by updating tables
+        setTables(currentTables=>[
+          ...currentTables.map(table=> table._id === table_id ? {...table, number_of_seats, name} : table)
+        ])
       } catch (error) {
         setLoading(false)
         console.log(error)
@@ -296,13 +293,10 @@ export default function TableManagement() {
             title: "Can't update this location",
           })
         }
-        // Get new locations after update location
-        // const refreshData = await fetch(ServerUrl+"/api/reservations/locations", {
-        //   method: "GET",
-        // })
-        // const freshLocations = await refreshData.json()
-        // setLocations(freshLocations.locations)
-        // setNumberOfLocation(freshLocations.numberOfLocation)
+          // Update Ui by updating tables
+          setLocations(currentLocations=>[
+            ...currentLocations.map(location=> location._id === location_id ? {...location, locationInRestaurant} : location)
+          ])
       } catch (error) {
         setLoading(false)
         console.log(error)
