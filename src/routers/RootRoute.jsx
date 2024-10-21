@@ -7,8 +7,15 @@ import Dashboard from "@/pages/dashboard/Dashboard";
 import About from "@/pages/home/About";
 import Home from "@/pages/home/Home";
 import HomeLayout from "@/pages/home/HomeLayout";
+import { Profile } from "@/pages/home/Profile";
 import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
+import TableComponent from "@/components/Admin/table/TableComponent";
+import TableManagement from "@/components/Admin/TableManagement";
+import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
+import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
+import Menu from "@/pages/home/Menu";
+import Categories from "@/pages/dashboard/Categories";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +33,11 @@ const router = createBrowserRouter([
         // loader: teamLoader,
       },
       {
+        path: "menu",
+        element: <Menu />,
+        // loader: teamLoader,
+      },
+      {
         path: "reservation",
         element: <Reservation />,
         // loader: teamLoader,
@@ -33,7 +45,12 @@ const router = createBrowserRouter([
       {
         path: "dishes/:id",
         element: <ProductDetail />,
-      }
+      },
+      {
+        path: "profile",
+        element: <Profile />,
+        // loader: teamLoader,
+      },
     ],
   },
   {
@@ -57,6 +74,27 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+    children: [
+      {
+        path: "categories",
+        element: <Categories />,
+      },
+      {
+        path: "tables",
+        element: <TableManagement />,
+        // loader: teamLoader,
+      },
+      {
+        path: "createReservation/:tableId",
+        element: <CreateReservation />,
+        // loader: teamLoader,
+      },
+      {
+        path: "foodOrder/:reservationId",
+        element: <FoodOrder />,
+        // loader: teamLoader,
+      },
+    ],
   },
 ]);
 
