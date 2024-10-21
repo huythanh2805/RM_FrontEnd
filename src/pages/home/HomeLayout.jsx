@@ -16,8 +16,7 @@ const HomeLayout = () => {
           isBoxed ? "max-w-[1536px]" : "w-screen"
         } transition-all duration-500 ease-in-out mx-auto overflow-hidden relative z-10 bg-white`}
       >
-        <Header />
-        <Slider />
+        <Header />     
         <main className="">
           <Brush />
           <ScrollToTopButton />

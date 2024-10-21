@@ -1,3 +1,4 @@
+import ProductDetail from "@/components/layouts/ProductDetail";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { ForgotPasswordPage } from "@/pages/auth/PasswordPage";
 import { RegisterPage } from "@/pages/auth/Register";
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
         path: "reservation",
         element: <Reservation />,
         // loader: teamLoader,
+      },
+      {
+        path: "dishes/:id",
+        element: <ProductDetail />,
       },
       {
         path: "profile",
