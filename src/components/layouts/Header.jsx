@@ -47,7 +47,6 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
-    // Có thể thêm thông báo sau khi đăng xuất nếu cần
   };
 
   return (

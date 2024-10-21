@@ -1,23 +1,33 @@
 import { useThemeContext } from "@/contexts/ThemeProvider";
-import { apiClient } from "@/services/api";
-import { formatCurrency } from "@/utilities/utils";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { HiOutlineShoppingCart } from "react-icons/hi";
+import { FaShoppingCart } from "react-icons/fa";
+import ReactStars from "react-rating-stars-component";
 
 const Menu = () => {
   const { colorCode } = useThemeContext();
   const [dish, setDish] = useState([]);
+  const [ratings, setRatings] = useState({});
+
+  // Function to handle rating change
+  const handleRatingChange = (newRating, dishId) => {
+    setRatings({
+      ...ratings,
+      [dishId]: newRating,
+    });
+  };
 
   useEffect(() => {
     axios
       .get("http://localhost:1111/dishes")
       .then((res) => {
-        console.log(res.data);
-        setDish(res.data);
+        console.log(res.data.data);
+        setDish(res.data.data);
       })
       .catch((error) => {
-        console.error(error.response ? error.response.data : error.message);
+        console.error(error.response ? error.response.data.data : error.message);
       });
   }, []);
 
@@ -27,52 +37,66 @@ const Menu = () => {
         className="text-xl font-semibold mb-2 flex justify-center items-center"
         style={{ color: colorCode }}
       >
-        <div
-          className="border-t w-12 mr-2"
-          style={{ borderColor: colorCode }}
-        />
+        <div className="border-t w-12 mr-2" style={{ borderColor: colorCode }} />
         Thực đơn
-        <div
-          className="border-t w-12 ml-2"
-          style={{ borderColor: colorCode }}
-        />
+        <div className="border-t w-12 ml-2" style={{ borderColor: colorCode }} />
       </div>
 
       {/* Navbar */}
       <div className="flex justify-between items-center gap-10 mt-10 max-w-4xl mx-auto">
-        <div className="font-bold border-b-2 border-black text-lg cursor-pointer hover:font-bold">
-          Tất cả
-        </div>
+        <div className="font-bold border-b-2 border-black text-lg cursor-pointer hover:font-bold">Tất cả</div>
         <div className="text-lg cursor-pointer hover:font-bold">Món chính</div>
         <div className="text-lg cursor-pointer hover:font-bold">Khai vị</div>
-        <div className="text-lg cursor-pointer hover:font-bold">
-          Tráng miệng
-        </div>
+        <div className="text-lg cursor-pointer hover:font-bold">Tráng miệng</div>
         <div className="text-lg cursor-pointer hover:font-bold">Đồ uống</div>
       </div>
 
       {/* Main menu */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10 max-w-5xl mx-auto">
         {dish.map((item) => (
-          <div
-            key={item._id}
-            className="bg-white shadow-lg rounded-lg overflow-hidden w-full md:w-auto"
-          >
-            <img
-              src={item.images[0]}
-              alt={item.name}
-              className="w-full max-h-56 object-cover"
-            />
-            <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">{item.name}</h2>
-              <p className="text-gray-500 text-sm mb-4">{item.desc}</p>
-              <div className="flex justify-between items-center">
-                <span className="text-lg font-bold">
-                  {formatCurrency(item.price)}
-                </span>
-                <div className="bg-white border border-[#fb6240de] text-[#fb6240de] p-2 rounded-full hover:bg-[#fb6240de] hover:text-white focus:outline-none transition duration-300 ease-in-out">
-                  <HiOutlineShoppingCart />
+          <div key={item._id} className="relative group rounded-lg shadow-lg overflow-hidden bg-white w-full">
+            <div className="relative overflow-hidden">
+              <img
+                src={item.images[0]}
+                className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                alt={item.name}
+              />
+              <div className="absolute inset-0 bg-gray-400 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="flex space-x-4">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    className="p-2 text-white rounded-full"
+                    style={{ backgroundColor: colorCode }}
+                    onClick={() => handleAddToCart(item)}
+                  >
+                    <FaShoppingCart />
+                  </motion.button>
                 </div>
+              </div>
+            </div>
+
+            {/* Thông tin món ăn */}
+            <div className="p-4 relative">
+              <Link to={`/dishes/${item._id}`}>
+                <h3 className="text-lg font-bold cursor-pointer">{item.name}</h3>
+              </Link>
+              <p className="text-sm text-gray-600">{item.desc}</p>
+
+              {/* Giá và đánh giá */}
+              <div className="flex justify-between items-center mt-4">
+                <span className="text-xl font-bold" style={{ color: colorCode }}>
+                  {item.price}₫
+                </span>
+                <ReactStars
+                  count={5}
+                  onChange={(newRating) => handleRatingChange(newRating, item._id)}
+                  size={24}
+                  activeColor="#ffd700"
+                  value={ratings[item._id] || item.rating}
+                />
+              </div>
+              <div className="absolute inset-x-0 bottom-0 flex justify-center items-center">
+                <div className="h-1 w-0 transition-all duration-500 group-hover:w-full" style={{ backgroundColor: colorCode }}></div>
               </div>
             </div>
           </div>
