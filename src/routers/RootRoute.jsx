@@ -13,6 +13,7 @@ import TableComponent from "@/components/Admin/table/TableComponent";
 import TableManagement from "@/components/Admin/TableManagement";
 import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
 import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
+import Menu from "@/pages/home/Menu";
 import Categories from "@/pages/dashboard/Categories";
 
 const router = createBrowserRouter([
@@ -28,6 +29,11 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <About />,
+        // loader: teamLoader,
+      },
+      {
+        path: "menu",
+        element: <Menu />,
         // loader: teamLoader,
       },
       {
