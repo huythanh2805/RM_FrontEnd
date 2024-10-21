@@ -13,6 +13,7 @@ import TableManagement from "@/components/Admin/TableManagement";
 import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
 import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
 import CompletedBill from "@/components/Admin/Bill/CompletedBill";
+import ListReservation from "@/components/Admin/Reservation/ListReservation";
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,11 @@ const router = createBrowserRouter([
       {
         path: "reservations/createReservation/:tableId",
         element: <CreateReservation />,
+        // loader: teamLoader,
+      },
+      {
+        path: "listReser",
+        element: <ListReservation />,
         // loader: teamLoader,
       },
       {
