@@ -19,12 +19,17 @@ import {
 import { useState } from "react"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolBar"
-
-
+import Prompt from "@/components/custom_ui/Prompt"
+import { Trash } from "lucide-react"
+import DatePicker from "react-datepicker"
 
 export function ReserDataTable({
   columns,
   data,
+  onDelete,
+  dateValidation,
+  handleDateValidation,
+  resetDateValidate,
 }) {
   const [sorting, setSorting] = useState([])
   const [columnFilters, setColumnFilters] = useState([])
@@ -64,11 +69,48 @@ export function ReserDataTable({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
- 
-console.log("rows",table.getRowModel().rows?.length)
+
+  const hadleDeleteSelectedRows = async () => {
+    const rows = table.getFilteredSelectedRowModel().rows
+    const IdsArray = rows.map((item) => item.original._id)
+    onDelete(IdsArray)
+    table.resetRowSelection()
+  }
+
   return (
     <div className="flex flex-col gap-5">
+      <div className="w-fit flex items-center">
         <DataTableToolbar table={table} />
+        <DatePicker
+          className="w-full bg-light-bg dark:bg-dark-bg focus:outline-none px-3 py-2 border border-gray-200 dark:border-gray-800 rounded-md"
+          placeholderText="Chose the date"
+          selected={dateValidation}
+          onChange={(date) => handleDateValidation(date)}
+          dateFormat={"dd/MM/yyyy, HH:mm"}
+          showTimeSelect
+          timeFormat="HH:mm"
+          timeIntervals={30}
+        />
+        {dateValidation && (
+          <p
+            onClick={resetDateValidate}
+            className="ml-2 px-2 rounded-full bg-red-1 text-white cursor-pointer"
+          >
+            X
+          </p>
+        )}
+        <Prompt
+          trigger={
+            <div className="px-3 py-3 rounded-full cursor-pointer text-white bg-red-1 dark:bg-dark-error hover:scale-90 transition-all ease-in">
+              <Trash />
+            </div>
+          }
+          title="Bạn chắc muốn xóa không?"
+          prompt="Xóa"
+          propmptEvent={() => hadleDeleteSelectedRows()}
+        />
+      </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>

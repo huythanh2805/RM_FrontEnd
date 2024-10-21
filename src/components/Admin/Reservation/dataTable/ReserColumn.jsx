@@ -11,7 +11,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router-dom"
-import { formatDate } from "@/utilities/utils"
+import { formatDate, formatPhoneNumber } from "@/utilities/utils"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -60,8 +60,8 @@ export const ReservationColumn = ({
     {
       accessorKey: "table_id",
       header: "Bàn số",
-      size: 200, //starting column size
-      minSize: 200,
+      size: 100, //starting column size
+      minSize: 100,
       enableResizing: true,
       cell: ({ row }) => {
         const table = row.original.table_id?.name
@@ -79,28 +79,40 @@ export const ReservationColumn = ({
       },
     },
     {
-      accessorKey: "party_size",
-      header: "Số người",
+      accessorKey: "guests_count",
+      header: ()=>(
+        <div className="w-full text-center">
+            Số người
+        </div>
+      ),
+      cell: ({row})=>(
+        <div className="w-full text-center">
+           {row.original.guests_count}
+        </div>
+      ),
       size: 100, //starting column size
     },
     {
-      accessorKey: "payment_method",
-      header: "Phương thức TT",
+      accessorKey: "phoneNumber",
+      header: "Số điện thoại",
       size: 200, //starting column size
       minSize: 200,
-      maxSize:600,
+      maxSize:300,
       cell: ({row})=>{
-        const payment_method = row.original.payment_method
-        if(payment_method === 'CASHPAYMENT' ){
-          return <div>Tiền mặt</div>
-        }else if(payment_method === 'BANKPAYMENT'){
-          return <div>Chuyển khoản</div>
-        }
+        return <div className="font-sans">
+            {formatPhoneNumber(row.original.phoneNumber)}
+        </div>
       }
     },
     {
-      accessorKey: "prepay",
-      header: "Trả trước",
+      accessorKey: "isOrderedOnline",
+      header: "Kiểu đặt",
+      cell: ({row})=>{
+        const isOrderedOnline = row.original.isOrderedOnline
+        return isOrderedOnline ?
+        <Badge> Online </Badge>:
+        <Badge> Trực tiếp </Badge>
+      },
       size: 150, //starting column size
     },
     {

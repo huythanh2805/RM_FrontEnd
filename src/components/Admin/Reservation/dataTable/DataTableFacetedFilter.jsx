@@ -28,7 +28,6 @@ export function DataTableFacetedFilter({
 }) {
   const facets = column?.getFacetedUniqueValues()
   const selectedValues = new Set(column?.getFilterValue() )
-  console.log('get', column?.getFilterValue())
   return (
     <Popover>
       <PopoverTrigger 
