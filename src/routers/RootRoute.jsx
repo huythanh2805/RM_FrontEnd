@@ -14,6 +14,7 @@ import TableManagement from "@/components/Admin/TableManagement";
 import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
 import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
 import Menu from "@/pages/home/Menu";
+import Categories from "@/pages/dashboard/Categories";
 
 const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Dashboard />,
     children: [
+      {
+        path: "categories",
+        element: <Categories />,
+      },
       {
         path: "tables",
         element: <TableManagement />,
