@@ -10,7 +10,6 @@ import HomeLayout from "@/pages/home/HomeLayout";
 import { Profile } from "@/pages/home/Profile";
 import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
-import TableComponent from "@/components/Admin/table/TableComponent";
 import TableManagement from "@/components/Admin/TableManagement";
 import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
 import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";

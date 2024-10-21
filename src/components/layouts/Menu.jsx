@@ -1,46 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaShoppingCart } from "react-icons/fa";
 import ReactStars from "react-rating-stars-component";
 import { useThemeContext } from "@/contexts/ThemeProvider";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Menu = () => {
+  const [dishes, setDishes] = useState([]);
   const [ratings, setRatings] = useState({});
   const { colorCode } = useThemeContext();
 
-  // Dữ liệu giả các món ăn
-  const dishes = [
-    {
-      id: 1,
-      name: "Mexico Beafsteak Potato Fly",
-      chef: "Don Joe",
-      price: "$25.0",
-      imageUrl:
-        "https://sun-themes.com/html/fooday/assets/images/product/product-full-02.jpg",
-      rating: 4,
-    },
-    {
-      id: 2,
-      name: "Mexico Beafsteak Potato",
-      chef: "Don Joe",
-      price: "$5.0",
-      imageUrl:
-        "https://sun-themes.com/html/fooday/assets/images/product/product-2e.jpg",
-      rating: 4,
-    },
-    {
-      id: 3,
-      name: "Madagasca Lopster Tasty",
-      chef: "Don Joe",
-      price: "$20.0",
-      imageUrl:
-        "https://sun-themes.com/html/fooday/assets/images/product/product-2e.jpg",
-      rating: 4.2,
-    },
-  ];
+  useEffect(() => {
+    const fetchDishes = async () => {
+      try {
+        const response = await axios.get("http://localhost:1111/dishes");
+        console.log("Dữ liệu nhận được:", response.data.data);
+        setDishes(response.data.data);
+      } catch (error) {
+        console.error("Có lỗi xảy ra khi lấy dữ liệu món ăn:", error);
+      }
+    };
+    fetchDishes();
+  }, []);
 
-  // Function to handle rating change
   const handleRatingChange = (newRating, dishId) => {
     setRatings({
       ...ratings,
@@ -48,7 +31,6 @@ const Menu = () => {
     });
   };
 
-  // Function to handle adding item to cart
   const handleAddToCart = (dish) => {
     console.log(`Added ${dish.name} to cart`);
   };
@@ -73,17 +55,18 @@ const Menu = () => {
       {/* Danh sách các món ăn */}
       <div className="pt-10 w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {dishes.map((dish) => (
+          {dishes.slice(0, 6).map((dish) => (
             <div
-              key={dish.id}
+              key={dish._id}
               className="relative group rounded-lg shadow-lg overflow-hidden bg-white w-full"
             >
               <div className="relative overflow-hidden">
                 <img
-                  src={dish.imageUrl}
+                  src={dish.images[0]}
                   className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                  alt={dish.name}
                 />
-                <div className="absolute inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute inset-0 bg-gray-400 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   <div className="flex space-x-4">
                     <motion.button
                       whileHover={{ scale: 1.1 }}
@@ -99,12 +82,12 @@ const Menu = () => {
 
               {/* Thông tin món ăn */}
               <div className="p-4 relative">
-                <Link to={`/dishes/${dish.id}`}>
+                <Link to={`/dishes/${dish._id}`}>
                   <h3 className="text-lg font-bold cursor-pointer">
                     {dish.name}
                   </h3>
                 </Link>
-                <p className="text-sm text-gray-600">Chef {dish.chef}</p>
+                <p className="text-sm text-gray-600">{dish.desc}</p>
 
                 {/* Giá và đánh giá */}
                 <div className="flex justify-between items-center mt-4">
@@ -112,16 +95,16 @@ const Menu = () => {
                     className="text-xl font-bold"
                     style={{ color: colorCode }}
                   >
-                    {dish.price}
+                    {dish.price}₫
                   </span>
                   <ReactStars
                     count={5}
                     onChange={(newRating) =>
-                      handleRatingChange(newRating, dish.id)
+                      handleRatingChange(newRating, dish._id)
                     }
                     size={24}
                     activeColor="#ffd700"
-                    value={ratings[dish.id] || dish.rating}
+                    value={ratings[dish._id] || dish.rating}
                   />
                 </div>
 

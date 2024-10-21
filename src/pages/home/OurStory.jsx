@@ -1,32 +1,69 @@
 import ButtonCustome from '@/components/ButtonCustome';
 import { useThemeContext } from '@/contexts/ThemeProvider';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const OurStory = () => {
   const { colorCode } = useThemeContext();
+  const [isVisible, setIsVisible] = useState(false);
+  const imagesRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 } // Chỉ khi 10% phần tử được nhìn thấy
+    );
+
+    if (imagesRef.current) {
+      observer.observe(imagesRef.current);
+    }
+
+    return () => {
+      if (imagesRef.current) {
+        observer.unobserve(imagesRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="flex flex-wrap items-start justify-between py-12 px-6 lg:px-20">
-      <div className="w-full lg:w-1/2 grid grid-cols-2 gap-4">
-        <div className="col-span-1 row-span-2">
+      <div ref={imagesRef} className="w-full lg:w-1/2 grid grid-cols-2 gap-4">
+        <div
+          className={`col-span-1 row-span-2 transition-all duration-700 transform ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+          }`}
+        >
           <img
             src="imgs/Screenshot.png"
             alt="Món chính"
-            className="w-full h-[480px] object-cover shadow-lg rounded transition-transform transform hover:scale-105 hover:opacity-90"  // Hiệu ứng hover
+            className="w-full h-[480px] object-cover shadow-lg rounded transition-transform transform hover:scale-105 hover:opacity-90" // Hiệu ứng hover
           />
         </div>
-        <div className="col-span-1">
+        <div
+          className={`col-span-1 transition-all duration-700 transform delay-200 ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+          }`}
+        >
           <img
             src="imgs/Screen2.jpg"
             alt="Món phụ"
-            className="w-full h-auto object-cover shadow-lg rounded transition-transform transform hover:scale-105 hover:opacity-90"  // Hiệu ứng hover
+            className="w-full h-auto object-cover shadow-lg rounded transition-transform transform hover:scale-105 hover:opacity-90" // Hiệu ứng hover
           />
         </div>
-        <div className="col-span-1 row-span-1">
+        <div
+          className={`col-span-1 row-span-1 transition-all duration-700 transform delay-400 ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+          }`}
+        >
           <img
             src="imgs/Screenshot3.png"
             alt="Món khác"
-            className="w-full h-auto object-cover shadow-lg rounded transition-transform transform hover:scale-105 hover:opacity-90"  // Hiệu ứng hover
+            className="w-full h-auto object-cover shadow-lg rounded transition-transform transform hover:scale-105 hover:opacity-90" // Hiệu ứng hover
           />
         </div>
       </div>
