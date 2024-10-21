@@ -38,7 +38,7 @@ const Menu = () => {
         style={{ color: colorCode }}
       >
         <div className="border-t w-12 mr-2" style={{ borderColor: colorCode }} />
-        Thực đơn
+        THỰC ĐƠN
         <div className="border-t w-12 ml-2" style={{ borderColor: colorCode }} />
       </div>
 
