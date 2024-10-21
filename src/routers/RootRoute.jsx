@@ -15,12 +15,12 @@ import CreateReservation from "@/components/Admin/Reservation/CreateReservation"
 import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
 import Menu from "@/pages/home/Menu";
 import Categories from "@/pages/dashboard/Categories";
+import NotFound from "@/pages/home/NotFound";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomeLayout />,
-    // loader: rootLoader,
     children: [
       {
         path: "/",
@@ -29,17 +29,14 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <About />,
-        // loader: teamLoader,
       },
       {
         path: "menu",
         element: <Menu />,
-        // loader: teamLoader,
       },
       {
         path: "reservation",
         element: <Reservation />,
-        // loader: teamLoader,
       },
       {
         path: "dishes/:id",
@@ -48,19 +45,16 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
-        // loader: teamLoader,
       },
     ],
   },
   {
     path: "/register",
     element: <RegisterPage />,
-    // loader: rootLoader,
   },
   {
     path: "/login",
     element: <LoginPage />,
-    // loader: rootLoader,
   },
   {
     path: "/forgot-password",
@@ -81,19 +75,20 @@ const router = createBrowserRouter([
       {
         path: "tables",
         element: <TableManagement />,
-        // loader: teamLoader,
       },
       {
         path: "createReservation/:tableId",
         element: <CreateReservation />,
-        // loader: teamLoader,
       },
       {
         path: "foodOrder/:reservationId",
         element: <FoodOrder />,
-        // loader: teamLoader,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 
