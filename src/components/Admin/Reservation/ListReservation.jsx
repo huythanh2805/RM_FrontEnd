@@ -113,6 +113,10 @@ export default function ListReservation() {
     setReservations(unChangedReservations)
     setDateValidation(null)
   }
+// Update Table
+  const updateTable = (reservationId)=>{
+   router(`/dashboard/tables/${reservationId}`)
+  }
   return (
     <div>
       {loading && (
@@ -126,7 +130,7 @@ export default function ListReservation() {
       {!loading && reservations && (
         <ReserDataTable
           columns={ReservationColumn({
-            reservations,
+            updateTable,
           })}
           data={reservations}
           onDelete={handleDeleteDishes}

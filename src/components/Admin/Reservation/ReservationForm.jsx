@@ -27,7 +27,7 @@ const formSchemaFunc = (maxSeats) =>
     userName: z.string().min(2).max(50),
     detailAddress: z.string().min(2).max(50),
     phoneNumber: z.string().min(8).max(13),
-    party_size: z
+    guests_count: z
       .number()
       .min(1)
       .max(maxSeats, {
@@ -56,8 +56,8 @@ export default function ReservationForm({
     defaultValues: {
       userName: reservation ? reservation?.userName : "",
       phoneNumber: reservation ? reservation?.phoneNumber : "",
-      detailAddress: reservation ? reservation.addres_id.detailAddress : "",
-      party_size: reservation ? reservation.party_size : 0,
+      detailAddress: reservation ? reservation.detailAddress : "",
+      guests_count: reservation ? reservation.guests_count : 0,
       payment_method: reservation ? reservation.payment_method : "CASHPAYMENT",
     },
   })
@@ -74,7 +74,7 @@ export default function ReservationForm({
         headers: {
           "Content-Type": "application/json"
         },
-        method: reservation ? "PATCH" : "POST",
+        method: reservation ? "PUT" : "POST",
         body: JSON.stringify({ ...values, table_id:tableId, startTime: new Date()}),
       })
       if (!res.ok) {
@@ -165,7 +165,7 @@ export default function ReservationForm({
 
         <FormField
           control={form.control}
-          name="party_size"
+          name="guests_count"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Số lượng khách</FormLabel>
@@ -173,7 +173,7 @@ export default function ReservationForm({
                 <Input
                  className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"
                   type="number"
-                  placeholder="Party size"
+                  placeholder="guests_count"
                   {...field}
                   onChange={(e) => field.onChange(Number(e.target.value))}
                 />
@@ -243,19 +243,12 @@ export default function ReservationForm({
           >
             Làm mới
           </Button>
-
           <Button
-            onClick={() => handleOrderedMenu()}
+            onClick={()=>router('/dashboard/tables')}
             type="button"
-            className={`
-            font-medium text-[16px],
-              ${(reservation && reservation?.status === "SEATED") ||
-                (createdReservation && createdReservation.status === "SEATED")
-                ? "opacity-100"
-                : "opacity-55 pointer-events-none" } 
-            `}
+            className="mr-4 font-medium text-[16px] bg-red-1 hover:bg-red-1 hover:opacity-80 transition-all duration-300 ease-in-out"
           >
-            Chọn món
+            Quay lại
           </Button>
         </div>
       </form>

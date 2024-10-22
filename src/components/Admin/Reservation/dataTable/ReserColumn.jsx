@@ -17,13 +17,9 @@ import { formatDate, formatPhoneNumber } from "@/utilities/utils"
 // You can use a Zod schema here if you want.
 
 export const ReservationColumn = ({
-  reservations
+  updateTable
  }) => {
-//   const router = useNavigate(); 
-//   const handleSelectTable = (reservation_id, type)=>{
-//     router(`/dashboard/reservations?reservation_id=${reservation_id}&type=${type}`);
-//   }
-  // Columns to be returned
+
   const columns = [
     {
       id: "select",
@@ -155,7 +151,7 @@ export const ReservationColumn = ({
             !table_id ?
              <Button onClick={()=>handleSelectTable(row.original._id, "SELECT")}>Nhận bàn</Button>:
              (status == "RESERVED" || status === "SEATED") ?
-             <Button onClick={()=>handleSelectTable(row.original._id , "RESELECT")}>Đổi bàn</Button>:
+             <Button onClick={()=>updateTable(row.original._id , "RESELECT")}>Đổi bàn</Button>:
              <div></div>
           }
         </div>
