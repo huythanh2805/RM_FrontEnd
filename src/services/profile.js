@@ -21,7 +21,6 @@ export const updateUserProfile = async (data) => {
     Object.keys(data).forEach((key) => {
       if (data[key]) formData.append(key, data[key]);
     });
-      console.log(formData);
     const token = localStorage.getItem("token");
     const response = await apiClient.put(API_URL, formData, {
       headers: {

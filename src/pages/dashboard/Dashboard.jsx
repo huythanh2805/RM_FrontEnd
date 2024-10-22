@@ -9,6 +9,6 @@ const Dashboard = () => {
       <Outlet />
     </div>
   );
-};
+};   
 
 export default Dashboard;
