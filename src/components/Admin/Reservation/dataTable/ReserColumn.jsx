@@ -17,7 +17,10 @@ import { formatDate, formatPhoneNumber } from "@/utilities/utils"
 // You can use a Zod schema here if you want.
 
 export const ReservationColumn = ({
-  updateTable
+  updateTable,
+  selectTable,
+  cancelReser,
+  confirmReser
  }) => {
 
   const columns = [
@@ -127,9 +130,9 @@ export const ReservationColumn = ({
         const status = row.original.status
         let stt;
         let colorText;
-        status === "RESERVED" ? (stt = 'Đặt trước', colorText= ''):
+         status === "ISWAITING" ? (stt = 'Đang chờ', colorText= '#f5365c'):
          status === "SEATED" ? (stt = 'Đang phục vụ', colorText= '#ff9800'):
-         status === "ISNOTPAID" ? (stt = 'Chưa thanh toán', colorText= '#f5365c'):
+         status === "ISCOMFIRMED" ? (stt = 'Đã xác nhận', colorText= '#f5365c'):
          status === "COMPLETED" ? (stt = 'Đã hoàn thành', colorText= '#fb6340'):
          (stt = 'Đã hủy', colorText= '#f5365c')
          
@@ -148,11 +151,16 @@ export const ReservationColumn = ({
         const status = row.original.status
         return <div>
           {
-            !table_id ?
-             <Button onClick={()=>handleSelectTable(row.original._id, "SELECT")}>Nhận bàn</Button>:
-             (status == "RESERVED" || status === "SEATED") ?
-             <Button onClick={()=>updateTable(row.original._id , "RESELECT")}>Đổi bàn</Button>:
-             <div></div>
+           status === "SEATED" && <Button onClick={()=>updateTable(row.original._id )}>Đổi bàn</Button>
+          }
+          {
+           status === "ISCOMFIRMED" && <Button onClick={()=>selectTable(row.original._id )}>Nhận bàn</Button>
+          }
+          {
+            status === "ISWAITING" && <div className="flex items-center gap-2">
+              <Button onClick={()=>cancelReser(row.original._id)}>Hủy Đơn</Button>
+              <Button onClick={()=>confirmReser(row.original._id)}>Xác nhận đơn</Button>
+            </div>
           }
         </div>
       },

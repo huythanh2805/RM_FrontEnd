@@ -7,28 +7,28 @@ import { Input } from "@/components/ui/input"
 
 export const statuses = [
   {
-    value: "RESERVED",
-    label: "RESERVED",
+    value: "ISWAITING",
+    label: "Đang chờ",
     // icon: QuestionMarkCircledIcon,
   },
   {
-    value: "SEATED",
-    label: "SEATED",
+    value: "ISCOMFIRMED",
+    label: "Đã xác nhận",
     // icon: CircleIcon,
   },
   {
-    value: "ISNOTPAID",
-    label: "ISNOTPAID",
+    value: "SEATED",
+    label: "Đang ngồi",
     // icon: CircleIcon,
   },
   {
     value: "COMPLETED",
-    label: "COMPLETED",
+    label: "Hoàn thành",
     // icon: StopwatchIcon,
   },
   {
     value: "CANCELED",
-    label: "CANCELED",
+    label: "Đã hủy",
     // icon: CheckCircledIcon,
   },
 ]

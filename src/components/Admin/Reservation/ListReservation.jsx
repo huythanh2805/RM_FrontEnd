@@ -6,6 +6,7 @@ import { toast } from "@/hooks/use-toast"
 import { ServerUrl } from "@/utilities/utils"
 import { ReservationColumn } from "./dataTable/ReserColumn"
 import { ReserDataTable } from "./dataTable/ReserDataTable"
+import { updateData } from "@/hooks/useFetchData"
 
 export default function ListReservation() {
   const [reservations, setReservations] = useState([])
@@ -113,10 +114,51 @@ export default function ListReservation() {
     setReservations(unChangedReservations)
     setDateValidation(null)
   }
-// Update Table
+// Update Table_id for reservation
   const updateTable = (reservationId)=>{
-   router(`/dashboard/tables/${reservationId}`)
+   router(`/dashboard/tables/${reservationId}?type=RESELECT`)
   }
+// select Table_id for reservation
+  const selectTable = (reservationId)=>{
+   router(`/dashboard/tables/${reservationId}?type=SELECT`)
+  }
+// confirm reservation
+  const confirmReser = async (reservationId)=>{
+    const data = await updateData(`${ServerUrl}/api/reservations/${reservationId}`, {status: "ISCOMFIRMED"})
+    if(data.success){
+      toast({
+        variant: "sucess",
+        title: "Confirmed reservation successfully!",
+      })
+      return setReservations(currentData=>(
+        [...currentData.map(item=> item._id === reservationId ? {...item, status: "ISCOMFIRMED" } : item)]
+      ))
+    }else{
+      toast({
+        variant: "destructive",
+        title: "Something wrong!",
+      })
+    }
+  }
+// Cancel reservation
+  const cancelReser = async (reservationId)=>{
+    const data = await updateData(`${ServerUrl}/api/reservations/${reservationId}`, {status: "CANCELED"})
+    if(data.success){
+      toast({
+        variant: "sucess",
+        title: "Cancel reservation successfully!",
+      })
+      return setReservations(currentData=>(
+        [...currentData.map(item=> item._id === reservationId ? {...item, status: "CANCELED" } : item)]
+      ))
+    }else{
+      toast({
+        variant: "destructive",
+        title: "Something wrong!",
+      })
+    }
+  }
+
   return (
     <div>
       {loading && (
@@ -131,6 +173,9 @@ export default function ListReservation() {
         <ReserDataTable
           columns={ReservationColumn({
             updateTable,
+            selectTable,
+            confirmReser,
+            cancelReser
           })}
           data={reservations}
           onDelete={handleDeleteDishes}

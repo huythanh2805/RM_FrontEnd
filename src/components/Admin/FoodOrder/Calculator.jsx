@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react"
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -13,8 +12,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -35,9 +32,21 @@ import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useNavigate } from "react-router-dom"
-import CompletedBill from "../Bill/CompletedBill"
 
-const statusOptions = ["ISPREPARED", "ISCOMPLETED", "ISCANCELED"]
+const statusOptions = [
+  {
+  option: "ISPREPARED",
+  label: "Đang chuẩn bị"
+  },
+  {
+  option: "ISCOMPLETED",
+  label: "Hoàn thành"
+  }, 
+  {
+  option: "ISCANCELED",
+  label: "Đã hủy"
+  }, 
+]
 
 const Calculator = ({
   reservation_id,
@@ -53,7 +62,6 @@ const Calculator = ({
 
   const [selectedRows, setSelectedRows] = useState([])
   const [billId, setBillId] = useState('')
-  const [isOpenBillDetail, setIsOpenBillDetail] = useState(false)
 
   const totalPrice = orderedFoods.reduce((sum, item) => {
     if(item.status === "ISCANCELED") return sum + 0
@@ -187,7 +195,6 @@ const Calculator = ({
       setOrderedFoods( currenntStatus=>
       currenntStatus.map(item=> selectedRows.includes(item._id) ? {...item, status: status} : item)
       )
-      setSelectedRows([])
     } catch (error) {
       toast({
         variant: "destructive",
@@ -277,7 +284,7 @@ const Calculator = ({
                   className={`
                   py-1 px-3 text-white rounded-full
                    ${
-                     orderedFood.status === "ISPREPARED"
+                       orderedFood.status === "ISPREPARED"
                        ? "bg-gray-1"
                        : orderedFood.status === "ISCOMPLETED"
                        ? "bg-yellow-1"
@@ -285,7 +292,13 @@ const Calculator = ({
                    }
                   `}
                 >
-                  {orderedFood.status}
+                  {
+                   orderedFood.status === "ISPREPARED"?
+                   <div className="text-nowrap text-center">Đang chuẩn bị</div>:
+                   orderedFood.status === "ISCOMPLETED"?
+                   <div className="text-nowrap text-center">Hoàn thành</div>: 
+                   <div className="text-nowrap text-center">Đã hủy</div>
+                  }
                 </div>
               </TableCell>
 
@@ -305,12 +318,12 @@ const Calculator = ({
             <TableCell className="text-right">
               <Select onValueChange={value=> updateOrderedDishesStatus(value)}>
                 <SelectTrigger className="w-full focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none">
-                  <SelectValue placeholder="Status"  className="focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none"/>
+                  <SelectValue placeholder="Trạng thái"  className="focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none"/>
                 </SelectTrigger>
                 <SelectContent className="focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none">
-                  {statusOptions.map((option) => (
-                    <SelectItem key={option} value={option} className="focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none">
-                      {option}
+                  {statusOptions.map((item) => (
+                    <SelectItem key={item.option} value={item.option} className="focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none">
+                      {item.label}
                     </SelectItem>
                   ))}
                 </SelectContent>

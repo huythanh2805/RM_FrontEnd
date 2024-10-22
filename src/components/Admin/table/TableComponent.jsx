@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useNavigate, useNavigation, useParams } from 'react-router-dom'
+import { useNavigate, useNavigation, useParams, useSearchParams } from 'react-router-dom'
 import { toast } from '@/hooks/use-toast'
 import { ServerUrl } from '@/utilities/utils'
 
@@ -35,12 +35,10 @@ export default function TableComponent({
   const [getTimeLoading, setGetTimeLoading] = useState(false)
   const router = useNavigate()
 
-  const { reservationId, type } = useParams();
+  const { reservationId } = useParams();
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get('type'); 
 
-  // const searchParams = useSearchParams()
-  // const reservation_id = searchParams.get('reservation_id')
-  // const type = searchParams.get('type')
- console.log({reservationId, type})
   const {
     setNodeRef,
      transform,
@@ -129,9 +127,12 @@ export default function TableComponent({
    }))
   }
   // Func pick up reservation for reser which didn't order table online and reselect table
-  const updateReservation = async (reservationId, table_id)=>{
+  const updateReservation = async (reservationId, table_id, type)=>{
+      const URL = type == "SELECT" ?
+                  ServerUrl+'/api/reservations/select':
+                  ServerUrl+'/api/reservations/reselect'
         try {
-          const res = await fetch(ServerUrl+'/api/reservations' ,{
+          const res = await fetch(URL ,{
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -161,7 +162,7 @@ export default function TableComponent({
   }
   const handleSelectTable = (table_id)=>{
     if (reservationId) {
-      updateReservation(reservationId , table_id)
+      updateReservation(reservationId , table_id, type)
     }else{
       router('/dashboard/reservations/createReservation/'+ table_id)
     }
@@ -319,7 +320,7 @@ export default function TableComponent({
         onClick={()=>handleSelectTable(table._id)}
         className='font-medium hover:scale-90 transition-all duration-300 ease-in-out backface-visibility-hidden'
         >
-         {reservationId ? "Đổi bàn": " Tạo đơn"}
+         {type === "RESELECT" ? "Đổi bàn": type === "SELECT" ? "Chọn bàn" : " Tạo đơn"}
         </Button>
       </div>
     </div>

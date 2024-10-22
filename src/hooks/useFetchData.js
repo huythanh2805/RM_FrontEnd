@@ -37,5 +37,25 @@ export function useFetchData(url){
       error,
       data,
     }
+}
+export function updateData(url, infor){
+  const updateData = async () => {
+    try {
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(infor)
+      })
+      if(!res.ok) {
+        return {success: false}
+      }
+      return {success: true}
+    } catch (error) {
+      return {success: false}
+    }
   }
+  return updateData()
+}
   
