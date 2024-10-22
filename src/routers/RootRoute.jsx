@@ -6,7 +6,9 @@ import { LoginPage } from "@/pages/auth/LoginPage";
 import { ForgotPasswordPage } from "@/pages/auth/PasswordPage";
 import { RegisterPage } from "@/pages/auth/Register";
 import { ResetPasswordPage } from "@/pages/auth/ResetPasswordPage";
-import Categories from "@/pages/dashboard/Categories";
+import CategoryAdd from "@/pages/dashboard/category/CategoryAdd";
+import CategoryList from "@/pages/dashboard/category/CategoryList";
+import CategoryUpdate from "@/pages/dashboard/category/CategoryUpdate";
 import Dashboard from "@/pages/dashboard/Dashboard";
 import { ProfileAdmin } from "@/pages/dashboard/Profile";
 import About from "@/pages/home/About";
@@ -71,7 +73,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: "categories",
-        element: <Categories />,
+        element: <CategoryList />,
+      },
+      {
+        path: "categories/add",
+        element: <CategoryAdd />,
+      },
+      {
+        path: "categories/:id/update",
+        element: <CategoryUpdate />,
       },
       {
         path: "proAdmin",

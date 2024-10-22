@@ -43,6 +43,7 @@
     "react-spinners": "^0.14.1",
     "react-time-picker": "^7.0.0",
     "run-parallel": "^1.2.0",
+    "sweetalert2": "^11.14.4",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.3",
