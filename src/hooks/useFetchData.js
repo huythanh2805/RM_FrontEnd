@@ -1,8 +1,9 @@
 import { toast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
 
 export function useFetchData(url){
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useViewTransitionState(null);
+    const [error, setError] = useState(null);
     const [data, setData] = useState(null);
     useEffect(() => {
       const fetData = async () => {
@@ -24,7 +25,7 @@ export function useFetchData(url){
           setLoading(false)
           toast({
             variant: "destructive",
-            title: "Something wrong with add new collection!",
+            title: "Something wrong with useFetchData!",
           })
         }
       }
@@ -36,5 +37,25 @@ export function useFetchData(url){
       error,
       data,
     }
+}
+export function updateData(url, infor){
+  const updateData = async () => {
+    try {
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(infor)
+      })
+      if(!res.ok) {
+        return {success: false}
+      }
+      return {success: true}
+    } catch (error) {
+      return {success: false}
+    }
   }
+  return updateData()
+}
   

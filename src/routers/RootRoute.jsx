@@ -1,6 +1,3 @@
-import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
-import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
-import TableManagement from "@/components/Admin/TableManagement";
 import ProductDetail from "@/components/layouts/ProductDetail";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { ForgotPasswordPage } from "@/pages/auth/PasswordPage";
@@ -19,6 +16,13 @@ import NotFound from "@/pages/home/NotFound";
 import { Profile } from "@/pages/home/Profile";
 import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
+import TableComponent from "@/components/Admin/table/TableComponent";
+import TableManagement from "@/components/Admin/TableManagement";
+import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
+import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
+import CompletedBill from "@/components/Admin/Bill/CompletedBill";
+import ListReservation from "@/components/Admin/Reservation/ListReservation";
+import UpdateReservation from "@/components/Admin/Reservation/UpdateReservation";
 
 const router = createBrowserRouter([
   {
@@ -92,12 +96,32 @@ const router = createBrowserRouter([
         element: <TableManagement />,
       },
       {
-        path: "createReservation/:tableId",
+        path: "tables/:reservationId",
+        element: <TableManagement />,
+        // loader: teamLoader,
+      },
+      {
+        path: "reservations/createReservation/:tableId",
         element: <CreateReservation />,
+      },
+      {
+        path: "reservations/updateReservation/:reservationId",
+        element: <UpdateReservation />,
+        // loader: teamLoader,
+      },
+      {
+        path: "listReser",
+        element: <ListReservation />,
+        // loader: teamLoader,
       },
       {
         path: "foodOrder/:reservationId",
         element: <FoodOrder />,
+      },
+      {
+        path: "completedBill/:billId",
+        element: <CompletedBill />,
+        // loader: teamLoader,
       },
     ],
   },

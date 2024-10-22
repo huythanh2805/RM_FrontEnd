@@ -20,9 +20,8 @@ import { FadeLoader } from "react-spinners"
 import LocationComponent from "./Location/LocationComponent"
 import TableComponent from "./table/TableComponent"
 import { toast } from "@/hooks/use-toast"
+import { ServerUrl } from "@/utilities/utils"
 
-
-const ServerUrl = import.meta.env.VITE_SERVER_URL;
 
 
 export default function TableManagement() {
@@ -248,7 +247,6 @@ export default function TableManagement() {
           body: JSON.stringify({ number_of_seats, name }),
           headers: {
             "Content-Type": "application/json",
-            "Cache-Control": "no-store", // Disable caching
           },
         })
 
@@ -258,13 +256,10 @@ export default function TableManagement() {
             title: "Can't update this table",
           })
         }
-        // Get new tables after add table
-        const refreshData = await fetch("/api/reservations/tables", {
-          method: "GET",
-        })
-        const freshTables = await refreshData.json()
-        setTables(freshTables.tables)
-        setNumberOfTable(freshTables.numberOfTable)
+        // Update Ui by updating tables
+        setTables(currentTables=>[
+          ...currentTables.map(table=> table._id === table_id ? {...table, number_of_seats, name} : table)
+        ])
       } catch (error) {
         setLoading(false)
         console.log(error)
@@ -288,7 +283,6 @@ export default function TableManagement() {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            "Cache-Control": "no-store", // Disable caching
           },
           body: JSON.stringify({ locationInRestaurant }),
         })
@@ -299,13 +293,10 @@ export default function TableManagement() {
             title: "Can't update this location",
           })
         }
-        // Get new locations after add location
-        const refreshData = await fetch(ServerUrl+"/api/reservations/locations", {
-          method: "GET",
-        })
-        const freshLocations = await refreshData.json()
-        setLocations(freshLocations.locations)
-        setNumberOfLocation(freshLocations.numberOfLocation)
+          // Update Ui by updating tables
+          setLocations(currentLocations=>[
+            ...currentLocations.map(location=> location._id === location_id ? {...location, locationInRestaurant} : location)
+          ])
       } catch (error) {
         setLoading(false)
         console.log(error)

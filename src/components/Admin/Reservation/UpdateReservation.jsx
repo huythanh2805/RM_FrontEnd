@@ -1,9 +1,12 @@
 import { FadeLoader } from "react-spinners"
 import ReservationForm from "./ReservationForm"
+import { useParams } from "react-router-dom"
+import { ServerUrl } from "@/utilities/utils"
+import { useEffect, useState } from "react"
 
 
-export default function CreateReservation() {
-  const { id: table_id } = params
+export default function UpdateReservation() {
+  const { reservationId: reservation_id } = useParams()
   const [reservation, setReservation] = useState()
   const [loading, setLoading] = useState(false)
 
@@ -11,16 +14,13 @@ export default function CreateReservation() {
     const fetData = async () => {
       setLoading(true)
       try {
-        const res = await fetch(
-          "/api/reservations/seatedReservation/" + table_id,
-          {
+        const res = await fetch(ServerUrl+"/api/reservations/" + reservation_id, {
             method: "GET",
           }
         )
         if (!res.ok) return
         const data = await res.json()
-        const reser = data.reservationDetail
-        setReservation(reser)
+        setReservation(data)
         setLoading(false)
       } catch (error) {
         console.log(error)
@@ -32,8 +32,9 @@ export default function CreateReservation() {
       }
     }
     fetData()
-  }, [table_id])
+  }, [reservation_id])
 
+console.log(reservation)
   return (
     <div className="flex flex-col xl:flex-row gap-5 w-full h-full pb-[80px]">
       <div className="w-full bg-light-bg_2 dark:bg-dark-bg_2 rounded-md flex justify-start">
@@ -49,7 +50,6 @@ export default function CreateReservation() {
           {reservation && !loading && (
             <ReservationForm
               reservation={reservation}
-              table_id={table_id}
               numberOfSeats={reservation.table_id.number_of_seats}
             />
           )}
