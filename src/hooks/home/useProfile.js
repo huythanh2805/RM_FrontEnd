@@ -14,6 +14,7 @@ export const useProfile = () => {
         setUser(userProfile);
       } catch (err) {
         setError(err);
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -26,6 +27,7 @@ export const useProfile = () => {
     try {
       setLoading(true);
       const updatedUser = await updateUserProfile(formData);
+      fetchProfile();
       setUser(updatedUser);
     } catch (err) {
       setError(err);

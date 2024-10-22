@@ -1,63 +1,70 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { AiFillProduct } from "react-icons/ai";
 import { FaHome, FaRegMoneyBillAlt } from "react-icons/fa";
 import { MdAccountCircle, MdCategory } from "react-icons/md";
 import { SiAirtable } from "react-icons/si";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { apiClient } from "../../services/api";
 
 const Sidebar = () => {
+  const API_URL = "users/edit";
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const getUserProfile = async () => {
+    try {
+      const response = await apiClient.get(API_URL, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setUser(response.data.user);
+    } catch (error) {
+      console.error(error.response?.data?.message || "Lỗi lấy thông tin người dùng");
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    getUserProfile();
+  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
   return (
-    <div class="xl:w-96 w-80 xl:p-4 p-2 bg-white flex-col justify-start items-start gap-5 inline-flex border-r">
-      <div class="w-full pt-4 justify-between items-center gap-2.5 inline-flex">
+    <div className="xl:w-96 w-80 xl:p-4 p-2 bg-white flex-col justify-start items-start gap-5 inline-flex border-r">
+      <div className="w-full pt-4 justify-between items-center gap-2.5 inline-flex">
         <p>Golden Pork</p>
-        <a href="javascript:;" class="w-6 h-6 relative bg-white">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+        <a href="javascript:;" className="w-6 h-6 relative bg-white">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="Menu">
               <rect width="24" height="24" fill="white" />
-              <path
-                id="icon"
-                d="M13 6H21M3 12H21M7 18H21"
-                stroke="#1F2937"
-                stroke-width="1.6"
-                stroke-linecap="round"
-              />
+              <path id="icon" d="M13 6H21M3 12H21M7 18H21" stroke="#1F2937" stroke-width="1.6" stroke-linecap="round" />
             </g>
           </svg>
         </a>
       </div>
-      <div class="w-full p-3 rounded-lg border border-gray-300">
-        <div class="w-full items-center flex">
-          <div class="w-full justify-between items-center inline-flex">
-            <div class="items-center flex">
-              {/* <img
-                class="rounded-lg"
-                alt="Ronald image"
-                src="https://pagedone.io/asset/uploads/1701235464.png"
-              /> */}
-              <div class="flex-col inline-flex ml-2.5">
-                <h2 class="text-gray-700 text-sm font-semibold leading-snug">
-                  Admin
+      <div className="w-full p-3 rounded-lg border border-gray-300">
+        <div className="w-full items-center flex">
+          <div className="w-full justify-between items-center inline-flex">
+            <div className="items-center flex">
+              <img
+                className="rounded-lg"
+                alt="User"
+                src={user?.image || "default-image-url.png"}
+                style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "50%" }}
+              />
+
+              <div className="flex-col inline-flex ml-2.5">
+                <h2 className="text-gray-700 text-sm font-semibold leading-snug">
+                  Xin chào, {user?.userName || "Khách"}
                 </h2>
-                <h6 class="text-black/20 text-xs font-normal leading-4">
-                  123@gmail.com
-                </h6>
+                <h6 className="text-black/20 text-xs font-normal leading-4">{user?.email} </h6>
               </div>
             </div>
-            <div class="flex items-center">
-              <a href="javascript:;" class="w-5 h-5 relative">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                >
+            <div className="flex items-center">
+              <a href="javascript:;" className="w-5 h-5 relative">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <g id="More Vertical">
                     <path
                       id="icon"
@@ -75,52 +82,46 @@ const Sidebar = () => {
       </div>
 
       {/* Menu */}
-      <div class="w-full">
-        <div class="w-full h-8 px-3 items-center flex">
-          <h6 class="text-gray-500 text-xs font-semibold leading-4">MENU</h6>
+      <div className="w-full">
+        <div className="w-full h-8 px-3 items-center flex">
+          <h6 className="text-gray-500 text-xs font-semibold leading-4">MENU</h6>
         </div>
-        <ul class="flex-col gap-1 flex">
+        <ul className="flex-col gap-1 flex">
           <li>
             <Link to="/dashboard">
-              <div class="flex-col flex p-3 bg-white rounded-lg">
-                <div class="h-5 gap-3 flex">
-                  <div class="relative">
+              <div className="flex-col flex p-3 bg-white rounded-lg">
+                <div className="h-5 gap-3 flex">
+                  <div className="relative">
                     <FaHome />
                   </div>
-                  <h2 class="text-gray-500 text-sm font-medium leading-snug">
-                    Home
-                  </h2>
+                  <h2 className="text-gray-500 text-sm font-medium leading-snug">Home</h2>
                 </div>
               </div>
             </Link>
           </li>
           <li>
             <Link to="/dashboard/categories">
-              <div class="flex-col gap-1 flex">
-                <div class="flex-col flex p-3 bg-white rounded-lg">
-                  <div class="h-5 gap-3 flex">
-                    <div class="relative">
+              <div className="flex-col gap-1 flex">
+                <div className="flex-col flex p-3 bg-white rounded-lg">
+                  <div className="h-5 gap-3 flex">
+                    <div className="relative">
                       <MdCategory />
                     </div>
-                    <h2 class="text-gray-500 text-sm font-medium leading-snug">
-                      Categories
-                    </h2>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Categories</h2>
                   </div>
                 </div>
               </div>
             </Link>
           </li>
           <li>
-            <div class="flex-col flex">
-              <div class="flex-col flex p-3 bg-white rounded-lg">
-                <div class="justify-between inline-flex">
-                  <a href="javascript:;" class="h-5 gap-3 flex">
-                    <div class="relative">
+            <div className="flex-col flex">
+              <div className="flex-col flex p-3 bg-white rounded-lg">
+                <div className="justify-between inline-flex">
+                  <a href="javascript:;" className="h-5 gap-3 flex">
+                    <div className="relative">
                       <AiFillProduct />
                     </div>
-                    <h2 class="text-gray-500 text-sm font-medium leading-snug">
-                      Dishes
-                    </h2>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Dishes</h2>
                   </a>
                 </div>
               </div>
@@ -128,15 +129,13 @@ const Sidebar = () => {
           </li>
           <li>
             <a href="javascript:;">
-              <div class="flex-col gap-1 flex">
-                <div class="flex-col flex bg-white rounded-lg p-3">
-                  <div class="h-5 gap-3 flex">
-                    <div class="relative">
+              <div className="flex-col gap-1 flex">
+                <div className="flex-col flex bg-white rounded-lg p-3">
+                  <div className="h-5 gap-3 flex">
+                    <div className="relative">
                       <SiAirtable />
                     </div>
-                    <h2 class="text-gray-500 text-sm font-medium leading-snug">
-                      Table
-                    </h2>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Table</h2>
                   </div>
                 </div>
               </div>
@@ -144,15 +143,13 @@ const Sidebar = () => {
           </li>
           <li>
             <a href="javascript:;">
-              <div class="flex-col gap-1 flex">
-                <div class="flex-col flex bg-white rounded-lg p-3">
-                  <div class="h-5 gap-3 flex">
-                    <div class="relative">
+              <div className="flex-col gap-1 flex">
+                <div className="flex-col flex bg-white rounded-lg p-3">
+                  <div className="h-5 gap-3 flex">
+                    <div className="relative">
                       <FaRegMoneyBillAlt />
                     </div>
-                    <h2 class="text-gray-500 text-sm font-medium leading-snug">
-                      Bill
-                    </h2>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Bill</h2>
                   </div>
                 </div>
               </div>
@@ -162,40 +159,30 @@ const Sidebar = () => {
       </div>
 
       {/* setting */}
-      <div class="w-full flex-col flex">
-        <div class="h-8 px-3 items-center inline-flex">
-          <h6 class="text-gray-500 text-xs font-semibold leading-4">
-            SETTINGS
-          </h6>
+      <div className="w-full flex-col flex">
+        <div className="h-8 px-3 items-center inline-flex">
+          <h6 className="text-gray-500 text-xs font-semibold leading-4">SETTINGS</h6>
         </div>
-        <ul class="flex-col gap-1 flex">
+        <ul className="flex-col gap-1 flex">
           <li>
-            <a href="javascript:;">
-              <div class="p-3 rounded-lg items-center inline-flex">
-                <div class="h-5 items-center gap-3 flex">
-                  <div class="relative">
+            <Link to="/dashboard/proAdmin">
+              <div className="p-3 rounded-lg items-center inline-flex">
+                <div className="h-5 items-center gap-3 flex">
+                  <div className="relative">
                     <MdAccountCircle />
                   </div>
-                  <h2 class="text-gray-500 text-sm font-medium leading-snug">
-                    Profile
-                  </h2>
+                  <h2 className="text-gray-500 text-sm font-medium leading-snug">Profile</h2>
                 </div>
               </div>
-            </a>
+            </Link>
           </li>
 
           <li>
             <a href="javascript:;">
-              <div class="p-3 rounded-lg items-center inline-flex">
-                <div class="h-5 items-center gap-3 flex">
-                  <div class="relative">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                    >
+              <div className="p-3 rounded-lg items-center inline-flex">
+                <div className="h-5 items-center gap-3 flex">
+                  <div className="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <g id="Help circle">
                         <path
                           id="icon"
@@ -205,25 +192,17 @@ const Sidebar = () => {
                       </g>
                     </svg>
                   </div>
-                  <h2 class="text-gray-500 text-sm font-medium leading-snug">
-                    Settings
-                  </h2>
+                  <h2 className="text-gray-500 text-sm font-medium leading-snug">Settings</h2>
                 </div>
               </div>
             </a>
           </li>
           <li>
             <a href="javascript:;">
-              <div class="p-3 rounded-lg items-center inline-flex">
-                <div class="h-5 items-center gap-3 flex">
-                  <div class="relative">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                    >
+              <div className="p-3 rounded-lg items-center inline-flex">
+                <div className="h-5 items-center gap-3 flex">
+                  <div className="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <g id="Logout">
                         <path
                           id="icon"
@@ -236,7 +215,7 @@ const Sidebar = () => {
                       </g>
                     </svg>
                   </div>
-                  <h2 class="text-gray-500 text-sm font-medium leading-snug">
+                  <h2 onClick={handleLogout} className="text-gray-500 text-sm font-medium leading-snug">
                     Logout
                   </h2>
                 </div>
