@@ -1,11 +1,19 @@
+import ProductDetail from "@/components/layouts/ProductDetail";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { ForgotPasswordPage } from "@/pages/auth/PasswordPage";
 import { RegisterPage } from "@/pages/auth/Register";
 import { ResetPasswordPage } from "@/pages/auth/ResetPasswordPage";
+import CategoryAdd from "@/pages/dashboard/category/CategoryAdd";
+import CategoryList from "@/pages/dashboard/category/CategoryList";
+import CategoryUpdate from "@/pages/dashboard/category/CategoryUpdate";
 import Dashboard from "@/pages/dashboard/Dashboard";
+import { ProfileAdmin } from "@/pages/dashboard/Profile";
 import About from "@/pages/home/About";
 import Home from "@/pages/home/Home";
 import HomeLayout from "@/pages/home/HomeLayout";
+import Menu from "@/pages/home/Menu";
+import NotFound from "@/pages/home/NotFound";
+import { Profile } from "@/pages/home/Profile";
 import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
 import TableComponent from "@/components/Admin/table/TableComponent";
@@ -20,7 +28,6 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <HomeLayout />,
-    // loader: rootLoader,
     children: [
       {
         path: "/",
@@ -29,24 +36,32 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <About />,
-        // loader: teamLoader,
+      },
+      {
+        path: "menu",
+        element: <Menu />,
       },
       {
         path: "reservation",
         element: <Reservation />,
-        // loader: teamLoader,
+      },
+      {
+        path: "dishes/:id",
+        element: <ProductDetail />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
       },
     ],
   },
   {
     path: "/register",
     element: <RegisterPage />,
-    // loader: rootLoader,
   },
   {
     path: "/login",
     element: <LoginPage />,
-    // loader: rootLoader,
   },
   {
     path: "/forgot-password",
@@ -61,9 +76,24 @@ const router = createBrowserRouter([
     element: <Dashboard />,
     children: [
       {
+        path: "categories",
+        element: <CategoryList />,
+      },
+      {
+        path: "categories/add",
+        element: <CategoryAdd />,
+      },
+      {
+        path: "categories/:id/update",
+        element: <CategoryUpdate />,
+      },
+      {
+        path: "proAdmin",
+        element: <ProfileAdmin />,
+      },
+      {
         path: "tables",
         element: <TableManagement />,
-        // loader: teamLoader,
       },
       {
         path: "tables/:reservationId",
@@ -73,7 +103,6 @@ const router = createBrowserRouter([
       {
         path: "reservations/createReservation/:tableId",
         element: <CreateReservation />,
-        // loader: teamLoader,
       },
       {
         path: "reservations/updateReservation/:reservationId",
@@ -88,7 +117,6 @@ const router = createBrowserRouter([
       {
         path: "foodOrder/:reservationId",
         element: <FoodOrder />,
-        // loader: teamLoader,
       },
       {
         path: "completedBill/:billId",
@@ -96,6 +124,10 @@ const router = createBrowserRouter([
         // loader: teamLoader,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 

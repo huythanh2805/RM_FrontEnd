@@ -1,6 +1,7 @@
 import Footer from "@/components/layouts/Footer";
 import Header from "@/components/layouts/Header";
 import Slider from "@/components/layouts/Silder";
+import SubscribeUsNow from "@/components/layouts/SubscribeUsNow";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import Brush from "@/components/siteColor/brush";
 import { useThemeContext } from "@/contexts/ThemeProvider";
@@ -17,15 +18,14 @@ const HomeLayout = () => {
         } transition-all duration-500 ease-in-out mx-auto overflow-hidden relative z-10 bg-white`}
       >
         <Header />
-        <Slider />
         <main className="">
           <Brush />
           <ScrollToTopButton />
           <Outlet />
         </main>
+        <SubscribeUsNow />
         <Footer />
       </div>
-      {/* <div className='fixed top-0 left-0 w-full min-h-screen -z-50 bg-orange-1'> </div> */}
     </>
   );
 };
