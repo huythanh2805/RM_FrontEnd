@@ -16,7 +16,7 @@ const ProductDetail = () => {
         const fetchDish = async () => {
             try {
                 const response = await axios.get(`http://localhost:1111/dishes/${id}`);
-                setDish(response.data.data);
+                setDish(response.data);
             } catch (error) {
                 console.error("Error fetching dish data:", error);
             }
