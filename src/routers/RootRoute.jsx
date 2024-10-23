@@ -1,3 +1,9 @@
+import CompletedBill from "@/components/Admin/Bill/CompletedBill";
+import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
+import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
+import ListReservation from "@/components/Admin/Reservation/ListReservation";
+import UpdateReservation from "@/components/Admin/Reservation/UpdateReservation";
+import TableManagement from "@/components/Admin/TableManagement";
 import ProductDetail from "@/components/layouts/ProductDetail";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { ForgotPasswordPage } from "@/pages/auth/PasswordPage";
@@ -8,6 +14,8 @@ import CategoryList from "@/pages/dashboard/category/CategoryList";
 import CategoryUpdate from "@/pages/dashboard/category/CategoryUpdate";
 import Dashboard from "@/pages/dashboard/Dashboard";
 import { ProfileAdmin } from "@/pages/dashboard/Profile";
+import UserAdd from "@/pages/dashboard/users/UserAdd";
+import UserList from "@/pages/dashboard/users/Userlist";
 import About from "@/pages/home/About";
 import Home from "@/pages/home/Home";
 import HomeLayout from "@/pages/home/HomeLayout";
@@ -16,13 +24,6 @@ import NotFound from "@/pages/home/NotFound";
 import { Profile } from "@/pages/home/Profile";
 import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
-import TableComponent from "@/components/Admin/table/TableComponent";
-import TableManagement from "@/components/Admin/TableManagement";
-import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
-import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
-import CompletedBill from "@/components/Admin/Bill/CompletedBill";
-import ListReservation from "@/components/Admin/Reservation/ListReservation";
-import UpdateReservation from "@/components/Admin/Reservation/UpdateReservation";
 
 const router = createBrowserRouter([
   {
@@ -122,6 +123,14 @@ const router = createBrowserRouter([
         path: "completedBill/:billId",
         element: <CompletedBill />,
         // loader: teamLoader,
+      },
+      {
+        path: "users",
+        element: <UserList />,
+      },
+      {
+        path: "users/add",
+        element: <UserAdd />,
       },
     ],
   },
