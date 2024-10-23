@@ -35,7 +35,7 @@ const Slider = () => {
       <div
         style={{ backgroundImage: `url(${images[currentIndex]})` }}
         className="w-full h-full bg-center bg-no-repeat bg-cover transition-opacity duration-500 ease-in-out object-center"
-        onDoubleClick={handleDoubleClick} // Nhấp đúp để chuyển slide
+        onDoubleClick={handleDoubleClick} 
       ></div>
 
       <div className="absolute top-1/3 w-full text-center text-white">

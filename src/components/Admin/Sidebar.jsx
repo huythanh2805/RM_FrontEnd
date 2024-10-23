@@ -1,32 +1,13 @@
-import { useEffect, useState } from "react";
+import { useProfile } from "@/hooks/home/useProfile";
 import { AiFillProduct } from "react-icons/ai";
 import { FaHome, FaRegMoneyBillAlt } from "react-icons/fa";
 import { MdAccountCircle, MdCategory } from "react-icons/md";
 import { SiAirtable } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
-import { apiClient } from "../../services/api";
 
 const Sidebar = () => {
-  const API_URL = "users/edit";
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  const getUserProfile = async () => {
-    try {
-      const response = await apiClient.get(API_URL, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setUser(response.data.user);
-    } catch (error) {
-      console.error(error.response?.data?.message || "Lỗi lấy thông tin người dùng");
-    } finally {
-    }
-  };
-
-  useEffect(() => {
-    getUserProfile();
-  }, []);
+  const { user } = useProfile();
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -215,7 +196,15 @@ const Sidebar = () => {
                       </g>
                     </svg>
                   </div>
-                  <h2 onClick={handleLogout} className="text-gray-500 text-sm font-medium leading-snug">
+                  <h2
+                    onClick={() => {
+                      const confirmLogout = window.confirm("Bạn có muốn đăng xuất không?");
+                      if (confirmLogout) {
+                        handleLogout();
+                      }
+                    }}
+                    className="text-gray-500 text-sm font-medium leading-snug"
+                  >
                     Logout
                   </h2>
                 </div>

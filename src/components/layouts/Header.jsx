@@ -13,7 +13,7 @@ import { useProfile } from "@/hooks/home/useProfile";
 import { useEffect, useState } from "react";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { PiShoppingCartSimpleDuotone } from "react-icons/pi";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Toast from "../nocatifications/Toast";
 
 const headerLink = [
@@ -26,6 +26,7 @@ const headerLink = [
 ];
 
 const Header = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { colorCode } = useThemeContext();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -47,8 +48,9 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+    navigate("/");
+    window.location.reload();
   };
-
   return (
     <div className="sticky rounded-br-xl rounded-bl-xl top-0 left-0 w-full bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-50">
       <div className="max-w-screen-2xl mx-auto">
@@ -100,11 +102,10 @@ const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className="h-fit w-fit border-none outline-none ring-0 ring-offset-0">
                 <Avatar>
-                  <AvatarImage src="imgs/avatar.jpg" />
+                  <AvatarImage src={user?.image || "imgs/avatar.jpg"} />
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuLabel className="text-gray-500">Xin chào , </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {!isLoggedIn ? (
                   <>
@@ -117,10 +118,19 @@ const Header = () => {
                   </>
                 ) : (
                   <>
+                    <DropdownMenuLabel className="text-gray-500">Xin chào , {user?.userName}</DropdownMenuLabel>
                     <DropdownMenuItem className="hover:bg-gray-100 text-gray-800">
                       <Link to="/profile">Thông tin cá nhân</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleLogout} className="hover:bg-red-100 text-red-600">
+                    <DropdownMenuItem
+                      onClick={() => {
+                        const confirmLogout = window.confirm("Bạn có muốn đăng xuất không?");
+                        if (confirmLogout) {
+                          handleLogout();
+                        }
+                      }}
+                      className="hover:bg-red-100 text-red-600"
+                    >
                       Đăng xuất
                     </DropdownMenuItem>
                   </>
