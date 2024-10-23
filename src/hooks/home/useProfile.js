@@ -1,45 +1,23 @@
 import { getUserProfile, updateUserProfile } from "@/services/profile";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export const useProfile = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        setLoading(true);
-        const userProfile = await getUserProfile();
-        setUser(userProfile);
-      } catch (err) {
-        setError(err);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, []);
+  const { isLoading, isError, data: user } = useQuery({ queryKey: ["getUserProfile"], queryFn: getUserProfile });
+  console.log(user);
 
   const handleUpdateProfile = async (formData) => {
     try {
-      setLoading(true);
       const updatedUser = await updateUserProfile(formData);
       fetchProfile();
       setUser(updatedUser);
     } catch (err) {
-      setError(err);
     } finally {
-      setLoading(false);
     }
   };
 
   return {
     user,
-    loading,
-    error,
+    loading: isLoading,
     handleUpdateProfile,
   };
 };

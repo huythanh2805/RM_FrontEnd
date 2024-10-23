@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/home/useProfile";
 import { useEffect, useState } from "react";
 export const ProfileAdmin = () => {
-  const { user, loading, error, handleUpdateProfile } = useProfile();
+  const { user, loading, handleUpdateProfile } = useProfile();
   const [formData, setFormData] = useState({
     userName: "",
     phoneNumber: "",
