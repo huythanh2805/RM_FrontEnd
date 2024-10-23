@@ -2,7 +2,7 @@ import { getUserProfile, updateUserProfile } from "@/services/profile";
 import { useQuery } from "@tanstack/react-query";
 
 export const useProfile = () => {
-  const { isLoading, isError, data: user } = useQuery({ queryKey: ["getUserProfile"], queryFn: getUserProfile });
+  const { isLoading, data: user } = useQuery({ queryKey: ["getUserProfile"], queryFn: getUserProfile });
   const handleUpdateProfile = async (formData) => {
     try {
       const updatedUser = await updateUserProfile(formData);
