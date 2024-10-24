@@ -2,9 +2,11 @@ import { addUserService, userListService } from "@/services/users";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 export const useUser = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const {
     data = [],
@@ -40,35 +42,33 @@ export const useUser = () => {
       queryClient.invalidateQueries(["userListService"]);
       setSuccess("User added successfully");
       resetForm();
+      navigate("/dashboard/users");
     },
     onError: (error) => {
       setError(error.response?.data?.message || "An error occurred while adding the user");
     },
   });
 
-  const handleImageUpload = (e) => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
       setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-      setValue("image", file); // Gán file vào giá trị của form
+    } else {
+      setSelectedImage(null);
+      setImageFile(null);
     }
   };
 
   const onSubmit = (data) => {
-    // Tạo đối tượng FormData cho multipart/form-data
     const submitData = new FormData();
     Object.keys(data).forEach((key) => {
       submitData.append(key, data[key]);
     });
     if (imageFile) {
-      submitData.append("image", imageFile); // Tên trường 'image' phải khớp với multer
+      submitData.append("image", imageFile);
     }
-    console.log(data);
     addUserMutation.mutate(submitData);
   };
 
@@ -77,7 +77,7 @@ export const useUser = () => {
     isLoading: isQueryLoading || addUserMutation.isLoading,
     error: queryError || error,
     success,
-    handleImageUpload,
+    handleImageChange,
     onSubmit,
     register,
     handleSubmit,
