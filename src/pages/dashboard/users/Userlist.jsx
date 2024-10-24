@@ -3,9 +3,14 @@ import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
 const UserList = () => {
-  const { list, isLoading, error } = useUser();
+  const { list, isLoading, error, deleteUser } = useUser();
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading user list.</p>;
+  const handleDelete = async (userId) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?")) {
+      await deleteUser(userId);
+    }
+  };
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
@@ -47,7 +52,7 @@ const UserList = () => {
                   </td>
 
                   <td className="py-4 px-6 text-sm flex items-center gap-1.5 lg:gap-3">
-                    <Link to={`/dashboard/users/${user._id}/update`}>
+                    <Link to={`/dashboard/users/edit/${user._id}`}>
                       <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">
                         <FaPenToSquare />
                       </div>
