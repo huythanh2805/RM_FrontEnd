@@ -2,7 +2,7 @@ import { useUser } from "@/hooks/dashboard/useAccount";
 import { Camera } from "lucide-react";
 
 const UserAdd = () => {
-  const { register, selectedImage, error, success, isLoading, handleImageUpload, onSubmit, handleSubmit } = useUser(); // Gọi custom hook
+  const { register, error, success, isLoading, handleImageChange, onSubmit, handleSubmit, selectedImage } = useUser();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mx-2 mt-11">
@@ -13,12 +13,12 @@ const UserAdd = () => {
         <div className="flex flex-col items-center">
           <div className="w-48 h-48 bg-gray-100 rounded-full flex items-center justify-center mb-4">
             {selectedImage ? (
-              <img src={selectedImage} alt="Profile" className="w-full h-full rounded-full object-cover" />
+              <img src={selectedImage} alt="Selected" className="w-full h-full object-cover rounded-full" />
             ) : (
               <label className="cursor-pointer flex flex-col items-center">
                 <Camera className="w-12 h-12 text-gray-400" />
                 <span className="text-sm text-gray-500 mt-2">Upload photo</span>
-                <input type="file" className="hidden" accept=".jpg,.jpeg,.png,.gif" onChange={handleImageUpload} />
+                <input type="file" className="hidden" onChange={handleImageChange} />
               </label>
             )}
           </div>

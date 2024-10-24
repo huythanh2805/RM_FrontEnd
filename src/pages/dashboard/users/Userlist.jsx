@@ -24,6 +24,7 @@ const UserList = () => {
                 <th className="hidden lg:block py-3 px-6">STT</th>
                 <th className="py-3 px-6">Tên</th>
                 <th className="py-3 px-6">Email</th>
+                <th className="py-3 px-6">Địa chỉ</th>
                 <th className="py-3 px-6">Role</th>
                 <th className="py-3 px-6"></th>
               </tr>
@@ -37,6 +38,9 @@ const UserList = () => {
                   </td>
                   <td className="py-4 px-6 text-sm font-medium text-[#202224] max-w-[100px] lg:max-w-[250px] break-words">
                     {user.email}
+                  </td>
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224] max-w-[100px] lg:max-w-[250px] break-words">
+                    {user.address}
                   </td>
                   <td className="py-4 px-6 text-sm font-medium text-[#202224] max-w-[100px] lg:max-w-[250px] break-words">
                     {user.role}
