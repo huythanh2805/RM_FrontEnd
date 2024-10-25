@@ -5,6 +5,7 @@ import OurStory from "./OurStory";
 import Slider from "@/components/layouts/Silder";
 import StatsCounter from "@/components/layouts/StatsCounter";
 import Menu from "./Menu";
+import ButtonViewMore from "@/components/ButtonViewMore";
 
 const Home = () => {
   const { isBoxed } = useThemeContext();
@@ -18,6 +19,7 @@ const Home = () => {
         <OurStory />
         <ReservationForm />
         <Menu limit={6} />
+        <ButtonViewMore />
       </section>
       <StatsCounter />
     </>
