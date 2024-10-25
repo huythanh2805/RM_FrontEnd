@@ -5,10 +5,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import ReactStars from "react-rating-stars-component";
+import { formatCurrency } from "@/utilities/utils";
 
 const Menu = ({ limit }) => {
   const { colorCode } = useThemeContext();
   const [dish, setDish] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const [ratings, setRatings] = useState({});
 
   // Function to handle rating change
@@ -25,6 +28,12 @@ const Menu = ({ limit }) => {
       .then((res) => {
         console.log(res.data);
         setDish(res.data);
+
+        // Lấy danh sách tên danh mục
+        const uniqueCategories = [
+          ...new Set(res.data.map((item) => item.category_id.name)),
+        ];
+        setCategories(["Tất cả", ...uniqueCategories]);
       })
       .catch((error) => {
         console.error(
@@ -33,8 +42,13 @@ const Menu = ({ limit }) => {
       });
   }, []);
 
+  const filteredDishes =
+    selectedCategory === "Tất cả"
+      ? dish
+      : dish.filter((dish) => dish.category_id.name === selectedCategory);
+
   // Sử dụng slice để giới hạn số lượng món ăn nếu có prop limit
-  const limitDishes = limit ? dish.slice(0, limit) : dish;
+  const limitDishes = limit ? filteredDishes.slice(0, limit) : filteredDishes;
 
   const handleAddToCart = (dish) => {
     console.log(`Added ${dish.name} to cart`);
@@ -57,17 +71,21 @@ const Menu = ({ limit }) => {
         />
       </div>
 
-      {/* Navbar */}
+      {/* Navbar menu */}
       <div className="flex justify-between items-center gap-10 mt-10 max-w-4xl mx-auto">
-        <div className="font-bold border-b-2 border-black text-lg cursor-pointer hover:font-bold">
-          Tất cả
-        </div>
-        <div className="text-lg cursor-pointer hover:font-bold">Món chính</div>
-        <div className="text-lg cursor-pointer hover:font-bold">Khai vị</div>
-        <div className="text-lg cursor-pointer hover:font-bold">
-          Tráng miệng
-        </div>
-        <div className="text-lg cursor-pointer hover:font-bold">Đồ uống</div>
+        {categories.map((category) => (
+          <div
+            className={`text-lg cursor-pointer ${
+              selectedCategory === category
+                ? "font-bold border-b-2 border-black"
+                : ""
+            }`}
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+          >
+            {category}
+          </div>
+        ))}
       </div>
 
       {/* Main menu */}
@@ -112,7 +130,7 @@ const Menu = ({ limit }) => {
                   className="text-xl font-bold"
                   style={{ color: colorCode }}
                 >
-                  {item.price}₫
+                  {formatCurrency(item.price)}
                 </span>
                 <ReactStars
                   count={5}
