@@ -16,6 +16,7 @@ import Dashboard from "@/pages/dashboard/Dashboard";
 import { ProfileAdmin } from "@/pages/dashboard/Profile";
 import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
+import UserUpdate from "@/pages/dashboard/users/UserUpdate";
 import About from "@/pages/home/About";
 import Home from "@/pages/home/Home";
 import HomeLayout from "@/pages/home/HomeLayout";
@@ -131,6 +132,10 @@ const router = createBrowserRouter([
       {
         path: "users/add",
         element: <UserAdd />,
+      },
+      {
+        path: "users/edit/:id",
+        element: <UserUpdate />,
       },
     ],
   },
