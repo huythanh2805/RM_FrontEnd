@@ -1,6 +1,7 @@
 import { useProfile } from "@/hooks/home/useProfile";
 import { AiFillProduct } from "react-icons/ai";
 import { FaHome, FaRegMoneyBillAlt } from "react-icons/fa";
+import { FaUserGroup } from "react-icons/fa6";
 import { MdAccountCircle, MdCategory } from "react-icons/md";
 import { SiAirtable } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
@@ -126,6 +127,29 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
+            <Link to="/dashboard/users">
+              <div className="flex-col gap-1 flex">
+                <div className="flex-col flex p-3 bg-white rounded-lg">
+                  <div className="h-5 gap-3 flex">
+                    <div className="relative">
+                      <FaUserGroup />
+                    </div>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Account</h2>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </li>
+          <li>
+            <div className="flex-col flex">
+              <div className="flex-col flex p-3 bg-white rounded-lg">
+                <div className="justify-between inline-flex">
+                  <a href="javascript:;" className="h-5 gap-3 flex">
+                    <div className="relative">
+                      <AiFillProduct />
+                    </div>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Dishes</h2>
+                  </a>
             <Link to={"/dashboard/dishes"}>
               <div className="flex-col flex">
                 <div className="flex-col flex p-3 bg-white rounded-lg">
