@@ -10,11 +10,11 @@ import {
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useThemeContext } from "@/contexts/ThemeProvider";
 import { useProfile } from "@/hooks/home/useProfile";
+import { toast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { PiShoppingCartSimpleDuotone } from "react-icons/pi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Toast from "../nocatifications/Toast";
 
 const headerLink = [
   { name: "TRANG CHỦ", link: "/" },
@@ -30,18 +30,13 @@ const Header = () => {
   const location = useLocation();
   const { colorCode } = useThemeContext();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
   const { user } = useProfile();
   useEffect(() => {}, [user]);
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
     if (token) {
-      setToastMessage("Đăng nhập thành công!");
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      toast({ variant: "success", title: "Đăng nhập thành công !" });
     }
   }, []);
 
@@ -140,9 +135,6 @@ const Header = () => {
           </div>
         </div>
       </div>
-
-      {/* Toast notification */}
-      {showToast && <Toast message={toastMessage} onClose={() => setShowToast(false)} />}
     </div>
   );
 };

@@ -1,18 +1,19 @@
-import Toast from "@/components/nocatifications/Toast";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/home/useProfile";
+import { toast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
+
 export const Profile = () => {
-  const { user, loading, handleUpdateProfile } = useProfile();
+  const { user, handleUpdateProfile } = useProfile();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     userName: "",
     phoneNumber: "",
     address: "",
     image: "",
-    email: "", // Thêm email vào formData
+    email: "",
   });
-  const [showToast, setShowToast] = useState(false); // State cho thông báo
-  const [toastMessage, setToastMessage] = useState(""); // State cho nội dung thông báo
+  const [currentImage, setCurrentImage] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -23,6 +24,7 @@ export const Profile = () => {
         image: user.image || null,
         email: user.email || "",
       });
+      setCurrentImage(user.image || "");
     }
   }, [user]);
 
@@ -35,7 +37,8 @@ export const Profile = () => {
     const file = e.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setFormData({ ...formData, image: imageUrl });
+      setFormData({ ...formData, image: file }); // Lưu file thay vì URL
+      setCurrentImage(imageUrl);
     } else {
       setFormData({ ...formData, image: null });
     }
@@ -43,21 +46,23 @@ export const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const inputFile = document.getElementById("image").files[0];
-    if (inputFile) {
-      formData.image = inputFile;
+    setIsLoading(true);
+    if (!formData.userName || !formData.phoneNumber || !formData.address) {
+      toast({ variant: "destructive", title: "Vui lòng điền đầy đủ thông tin" });
+      setIsLoading(false);
+      return;
     }
 
     handleUpdateProfile(formData)
       .then(() => {
-        setToastMessage("Cập nhật thông tin thành công!");
-        setShowToast(true); // Hiện thông báo
-        setTimeout(() => setShowToast(false), 3000);
+        setCurrentImage(formData.image);
+        toast({ variant: "success", title: "Cập nhật thành công" });
       })
       .catch(() => {
-        setToastMessage("Cập nhật thất bại, vui lòng thử lại!");
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
+        toast({ variant: "destructive", title: "Cập nhật thất bại" });
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -69,14 +74,11 @@ export const Profile = () => {
             <h1 className="lg:text-3xl md:text-2xl sm:text-xl xs:text-xl font-serif font-extrabold mb-2 dark:text-white">
               Thông tin cá nhân
             </h1>
-            <br />
             <form onSubmit={handleSubmit}>
               <div className="w-full rounded-sm bg-[url('https://images.unsplash.com/photo-1449844908441-8829872d2607?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw2fHxob21lfGVufDB8MHx8fDE3MTA0MDE1NDZ8MA&ixlib=rb-4.0.3&q=80&w=1080')] bg-cover bg-center bg-no-repeat items-center">
                 <div className="mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full relative overflow-hidden top-11">
-                  <img src={formData.image} alt="Profile" className="absolute inset-0 w-full h-full object-cover" />
+                  <img src={currentImage} alt="Profile" className="absolute inset-0 w-full h-full object-cover" />
                   <div className="bg-white/90 rounded-full w-8 h-8 text-center absolute top-4 right-2 flex items-center justify-center">
-                    {" "}
-                    {/* Di chuyển sang bên phải */}
                     <input type="file" name="image" id="image" onChange={handleImageChange} hidden />
                     <label htmlFor="image" className="cursor-pointer flex items-center justify-center">
                       <svg
@@ -103,7 +105,6 @@ export const Profile = () => {
                     </label>
                   </div>
                 </div>
-                <div className="flex justify-end"></div>
               </div>
               <h2 className="text-center mt-1 font-semibold dark:text-gray-300 mt-11">Tải lên ảnh hồ sơ</h2>
               <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
@@ -116,6 +117,7 @@ export const Profile = () => {
                     onChange={handleChange}
                     className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
                     placeholder="Họ và tên"
+                    required
                   />
                 </div>
                 <div className="w-full mb-4 lg:mt-6">
@@ -127,6 +129,7 @@ export const Profile = () => {
                     onChange={handleChange}
                     className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
                     placeholder="Số điện thoại"
+                    required
                   />
                 </div>
               </div>
@@ -139,30 +142,35 @@ export const Profile = () => {
                     value={formData.email}
                     onChange={handleChange}
                     className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
-                    placeholder="Số điện thoại"
+                    placeholder="Email"
+                    disabled
                   />
                 </div>
                 <div className="w-full">
-                  <h3 className="dark:text-gray-300 mb-2">Địa chỉ</h3>
+                  <label className="dark:text-gray-300">Địa chỉ</label>
                   <input
                     type="text"
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
-                    className="text-gray-500 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
+                    className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
+                    placeholder="Địa chỉ"
+                    required
                   />
                 </div>
               </div>
-              <div className="w-full rounded-lg bg-blue-500 mt-4 text-white text-lg font-semibold">
-                <Button type="submit" className="w-full p-4">
-                  Submit
+              <div className="flex justify-center w-full mb-4 mt-8">
+                <Button
+                  type="submit"
+                  className="lg:w-[150px] md:w-full sm:w-full xs:w-full dark:bg-blue-800 dark:text-white"
+                >
+                  {isLoading ? "Đang cập nhật..." : "Cập nhật"}
                 </Button>
               </div>
             </form>
           </div>
         </div>
       </div>
-      {showToast && <Toast message={toastMessage} onClose={() => setShowToast(false)} />}
     </section>
   );
 };

@@ -22,7 +22,7 @@ export const updateUserProfile = async (data) => {
       if (data[key]) formData.append(key, data[key]);
     });
     const token = localStorage.getItem("token");
-    const response = await apiClient.put(API_URL, formData, {
+    const response = await apiClient.put("users/update", formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
