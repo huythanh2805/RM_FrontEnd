@@ -134,22 +134,16 @@ const Sidebar = () => {
                     <div className="relative">
                       <FaUserGroup />
                     </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Account</h2>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                      Account
+                    </h2>
                   </div>
                 </div>
               </div>
             </Link>
           </li>
+          
           <li>
-            <div className="flex-col flex">
-              <div className="flex-col flex p-3 bg-white rounded-lg">
-                <div className="justify-between inline-flex">
-                  <a href="javascript:;" className="h-5 gap-3 flex">
-                    <div className="relative">
-                      <AiFillProduct />
-                    </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Dishes</h2>
-                  </a>
             <Link to={"/dashboard/dishes"}>
               <div className="flex-col flex">
                 <div className="flex-col flex p-3 bg-white rounded-lg">
@@ -166,7 +160,22 @@ const Sidebar = () => {
                 </div>
               </div>
             </Link>
+            {/* <div className="flex-col flex">
+              <div className="flex-col flex p-3 bg-white rounded-lg">
+                <div className="justify-between inline-flex">
+                  <a href="javascript:;" className="h-5 gap-3 flex">
+                    <div className="relative">
+                      <AiFillProduct />
+                    </div>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                      Dishes
+                    </h2>
+                  </a>
+                </div>
+              </div>
+            </div> */}
           </li>
+
           <li>
             <a href="javascript:;">
               <div className="flex-col gap-1 flex">
