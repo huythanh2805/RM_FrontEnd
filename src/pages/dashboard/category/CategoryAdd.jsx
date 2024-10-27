@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "@/hooks/use-toast";
 
 const CategoryAdd = () => {
   const {
@@ -14,8 +15,10 @@ const CategoryAdd = () => {
   const onsubmit = (data) => {
     axios
       .post("http://localhost:1111/categories", data)
-      .then(() => {
+      .then((res) => {
+        // console.log(res);
         navigate("/dashboard/categories");
+        toast({ variant: "success", title: "Thêm danh mục thành công" });
       })
       .catch((err) => {
         console.log(err);
@@ -43,7 +46,7 @@ const CategoryAdd = () => {
                     : "border-gray-300 focus:border-gray-500"
                 } rounded-md shadow-sm focus:outline-none`}
                 {...register("name", {
-                  required: "Vui lòng nhập tên danh mục"
+                  required: "Vui lòng nhập tên danh mục",
                 })}
               />
               {errors.name && (
@@ -60,13 +63,8 @@ const CategoryAdd = () => {
               >
                 Mô tả:
               </label>
-              <input
-                type="text"
-                className={`mt-1 block w-full px-4 py-2 border ${
-                  errors.desc
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-gray-300 focus:border-gray-500"
-                } rounded-md shadow-sm focus:outline-none`}
+              <textarea
+                className="mt-1 block h-32 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none"
                 {...register("desc")}
               />
             </div>

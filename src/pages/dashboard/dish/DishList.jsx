@@ -6,6 +6,7 @@ import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa";
 import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
+import { AiTwotoneFileImage } from "react-icons/ai";
 
 const DishList = () => {
   const [data, setData] = useState([]);
@@ -98,11 +99,16 @@ const DishList = () => {
                       className="hover:underline"
                     >
                       <div className="flex items-center gap-2 lg:gap-4">
-                        <img
-                          src={d.images[0]}
-                          alt=""
-                          className="w-16 h-20 lg:w-20 lg:h-25 object-cover"
-                        />
+                        {d.images && d.images.length > 0 ? (
+                          <img
+                            src={d.images[0]}
+                            alt=""
+                            className="w-16 h-20 lg:w-20 lg:h-25 object-cover"
+                          />
+                        ) : (
+                          <AiTwotoneFileImage className="w-16 h-20 lg:w-20 lg:h-25 object-cover" />
+                        )}
+
                         <span className="hidden lg:block">{d.name}</span>
                       </div>
                     </Link>
