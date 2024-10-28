@@ -95,7 +95,7 @@ const DishList = () => {
                   </td>
                   <td className="py-3 px-4 lg:px-6 text-sm font-medium text-[#202224] break-words">
                     <Link
-                      to={`/dashboard/dishes/${d._id}`}
+                      to={`/dashboard/dishes/${d._id}/detail`}
                       className="hover:underline"
                     >
                       <div className="flex items-center gap-2 lg:gap-4">
@@ -133,7 +133,7 @@ const DishList = () => {
                   </td>
                   <td className="py-3 px-4 lg:px-6">
                     <div className="flex items-center gap-2 lg:gap-3">
-                      <Link to={``}>
+                      <Link to={`/dashboard/dishes/${d._id}/detail`}>
                         <div className="hidden lg:block bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-xs lg:text-sm font-semibold hover:bg-yellow-300 transition">
                           <FaEye />
                         </div>
