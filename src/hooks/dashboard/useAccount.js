@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import {
   addUserService,
   getUserByIdService,
@@ -6,125 +7,182 @@ import {
   userListService,
 } from "@/services/users";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const useUser = (id, setValue) => {
+export const useUser = (id, form) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const {
-    data = [],
-    isLoading: isQueryLoading,
-    error: queryError,
-  } = useQuery({
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+
+  const { data = [], isLoading: isQueryLoading } = useQuery({
     queryKey: ["userListService"],
     queryFn: userListService,
   });
+
   const list = data?.users || [];
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+
   const resetForm = () => {
-    setValue("userName", "");
-    setValue("email", "");
-    setValue("password", "");
-    setValue("phoneNumber", "");
-    setValue("address", "");
-    setSelectedImage(null);
-    setImageFile(null);
+    if (form) {
+      form.reset({
+        userName: "",
+        email: "",
+        password: "",
+        phoneNumber: "",
+        address: "",
+        role: "ADMIN", // Mặc định là ADMIN theo BE
+      });
+      setSelectedImage(null);
+      setImageFile(null);
+    }
   };
-  const addUserMutation = useMutation({
-    mutationFn: (formData) => addUserService(formData),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["userListService"]);
-      setSuccess("User added successfully");
-      resetForm();
-      navigate("/dashboard/users");
-    },
-    onError: (error) => {
-      setError(error.response?.data?.message || "An error occurred while adding the user");
+
+  const { data: userData, isLoading: isUserLoading } = useQuery(["user", id], () => getUserByIdService(id), {
+    enabled: !!id,
+    onSuccess: (data) => {
+      if (data?.user) {
+        const user = data.user.user || data.user;
+        if (form) {
+          form.reset({
+            userName: user.userName || "",
+            email: user.email || "",
+            phoneNumber: user.phoneNumber || "",
+            address: user.address || "",
+            role: user.role || "ADMIN",
+          });
+        }
+        if (user.image) {
+          setSelectedImage(user.image);
+        }
+      }
     },
   });
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(imageUrl);
       setImageFile(file);
-    } else {
-      setSelectedImage(null);
-      setImageFile(null);
     }
   };
-  const { mutateAsync: deleteUser } = useMutation(
-    async (userId) => {
-      await updateUserIsDelete(userId);
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["users"]);
-      },
-      onError: (error) => {
-        setError(error);
-      },
+
+  const validateFormData = (data, isUpdate = false) => {
+    if (!data.userName || !data.email || !data.phoneNumber || (!isUpdate && !data.password)) {
+      throw new Error("Vui lòng điền đầy đủ thông tin bắt buộc");
     }
-  );
-  const { data: { user } = {}, isLoading: isUserLoading } = useQuery(["user", id], () => getUserByIdService(id), {
-    enabled: !!id,
-    onSuccess: (data) => {
-      if (data?.user?.image) {
-        setSelectedImage(data.user.image);
+    if (!isUpdate && !imageFile) {
+      throw new Error("Vui lòng chọn ảnh đại diện");
+    }
+  };
+
+  // Helper function để tạo FormData
+  const createFormData = (data, isUpdate = false) => {
+    validateFormData(data, isUpdate);
+
+    const formData = new FormData();
+
+    // Thêm các trường thông tin cơ bản
+    Object.keys(data).forEach((key) => {
+      if (data[key]) {
+        formData.append(key, data[key]);
       }
+    });
+
+    // Chỉ thêm file ảnh nếu có
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
+    return formData;
+  };
+
+  const addUserMutation = useMutation({
+    mutationFn: async (data) => {
+      try {
+        const formData = createFormData(data);
+        return await addUserService(formData);
+      } catch (error) {
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["userListService"]);
+      toast({ variant: "success", title: "Thêm mới tài khoản thành công" });
+      resetForm();
+      navigate("/dashboard/users");
+    },
+    onError: (error) => {
+      console.error("Error adding user:", error);
+      const errorMessage = error.response?.data?.message || error.message || "Vui lòng kiểm tra lại thông tin";
+      toast({
+        variant: "destructive",
+        title: "Lỗi khi thêm tài khoản",
+        description: errorMessage,
+      });
     },
   });
-  useEffect(() => {
-    if (user && setValue) {
-      const userData = user.user || user;
-      setValue("userName", userData.userName || "");
-      setValue("email", userData.email || "");
-      setValue("phoneNumber", userData.phoneNumber || "");
-      setValue("address", userData.address || "");
-      setValue("image", userData.image || "");
-    }
-  }, [user, setValue]);
+
   const updateUserMutation = useMutation({
     mutationFn: async (data) => {
-      const formData = new FormData();
-      Object.keys(data).forEach((key) => {
-        if (data[key]) {
-          formData.append(key, data[key]);
-        }
-      });
-      if (imageFile) {
-        formData.append("image", imageFile);
+      try {
+        const formData = createFormData(data, true);
+        return await updateUserService(id, formData);
+      } catch (error) {
+        throw error;
       }
-      return updateUserService(id, formData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["user", id]);
       queryClient.invalidateQueries(["userListService"]);
-      setSuccess("User updated successfully");
+      toast({ variant: "success", title: "Cập nhật tài khoản thành công" });
       navigate("/dashboard/users");
     },
     onError: (error) => {
-      setError(error.response?.data?.message || "An error occurred while updating the user");
+      console.error("Error updating user:", error);
+      const errorMessage = error.response?.data?.message || error.message || "Lỗi cập nhật tài khoản";
+      toast({
+        variant: "destructive",
+        title: "Lỗi khi cập nhật tài khoản",
+        description: errorMessage,
+      });
     },
   });
-  const handleUpdate = async (data) => {
+
+  const deleteUserMutation = useMutation((userId) => updateUserIsDelete(userId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["userListService"]);
+      toast({ variant: "success", title: "Xóa tài khoản thành công" });
+    },
+    onError: (error) => {
+      const errorMessage = error.response?.data?.message || "Lỗi xóa tài khoản";
+      toast({
+        variant: "destructive",
+        title: errorMessage,
+      });
+    },
+  });
+
+  const handleAdd = (data) => {
+    addUserMutation.mutate(data);
+  };
+
+  const handleUpdate = (data) => {
     updateUserMutation.mutate(data);
   };
 
   return {
-    user,
+    user: userData?.user,
     list,
     isUserLoading,
-    isLoading: isQueryLoading || addUserMutation.isLoading,
-    error: queryError || error,
-    success,
+    isLoading: isQueryLoading || addUserMutation.isLoading || updateUserMutation.isLoading,
     handleImageChange,
     selectedImage,
-    deleteUser,
+    imageFile,
+    deleteUser: deleteUserMutation.mutateAsync,
+    handleAdd,
     handleUpdate,
+    resetForm,
   };
 };

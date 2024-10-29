@@ -1,19 +1,37 @@
 import { useUser } from "@/hooks/dashboard/useAccount";
 import { Camera } from "lucide-react";
+import { useForm } from "react-hook-form";
 
 const UserAdd = () => {
-  const { register, error, success, isLoading, handleImageChange, onSubmit, handleSubmit, selectedImage } = useUser();
+  const form = useForm({
+    defaultValues: {
+      userName: "",
+      email: "",
+      password: "",
+      phoneNumber: "",
+      address: "",
+    },
+  });
+  const { register, handleSubmit } = form;
+  const { handleImageChange, handleAdd, selectedImage, isLoading } = useUser(null, form);
 
+  const onSubmit = (data) => {
+    handleAdd(data);
+  };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mx-2 mt-11">
       <div className="text-2xl font-semibold mb-4">Thêm mới tài khoản</div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-9">
-        {/* Left Column - Photo Upload */}
         <div className="flex flex-col items-center">
-          <div className="w-48 h-48 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+          <div className="w-48 h-48 bg-gray-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
             {selectedImage ? (
-              <img src={selectedImage} alt="Selected" className="w-full h-full object-cover rounded-full" />
+              <img
+                src={selectedImage}
+                alt="Selected"
+                className="w-full h-full object-cover rounded-full"
+                style={{ maxWidth: "100%", maxHeight: "100%" }}
+              />
             ) : (
               <label className="cursor-pointer flex flex-col items-center">
                 <Camera className="w-12 h-12 text-gray-400" />
@@ -22,14 +40,19 @@ const UserAdd = () => {
               </label>
             )}
           </div>
-          <div className="text-xs text-gray-500 text-center">
+          <label className="cursor-pointer">
+            <span className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+              Change Photo
+            </span>
+            <input type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
+          </label>
+          <div className="text-xs text-gray-500 text-center mt-2">
             Allowed *.jpeg, *.jpg, *.png, *.gif
             <br />
             max size of 3 Mb
           </div>
         </div>
 
-        {/* Right Column - Form Fields */}
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -99,9 +122,6 @@ const UserAdd = () => {
           {isLoading ? "Đang xử lý..." : "Thêm mới"}
         </button>
       </div>
-
-      {error && <div className="text-red-500 mt-2">{error}</div>}
-      {success && <div className="text-green-500 mt-2">{success}</div>}
     </form>
   );
 };

@@ -1,11 +1,10 @@
 import { useUser } from "@/hooks/dashboard/useAccount";
 import { Camera } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const UserUpdate = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const form = useForm({
     defaultValues: {
@@ -15,10 +14,8 @@ const UserUpdate = () => {
       address: "",
     },
   });
-
-  const { register, handleSubmit, setValue } = form;
-
-  const { selectedImage, handleImageChange, user, error, isUserLoading, handleUpdate } = useUser(id, setValue);
+  const { register, handleSubmit } = form;
+  const { handleImageChange, handleUpdate, selectedImage, user, isLoading } = useUser(id, form);
 
   const onSubmit = (data) => {
     handleUpdate(data);
@@ -115,17 +112,15 @@ const UserUpdate = () => {
       <div className="flex justify-end mt-8">
         <button
           type="submit"
-          disabled={isUserLoading}
+          disabled={isLoading}
           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isUserLoading ? "Đang xử lý..." : "Cập nhật"}
+          {isLoading ? "Đang xử lý..." : "Thêm mới"}
         </button>
         <Link to="/dashboard/users" className="ml-2 px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
           Quay lại
         </Link>
       </div>
-
-      {error && <div className="text-red-500 mt-2">{error}</div>}
     </form>
   );
 };

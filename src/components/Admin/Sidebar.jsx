@@ -1,6 +1,7 @@
 import { useProfile } from "@/hooks/home/useProfile";
 import { AiFillProduct } from "react-icons/ai";
 import { FaHome, FaRegMoneyBillAlt } from "react-icons/fa";
+import { FaUserGroup } from "react-icons/fa6";
 import { MdAccountCircle, MdCategory } from "react-icons/md";
 import { SiAirtable } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,10 +18,22 @@ const Sidebar = () => {
       <div className="w-full pt-4 justify-between items-center gap-2.5 inline-flex">
         <p>Golden Pork</p>
         <a href="javascript:;" className="w-6 h-6 relative bg-white">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <g id="Menu">
               <rect width="24" height="24" fill="white" />
-              <path id="icon" d="M13 6H21M3 12H21M7 18H21" stroke="#1F2937" stroke-width="1.6" stroke-linecap="round" />
+              <path
+                id="icon"
+                d="M13 6H21M3 12H21M7 18H21"
+                stroke="#1F2937"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
             </g>
           </svg>
         </a>
@@ -33,19 +46,32 @@ const Sidebar = () => {
                 className="rounded-lg"
                 alt="User"
                 src={user?.image || "default-image-url.png"}
-                style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "50%" }}
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
               />
 
               <div className="flex-col inline-flex ml-2.5">
                 <h2 className="text-gray-700 text-sm font-semibold leading-snug">
                   Xin chào, {user?.userName || "Khách"}
                 </h2>
-                <h6 className="text-black/20 text-xs font-normal leading-4">{user?.email} </h6>
+                <h6 className="text-black/20 text-xs font-normal leading-4">
+                  {user?.email}{" "}
+                </h6>
               </div>
             </div>
             <div className="flex items-center">
               <a href="javascript:;" className="w-5 h-5 relative">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                >
                   <g id="More Vertical">
                     <path
                       id="icon"
@@ -65,7 +91,9 @@ const Sidebar = () => {
       {/* Menu */}
       <div className="w-full">
         <div className="w-full h-8 px-3 items-center flex">
-          <h6 className="text-gray-500 text-xs font-semibold leading-4">MENU</h6>
+          <h6 className="text-gray-500 text-xs font-semibold leading-4">
+            MENU
+          </h6>
         </div>
         <ul className="flex-col gap-1 flex">
           <li>
@@ -75,7 +103,9 @@ const Sidebar = () => {
                   <div className="relative">
                     <FaHome />
                   </div>
-                  <h2 className="text-gray-500 text-sm font-medium leading-snug">Home</h2>
+                  <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                    Home
+                  </h2>
                 </div>
               </div>
             </Link>
@@ -88,26 +118,64 @@ const Sidebar = () => {
                     <div className="relative">
                       <MdCategory />
                     </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Categories</h2>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                      Categories
+                    </h2>
                   </div>
                 </div>
               </div>
             </Link>
           </li>
           <li>
-            <div className="flex-col flex">
+            <Link to="/dashboard/users">
+              <div className="flex-col gap-1 flex">
+                <div className="flex-col flex p-3 bg-white rounded-lg">
+                  <div className="h-5 gap-3 flex">
+                    <div className="relative">
+                      <FaUserGroup />
+                    </div>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                      Account
+                    </h2>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </li>
+          
+          <li>
+            <Link to={"/dashboard/dishes"}>
+              <div className="flex-col flex">
+                <div className="flex-col flex p-3 bg-white rounded-lg">
+                  <div className="justify-between inline-flex">
+                    <a href="javascript:;" className="h-5 gap-3 flex">
+                      <div className="relative">
+                        <AiFillProduct />
+                      </div>
+                      <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                        Dishes
+                      </h2>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </Link>
+            {/* <div className="flex-col flex">
               <div className="flex-col flex p-3 bg-white rounded-lg">
                 <div className="justify-between inline-flex">
                   <a href="javascript:;" className="h-5 gap-3 flex">
                     <div className="relative">
                       <AiFillProduct />
                     </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Dishes</h2>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                      Dishes
+                    </h2>
                   </a>
                 </div>
               </div>
-            </div>
+            </div> */}
           </li>
+
           <li>
             <a href="javascript:;">
               <div className="flex-col gap-1 flex">
@@ -116,7 +184,9 @@ const Sidebar = () => {
                     <div className="relative">
                       <SiAirtable />
                     </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Table</h2>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                      Table
+                    </h2>
                   </div>
                 </div>
               </div>
@@ -130,7 +200,9 @@ const Sidebar = () => {
                     <div className="relative">
                       <FaRegMoneyBillAlt />
                     </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">Bill</h2>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                      Bill
+                    </h2>
                   </div>
                 </div>
               </div>
@@ -142,7 +214,9 @@ const Sidebar = () => {
       {/* setting */}
       <div className="w-full flex-col flex">
         <div className="h-8 px-3 items-center inline-flex">
-          <h6 className="text-gray-500 text-xs font-semibold leading-4">SETTINGS</h6>
+          <h6 className="text-gray-500 text-xs font-semibold leading-4">
+            SETTINGS
+          </h6>
         </div>
         <ul className="flex-col gap-1 flex">
           <li>
@@ -152,7 +226,9 @@ const Sidebar = () => {
                   <div className="relative">
                     <MdAccountCircle />
                   </div>
-                  <h2 className="text-gray-500 text-sm font-medium leading-snug">Profile</h2>
+                  <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                    Profile
+                  </h2>
                 </div>
               </div>
             </Link>
@@ -163,7 +239,13 @@ const Sidebar = () => {
               <div className="p-3 rounded-lg items-center inline-flex">
                 <div className="h-5 items-center gap-3 flex">
                   <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                    >
                       <g id="Help circle">
                         <path
                           id="icon"
@@ -173,7 +255,9 @@ const Sidebar = () => {
                       </g>
                     </svg>
                   </div>
-                  <h2 className="text-gray-500 text-sm font-medium leading-snug">Settings</h2>
+                  <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                    Settings
+                  </h2>
                 </div>
               </div>
             </a>
@@ -183,7 +267,13 @@ const Sidebar = () => {
               <div className="p-3 rounded-lg items-center inline-flex">
                 <div className="h-5 items-center gap-3 flex">
                   <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                    >
                       <g id="Logout">
                         <path
                           id="icon"
@@ -198,7 +288,9 @@ const Sidebar = () => {
                   </div>
                   <h2
                     onClick={() => {
-                      const confirmLogout = window.confirm("Bạn có muốn đăng xuất không?");
+                      const confirmLogout = window.confirm(
+                        "Bạn có muốn đăng xuất không?"
+                      );
                       if (confirmLogout) {
                         handleLogout();
                       }

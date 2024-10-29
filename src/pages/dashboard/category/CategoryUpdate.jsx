@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
+import { toast } from "@/hooks/use-toast";
 
 const CategoryUpdate = () => {
   const { id } = useParams();
@@ -34,6 +35,7 @@ const CategoryUpdate = () => {
       .put(`http://localhost:1111/categories/${id}`, data)
       .then(() => {
         navigate("/dashboard/categories");
+        toast({ variant: "success", title: "Cập nhật danh mục thành công" });
       })
       .catch((err) => {
         console.log(err);
@@ -44,7 +46,7 @@ const CategoryUpdate = () => {
     <>
       <div className="w-full min-h-screen bg-[#f5f6fa]">
         <div className="px-5 py-2 ">
-          <h2 className="text-[32px] font-semibold mb-4">Sửa danh mục</h2>
+          <h2 className="text-[32px] font-semibold mb-4">Cập nhật danh mục</h2>
           <form className="space-y-6" onSubmit={handleSubmit(onsubmit)}>
             <div>
               <label
@@ -82,13 +84,8 @@ const CategoryUpdate = () => {
               >
                 Mô tả:
               </label>
-              <input
-                type="text"
-                className={`mt-1 block w-full px-4 py-2 border ${
-                  errors.desc
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-gray-300 focus:border-gray-500"
-                } rounded-md shadow-sm focus:outline-none`}
+              <textarea
+                className="mt-1 block h-32 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none"
                 {...register("desc")}
               />
             </div>
@@ -120,9 +117,9 @@ const CategoryUpdate = () => {
 
               <button
                 type="submit"
-                className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-green-300 transition"
+                className="bg-blue-200 text-blue-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-blue-300 transition"
               >
-                Sửa
+                Cập nhật
               </button>
             </div>
           </form>

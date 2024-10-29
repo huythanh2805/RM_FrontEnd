@@ -1,21 +1,26 @@
 import { getUserProfile, updateUserProfile } from "@/services/profile";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useProfile = () => {
-  const { isLoading, data: user } = useQuery({ queryKey: ["getUserProfile"], queryFn: getUserProfile });
-  const handleUpdateProfile = async (formData) => {
-    try {
-      const updatedUser = await updateUserProfile(formData);
-      fetchProfile();
-      setUser(updatedUser);
-    } catch (err) {
-    } finally {
-    }
-  };
+  const queryClient = useQueryClient();
+
+  // Query để lấy thông tin profile
+  const { isLoading, data: user } = useQuery({
+    queryKey: ["getUserProfile"],
+    queryFn: getUserProfile,
+  });
+
+  // Mutation để update profile
+  const { mutateAsync: handleUpdateProfile, isPending: isUpdating } = useMutation({
+    mutationFn: (formData) => updateUserProfile(formData),
+    onSuccess: (newUserData) => {
+      queryClient.setQueryData(["getUserProfile"], newUserData);
+    },
+  });
 
   return {
     user,
-    loading: isLoading,
+    loading: isLoading || isUpdating,
     handleUpdateProfile,
   };
 };

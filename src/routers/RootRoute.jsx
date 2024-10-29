@@ -13,6 +13,10 @@ import CategoryAdd from "@/pages/dashboard/category/CategoryAdd";
 import CategoryList from "@/pages/dashboard/category/CategoryList";
 import CategoryUpdate from "@/pages/dashboard/category/CategoryUpdate";
 import Dashboard from "@/pages/dashboard/Dashboard";
+import DishAdd from "@/pages/dashboard/dish/DishAdd";
+import DishDetail from "@/pages/dashboard/dish/DishDetail";
+import DishList from "@/pages/dashboard/dish/DishList";
+import DishUpdate from "@/pages/dashboard/dish/DishUpdate";
 import { ProfileAdmin } from "@/pages/dashboard/Profile";
 import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
@@ -88,6 +92,22 @@ const router = createBrowserRouter([
       {
         path: "categories/:id/update",
         element: <CategoryUpdate />,
+      },
+      {
+        path: "dishes",
+        element: <DishList />,
+      },
+      {
+        path: "dishes/add",
+        element: <DishAdd />,
+      },
+      {
+        path: "dishes/:id/update",
+        element: <DishUpdate />,
+      },
+      {
+        path: "dishes/:id/detail",
+        element: <DishDetail />,
       },
       {
         path: "proAdmin",
