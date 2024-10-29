@@ -111,22 +111,6 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/dashboard/categories">
-              <div className="flex-col gap-1 flex">
-                <div className="flex-col flex p-3 bg-white rounded-lg">
-                  <div className="h-5 gap-3 flex">
-                    <div className="relative">
-                      <MdCategory />
-                    </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
-                      Categories
-                    </h2>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </li>
-          <li>
             <Link to="/dashboard/users">
               <div className="flex-col gap-1 flex">
                 <div className="flex-col flex p-3 bg-white rounded-lg">
@@ -142,7 +126,23 @@ const Sidebar = () => {
               </div>
             </Link>
           </li>
-          
+          <li>
+            <Link to="/dashboard/categories">
+              <div className="flex-col gap-1 flex">
+                <div className="flex-col flex p-3 bg-white rounded-lg">
+                  <div className="h-5 gap-3 flex">
+                    <div className="relative">
+                      <MdCategory />
+                    </div>
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                      Categories
+                    </h2>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </li>
+
           <li>
             <Link to={"/dashboard/dishes"}>
               <div className="flex-col flex">
@@ -177,7 +177,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <a href="javascript:;">
+            <Link to="/dashboard/tables">
               <div className="flex-col gap-1 flex">
                 <div className="flex-col flex bg-white rounded-lg p-3">
                   <div className="h-5 gap-3 flex">
@@ -190,7 +190,7 @@ const Sidebar = () => {
                   </div>
                 </div>
               </div>
-            </a>
+            </Link>
           </li>
           <li>
             <a href="javascript:;">

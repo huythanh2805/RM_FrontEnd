@@ -450,7 +450,7 @@ const Calculator = ({
           </DialogHeader>
           <div className="w-full">
             <h2 className="leading-6 text-center text-light-text dark:text-dark-text">
-              Cảm ơn cháu đã dùng dịch vụ nhà hàng của chúng ta. Check your
+              Cảm ơn bạn đã dùng dịch vụ nhà hàng của chúng tôi. Check your
               bill?
             </h2>
           </div>
