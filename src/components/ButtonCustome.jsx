@@ -3,12 +3,12 @@ import { useState } from "react";
 import { useThemeContext } from "@/contexts/ThemeProvider";
 import React from "react";
 
-const ButtonCustome = ({ buttonText }) => {
+const ButtonCustome = ({ buttonText, handleClick }) => {
   const { colorCode } = useThemeContext();
   const [isHovered, setIsHovered] = useState(false); // State để theo dõi hover
-
+  
   return (
-    <div className="flex items-center justify-center">
+    <div onClick={handleClick} className="flex items-center justify-center">
       <motion.button
         onHoverStart={() => setIsHovered(true)} // Khi hover vào button
         onHoverEnd={() => setIsHovered(false)} // Khi hover ra khỏi button

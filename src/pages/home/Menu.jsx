@@ -6,9 +6,11 @@ import React, { useEffect, useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import ReactStars from "react-rating-stars-component";
 import { formatCurrency } from "@/utilities/utils";
+import { useCart } from "@/contexts/CartProvider";
 
 const Menu = ({ limit }) => {
   const { colorCode } = useThemeContext();
+  const {addItem} = useCart()
   const [dish, setDish] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
@@ -21,12 +23,11 @@ const Menu = ({ limit }) => {
       [dishId]: newRating,
     });
   };
-
+  
   useEffect(() => {
     axios
       .get("http://localhost:1111/dishes")
       .then((res) => {
-        console.log(res.data);
         setDish(res.data);
 
         // Lấy danh sách tên danh mục
@@ -52,6 +53,14 @@ const Menu = ({ limit }) => {
 
   const handleAddToCart = (dish) => {
     console.log(`Added ${dish.name} to cart`);
+    addItem({
+    dish_id: dish._id,
+    name: dish.name,
+    price: dish.price,
+    image: dish.images[0],
+    quantity: 1,
+    type: "dish"
+    })
   };
 
   return (
