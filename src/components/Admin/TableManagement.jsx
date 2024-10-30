@@ -322,8 +322,6 @@ export default function TableManagement() {
       },
     })
   )
-
-  console.log({locations, locationsIds})
   return (
     <div>
       {loadingFirstOne ? (

@@ -15,8 +15,8 @@ export const useRegister = () => {
       console.log(response);
       navigate("/login"); // Điều hướng về trang login
     } catch (error) {
+      console.log(error);
       setError(error.response?.data?.message || "Đăng ký thất bại");
-      console.error(error);
     }
   };
 

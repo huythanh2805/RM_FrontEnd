@@ -158,6 +158,9 @@ export default function ListReservation() {
       })
     }
   }
+  const getDetail = ()=>{
+    router(`/dashboard/tables/${reservationId}?type=SELECT`)
+  }
 
   return (
     <div>

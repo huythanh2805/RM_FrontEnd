@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { PiShoppingCartSimpleDuotone } from "react-icons/pi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import Cart from "../Cart";
 
 const headerLink = [
   { name: "TRANG CHỦ", link: "/" },
@@ -90,9 +91,7 @@ const Header = () => {
               </Sheet>
             </div>
 
-            <div className="flex items-center justify-center">
-              <PiShoppingCartSimpleDuotone className="text-[30px]" />
-            </div>
+            <Cart/>
 
             <DropdownMenu>
               <DropdownMenuTrigger className="h-fit w-fit border-none outline-none ring-0 ring-offset-0">
