@@ -25,13 +25,24 @@ import { useThemeContext } from "@/contexts/ThemeProvider";
 import { motion } from "framer-motion";
 import DatePicker from "react-datepicker";
 import { CalendarCheck } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { jwtDecode } from "jwt-decode";
+import { usePostData } from "@/hooks/usePostData";
+import { ServerUrl } from "@/utilities/utils";
+import { useCart } from "@/contexts/CartProvider";
 
 const ReservationForm = () => {
   const { colorCode } = useThemeContext();
+  const {cart , clearCart} = useCart()
 
   const [personCount, setPersonCount] = useState(1);
+  const [email, setEmail] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [userName, setUserName] = useState('')
   const [datePicker, setDatePicker] = useState();
   const [timePicker, setTimePicker] = useState();
+  const [loading, setLoading] = useState(false)
+
   
 
   // Thiết lập animation cho hình ảnh
@@ -40,16 +51,53 @@ const ReservationForm = () => {
     visible: { x: 0, opacity: 1, transition: { duration: 0.5 } }, // Vị trí cuối cùng
   };
   const combinedDateTime = (date, time) =>{
-   return new Date(
+   const fomartedDate = new Date(
       date.getFullYear(), 
       date.getMonth(), 
       date.getDate(), 
       time.getHours(), 
       time.getMinutes()
     );
+    return fomartedDate
   }
-  const handleClick = ()=>{
-     console.log(combinedDateTime(datePicker, timePicker))
+  const handleClick = async ()=>{
+    const token = localStorage.getItem('token')
+    const decodedToken = jwtDecode(token)
+    if(!token || !decodedToken.id) return toast({variant: "destructive", title: "Bạn cần đăng nhập trước khi đặt bàn"})
+    if(!datePicker || !timePicker) return toast({variant: "destructive", title: "Bạn chưa chọn thời gian"})
+    if(!userName || !phoneNumber) return toast({variant: "destructive", title: "Bạn chưa điền đầy đủ thông tin"})
+     const startTime = combinedDateTime(datePicker, timePicker)
+     const postData = {
+       startTime,
+       dishs: cart,
+       user_id: decodedToken.id,
+       guests_count: personCount,
+       phoneNumber,
+       userName,
+     }
+     console.log(postData)
+     try {
+      setLoading(true)
+       const {message} = await usePostData(`${ServerUrl}/api/reservations/v2/client`,postData)
+       if(message){
+         setUserName('')
+         setPhoneNumber('')
+         setEmail('')
+         setPersonCount(1)
+         setDatePicker(null)
+         setTimePicker(null)
+        //  Clear cart
+         clearCart()
+         toast({variant: "success", title: message})
+       }
+      setLoading(false)
+     } catch (error) {
+      setLoading(false)
+      console.log(error)
+     } finally {
+      setLoading(false)
+     }
+     
   }
   return (
     <div className="w-full">
@@ -100,6 +148,8 @@ const ReservationForm = () => {
               <div className="relative">
                 <FaUser className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                 <Input
+                   value={userName}
+                  onChange={e=>setUserName(e.target.value)}
                   placeholder="Họ và Tên"
                   className="pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
@@ -107,7 +157,9 @@ const ReservationForm = () => {
               <div className="relative">
                 <MdEmail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                 <Input
-                  placeholder="Email"
+                 value={email}
+                 onChange={e=>setEmail(e.target.value)}
+                  placeholder="Email ( Để cho đẹp )"
                   type="email"
                   className="pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
@@ -115,6 +167,8 @@ const ReservationForm = () => {
               <div className="relative">
                 <FaPhoneAlt className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                 <Input
+                  value={phoneNumber}
+                  onChange={e=>setPhoneNumber(e.target.value)}
                   placeholder="Số điện thoại"
                   className="pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
@@ -151,9 +205,10 @@ const ReservationForm = () => {
                   className="w-full md:min-w-[380x] sm:min-w-[333px] lg:min-w-[333px] xl:min-w-[463px] bg-transparent focus:outline-none px-10 py-2 border-none"
                   placeholderText="Chọn ngày"
                   selected={datePicker}
+                  minDate={new Date()}
                   onChange={(date) => setDatePicker(date)}
                   dateFormat={"dd/MM/yyyy"}
-                ></DatePicker>
+                />
               </div>
               {/* time picker */}
               <div className="relative w-full border border-[#e5e7eb]-1 rounded-md">
@@ -173,12 +228,12 @@ const ReservationForm = () => {
 
               <div className="col-span-2">
                 <textarea
-                  placeholder="Nhập ghi chú ..."
+                  placeholder="Nhập ghi chú (optional)"
                   className="w-full h-24 p-3 border rounded-md focus-visible:outline-none"
                 />
               </div>
               <div className="col-span-2">
-                <ButtonCustome buttonText="Đặt Bàn" handleClick={handleClick} />
+                <ButtonCustome buttonText="Đặt Bàn" handleClick={handleClick} loading={loading}/>
               </div>
             </div>
           </div>

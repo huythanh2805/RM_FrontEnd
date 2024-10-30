@@ -165,7 +165,7 @@ const Cart = () => {
          className=" text-[18px] w-full px-3 py-6 bg-gradient-to-r from-[#11c4ef] to-[#1187ef] text-white dark:text-white 
          hover:scale-95 transition-transform duration-150 ease-linear"
         >
-            Check out
+            Tạo đơn
         </Button>
          </SheetClose>
         </div>

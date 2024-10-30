@@ -78,6 +78,7 @@ export default function TableComponent({
       setReservationDetail(reservationDetail)
       setGetTimeLoading(false)
     } catch (error) {
+      console.log(error)
       setGetTimeLoading(false)
       return toast({
         variant: "destructive",
@@ -253,7 +254,6 @@ export default function TableComponent({
     }
     </div>
   )
-
   return (
     <div
     ref={setNodeRef}
