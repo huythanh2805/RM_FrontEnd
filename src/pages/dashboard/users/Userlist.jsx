@@ -1,16 +1,26 @@
 import { useUser } from "@/hooks/dashboard/useAccount";
 import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const UserList = () => {
   const { list, isLoading, error, deleteUser } = useUser();
+  const [filter, setFilter] = useState("all"); 
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading user list.</p>;
+
   const handleDelete = async (userId) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?")) {
       await deleteUser(userId);
     }
   };
+
+  const filteredUsers = list.filter((user) => {
+    if (filter === "all") return true;
+    return user.role === filter; 
+  });
+
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
@@ -22,6 +32,20 @@ const UserList = () => {
             </div>
           </Link>
         </div>
+
+        {/* Filter Options */}
+        <div className="mb-4">
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="bg-white border border-gray-300 rounded-md p-2"
+          >
+            <option value="all">Tất cả</option>
+            <option value="client">Client</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
           <table className="min-w-full bg-white">
             <thead className="border-b border-[#d5d5d5] text-left text-xs font-semibold text-[#202224] uppercase tracking-wider">
@@ -35,7 +59,7 @@ const UserList = () => {
               </tr>
             </thead>
             <tbody>
-              {list.map((user, index) => (
+              {filteredUsers.map((user, index) => (
                 <tr className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition" key={user._id}>
                   <td className="hidden lg:block py-4 px-6 text-sm font-medium text-[#202224]">{index + 1}</td>
                   <td className="py-4 px-6 text-sm font-medium text-[#202224] max-w-[100px] lg:max-w-[250px] break-words">

@@ -13,7 +13,6 @@ import { useProfile } from "@/hooks/home/useProfile";
 import { toast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
-import { PiShoppingCartSimpleDuotone } from "react-icons/pi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Cart from "../Cart";
 
@@ -91,7 +90,7 @@ const Header = () => {
               </Sheet>
             </div>
 
-            <Cart/>
+            <Cart />
 
             <DropdownMenu>
               <DropdownMenuTrigger className="h-fit w-fit border-none outline-none ring-0 ring-offset-0">
@@ -115,6 +114,9 @@ const Header = () => {
                     <DropdownMenuLabel className="text-gray-500">Xin chào , {user?.userName}</DropdownMenuLabel>
                     <DropdownMenuItem className="hover:bg-gray-100 text-gray-800">
                       <Link to="/profile">Thông tin cá nhân</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="hover:bg-gray-100 text-gray-800">
+                      <Link to={`/history/${user?._id}`}>Lịch sử đặt bàn</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => {
