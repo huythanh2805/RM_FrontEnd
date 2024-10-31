@@ -22,6 +22,8 @@ import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
 import UserUpdate from "@/pages/dashboard/users/UserUpdate";
 import About from "@/pages/home/About";
+import { HistoryReservation } from "@/pages/home/HistoryReservation";
+import { HistoryReservationDetail } from "@/pages/home/HistoryReservationDetails";
 import Home from "@/pages/home/Home";
 import HomeLayout from "@/pages/home/HomeLayout";
 import Menu from "@/pages/home/Menu";
@@ -58,6 +60,14 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "history/:userId",
+        element: <HistoryReservation />,
+      },
+      {
+        path: "history-details",
+        element: <HistoryReservationDetail />,
       },
     ],
   },
