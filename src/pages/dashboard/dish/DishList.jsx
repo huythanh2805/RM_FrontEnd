@@ -7,21 +7,38 @@ import { FaEye } from "react-icons/fa";
 import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
 import { AiTwotoneFileImage } from "react-icons/ai";
+import Pagination from "@/components/Pagination";
 
 const DishList = () => {
-  const [data, setData] = useState([]);
+  const [dishes, setDishes] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("Tất cả");
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemPerPage = 5;
 
   const fetchData = () => {
     axios
       .get(BASE_URL + "/dishes")
       .then((res) => {
-        setData(res.data);
+        setDishes(res.data);
         console.log(res.data);
+
+        const categoryList = [
+          ...new Set(res.data.map((item) => item.category_id.name)),
+        ];
+
+        setCategories(["Tất cả", ...categoryList]);
+        console.log(categoryList);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  const filterDishes =
+    selectedCategory === "Tất cả"
+      ? dishes
+      : dishes.filter((dish) => dish.category_id.name === selectedCategory);
 
   useEffect(() => {
     fetchData();
@@ -55,17 +72,45 @@ const DishList = () => {
     });
   };
 
+  const pageCount = Math.ceil(filterDishes.length / itemPerPage);
+
+  const currentItems = filterDishes.slice(
+    currentPage * itemPerPage,
+    (currentPage + 1) * itemPerPage
+  );
+
+  const handlePageClick = (e) => {
+    setCurrentPage(e.selected);
+  };
+
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
-        <div className="flex items-center justify-between">
-          <p className="text-[32px] font-semibold mb-4">Món ăn</p>
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[32px] font-semibold">Món ăn</p>
           <Link to={"/dashboard/dishes/add"}>
             <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-xs font-semibold hover:bg-green-300 transition">
               Thêm +
             </div>
           </Link>
         </div>
+
+        {/* Lọc món */}
+        <div className="flex justify-between mb-4">
+          <div class="max-w-sm">
+            <select
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5"
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              {categories.map((category) => (
+                <option value={category} key={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
           <table className="min-w-full bg-white">
             <thead className="border-b border-[#d5d5d5] text-left text-xs font-semibold text-[#202224] uppercase tracking-wider">
@@ -83,7 +128,7 @@ const DishList = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((d, index) => (
+              {currentItems.map((d, index) => (
                 <tr
                   className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
                   key={d._id}
@@ -155,6 +200,9 @@ const DishList = () => {
               ))}
             </tbody>
           </table>
+
+          {/* Phân trang */}
+          <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
         </div>
       </div>
     </div>
