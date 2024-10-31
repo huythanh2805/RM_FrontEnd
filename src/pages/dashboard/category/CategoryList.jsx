@@ -3,16 +3,19 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
 import Swal from "sweetalert2";
+import Pagination from "@/components/Pagination";
 
 const CategoryList = () => {
-  const [data, setData] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemPerPage = 5;
 
   const fetchData = () => {
     axios
       .get("http://localhost:1111/categories")
       .then((res) => {
-        setData(res.data);
-        console.log(res.data);
+        setCategories(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -22,6 +25,17 @@ const CategoryList = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const pageCount = Math.ceil(categories.length / itemPerPage);
+
+  const currentItems = categories.slice(
+    currentPage * itemPerPage,
+    (currentPage + 1) * itemPerPage
+  );
+
+  const handlePageChage = (e) => {
+    setCurrentPage(e.selected);
+  };
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -74,7 +88,7 @@ const CategoryList = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((d, index) => (
+              {currentItems.map((d, index) => (
                 <tr
                   className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
                   key={d._id}
@@ -116,6 +130,8 @@ const CategoryList = () => {
               ))}
             </tbody>
           </table>
+
+          <Pagination pageCount={pageCount} onPageChange={handlePageChage} />
         </div>
       </div>
     </div>
