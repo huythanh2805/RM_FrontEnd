@@ -66,7 +66,7 @@ const router = createBrowserRouter([
         element: <HistoryReservation />,
       },
       {
-        path: "history-details",
+        path: "history-details/:reservation_id",
         element: <HistoryReservationDetail />,
       },
     ],
