@@ -17,6 +17,9 @@ import DishAdd from "@/pages/dashboard/dish/DishAdd";
 import DishDetail from "@/pages/dashboard/dish/DishDetail";
 import DishList from "@/pages/dashboard/dish/DishList";
 import DishUpdate from "@/pages/dashboard/dish/DishUpdate";
+import EmployeeAdd from "@/pages/dashboard/employee/EmployeeAdd";
+import EmployeeList from "@/pages/dashboard/employee/EmployeeList";
+import EmployeeUpdate from "@/pages/dashboard/employee/EmployeeUpdate";
 import { ProfileAdmin } from "@/pages/dashboard/Profile";
 import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
@@ -102,6 +105,18 @@ const router = createBrowserRouter([
       {
         path: "categories/:id/update",
         element: <CategoryUpdate />,
+      },
+      {
+        path: "employees",
+        element: <EmployeeList />,
+      },
+      {
+        path: "employees/add",
+        element: <EmployeeAdd />,
+      },
+      {
+        path: "employees/:id/update",
+        element: <EmployeeUpdate />,
       },
       {
         path: "dishes",
