@@ -12,7 +12,7 @@ import { ResetPasswordPage } from "@/pages/auth/ResetPasswordPage";
 import CategoryAdd from "@/pages/dashboard/category/CategoryAdd";
 import CategoryList from "@/pages/dashboard/category/CategoryList";
 import CategoryUpdate from "@/pages/dashboard/category/CategoryUpdate";
-import Dashboard from "@/pages/dashboard/Dashboard";
+import LayoutAdmin from "@/pages/dashboard/LayoutAdmin";
 import DishAdd from "@/pages/dashboard/dish/DishAdd";
 import DishDetail from "@/pages/dashboard/dish/DishDetail";
 import DishList from "@/pages/dashboard/dish/DishList";
@@ -34,6 +34,7 @@ import NotFound from "@/pages/home/NotFound";
 import { Profile } from "@/pages/home/Profile";
 import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
+import Dashboard from "@/pages/dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -92,8 +93,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: <LayoutAdmin />,
     children: [
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
       {
         path: "categories",
         element: <CategoryList />,
