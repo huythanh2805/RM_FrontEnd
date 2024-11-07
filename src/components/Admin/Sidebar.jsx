@@ -1,5 +1,5 @@
 import { useProfile } from "@/hooks/home/useProfile";
-import { AiFillProduct } from "react-icons/ai";
+import { AiFillGolden, AiFillProduct } from "react-icons/ai";
 import { FaHome, FaRegMoneyBillAlt } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
 import { MdAccountCircle, MdCategory, MdRememberMe } from "react-icons/md";
@@ -174,6 +174,25 @@ const Sidebar = () => {
                 </div>
               </div>
             </div> */}
+          </li>
+
+          <li>
+            <Link to={"/dashboard/setCombos"}>
+              <div className="flex-col flex">
+                <div className="flex-col flex p-3 bg-white rounded-lg">
+                  <div className="justify-between inline-flex">
+                    <a href="javascript:;" className="h-5 gap-3 flex">
+                      <div className="relative">
+                        <AiFillGolden />
+                      </div>
+                      <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                        Combo
+                      </h2>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </Link>
           </li>
 
           <li>

@@ -35,6 +35,10 @@ import { Profile } from "@/pages/home/Profile";
 import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/dashboard/Dashboard";
+import SetComboList from "@/pages/dashboard/setCombo/SetComboList";
+import SetComboAdd from "@/pages/dashboard/setCombo/setComboAdd";
+import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";
+import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
 
 const router = createBrowserRouter([
   {
@@ -186,6 +190,22 @@ const router = createBrowserRouter([
       {
         path: "users/edit/:id",
         element: <UserUpdate />,
+      },
+      {
+        path: "setCombos",
+        element: <SetComboList />,
+      },
+      {
+        path: "setCombos/add",
+        element: <SetComboAdd />,
+      },
+      {
+        path: "setCombos/:id/update",
+        element: <SetComboUpdate />,
+      },
+      {
+        path: "setCombos/:id/detail",
+        element: <SetComboDetail />,
       },
     ],
   },
