@@ -1,0 +1,395 @@
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { FaPlus, FaRegImage, FaTimes } from "react-icons/fa";
+import BASE_URL from "@/configs";
+import CLOUDINARY_URL from "@/configs/cloudinary_api";
+import { toast } from "@/hooks/use-toast";
+
+const SetComboUpdate = () => {
+  const { id } = useParams();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
+
+  const [dishes, setDishes] = useState([]);
+  const [isMenu, setIsMenu] = useState(false);
+  const [selectDish, setSelectDish] = useState([]);
+  const [dishImage, setDishImage] = useState([]);
+  const [images, setImages] = useState([]);
+  const [imagesErr, setImagesErr] = useState(false);
+  const [imagesUpload, setImagesUpload] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/setCombos/${id}`)
+      .then((res) => {
+        // console.log(res.data);
+
+        const combo = res.data;
+        setValue("name", combo.name);
+        setValue("price", combo.price);
+        setValue("desc", combo.desc);
+        setValue("isShow", combo.isShow);
+        setImages(combo.images);
+
+        // Kiểm tra nếu setComboProducts không rỗng và lấy mảng dishes từ phần tử đầu tiên
+        if (combo.setComboProducts && combo.setComboProducts.length > 0) {
+          const dishes = combo.setComboProducts[0].dishes;
+          setSelectDish(dishes.map((dish) => dish._id)); // Lưu _id của các món ăn
+          //   console.log(dishes);
+          const selectedDishImages = dishes.map((dish) => dish.images[0]);
+          setDishImage(selectedDishImages); // Lưu hình ảnh của món ăn
+        }
+      })
+      .catch((err) => console.error(err));
+
+    axios
+      .get(BASE_URL + `/dishes`)
+      .then((res) => {
+        setDishes(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [id, setValue]);
+
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "rm-file");
+
+    const response = await axios.post(CLOUDINARY_URL, formData);
+    return response.data.secure_url;
+  };
+
+  const handleImageChange = async (e) => {
+    setImagesUpload(true);
+
+    const files = Array.from(e.target.files);
+    const uploadedImages = await Promise.all(
+      files.map((file) => uploadImage(file))
+    );
+
+    setImages((prevImages) => [...prevImages, ...uploadedImages]);
+    setImagesUpload(false);
+    setImagesErr(false);
+  };
+
+  const handleRemoveImage = (index) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+
+  const handleOpenMenu = () => setIsMenu(true);
+  const handleCloseMenu = () => {
+    setSelectDish([]);
+    setDishImage([]);
+    setIsMenu(false);
+  };
+
+  const handleSelectDish = (dishId) => {
+    setSelectDish((prev) =>
+      prev.includes(dishId)
+        ? prev.filter((id) => id !== dishId)
+        : [...prev, dishId]
+    );
+  };
+
+  const handleConfirmDish = () => {
+    const selectedDish = dishes.filter((dish) => selectDish.includes(dish._id));
+    const selectedImages = selectedDish.map((dish) => dish.images[0]);
+    setDishImage(selectedImages);
+    setIsMenu(false);
+  };
+
+  const onSubmit = async (data) => {
+    try {
+      if (images.length === 0) {
+        setImagesErr(true);
+        return;
+      }
+
+      const formData = {
+        ...data,
+        images,
+        dishes: selectDish,
+      };
+
+      await axios.put(`${BASE_URL}/setCombos/${id}`, formData);
+      navigate("/dashboard/setCombos");
+      toast({ variant: "success", title: "Cập nhật combo thành công!" });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-[#f5f6fa]">
+      <div className="px-5 py-2">
+        <h2 className="text-[32px] font-semibold mb-4">Cập nhật combo</h2>
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          {/* Tên combo */}
+          <div>
+            <label htmlFor="name" className="text-sm font-medium text-gray-700">
+              Tên combo:
+            </label>
+            <input
+              type="text"
+              className={`mt-1 block w-full px-4 py-2 border ${
+                errors.name ? "border-red-500" : "border-gray-300"
+              } rounded-md shadow-sm focus:outline-none`}
+              {...register("name", {
+                required: "Vui lòng nhập tên combo",
+              })}
+            />
+            {errors.name && (
+              <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>
+            )}
+          </div>
+
+          {/* Giá bán */}
+          <div>
+            <label
+              htmlFor="price"
+              className="text-sm font-medium text-gray-700"
+            >
+              Giá bán:
+            </label>
+            <input
+              type="number"
+              className={`mt-1 block w-full px-4 py-2 border ${
+                errors.price ? "border-red-500" : "border-gray-300"
+              } rounded-md shadow-sm focus:outline-none`}
+              {...register("price", {
+                required: "Vui lòng nhập giá món",
+                min: {
+                  value: 1,
+                  message: "Giá món phải lớn hơn 1",
+                },
+              })}
+            />
+            {errors.price && (
+              <p className="mt-2 text-sm text-red-600">
+                {errors.price.message}
+              </p>
+            )}
+          </div>
+
+          {/* Hình ảnh combo */}
+          <div>
+            <p className="text-sm font-medium text-gray-700">Ảnh combo:</p>
+            <input
+              type="file"
+              id="images"
+              className="hidden"
+              accept="image/*"
+              multiple
+              onChange={handleImageChange}
+            />
+            <div className="mt-2">
+              {imagesUpload && (
+                <div className="w-52 my-2 px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse">
+                  Đang tải ảnh lên...
+                </div>
+              )}
+
+              {images.length === 0 ? (
+                <label htmlFor="images" className="cursor-pointer">
+                  <div
+                    className={`flex items-center justify-center w-24 h-24 border-2  ${
+                      imagesErr ? "border-red-400" : "border-gray-400"
+                    } border-dashed rounded bg-white`}
+                  >
+                    <FaRegImage
+                      size={40}
+                      className={imagesErr ? "text-red-600" : "text-gray-600"}
+                    />
+                  </div>
+                </label>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {images.map((url, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={url}
+                        alt={`Uploaded ${index}`}
+                        className="w-24 h-24 object-cover rounded"
+                      />
+                      <button
+                        type="button"
+                        className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1"
+                        onClick={() => handleRemoveImage(index)}
+                      >
+                        <FaTimes />
+                      </button>
+                    </div>
+                  ))}
+
+                  {/* Nút thêm hình ảnh */}
+                  <label htmlFor="images" className="cursor-pointer">
+                    <div
+                      className={`flex items-center justify-center w-24 h-24 border-2  ${
+                        imagesErr ? "border-red-400" : "border-gray-400"
+                      } border-dashed rounded bg-white`}
+                    >
+                      <FaRegImage
+                        size={40}
+                        className={imagesErr ? "text-red-600" : "text-gray-600"}
+                      />
+                    </div>
+                  </label>
+                </div>
+              )}
+
+              {imagesErr && (
+                <p className="mt-2 text-sm text-red-600">
+                  {imagesErr ? "Vui lòng tải lên ít nhất 1 ảnh" : ""}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Món ăn trong combo */}
+          <div>
+            <p className="text-sm font-medium text-gray-700">
+              Món ăn trong combo:
+            </p>
+            {dishImage.length !== 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {dishImage.map((url, index) => (
+                  <div key={index} className="relative mt-2">
+                    <img
+                      src={url}
+                      alt={`Uploaded ${index}`}
+                      className="w-24 h-24 object-cover rounded"
+                    />
+                  </div>
+                ))}
+
+                {/* Nút hình ảnh */}
+                <div
+                  className={`flex items-center justify-center mt-2 w-24 h-24 border-2 border-gray-400 border-dashed rounded bg-white`}
+                  onClick={() => handleOpenMenu()}
+                >
+                  <FaPlus
+                    size={40}
+                    className={imagesErr ? "text-red-600" : "text-gray-600"}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`flex items-center justify-center mt-2 w-24 h-24 border-2 border-gray-400 border-dashed rounded bg-white`}
+                onClick={() => handleOpenMenu()}
+              >
+                <FaPlus
+                  size={40}
+                  className={imagesErr ? "text-red-600" : "text-gray-600"}
+                />
+              </div>
+            )}
+
+            {/* Modal Menu */}
+            {isMenu && (
+              <div className="bg-[#75767a] fixed inset-0 z-50 bg-opacity-50 flex justify-center items-center">
+                <div className="bg-white p-4 ">
+                  <p className="text-center text-xl font-semibold mb-4 ">
+                    Menu
+                  </p>
+                  <div className="grid grid-cols-3 gap-3 mb-3">
+                    {dishes.map((dish) => (
+                      <div key={dish._id}>
+                        <div onClick={() => handleSelectDish(dish._id)}>
+                          <img
+                            src={dish.images[0]}
+                            alt=""
+                            className={`w-20 h-20 lg:w-20 lg:h-25 object-cover rounded-lg mb-1  ${
+                              selectDish.includes(dish._id) ? "opacity-50" : ""
+                            }
+                            }`}
+                          />
+                          <p className="text-center ">
+                            {selectDish.includes(dish._id)
+                              ? "Đã chọn"
+                              : dish.name}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-center items-center gap-5">
+                    <div
+                      className="bg-gray-200 text-gray-800 px-5 py-1 rounded-lg hover:bg-gray-300 cursor-pointer"
+                      onClick={() => handleCloseMenu()}
+                    >
+                      Hủy bỏ
+                    </div>
+                    <div
+                      className="bg-green-200 text-green-800 px-5 py-1 rounded-lg hover:bg-green-300 cursor-pointer"
+                      onClick={handleConfirmDish}
+                    >
+                      Xác nhận
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Mô tả */}
+          <div>
+            <label htmlFor="desc" className="text-sm font-medium text-gray-700">
+              Mô tả:
+            </label>
+            <textarea
+              className="mt-1 block h-32 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none"
+              {...register("desc")}
+            />
+          </div>
+
+          {/* isShow */}
+          <div>
+            <div className="flex items-center">
+              <label
+                htmlFor="isShow"
+                className="text-sm font-medium text-gray-700"
+              >
+                Có sẵn
+              </label>
+              <input
+                type="checkbox"
+                className="ml-2 w-4 h-4"
+                {...register("isShow")}
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-2">
+            <Link
+              to="/dashboard/setCombos"
+              className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300"
+            >
+              Quay lại
+            </Link>
+
+            <button
+              type="submit"
+              className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-green-300 transition"
+            >
+              Cập nhật
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default SetComboUpdate;
