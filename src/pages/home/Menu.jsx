@@ -10,20 +10,19 @@ import { useCart } from "@/contexts/CartProvider";
 
 const Menu = ({ limit }) => {
   const { colorCode } = useThemeContext();
-  const {addItem} = useCart()
+  const { addItem } = useCart();
   const [dish, setDish] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const [ratings, setRatings] = useState({});
 
-  // Function to handle rating change
   const handleRatingChange = (newRating, dishId) => {
     setRatings({
       ...ratings,
       [dishId]: newRating,
     });
   };
-  
+
   useEffect(() => {
     axios
       .get("http://localhost:1111/dishes")
@@ -54,17 +53,29 @@ const Menu = ({ limit }) => {
   const handleAddToCart = (dish) => {
     console.log(`Added ${dish.name} to cart`);
     addItem({
-    dish_id: dish._id,
-    name: dish.name,
-    price: dish.price,
-    image: dish.images[0],
-    quantity: 1,
-    type: "dish"
-    })
+      dish_id: dish._id,
+      name: dish.name,
+      price: dish.price,
+      image: dish.images[0],
+      quantity: 1,
+      type: "dish",
+    });
   };
 
   return (
     <div className="w-full p-10">
+      <img
+        src="https://sun-themes.com/html/fooday/assets/images/background/pizza1.png"
+        alt="Vegetable 1"
+        className="absolute left-0 transform translate-x-[-60%] translate-y-[120%] w-40 h-40 sm:w-auto sm:h-auto hidden lg:block"
+      />
+
+      <img
+        src="https://sun-themes.com/html/fooday/assets/images/background/food1.png"
+        alt="Vegetable 2"
+        className="absolute right-0 transform translate-x-[40%] translate-y-[-5%] w-40 h-40 sm:w-auto sm:h-auto hidden lg:block"
+      />
+
       <div
         className="text-xl font-semibold mb-2 flex justify-center items-center"
         style={{ color: colorCode }}
@@ -102,7 +113,7 @@ const Menu = ({ limit }) => {
         {limitDishes.map((item) => (
           <div
             key={item._id}
-            className="relative group rounded-lg shadow-lg overflow-hidden bg-white w-full"
+            className="relative group rounded shadow-lg overflow-hidden bg-white w-full"
           >
             <div className="relative overflow-hidden">
               <img

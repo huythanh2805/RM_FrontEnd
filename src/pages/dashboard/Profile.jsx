@@ -106,7 +106,7 @@ export const ProfileAdmin = () => {
                   </div>
                 </div>
               </div>
-              <h2 className="text-center mt-1 font-semibold dark:text-gray-300 mt-11">Tải lên ảnh hồ sơ</h2>
+              <h2 className="text-center font-semibold dark:text-gray-300 mt-11">Tải lên ảnh hồ sơ</h2>
               <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
                 <div className="w-full mb-4 mt-6">
                   <label className="mb-2 dark:text-gray-300">Tên</label>
