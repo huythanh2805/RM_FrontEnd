@@ -1,54 +1,35 @@
-import { useThemeContext } from "@/contexts/ThemeProvider";
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 const Slider = () => {
-  const images = [
-    "/imgs/img1.jpg",
-    "/imgs/img2.jpg",
-  ];
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const { colorCode } = useThemeContext();
-
-  const goToNext = () => {
-    const isLastSlide = currentIndex === images.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setCurrentIndex(newIndex);
-  };
-
-  const handleDoubleClick = () => {
-    goToNext();
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      goToNext();
-    }, 3000);
-
-    // Dọn dẹp interval khi component unmount
-    return () => clearInterval(interval);
-  }, [currentIndex]);
-
   return (
-    <div className="relative w-full h-[500px] overflow-hidden">
-      {/* Slider Image */}
+    <div className="relative w-full h-[800px] overflow-hidden">
       <div
-        style={{ backgroundImage: `url(${images[currentIndex]})` }}
-        className="w-full h-full bg-center bg-no-repeat bg-cover transition-opacity duration-500 ease-in-out object-center"
-        onDoubleClick={handleDoubleClick} 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/imgs/slider2-bg1.jpg')",
+          backgroundAttachment: "fixed", // parallax effect
+        }}
       ></div>
 
-      <div className="absolute top-1/3 w-full text-center text-white">
-        <h2 className="text-4xl font-bold">
-          CHÀO MỪNG BẠN ĐẾN VỚI NHÀ HÀNG GOLDEN FORK
-        </h2>
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white">
         <img
-          src="https://sun-themes.com/html/fooday/assets/images/slider/slider1-icon.png"
-          alt="Icon"
-          className="mx-auto my-2 w-[120px] h-[75px]"
+          src="https://sun-themes.com/html/fooday/assets/images/slider/slider3-icon.png"
+          alt="logo"
+          className="w-50 mb-2 hidden sm:block"
         />
-        <p className="text-2xl mt-2">
-          Hãy thưởng thức những món ăn hấp dẫn tại Golden Fork
+        <h1 className="text-5xl md:text-4xl sm:text-3xl font-bold">
+          GOLDEN FORK RESTAURANT
+        </h1>
+        <p className="text-4xl md:text-2xl sm:text-xl mt-4 flex items-center justify-center">
+          <span className="bg-white p-1 rounded-full ml-0 mr-0"></span>
+          <span className="bg-white h-[2px] w-[200px]"></span>
+          <span className="ml-4">Tasty</span>
+          <span className="bg-white p-1 rounded-full ml-4 mr-4"></span>
+          <span>Delicious</span>
+          <span className="bg-white p-1 rounded-full ml-4 mr-4"></span>
+          <span>Savoury</span>
+          <span className="bg-white h-[2px] w-[200px] ml-4"></span>
+          <span className="bg-white p-1 rounded-full ml-0 mr-0"></span>
         </p>
       </div>
     </div>

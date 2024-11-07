@@ -6,6 +6,7 @@ import Slider from "@/components/layouts/Silder";
 import StatsCounter from "@/components/layouts/StatsCounter";
 import Menu from "./Menu";
 import ButtonViewMore from "@/components/ButtonViewMore";
+import ChefProfile from "./ChefProfile";
 
 const Home = () => {
   const { isBoxed } = useThemeContext();
@@ -18,9 +19,10 @@ const Home = () => {
       >
         <OurStory />
         <ReservationForm />
-        <Menu limit={6} />
-        <ButtonViewMore />
       </section>
+      <ChefProfile className="w-full" />
+      <Menu limit={6} />
+      <ButtonViewMore />
       <StatsCounter />
     </>
   );
