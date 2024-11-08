@@ -225,7 +225,7 @@ const Calculator = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orderedFoods.map((orderedFood) => (
+          {orderedFoods?.map((orderedFood) => (
             <TableRow
               onClick={() => handleCheckboxChange(orderedFood._id)}
               key={orderedFood._id}
@@ -347,7 +347,7 @@ const Calculator = ({
 
       <div className="w-full py-4 flex gap-5">
         <Button
-          onClick={() => router("/dashboard/tables")}
+          onClick={() => router("/admin/tables")}
           className="flex-1 py-6 text-[17px] text-white dark:text-white bg-red-1 dark:bg-red-1 hover:scale-95 transition-transform duration-150 ease-linear"
         >
           Quay lại
@@ -465,7 +465,7 @@ const Calculator = ({
             </DialogClose>
             <DialogClose asChild>
               <Button
-                onClick={()=> router(`/dashboard/completedBill/${billId}`)}
+                onClick={()=> router(`/admin/completedBill/${billId}`)}
                 className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
               text-white dark:text-white hover:scale-90 transition-all ease-in"
               >

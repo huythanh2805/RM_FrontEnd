@@ -4,10 +4,11 @@ import { useParams } from "react-router-dom"
 import ReservationForm from "./ReservationForm"
 import { toast } from "@/hooks/use-toast"
 import { ServerUrl } from "@/utilities/utils"
+import CreateFoodOrder from "../FoodOrder/CreateFoodOrder"
 
 export default function CreateReservation() {
-
   let { tableId } = useParams();
+  const [orderedFoodOpen, setOrderedFoodOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [numberOfSeats, setNumberOfSeats] = useState()
 
@@ -45,7 +46,7 @@ export default function CreateReservation() {
 
   return (
     <div className="flex flex-col xl:flex-row gap-5 w-full h-full pb-[80px]">
-      <div className="w-full bg-light-bg_2 dark:bg-dark-bg_2 rounded-md flex justify-start">
+      <div className="w-full bg-light-bg_2 dark:bg-dark-bg_2 rounded-md flex justify-start flex-col">
         <div className="w-full lg:w-1/2 px-3 py-4 md:px-6 md:py-6">
           {loading && (
             <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
@@ -59,9 +60,14 @@ export default function CreateReservation() {
             <ReservationForm
               tableId={tableId}
               numberOfSeats={numberOfSeats}
+              orderedFoodOpen={orderedFoodOpen}
+              setOrderedFoodOpen={setOrderedFoodOpen}
             />
           )}
         </div>
+        {/* {
+        orderedFoodOpen && <CreateFoodOrder />
+        } */}
       </div>
     </div>
   )

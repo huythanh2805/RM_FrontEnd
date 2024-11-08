@@ -44,7 +44,7 @@ const ReservationForm = () => {
   const [loading, setLoading] = useState(false)
 
   
-
+     
   // Thiết lập animation cho hình ảnh
   const imgAnimation = {
     hidden: { x: -200, opacity: 0 }, // Vị trí ban đầu bên trái
@@ -63,6 +63,7 @@ const ReservationForm = () => {
   const handleClick = async ()=>{
     const token = localStorage.getItem('token')
     const decodedToken = jwtDecode(token)
+    console.log({decodedToken})
     if(!token || !decodedToken.id) return toast({variant: "destructive", title: "Bạn cần đăng nhập trước khi đặt bàn"})
     if(!datePicker || !timePicker) return toast({variant: "destructive", title: "Bạn chưa chọn thời gian"})
     if(!userName || !phoneNumber) return toast({variant: "destructive", title: "Bạn chưa điền đầy đủ thông tin"})

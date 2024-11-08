@@ -42,7 +42,7 @@ const DishDetail = () => {
               text: "Món ăn đã được xóa thành công.",
               icon: "success",
             });
-            navigate("/dashboard/dishes");
+            navigate("/admin/dishes");
           })
           .catch((err) => {
             console.log(err);
@@ -133,7 +133,7 @@ const DishDetail = () => {
               </div>
 
               <div className="flex space-x-4 mb-6">
-                <Link to={`/dashboard/dishes/${dataDish._id}/update`}>
+                <Link to={`/admin/dishes/${dataDish._id}/update`}>
                   <div className="bg-indigo-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-indigo-700">
                     Cập nhật
                   </div>
@@ -145,7 +145,7 @@ const DishDetail = () => {
                   </div>
                 </div>
 
-                <Link to={`/dashboard/dishes`}>
+                <Link to={`/admin/dishes`}>
                   <div className="bg-gray-200 flex gap-2 items-center text-gray-800 px-6 py-2 rounded-md hover:bg-gray-300">
                     Quay lại
                   </div>

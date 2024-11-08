@@ -26,7 +26,7 @@ const UserList = () => {
       <div className="px-5 py-2">
         <div className="flex items-center justify-between">
           <p className="text-[32px] font-semibold mb-4">Danh sách người dùng</p>
-          <Link to={"/dashboard/users/add"}>
+          <Link to={"/admin/users/add"}>
             <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-xs font-semibold hover:bg-green-300 transition">
               Thêm +
             </div>
@@ -76,7 +76,7 @@ const UserList = () => {
                   </td>
 
                   <td className="py-4 px-6 text-sm flex items-center gap-1.5 lg:gap-3">
-                    <Link to={`/dashboard/users/edit/${user._id}`}>
+                    <Link to={`/admin/users/edit/${user._id}`}>
                       <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">
                         <FaPenToSquare />
                       </div>

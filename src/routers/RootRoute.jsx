@@ -96,11 +96,11 @@ const router = createBrowserRouter([
     element: <ResetPasswordPage />,
   },
   {
-    path: "/dashboard",
+    path: "/admin",
     element: <LayoutAdmin />,
     children: [
       {
-        path: "/dashboard",
+        path: "/admin",
         element: <Dashboard />,
       },
       {

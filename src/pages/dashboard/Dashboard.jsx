@@ -63,7 +63,7 @@ const Dashboard = () => {
             </div>
           </div>
           {/* Tổng món ăn */}
-          <Link to="/dashboard/dishes">
+          <Link to="/admin/dishes">
             <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default ">
               <div className="px-6">
                 <div className="flex h-11.5 w-11.5 rounded-full bg-meta-2 dark:bg-meta-4">

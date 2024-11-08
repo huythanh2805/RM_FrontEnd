@@ -17,7 +17,7 @@ const CategoryAdd = () => {
       .post("http://localhost:1111/categories", data)
       .then((res) => {
         // console.log(res);
-        navigate("/dashboard/categories");
+        navigate("/admin/categories");
         toast({ variant: "success", title: "Thêm danh mục thành công" });
       })
       .catch((err) => {
@@ -88,7 +88,7 @@ const CategoryAdd = () => {
 
             <div className="flex justify-end space-x-2">
               <Link
-                to="/dashboard/categories"
+                to="/admin/categories"
                 className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300 "
               >
                 Quay lại

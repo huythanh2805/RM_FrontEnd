@@ -72,7 +72,7 @@ const DishAdd = () => {
       };
 
       await axios.post(BASE_URL + "/dishes", formData);
-      navigate("/dashboard/dishes");
+      navigate("/admin/dishes");
       toast({ variant: "success", title: "Thêm món ăn thành công !" });
     } catch (error) {
       console.log(error);
@@ -265,7 +265,7 @@ const DishAdd = () => {
 
           <div className="flex justify-end space-x-2">
             <Link
-              to="/dashboard/dishes"
+              to="/admin/dishes"
               className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300"
             >
               Quay lại

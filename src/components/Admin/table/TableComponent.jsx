@@ -151,7 +151,7 @@ export default function TableComponent({
             variant: "sucess",
             title: data.message
           })
-          router('/dashboard/listReser')
+          router('/admin/listReser')
         } catch (error) {
           console.log(error)
            toast({
@@ -165,14 +165,14 @@ export default function TableComponent({
     if (reservationId) {
       updateReservation(reservationId , table_id, type)
     }else{
-      router('/dashboard/reservations/createReservation/'+ table_id)
+      router('/admin/reservations/createReservation/'+ table_id)
     }
   }
   const editReservation = (table_id)=>{
-   router('/dashboard/reservations/updateReservation/'+ table_id)
+   router('/admin/reservations/updateReservation/'+ table_id)
  }
   const OrderFood = (reservation_id)=>{
-   router('/dashboard/foodOrder/'+ reservation_id)
+   router('/admin/foodOrder/'+ reservation_id)
  }
   // Overlayout
   if(isDragging) return (
@@ -337,7 +337,7 @@ export default function TableComponent({
           className='absolute z-30 inset-0 top-0 left-0 w-full h-full bg-blur_bg dark:bg-blur_bg flex items-center justify-center rounded-md'>
             <div className='w-full h-full flex flex-col gap-1 items-center justify-center'>
             <h1 className='font-semibold text-[19px] text-light-warning dark:text-dark-warning'>Đang phục vụ </h1>
-            {getTimeLoading ? <div>00:00:00</div>: <TimeInterval reservationStartTime={reservationDetail.startTime}/>} 
+            {getTimeLoading ? <div>00:00:00</div>: <TimeInterval reservationStartTime={reservationDetail?.startTime}/>} 
             </div>
         </div>
         </DialogTrigger>
@@ -349,7 +349,7 @@ export default function TableComponent({
             <div className='flex items-center gap-2 py-2 text-light-textSoft dark:text-dark-textSoft font-normal'>
              This table has been serving for:
             <div className='text-light-text dark:text-dark-text'>
-            {getTimeLoading ? <div>00:00:00</div>: <TimeInterval reservationStartTime={reservationDetail.startTime}/>} 
+            {getTimeLoading ? <div>00:00:00</div>: <TimeInterval reservationStartTime={reservationDetail?.startTime}/>} 
             </div>
             </div>
           </DialogHeader>

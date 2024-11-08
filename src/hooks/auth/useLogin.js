@@ -19,7 +19,7 @@ export const useLogin = (setIsLoggedIn) => {
       localStorage.setItem("token", token);
       setIsLoggedIn(true);
       if (role === "ADMIN") {
-        navigate("/dashboard"); // Đường dẫn cho quản trị viên
+        navigate("/admin"); // Đường dẫn cho quản trị viên
       } else {
         navigate("/"); // Đường dẫn cho người dùng bình thường
       }
