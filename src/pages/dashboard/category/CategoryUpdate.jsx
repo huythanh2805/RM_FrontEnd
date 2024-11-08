@@ -34,7 +34,7 @@ const CategoryUpdate = () => {
     axios
       .put(`http://localhost:1111/categories/${id}`, data)
       .then(() => {
-        navigate("/dashboard/categories");
+        navigate("/admin/categories");
         toast({ variant: "success", title: "Cập nhật danh mục thành công" });
       })
       .catch((err) => {
@@ -109,7 +109,7 @@ const CategoryUpdate = () => {
 
             <div className="flex justify-end space-x-2">
               <Link
-                to="/dashboard/categories"
+                to="/admin/categories"
                 className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300 "
               >
                 Quay lại

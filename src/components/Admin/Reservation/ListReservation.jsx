@@ -116,11 +116,11 @@ export default function ListReservation() {
   }
 // Update Table_id for reservation
   const updateTable = (reservationId)=>{
-   router(`/dashboard/tables/${reservationId}?type=RESELECT`)
+   router(`/admin/tables/${reservationId}?type=RESELECT`)
   }
 // select Table_id for reservation
   const selectTable = (reservationId)=>{
-   router(`/dashboard/tables/${reservationId}?type=SELECT`)
+   router(`/admin/tables/${reservationId}?type=SELECT`)
   }
 // confirm reservation
   const confirmReser = async (reservationId)=>{
@@ -158,9 +158,13 @@ export default function ListReservation() {
       })
     }
   }
-  const getDetail = ()=>{
-    router(`/dashboard/tables/${reservationId}?type=SELECT`)
+// Tính tiền 
+  const completedReservation = async(reservationId)=>{
+    router(`/admin/foodOrder/${reservationId}`)
   }
+  // const getDetail = ()=>{
+  //   router(`/dashboard/tables/${reservationId}?type=SELECT`)
+  // }
 
   return (
     <div>
@@ -178,7 +182,8 @@ export default function ListReservation() {
             updateTable,
             selectTable,
             confirmReser,
-            cancelReser
+            cancelReser,
+            completedReservation
           })}
           data={reservations}
           onDelete={handleDeleteDishes}

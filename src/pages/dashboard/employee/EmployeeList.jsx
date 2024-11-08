@@ -69,7 +69,7 @@ const EmployeeList = () => {
       <div className="px-5 py-2">
         <div className="flex items-center justify-between">
           <p className="text-[32px] font-semibold mb-4">Nhân Viên</p>
-          <Link to={"/dashboard/employees/add"}>
+          <Link to={"/admin/employees/add"}>
             <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-xs font-semibold hover:bg-green-300 transition">
               Thêm +
             </div>
@@ -126,7 +126,7 @@ const EmployeeList = () => {
                     Trống
                   </td>
                   <td className="py-4 px-6 text-sm flex items-center gap-1.5 lg:gap-3">
-                    <Link to={`/dashboard/employees/${d._id}/update`}>
+                    <Link to={`/admin/employees/${d._id}/update`}>
                       <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">
                         <FaPenToSquare />
                       </div>

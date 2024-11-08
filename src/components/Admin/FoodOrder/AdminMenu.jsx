@@ -11,7 +11,7 @@ import { ServerUrl } from '@/utilities/utils'
          if(activedLink === 'all'){
           return dishes
          }else if(dishes){
-          return [...dishes?.filter(dish=> dish.category_id === activedLink)]
+          return [...dishes?.filter(dish=> dish.category_id._id === activedLink)]
          }
     },[activedLink])
   
@@ -92,9 +92,6 @@ import { ServerUrl } from '@/utilities/utils'
                ${orderedFoods.find(orderedFood => orderedFood.dish_id._id === dish._id ) ? 'block' : 'hidden'}`}>
               <Check width={35} height={35} className='font-extrabold text-light-success dark:text-dark-success' />
             </div>
-
-            
-
           </div>
         )
        }

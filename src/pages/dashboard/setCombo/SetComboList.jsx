@@ -61,7 +61,7 @@ const SetComboList = () => {
       <div className="px-5 py-2">
         <div className="flex items-center justify-between mb-2">
           <p className="text-[32px] font-semibold">Set Combo</p>
-          <Link to={"/dashboard/setCombos/add"}>
+          <Link to={"/admin/setCombos/add"}>
             <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-xs font-semibold hover:bg-green-300 transition">
               Thêm +
             </div>
@@ -113,7 +113,7 @@ const SetComboList = () => {
                   </td>
                   <td className="py-3 px-4 lg:px-6 text-sm font-medium text-[#202224] break-words">
                     <Link
-                      to={`/dashboard/setCombos/${d._id}/detail`}
+                      to={`/admin/setCombos/${d._id}/detail`}
                       className="hover:underline"
                     >
                       <div className="flex items-center gap-2 lg:gap-4">
@@ -151,12 +151,12 @@ const SetComboList = () => {
                   </td>
                   <td className="py-3 px-4 lg:px-6">
                     <div className="flex items-center gap-2 lg:gap-3">
-                      <Link to={`/dashboard/setCombos/${d._id}/detail`}>
+                      <Link to={`/admin/setCombos/${d._id}/detail`}>
                         <div className="hidden lg:block bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-xs lg:text-sm font-semibold hover:bg-yellow-300 transition">
                           <FaEye />
                         </div>
                       </Link>
-                      <Link to={`/dashboard/setCombos/${d._id}/update`}>
+                      <Link to={`/admin/setCombos/${d._id}/update`}>
                         <div className="bg-blue-200 text-blue-800 px-2 py-1 rounded-lg text-xs lg:text-sm font-semibold hover:bg-blue-300 transition">
                           <FaPenToSquare />
                         </div>

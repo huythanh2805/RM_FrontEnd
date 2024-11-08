@@ -97,7 +97,7 @@ const Sidebar = () => {
         </div>
         <ul className="flex-col gap-1 flex">
           <li>
-            <Link to="/dashboard">
+            <Link to="/admin">
               <div className="flex-col flex p-3 bg-white rounded-lg">
                 <div className="h-5 gap-3 flex">
                   <div className="relative">
@@ -111,7 +111,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/dashboard/users">
+            <Link to="/admin/users">
               <div className="flex-col gap-1 flex">
                 <div className="flex-col flex p-3 bg-white rounded-lg">
                   <div className="h-5 gap-3 flex">
@@ -127,7 +127,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/dashboard/categories">
+            <Link to="/admin/categories">
               <div className="flex-col gap-1 flex">
                 <div className="flex-col flex p-3 bg-white rounded-lg">
                   <div className="h-5 gap-3 flex">
@@ -144,7 +144,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <Link to={"/dashboard/dishes"}>
+            <Link to={"/admin/dishes"}>
               <div className="flex-col flex">
                 <div className="flex-col flex p-3 bg-white rounded-lg">
                   <div className="justify-between inline-flex">
@@ -177,7 +177,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <Link to={"/dashboard/setCombos"}>
+            <Link to={"/admin/setCombos"}>
               <div className="flex-col flex">
                 <div className="flex-col flex p-3 bg-white rounded-lg">
                   <div className="justify-between inline-flex">
@@ -196,7 +196,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <Link to="/dashboard/tables">
+            <Link to="/admin/tables">
               <div className="flex-col gap-1 flex">
                 <div className="flex-col flex bg-white rounded-lg p-3">
                   <div className="h-5 gap-3 flex">
@@ -212,7 +212,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/dashboard/employees">
+            <Link to="/admin/employees">
               <div className="flex-col gap-1 flex">
                 <div className="flex-col flex bg-white rounded-lg p-3">
                   <div className="h-5 gap-3 flex">
@@ -255,7 +255,7 @@ const Sidebar = () => {
         </div>
         <ul className="flex-col gap-1 flex">
           <li>
-            <Link to="/dashboard/proAdmin">
+            <Link to="/admin/proAdmin">
               <div className="p-3 rounded-lg items-center inline-flex">
                 <div className="h-5 items-center gap-3 flex">
                   <div className="relative">

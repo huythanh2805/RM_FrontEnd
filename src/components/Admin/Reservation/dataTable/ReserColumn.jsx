@@ -20,7 +20,8 @@ export const ReservationColumn = ({
   updateTable,
   selectTable,
   cancelReser,
-  confirmReser
+  confirmReser,
+  completedReservation
  }) => {
 
   const columns = [
@@ -151,7 +152,10 @@ export const ReservationColumn = ({
         const status = row.original.status
         return <div>
           {
-           status === "SEATED" && <Button onClick={()=>updateTable(row.original._id )}>Đổi bàn</Button>
+           status === "SEATED" && <div className="flex items-center gap-2">
+           <Button onClick={()=>updateTable(row.original._id )}>Đổi bàn</Button>
+           <Button onClick={()=>completedReservation(row.original._id )}>Tính tiền</Button>
+         </div>
           }
           {
            status === "ISCOMFIRMED" && <Button onClick={()=>selectTable(row.original._id )}>Nhận bàn</Button>

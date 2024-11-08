@@ -35,7 +35,7 @@ const EmployeeUpdate = () => {
     axios
       .put(`http://localhost:1111/employees/${id}`, data)
       .then(() => {
-        navigate("/dashboard/employees");
+        navigate("/admin/employees");
         toast({ variant: "success", title: "Cập nhật nhân viên thành công" });
       })
       .catch((err) => {
@@ -146,7 +146,7 @@ const EmployeeUpdate = () => {
 
           <div className="flex justify-end space-x-2">
             <Link
-              to="/dashboard/employees"
+              to="/admin/employees"
               className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300 "
             >
               Quay lại

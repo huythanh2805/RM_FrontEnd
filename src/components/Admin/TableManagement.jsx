@@ -323,7 +323,7 @@ export default function TableManagement() {
     })
   )
   return (
-    <div>
+    <div className="w-full md:p-3 xl:p-5">
       {loadingFirstOne ? (
         <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center">
           <FadeLoader

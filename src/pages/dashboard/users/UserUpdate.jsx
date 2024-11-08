@@ -117,7 +117,7 @@ const UserUpdate = () => {
         >
           {isLoading ? "Đang xử lý..." : "Thêm mới"}
         </button>
-        <Link to="/dashboard/users" className="ml-2 px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+        <Link to="/admin/users" className="ml-2 px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
           Quay lại
         </Link>
       </div>

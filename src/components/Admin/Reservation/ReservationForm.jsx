@@ -43,8 +43,11 @@ export default function ReservationForm({
   reservation,
   tableId,
   numberOfSeats,
+  orderedFoodOpen,
+  setOrderedFoodOpen
 }) {
   const [loading, setLoading] = useState(false)
+
   const [createdReservation, setCreatedReservation] =
     useState(null)
   const router = useNavigate()
@@ -94,7 +97,7 @@ export default function ReservationForm({
           ? data.message
           : "You added new reservation succesfully",
       })
-      router("/dashboard/tables")
+      router("/admin/tables")
       setLoading(false)
     } catch (error) {
       console.log(error)
@@ -113,10 +116,10 @@ export default function ReservationForm({
     const reservation_id = createdReservation
       ? createdReservation._id
       : reservation?._id
-    router("/dashboard/reservations/orderedFood/" + reservation_id)
+    router("/admin/reservations/orderedFood/" + reservation_id)
   }
   return (
-    <Form {...form}>
+      <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
@@ -243,8 +246,17 @@ export default function ReservationForm({
           >
             Làm mới
           </Button>
+          {
+            tableId && <Button
+            onClick={()=>setOrderedFoodOpen(!orderedFoodOpen)}
+            type="button"
+            className="mr-4 font-medium text-[16px]"
+          >
+            Chọn món
+          </Button>
+          }
           <Button
-            onClick={()=>router('/dashboard/tables')}
+            onClick={()=>router('/admin/tables')}
             type="button"
             className="mr-4 font-medium text-[16px] bg-red-1 hover:bg-red-1 hover:opacity-80 transition-all duration-300 ease-in-out"
           >

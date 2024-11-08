@@ -123,7 +123,7 @@ const SetComboUpdate = () => {
       };
 
       await axios.put(`${BASE_URL}/setCombos/${id}`, formData);
-      navigate("/dashboard/setCombos");
+      navigate("/admin/setCombos");
       toast({ variant: "success", title: "Cập nhật combo thành công!" });
     } catch (error) {
       console.error(error);
@@ -373,7 +373,7 @@ const SetComboUpdate = () => {
 
           <div className="flex justify-end space-x-2">
             <Link
-              to="/dashboard/setCombos"
+              to="/admin/setCombos"
               className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300"
             >
               Quay lại

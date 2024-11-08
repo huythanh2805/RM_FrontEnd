@@ -111,7 +111,7 @@ export const useUser = (id, form) => {
       queryClient.invalidateQueries(["userListService"]);
       toast({ variant: "success", title: "Thêm mới tài khoản thành công" });
       resetForm();
-      navigate("/dashboard/users");
+      navigate("/admin/users");
     },
     onError: (error) => {
       console.error("Error adding user:", error);
@@ -137,7 +137,7 @@ export const useUser = (id, form) => {
       queryClient.invalidateQueries(["user", id]);
       queryClient.invalidateQueries(["userListService"]);
       toast({ variant: "success", title: "Cập nhật tài khoản thành công" });
-      navigate("/dashboard/users");
+      navigate("/admin/users");
     },
     onError: (error) => {
       console.error("Error updating user:", error);

@@ -82,7 +82,7 @@ const CompletedBill = () => {
           <div className="flex items-center justify-between px-2 py-1">
             <div className="relative md:absolute top-0 left-0 md:py-4 md:px-3">
               <Button
-                onClick={() => router("/dashboard/tables")}
+                onClick={() => router("/admin/tables")}
                 className="flex items-center gap-2 cursor-pointer hover:scale-95 transition-transform ease-in"
               >
                 <p>

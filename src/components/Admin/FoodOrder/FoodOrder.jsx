@@ -17,6 +17,7 @@ export default function FoodOrder() {
 
   //  Get ordered food for reservation
   useEffect(() => {
+    if(!reservationId) return
     const fetData = async () => {
       setLoading(false)
       const res = await fetch(ServerUrl+'/api/orderedFood/' + reservationId, {
@@ -54,8 +55,6 @@ export default function FoodOrder() {
     if (!res.ok) return null
     return data.orderedFood
   }
-  console.log('categories In dis', categories)
-  console.log('dishes In dis', dishes)
   return (
     <div className="px-3 md:px-5 py-2 md:py-4 flex flex-col xl:flex-row gap-5 w-full h-full pb-[80px]">
       <div className="flex-[2] bg-light-bg_2 dark:bg-dark-bg_2 rounded-md">
