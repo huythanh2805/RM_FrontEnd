@@ -7,6 +7,7 @@ import StatsCounter from "@/components/layouts/StatsCounter";
 import Menu from "./Menu";
 import ButtonViewMore from "@/components/ButtonViewMore";
 import ChefProfile from "./ChefProfile";
+import ChefChoice from "./ChefChoice";
 
 const Home = () => {
   const { isBoxed } = useThemeContext();
@@ -17,6 +18,7 @@ const Home = () => {
       <section
         className={`${isBoxed ? "px-0" : ""} relative z-10 bg-white mx-auto`}
       >
+        <ChefChoice/>
         <OurStory />
         <ReservationForm />
       </section>

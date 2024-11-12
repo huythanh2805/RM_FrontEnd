@@ -2,6 +2,7 @@ import Footer from "@/components/layouts/Footer";
 import Header from "@/components/layouts/Header";
 import Slider from "@/components/layouts/Silder";
 import SubscribeUsNow from "@/components/layouts/SubscribeUsNow";
+import Messager from "@/components/Messager";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import Brush from "@/components/siteColor/brush";
 import { useThemeContext } from "@/contexts/ThemeProvider";
@@ -20,7 +21,8 @@ const HomeLayout = () => {
         <Header />
         <main className="">
           <Brush />
-          <ScrollToTopButton />
+          {/* <ScrollToTopButton /> */}
+          <Messager/>
           <Outlet />
         </main>
         <SubscribeUsNow />

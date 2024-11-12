@@ -5,11 +5,11 @@ import { StrictMode } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
-import "./app.css";
 import { ThemeProvider } from "./contexts/ThemeProvider";
-import "./index.css";
 import router from "./routers/RootRoute";
 import { CartProvider } from "./contexts/CartProvider";
+import "./app.css";
+import "./index.css";
 
 const clientID = "1034244549008-5hm8ddao395soh8ebcgpcj3q1tl9q83f.apps.googleusercontent.com";
 const queryClient = new QueryClient();
