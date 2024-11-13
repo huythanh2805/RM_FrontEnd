@@ -51,7 +51,7 @@
     "react-spinners": "^0.14.1",
     "react-to-print": "^2.15.1",
     "run-parallel": "^1.2.0",
-    "socket.io-client": "^4.8.1",
+    "socket.io-client": "^4.7.5",
     "sweetalert2": "^11.14.4",
     "swiper": "^11.1.14",
     "tailwind-merge": "^2.5.2",

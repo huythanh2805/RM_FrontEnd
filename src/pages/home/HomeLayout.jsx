@@ -6,11 +6,14 @@ import Messager from "@/components/Messager";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import Brush from "@/components/siteColor/brush";
 import { useThemeContext } from "@/contexts/ThemeProvider";
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
+
 
 const HomeLayout = () => {
   const { isBoxed } = useThemeContext();
+   // Lắng nghe sự kiện 'receiveMessage' từ server
+
   return (
     <>
       <div

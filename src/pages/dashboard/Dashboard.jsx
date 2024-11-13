@@ -10,7 +10,6 @@ const Dashboard = () => {
     axios
       .get(BASE_URL + "/dishes")
       .then((res) => {
-        console.log(res);
         setDataProduct(res.data);
       })
       .catch((error) => {
