@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
 import Message from "./Message"
 import { socket } from "@/main"
+import { useFetchData } from "@/hooks/useFetchData"
 
 
 
@@ -19,7 +20,10 @@ const AdminMessager = () => {
   const [conversations, setConversation] = useState([])
   const [currentConversation, setCurrentConversation] = useState(null)
   const [valueInput, setValueInput] = useState("")
+  const [newMessage, setNewMessage] = useState(null)
+  const [newConversation, setNewConversation] = useState(null)
   const endOfMessagesRef = useRef(null);
+  const [unseenMessage, setUnseenMessage] = useState(0)
   const [decodedToken, setDecodeToken] = useState(()=>{
     const token = localStorage.getItem('token')
     return jwtDecode(token)
@@ -29,14 +33,80 @@ const AdminMessager = () => {
     hidden: { opacity: 0, scale: 0, x: "100%", y: "100%" },
     visible: { opacity: 1, scale: 1, x: "0%", y: "0%" },
   }
-  // Nhận tin nhắn từ socket và createConversation từ socket
-  console.log({messages})
+
+  // Đồn bộ dữ liệu socket
+
+  // Update lại nhưng tin nhắn đã xem
+  useEffect(()=>{
+    const fetUnseenMessage = async ()=>{
+      if(isOpen){
+       await fetch(`${ServerUrl}/api/message/text/seen/${currentConversation._id}/${decodedToken.id}`, {
+         method: "PUT",
+         headers: {
+          "Content-Type": "application/json"
+         },
+       })
+      }
+      const res = await fetch(`${ServerUrl}/api/message/text/seen/${decodedToken.id}/admin`,{
+       method: "GET"
+      })
+      const data = await res.json()
+      setUnseenMessage(data.unseenMessageCount)
+    }
+    fetUnseenMessage()
+ },[messages, isOpen, newMessage])
+
+
   useEffect(() => {
-    const handleReceiveMessage = socket.on('receiveMessage', (mess) => setMessages(pre=>[...pre, mess]))
+    if(currentConversation) fetchMessages(currentConversation._id)
+  }, [currentConversation])
+  
+  const handleChangeConversation = (conver)=>{
+    fetchMessages(conver._id)
+    setCurrentConversation(conver)
+  }
+  // Trigger khi có 1 tin nhắn mới hoặc conversation mới đến để thực hiện xử lí dữ liệu cho state
+  const resetOrderConversation = (leadingConversationId)=>{
+    // Dựa vào id con versation đổi nó lên đầu
+    setConversation(pre=>{
+      const newestConversation = pre.find(conver=> conver._id === leadingConversationId)
+      const restOfConver = pre.filter(conver=> conver._id !== leadingConversationId)
+      return newestConversation ? [newestConversation, ...restOfConver] : pre;
+    })
+
+  }
+  useEffect(()=>{
+    if(newConversation){
+      setConversation((prev) => [newConversation, ...prev])
+      if(!currentConversation){
+        setCurrentConversation(newConversation)
+        fetchMessages(newConversation._id)
+      }
+      setNewConversation(null)
+    }
+    
+    // Thêm tin nhắn nếu như gửi cho conversation đang mở
+    if(newMessage){
+      setMessages(pre=> {
+        if(pre[0].conversationId === newMessage._id){
+          return [...pre, newMessage]
+        }
+        return pre
+      })
+      // Chèn tin nhắn mới nhất
+      setConversation(pre=> [...pre.map(conver=>(conver._id === newMessage._id ? {...conver, lastMessage: {text: newMessage.text}} : conver))])
+      // Xếp lại thứ tự
+      resetOrderConversation(newMessage._id)
+      setNewMessage(null)
+    }
+  },[newMessage, newConversation])
+  // Nhận tin nhắn từ socket và createConversation từ socket
+  useEffect(() => {
+    const handleReceiveMessage = socket.on('receiveMessage', (mess) => {
+      setNewMessage(mess)
+    })
     const handleReceiveConversation = socket.on('receiveConversation', (data) => {
-      setMessages(pre=>[...pre, {text:data.lastMessage.text, senderId:{_id: data.userId._id}, createdAt: new Date()}])
-      setConversation(pre=>[data ,...pre]);
-      setCurrentConversation(data);
+      setNewConversation(data)
     })
 
     return () => {
@@ -44,12 +114,12 @@ const AdminMessager = () => {
       socket.off('receiveConversation', handleReceiveConversation);
     };
   }, []);
-  console.log({currentConversation})
 // Gửi tin nhắn
   const sendMessage = async (e) => {
     e.preventDefault()
     socket.emit('sendMessage', {
       text: valueInput,
+      seen: false,
       roomId:currentConversation._id,
       _id: currentConversation._id,
       createdAt: new Date(),
@@ -58,6 +128,8 @@ const AdminMessager = () => {
         image: decodedToken.image
       }
     })
+    // Đổi lại ví trí lên đầu
+    resetOrderConversation(currentConversation._id)
     try {
       if(!valueInput) return
       if(!decodedToken.id) return toast({variant: "destructive", title: "Bạn cần đăng nhập để nhắn tin"})
@@ -81,13 +153,16 @@ const AdminMessager = () => {
       toast({variant: "destructive", title: "Không thể gửi tin nhắn"})
     }
   };
+  // Join phong chat
   useEffect(()=>{
-    const handleJoin = socket.emit('joinRoom', currentConversation?._id)
-    return () => {
-      socket.off('joinRoom', handleJoin);
-    };
-  },[currentConversation])
+     if (conversations && conversations.length > 0) {
+      conversations.forEach((conversation) => {
+        socket.emit('joinRoom', conversation._id);
+      });
+    }
+  },[conversations])
 
+  // Lấy cuộc hội thoại và tin nhắn khi lần đầu vào trang
   useEffect(() => {
     const fetData = async () => {
       try {
@@ -108,25 +183,23 @@ const AdminMessager = () => {
     fetData()
   }, [])
 // Lấy tin nhắn trong conversation
-useEffect(() => {
-  const fetData = async () => {
-    try {
-      const res = await fetch(ServerUrl+"/api/message/v2/"+ currentConversation._id, {
-        method: "GET",
-      })
-        const data = await res.json()
-        if(!res.ok) return toast({variant: "destructive", title:data.error})
-        setMessages(data.messages)
-    } catch (error) {
-      console.log(error)
-      toast({
-        variant: "destructive",
-        title: "Something wrong with useFetchData!",
-      })
-    }
+const fetchMessages = async (conversationId) => {
+  try {
+    const res = await fetch(ServerUrl+"/api/message/v2/"+ conversationId, {
+      method: "GET"
+    })
+      const data = await res.json()
+      if(!res.ok) return toast({variant: "destructive", title:data.error})
+      setMessages(data.messages)
+  } catch (error) {
+    console.log(error)
+    toast({
+      variant: "destructive",
+      title: "Something wrong with useFetchData!",
+    })
   }
-  if(currentConversation) fetData()
-}, [currentConversation])
+}
+
   // Cuộn đến tin nhắn mới nhất khi có tin nhắn mới
   useEffect(() => {
     if (isOpen) {
@@ -136,6 +209,7 @@ useEffect(() => {
     }
 
   }, [isOpen , messages]);
+
   return (
     <>
       <AnimatePresence>
@@ -144,11 +218,17 @@ useEffect(() => {
             initial="visible"
             animate="hidden"
             exit="hidden"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => {setIsOpen(!isOpen); setCurrentConversation(conversations[0])}}
             className="fixed z-50 right-5 bottom-5  rounded-full flex items-center justify-center"
           >
             <FaFacebookMessenger className="text-[35px] text-blue-1 " />
             <p className="absolute top-0 left-0 bg-sky-400 opacity-75 inline-flex w-full h-full rounded-full animate-ping duration-2000"></p>
+            {
+              unseenMessage !== null && unseenMessage != 0 && <span className="absolute w-5 h-5 top-0 left-0 -translate-y-[50%] -translate-x-[50%] 
+               rounded-full flex  items-center justify-center bg-red-1 text-white">
+                {unseenMessage}
+              </span>
+            }
           </motion.button>
         )}
       </AnimatePresence>
@@ -181,7 +261,7 @@ useEffect(() => {
                  conversations && conversations.map((conver, index)=>(
                     <div
                     key={index}
-                     onClick={()=>setCurrentConversation(conver)} 
+                     onClick={()=> handleChangeConversation(conver)} 
                      className={cn(
                       "flex items-center px-2 rounded-lg my-2 cursor-pointer",
                       conver._id === currentConversation._id ? "bg-black/10" : ""
@@ -199,8 +279,9 @@ useEffect(() => {
                       {conver.userId._id === decodedToken.id ? "Bản thân" : conver.userId.userName}
                       </h2>
                       <h2 className="text-[17px]  font-sans  truncate text-nowrap">
-                       {conver.lastMessage?.text}
+                       {conver.lastMessage.text}
                       </h2>
+                     
                     </div>
                   </div>
                   ))

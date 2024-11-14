@@ -17,12 +17,15 @@ const Messager = () => {
   const [messages, setMessages] = useState([]);
   const [conversationId, setConversationId] = useState(null);
   const [valueInput, setValueInput] = useState("")
+  const [unseenMessage, setUnseenMessage] = useState(null)
+  const [newMessage, setNewMessage] = useState(null)
   const [decodedToken, setDecodeToken] = useState(()=>{
       const token = localStorage.getItem('token')
       return jwtDecode(token)
        
   })
   const endOfMessagesRef = useRef(null);
+  const {data} = useFetchData(`${ServerUrl}/api/message/text/seen/${decodedToken.id}/client`)
 
   const chatVariants = {
     hidden: { opacity: 0, scale: 0, x: "100%", y: "100%" },
@@ -50,19 +53,44 @@ const Messager = () => {
   }, [])
   // nhận tin nhắn
   useEffect(() => {
-    const handleReceiveMessage = socket.on('receiveMessage',(mess) => setMessages(pre=>[...pre, mess]))
+    const handleReceiveMessage = socket.on('receiveMessage',(mess) => {
+      setMessages(pre=>{
+        const newestMessages = [...pre, mess]
+        return newestMessages
+       })
+    })
     return () => {
       socket.off('receiveMessage', handleReceiveMessage);
     };
   }, []);
   
+  // Update lại nhưng tin nhắn đã xem
+  useEffect(()=>{
+    const fetUnseenMessage = async ()=>{
+      if(isOpen){
+       await fetch(`${ServerUrl}/api/message/text/seen/${conversationId}/${decodedToken.id}`, {
+         method: "PUT",
+         headers: {
+          "Content-Type": "application/json"
+         },
+       })
+      }
+      const res = await fetch(`${ServerUrl}/api/message/text/seen/${decodedToken.id}/client`,{
+       method: "GET"
+      })
+      const data = await res.json()
+      setUnseenMessage(data.unseenMessageCount)
+    }
+    fetUnseenMessage()
+ },[messages, isOpen, newMessage])
+
   useEffect(()=>{
      const handleJoin = socket.emit('joinRoom', conversationId)
      return () => {
       socket.off('joinRoom', handleJoin);
     };
   },[conversationId])
-console.log(messages)
+  
   // Gửi tin nhắn
   const sendMessage = async (e) => {
     e.preventDefault()
@@ -77,6 +105,7 @@ console.log(messages)
       socket.emit("createConversation", {
         lastMessage: { text: valueInput },
         _id: conversationId,
+        seen: false,
         createdAt: new Date(),
         userId: {
           _id: decodedToken.id,
@@ -89,6 +118,7 @@ console.log(messages)
         text: valueInput,
         roomId: conversationId,
         _id: conversationId,
+        seen: false,
         createdAt: new Date(),
         senderId: {
           _id: decodedToken.id,
@@ -148,6 +178,30 @@ console.log(messages)
        },300)
     }
   }, [isOpen , messages]);
+  // Cập nhật lại ste dựa trên data lấy được từ useFetchData 
+  useEffect(() => {
+    if (data) {
+      setUnseenMessage(data.unseenMessageCount);
+    }
+  }, [data]);
+  // Xử lí khi mở 1 cuộc trò chuyện sẽ cập nhật lại tin nhắn thành đã xem
+  const handleSeenMessage = async ()=>{
+    setIsOpen(!isOpen)
+    if(!isOpen){
+      await fetch(`${ServerUrl}/api/message/text/seen/${conversationId}/${decodedToken.id}`, {
+        method: "PUT",
+        headers: {
+         "Content-Type": "application/json"
+        },
+      })
+    }
+    setUnseenMessage(0)
+    updatedUnseenStatus(true)
+  }
+    // Updata seen và cùng 1 true hoặc false
+    const updatedUnseenStatus = (boolean)=>{
+      setMessages(pre=>pre.map(item=>({...item, seen: boolean})))
+    }
   return (
     <>
       <AnimatePresence>
@@ -156,11 +210,17 @@ console.log(messages)
             initial="visible"
             animate="hidden"
             exit="hidden"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => handleSeenMessage()}
             className="fixed z-50 right-5 bottom-5  rounded-full flex items-center justify-center"
           >
             <FaFacebookMessenger className="text-[35px] text-blue-1 " />
             <p className="absolute top-0 left-0 bg-sky-400 opacity-75 inline-flex w-full h-full rounded-full animate-ping duration-2000"></p>
+            {
+              unseenMessage !== null && unseenMessage != 0 && <span className="absolute w-5 h-5 top-0 left-0 -translate-y-[50%] -translate-x-[50%] rounded-full 
+              flex items-center justify-center bg-red-1 text-white">
+                {unseenMessage}
+              </span>
+            }
           </motion.button>
         )}
       </AnimatePresence>
