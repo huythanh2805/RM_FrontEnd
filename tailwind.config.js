@@ -7,6 +7,10 @@ export default {
     extend: {
       transitionDuration: {
         '1500': '1500ms', // Thêm duration tùy chỉnh 2000ms
+        '2000': '2000ms', // Thêm duration tùy chỉnh 2000ms
+      },
+      boxShadow: {
+        'panel': '1px 3px 10px 1px rgba(0, 0, 0, 0.3)',
       },
       colors: {
         blue: {

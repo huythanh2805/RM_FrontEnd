@@ -2,14 +2,18 @@ import Footer from "@/components/layouts/Footer";
 import Header from "@/components/layouts/Header";
 import Slider from "@/components/layouts/Silder";
 import SubscribeUsNow from "@/components/layouts/SubscribeUsNow";
+import Messager from "@/components/Messager";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import Brush from "@/components/siteColor/brush";
 import { useThemeContext } from "@/contexts/ThemeProvider";
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
+
 
 const HomeLayout = () => {
   const { isBoxed } = useThemeContext();
+   // Lắng nghe sự kiện 'receiveMessage' từ server
+
   return (
     <>
       <div
@@ -20,7 +24,8 @@ const HomeLayout = () => {
         <Header />
         <main className="">
           <Brush />
-          <ScrollToTopButton />
+          {/* <ScrollToTopButton /> */}
+          <Messager/>
           <Outlet />
         </main>
         <SubscribeUsNow />

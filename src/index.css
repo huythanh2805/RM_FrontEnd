@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.swiper-button-next:after, .swiper-rtl .swiper-button-prev:after {
+  display: none
+}
+.swiper-button-prev:after, .swiper-rtl .swiper-button-next:after {
+  display: none
+}
 @layer base {
   section {
     @apply max-w-screen-2xl min-h-screen mx-auto py-[75px];
