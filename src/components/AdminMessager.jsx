@@ -3,15 +3,14 @@ import { FaFacebookMessenger } from "react-icons/fa"
 import { motion, AnimatePresence } from "framer-motion"
 import { LucideMinus, SendHorizontal } from "lucide-react"
 import Logo from "../public/images/logo.png"
-import decorate from "../public/images/product-decorate.jpg"
 import { ServerUrl } from "@/utilities/utils"
 import { jwtDecode } from "jwt-decode"
 import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
 import Message from "./Message"
 import { socket } from "@/main"
+import Avatar from "../public/images/avatar.jpg"
 import { useFetchData } from "@/hooks/useFetchData"
-
 
 
 const AdminMessager = () => {
@@ -24,6 +23,7 @@ const AdminMessager = () => {
   const [newConversation, setNewConversation] = useState(null)
   const endOfMessagesRef = useRef(null);
   const [unseenMessage, setUnseenMessage] = useState(0)
+  const [user, setUser] = useState(null)
   const [decodedToken, setDecodeToken] = useState(()=>{
     const token = localStorage.getItem('token')
     return jwtDecode(token)
@@ -33,10 +33,37 @@ const AdminMessager = () => {
     hidden: { opacity: 0, scale: 0, x: "100%", y: "100%" },
     visible: { opacity: 1, scale: 1, x: "0%", y: "0%" },
   }
+   // Lấy thông tin của người dùng dựa vào Id
+   const {data: userData} = useFetchData(`${ServerUrl}/users/get/v2/${decodedToken.id}`)
+   useEffect(()=>{
+     if(userData) setUser(userData.user)
+   },[userData, isOpen])
 
   // Đồn bộ dữ liệu socket
+  // Join phong chat
+    useEffect(()=>{
+      if (conversations && conversations.length > 0) {
+       conversations.forEach((conversation) => {
+         socket.emit('joinRoom', conversation._id);
+       });
+     }
+   },[conversations])
+  // Nhận tin nhắn từ socket và createConversation từ socket
+    useEffect(() => {
+      const handleReceiveMessage = socket.on('receiveMessage', (mess) => {
+        setNewMessage(mess)
+      })
+      const handleReceiveConversation = socket.on('receiveConversation', (data) => {
+        setNewConversation(data)
+      })
+  
+      return () => {
+        socket.off('receiveMessage', handleReceiveMessage);
+        socket.off('receiveConversation', handleReceiveConversation);
+      };
+    }, []);
 
-  // Update lại nhưng tin nhắn đã xem
+  // Update lại những tin nhắn đã xem
   useEffect(()=>{
     const fetUnseenMessage = async ()=>{
       if(isOpen){
@@ -85,8 +112,8 @@ const AdminMessager = () => {
       setNewConversation(null)
     }
     
-    // Thêm tin nhắn nếu như gửi cho conversation đang mở
-    if(newMessage){
+  // Xử lí khi mà tin nhắn gửi đến conversation đang mở
+    if(newMessage && currentConversation){
       setMessages(pre=> {
         if(pre[0].conversationId === newMessage._id){
           return [...pre, newMessage]
@@ -94,42 +121,35 @@ const AdminMessager = () => {
         return pre
       })
       // Chèn tin nhắn mới nhất
-      setConversation(pre=> [...pre.map(conver=>(conver._id === newMessage._id ? {...conver, lastMessage: {text: newMessage.text}} : conver))])
+      setConversation(pre=> [...pre.map(conver=>(conver._id === newMessage._id ? {...conver, lastMessage: {text: newMessage.text, senderId: newMessage.senderId._id}} : conver))])
+      //  Sau khi chèn tin nhắn mới nhất xong xét xem nếu đang ở conversation đó thì set lại tin nhắn là đã xem
+      setConversation(pre=> [...pre.map(conver=>conver._id === currentConversation._id ? {...conver,lastMessage: {...conver.lastMessage,seen:true}} : conver)])
       // Xếp lại thứ tự
       resetOrderConversation(newMessage._id)
       setNewMessage(null)
     }
   },[newMessage, newConversation])
-  // Nhận tin nhắn từ socket và createConversation từ socket
-  useEffect(() => {
-    const handleReceiveMessage = socket.on('receiveMessage', (mess) => {
-      setNewMessage(mess)
-    })
-    const handleReceiveConversation = socket.on('receiveConversation', (data) => {
-      setNewConversation(data)
-    })
 
-    return () => {
-      socket.off('receiveMessage', handleReceiveMessage);
-      socket.off('receiveConversation', handleReceiveConversation);
-    };
-  }, []);
+
 // Gửi tin nhắn
   const sendMessage = async (e) => {
     e.preventDefault()
     socket.emit('sendMessage', {
       text: valueInput,
       seen: false,
+      lastMessage: { text: valueInput, seen: false, senderId: user._id },
       roomId:currentConversation._id,
       _id: currentConversation._id,
       createdAt: new Date(),
       senderId: {
         _id: decodedToken.id,
-        image: decodedToken.image
+        image: user.image
       }
     })
     // Đổi lại ví trí lên đầu
     resetOrderConversation(currentConversation._id)
+    // Chèn tin nhắn mới nhất
+    setConversation(pre=> [...pre.map(conver=>(conver._id === currentConversation._id ? {...conver, lastMessage: {text: valueInput, seen: true, senderId: decodedToken.id}} : conver))])
     try {
       if(!valueInput) return
       if(!decodedToken.id) return toast({variant: "destructive", title: "Bạn cần đăng nhập để nhắn tin"})
@@ -153,14 +173,7 @@ const AdminMessager = () => {
       toast({variant: "destructive", title: "Không thể gửi tin nhắn"})
     }
   };
-  // Join phong chat
-  useEffect(()=>{
-     if (conversations && conversations.length > 0) {
-      conversations.forEach((conversation) => {
-        socket.emit('joinRoom', conversation._id);
-      });
-    }
-  },[conversations])
+
 
   // Lấy cuộc hội thoại và tin nhắn khi lần đầu vào trang
   useEffect(() => {
@@ -171,7 +184,7 @@ const AdminMessager = () => {
         })
           const data = await res.json()
           setConversation(data.recentConversations)
-          setCurrentConversation(data.recentConversations[0])
+          // setCurrentConversation(data.recentConversations[0])
       } catch (error) {
         console.log(error)
         toast({
@@ -210,6 +223,20 @@ const fetchMessages = async (conversationId) => {
 
   }, [isOpen , messages]);
 
+  useEffect(()=>{
+    if(currentConversation){
+      setConversation(pre=> [...pre.map(conver=>conver._id === currentConversation._id ? {...conver,lastMessage: {...conver.lastMessage,seen:true}} : conver)])
+    }
+  },[currentConversation])
+
+  useEffect(()=>{
+    if(isOpen){
+      setCurrentConversation(conversations[0])
+    }
+    if(!isOpen){
+      setCurrentConversation(null)
+    }
+  },[isOpen])
   return (
     <>
       <AnimatePresence>
@@ -218,7 +245,7 @@ const fetchMessages = async (conversationId) => {
             initial="visible"
             animate="hidden"
             exit="hidden"
-            onClick={() => {setIsOpen(!isOpen); setCurrentConversation(conversations[0])}}
+            onClick={() => {setIsOpen(!isOpen)}}
             className="fixed z-50 right-5 bottom-5  rounded-full flex items-center justify-center"
           >
             <FaFacebookMessenger className="text-[35px] text-blue-1 " />
@@ -258,7 +285,7 @@ const fetchMessages = async (conversationId) => {
               <div className="p-5">
                 <div className="min-w-[280px] h-full overflow-y-scroll flex flex-col">
                  {
-                 conversations && conversations.map((conver, index)=>(
+                 conversations && currentConversation && conversations.map((conver, index)=>(
                     <div
                     key={index}
                      onClick={()=> handleChangeConversation(conver)} 
@@ -270,7 +297,7 @@ const fetchMessages = async (conversationId) => {
                     <div className="w-[55px] h-[55px]  rounded-full overflow-hidden flex items-center justify-center ">
                       <img
                         alt="Logo"
-                        src={conver.userId?.image ? conver.userId?.image : decorate}
+                        src={conver.userId?.image ? conver.userId?.image : Avatar}
                         className="object-cover w-full h-full"
                       />
                     </div>
@@ -278,8 +305,11 @@ const fetchMessages = async (conversationId) => {
                       <h2 className="text-[20px] font-medium font-sans">
                       {conver.userId._id === decodedToken.id ? "Bản thân" : conver.userId.userName}
                       </h2>
-                      <h2 className="text-[17px]  font-sans  truncate text-nowrap">
-                       {conver.lastMessage.text}
+                      <h2 className={cn(
+                        "text-[17px]  font-sans text-nowrap truncate ",
+                        conver.lastMessage?.seen ? "text-red-1" : "text-black"
+                      )}>
+                       {conver.lastMessage?.senderId === decodedToken.id ? `Bạn: ${conver.lastMessage?.text}` : conver.lastMessage?.text}
                       </h2>
                      
                     </div>
@@ -296,7 +326,7 @@ const fetchMessages = async (conversationId) => {
                     <div className="w-[45px] h-[45px]  rounded-full overflow-hidden flex items-center justify-center ">
                           <img
                             alt="Logo"
-                            src={currentConversation.userId?.image ? currentConversation.userId?.image : decorate}
+                            src={currentConversation.userId?.image ? currentConversation.userId?.image : Avatar}
                             className="object-cover w-full h-full"
                           />
                      </div>
