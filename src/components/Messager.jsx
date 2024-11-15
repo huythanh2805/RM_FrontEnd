@@ -19,6 +19,7 @@ const Messager = () => {
   const [valueInput, setValueInput] = useState("")
   const [unseenMessage, setUnseenMessage] = useState(null)
   const [newMessage, setNewMessage] = useState(null)
+  const [user, setUser] = useState(null)
   const [decodedToken, setDecodeToken] = useState(()=>{
       const token = localStorage.getItem('token')
       return jwtDecode(token)
@@ -31,6 +32,19 @@ const Messager = () => {
     hidden: { opacity: 0, scale: 0, x: "100%", y: "100%" },
     visible: { opacity: 1, scale: 1, x: "0%", y: "0%" },
   }
+  // Lấy thông tin của người dùng dựa vào Id
+  const {data: userData} = useFetchData(`${ServerUrl}/users/get/v2/${decodedToken.id}`)
+  useEffect(()=>{
+    if(userData) setUser(userData.user)
+  },[userData, isOpen])
+  // Đồng bộ dữ liệu socket
+  // Join phòng
+  useEffect(()=>{
+    const handleJoin = socket.emit('joinRoom', conversationId)
+    return () => {
+      socket.off('joinRoom', handleJoin);
+    };
+  },[conversationId])
   useEffect(() => {
     const fetData = async () => {
       try {
@@ -83,14 +97,8 @@ const Messager = () => {
     }
     fetUnseenMessage()
  },[messages, isOpen, newMessage])
-
-  useEffect(()=>{
-     const handleJoin = socket.emit('joinRoom', conversationId)
-     return () => {
-      socket.off('joinRoom', handleJoin);
-    };
-  },[conversationId])
-  
+   
+  console.log({user})
   // Gửi tin nhắn
   const sendMessage = async (e) => {
     e.preventDefault()
@@ -100,17 +108,16 @@ const Messager = () => {
         variant: "destructive",
         title: "Bạn cần đăng nhập để nhắn tin",
       })
-    const userId = decodedToken.id
     if (messages.length === 0) {
       socket.emit("createConversation", {
-        lastMessage: { text: valueInput },
+        lastMessage: { text: valueInput, seen: false, senderId: user._id },
         _id: conversationId,
         seen: false,
         createdAt: new Date(),
         userId: {
-          _id: decodedToken.id,
-          image: decodedToken.image,
-          userName: decodedToken.userName,
+          _id: user._id,
+          image: user.image,
+          userName: user.userName,
         },
       })
     } else {
@@ -121,8 +128,9 @@ const Messager = () => {
         seen: false,
         createdAt: new Date(),
         senderId: {
-          _id: decodedToken.id,
-          image: decodedToken.image,
+          _id: user._id,
+          image: user.image,
+          userName: user.userName,
         },
       })
     }
@@ -133,13 +141,13 @@ const Messager = () => {
          "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          senderId: userId,
+          senderId: user._id,
           text: valueInput,
           conservationId: conversationId,
         }),
       })
       if(!res.ok) return toast({variant: "destructive", title: "Không thể gửi tin nhắn"})
-      setMessages(pre=>[...pre, {text:valueInput, senderId:{_id: userId}, createdAt: new Date()}])
+      setMessages(pre=>[...pre, {text:valueInput, senderId:{_id: user._id}, createdAt: new Date()}])
       setValueInput('')
     } catch (error) {
       console.log(error)
@@ -149,14 +157,13 @@ const Messager = () => {
   const createConversation = async () => {
     try {
       if(!decodedToken.id) return toast({variant: "destructive", title: "Bạn cần đăng nhập để nhắn tin"})
-      const userId = decodedToken.id
       const res  = await fetch(ServerUrl+"/api/conversation", {
         method: "POST",
         headers: {
          "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          senderId: userId,
+          senderId: user._id,
         }),
       })
       const data = await res.json()

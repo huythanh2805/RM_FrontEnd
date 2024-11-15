@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode"
 import React, { useState } from "react"
-import Logo from "../public/images/logo.png"
+import Avatar from "../public/images/avatar.jpg"
 import { cn } from "@/lib/utils"
 import { formatDate } from "@/utilities/utils"
 const Message = ({message, isRecently,isSperated, previousTime, isFirstText, isAdmin}) => {
@@ -32,8 +32,8 @@ const Message = ({message, isRecently,isSperated, previousTime, isFirstText, isA
           <div className="w-[35px] h-[35px] rounded-full overflow-hidden flex items-center justify-center ">
           
            {
-            isSperated ? <img alt="Logo" src={message.senderId?.image ? message.senderId.image : Logo} className="object-cover w-full h-full" /> :
-            !isRecently ? <img alt="Logo" src={message.senderId?.image ? message.senderId.image : Logo} className="object-cover w-full h-full" />:
+            isSperated ? <img alt="Avatar" src={message.senderId?.image ? message.senderId.image : Avatar} className="object-cover w-full h-full" /> :
+            !isRecently ? <img alt="Avatar" src={message.senderId?.image ? message.senderId.image : Avatar} className="object-cover w-full h-full" />:
             ''
            }
           </div>
