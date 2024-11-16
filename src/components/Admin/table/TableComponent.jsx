@@ -16,11 +16,11 @@ import {
 import { useNavigate, useNavigation, useParams, useSearchParams } from 'react-router-dom'
 import { toast } from '@/hooks/use-toast'
 import { ServerUrl } from '@/utilities/utils'
+import { cn } from '@/lib/utils'
 
 
 export default function TableComponent({
   table,
-  deleteTable,
   updateTable
 } ) {
   // input for updating
@@ -34,6 +34,7 @@ export default function TableComponent({
   const [reservationDetail, setReservationDetail] = useState({})
   const [getTimeLoading, setGetTimeLoading] = useState(false)
   const router = useNavigate()
+  const [isDialogOpen, setIsDialogOpen] = useState(false) 
 
   const { reservationId } = useParams();
   const [searchParams] = useSearchParams();
@@ -90,19 +91,20 @@ export default function TableComponent({
      if (table.status === 'ISSERVING') {
       getReservationDetailByTableId()
      }
-  },[table])
-  const handleDelete = (e) =>{
-    e.preventDefault()
-    deleteTable(table._id)
-  }
+  },[])
+console.log({
+  getTimeLoading
+})
   // update information
   const handleUpdateTable = (e)=>{
     e.preventDefault()
+    e.stopPropagation()
     setEditModelForTextInput(false)
     setEditModleForNumberInput(false)
     updateTable(inputValue)
   }
   const handleOnKeyDown = (e) =>{
+    e.stopPropagation()
     if(e.key === "Enter"){
       setEditModelForTextInput(false)
       setEditModleForNumberInput(false)
@@ -110,6 +112,7 @@ export default function TableComponent({
     }
   }
   const handleChangeInput = (e )=>{
+    e.stopPropagation()
     if(e.target.name === 'number_of_seats'){
        if(parseInt(e.target.value) < 1){
         return toast({
@@ -175,223 +178,165 @@ export default function TableComponent({
    router('/admin/foodOrder/'+ reservation_id)
  }
   // Overlayout
-  if(isDragging) return (
-    <div
-    ref={setNodeRef}
-    style={style}
-    {...attributes}
-    {...listeners}
-    className='relative pointer-events-none opacity-45'
-    >
-    <div className={
-      `
-      ${!( table.status === "AVAILABLE") && 'opacity-30'}
-      'relative z-10 min-w-[80px] min-h-[80px] rounded-md flex flex-col items-center justify-center bg-light-bg_2 dark:bg-dark-bg_2 px-4 py-3 text-light-text dark:text-dark-text'
-      `
-    }>
-      {
-        table.status === "AVAILABLE" && (<button
-          onClick={(e)=>handleDelete(e)}
-          className='absolute text-[15px] w-[20px] h-[20px] flex items-center justify-center top-0 left-0 translate-x-[-50%] translate-y-[-50%] rounded-full
-          bg-light-error dark:bg-dark-error border-none text-white dark:text-white hover:scale-90 transition-all ease-in-out shadow-none hover:shadow-shadown_hover'
-         >
-           X
-         </button>)
-      }
-      
-      {
-        editModelForTextInput ? (<input 
-          autoFocus
-          type="text"  
-          name='name' 
-          value={inputValue.name} 
-          onChange={e=>handleChangeInput(e)} 
-          onBlur={(e)=>handleUpdateTable(e)}
-          onKeyDown={(e)=>handleOnKeyDown(e)}
-          className='bg-transparent dark:bg-transparent w-full px-2 focus:outline-none'
-          />) : <h4 onClick={()=>setEditModelForTextInput(true)}>{inputValue.name}</h4>
-      }
-      <p className='separate_line my-2'></p>
-      <div className='w-full flex flex-col justify-between gap-3 mt-1'>
-        <div className='flex items-center gap-2'>
-       <div className='min-h-[20px] min-w-[20px]'>
-       <UsersRound width={20} height={20}/>
-       </div>
-        {
-        editModleForNumberInput ? (<input 
-          autoFocus
-          type="number"  
-          name='number_of_seats' 
-          value={inputValue.number_of_seats} 
-          onChange={e=>handleChangeInput(e)} 
-          onBlur={(e)=>handleUpdateTable(e)}  
-          onKeyDown={(e)=>handleOnKeyDown(e)}
-          className='bg-transparent dark:bg-transparent w-full focus:outline-none'
-          />) : <h4 onClick={()=>setEditModleForNumberInput(true)} className='flex-grow'>{inputValue.number_of_seats}</h4>
-      }
-        </div>
-        <div className='flex items-center gap-2'>
-        {/* <Annoyed width={20} height={20}/> */}
-        <span>TT :</span>
-        <p className='font-thin text-[14px] text-light-error dark:text-dark-error'>{table.status === "AVAILABLE" ? "Có Sẵn" : table.status === "ISBOOKED" ? "Đã được đặt" : "Đang phục vụ" }</p>
-        </div>
-      </div>
-      <div className='mt-2 w-full flex items-center justify-end'>
-        <Button className='font-medium hover:scale-90 transition-all duration-300 ease-in-out backface-visibility-hidden'>Tạo đơn</Button>
-      </div>
-    </div>
 
-    {
-      !(table.status === "AVAILABLE") && (
-        <div className='absolute z-30 inset-0 top-0 left-0 w-full h-full bg-blur_bg dark:bg-blur_bg flex items-center justify-center rounded-md'>
-        {
-          table.status === "ISSERVING" ? 
-          <h1 className='font-semibold text-[19px] text-light-warning dark:text-dark-warning'>Đang phục vụ</h1>:
-          <h1 className='font-semibold text-[19px] text-light-error dark:text-dark-error'>Đã được đặt</h1> 
-        }
-        </div>
-      )
-    }
-    </div>
-  )
   return (
     <div
-    ref={setNodeRef}
-    style={style}
-    {...attributes}
-    {...listeners}
-    className='relative max-h-[177px]'
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="relative max-h-[140px] min-w-[140px]"
+      onClick={() => setIsDialogOpen(!isDialogOpen)}
     >
-    <div className={
-      `
-      ${!( table.status === "AVAILABLE") && 'opacity-30'}
-      'relative z-10 min-w-[80px] min-h-[80px] rounded-md flex flex-col items-center justify-center bg-light-bg_2 dark:bg-dark-bg_2 px-4 py-3 text-light-text dark:text-dark-text'
-      `
-    }>
-      {
-        table.status === "AVAILABLE" && (<button
-          onClick={(e)=>handleDelete(e)}
-          className='absolute text-[15px] w-[20px] h-[20px] flex items-center justify-center top-0 left-0 translate-x-[-50%] translate-y-[-50%] rounded-full
-          bg-light-error dark:bg-dark-error border-none text-white dark:text-white hover:scale-90 transition-all ease-in-out shadow-none hover:shadow-shadown_hover'
-         >
-           X
-         </button>)
-      }
-      
-      {
-        editModelForTextInput ? (<input 
-          autoFocus
-          type="text"  
-          name='name' 
-          value={inputValue.name} 
-          onChange={e=>handleChangeInput(e)} 
-          onBlur={(e)=>handleUpdateTable(e)}
-          onKeyDown={(e)=>handleOnKeyDown(e)}
-          className='bg-transparent dark:bg-transparent w-full px-2 focus:outline-none'
-          />) : <h4 onClick={()=>setEditModelForTextInput(true)}>{inputValue.name}</h4>
-      }
-      <p className='separate_line my-2'></p>
-      <div className='w-full flex flex-col justify-between gap-3 mt-1'>
-        <div className='flex items-center gap-2'>
-       <div className='min-h-[20px] min-w-[20px]'>
-       <UsersRound width={20} height={20}/>
-       </div>
-        {
-        editModleForNumberInput ? (<input 
-          autoFocus
-          type="number"  
-          name='number_of_seats' 
-          value={inputValue.number_of_seats} 
-          onChange={e=>handleChangeInput(e)} 
-          onBlur={(e)=>handleUpdateTable(e)}  
-          onKeyDown={(e)=>handleOnKeyDown(e)}
-          className='bg-transparent dark:bg-transparent w-full focus:outline-none'
-          />) : <h4 onClick={()=>setEditModleForNumberInput(true)} className='flex-grow'>{inputValue.number_of_seats}</h4>
-      }
+      <div
+        className={cn(
+          "relative z-10 min-w-[80px] min-h-[80px] rounded-md flex flex-col items-center justify-center bg-light-bg_2",
+          "dark:bg-dark-bg_2 px-4 py-3 text-light-text dark:text-dark-text",
+          table.status === "ISSERVING" ? "border border-yellow-1" : ""
+        )}
+      >
+        {editModelForTextInput ? (
+          <input
+            autoFocus
+            type="text"
+            name="name"
+            value={inputValue.name}
+            onChange={(e) => handleChangeInput(e)}
+            onBlur={(e) => handleUpdateTable(e)}
+            onKeyDown={(e) => handleOnKeyDown(e)}
+            className="bg-transparent dark:bg-transparent w-full px-2 focus:outline-none text-[18px]"
+          />
+        ) : (
+          <h4
+            className="text-[18px]"
+            onClick={(e) => {
+              e.stopPropagation(), setEditModelForTextInput(true)
+            }}
+          >
+            {inputValue.name}
+          </h4>
+        )}
+        <p className="separate_line my-2"></p>
+        <div className="w-full flex flex-col justify-between gap-3 mt-1">
+          <div className="flex items-center gap-2">
+            <div className="min-h-[20px] min-w-[20px]">
+              <UsersRound width={20} height={20} />
+            </div>
+            {editModleForNumberInput ? (
+              <input
+                autoFocus
+                type="number"
+                name="number_of_seats"
+                value={inputValue.number_of_seats}
+                onChange={(e) => handleChangeInput(e)}
+                onBlur={(e) => handleUpdateTable(e)}
+                onKeyDown={(e) => handleOnKeyDown(e)}
+                className="bg-transparent dark:bg-transparent w-full focus:outline-none text-[20px]"
+              />
+            ) : (
+              <h4
+                onClick={(e) => {
+                  e.stopPropagation(), setEditModleForNumberInput(true)
+                }}
+                className="flex-grow text-[20px]"
+              >
+                {inputValue.number_of_seats}
+              </h4>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            {/* <Annoyed width={20} height={20}/> */}
+            <span className="text-[17px]">TT :</span>
+            <p
+              className={cn(
+                "font-thin text-[17px]",
+                table.status === "AVAILABLE" ? "text-black" : "text-yellow-1"
+              )}
+            >
+              {table.status === "AVAILABLE" ? "Có Sẵn" : "Đang phục vụ"}
+            </p>
+          </div>
         </div>
-        <div className='flex items-center gap-2'>
-        {/* <Annoyed width={20} height={20}/> */}
-        <span>TT :</span>
-        <p className='font-thin text-[14px] text-light-error dark:text-dark-error'>{table.status === "AVAILABLE" ? "Có Sẵn" : table.status === "ISBOOKED" ? "Đã được đặt" : "Đang phục vụ" }</p>
-        </div>
-      </div>
-      <div className='mt-2 w-full flex items-center justify-end'>
+        {/* <div className='mt-2 w-full flex items-center justify-end'>
         <Button 
         onClick={()=>handleSelectTable(table._id)}
         className='font-medium hover:scale-90 transition-all duration-300 ease-in-out backface-visibility-hidden'
         >
          {type === "RESELECT" ? "Đổi bàn": type === "SELECT" ? "Chọn bàn" : " Tạo đơn"}
         </Button>
+      </div> */}
       </div>
-    </div>
 
-    {
-      (table.status !== "AVAILABLE") && (
-        <>
-          { table.status === "ISSERVING" && (
-         
-        <Dialog>
-        <DialogTrigger>
-        <div 
-          
-          className='absolute z-30 inset-0 top-0 left-0 w-full h-full bg-blur_bg dark:bg-blur_bg flex items-center justify-center rounded-md'>
-            <div className='w-full h-full flex flex-col gap-1 items-center justify-center'>
-            <h1 className='font-semibold text-[19px] text-light-warning dark:text-dark-warning'>Đang phục vụ </h1>
-            {getTimeLoading ? <div>00:00:00</div>: <TimeInterval reservationStartTime={reservationDetail?.startTime}/>} 
-            </div>
-        </div>
-        </DialogTrigger>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger></DialogTrigger>
         <DialogContent className="bg-light-bg_2 dark:bg-dark-bg_2 text-light-text dark:text-dark-text">
           <DialogHeader>
-            <DialogTitle className='text-light-textSoft dark:text-dark-textSoft font-normal'>
-             What are you looking for? 
+            <DialogTitle className="text-light-textSoft dark:text-dark-textSoft font-normal text-[19px]">
+               {`Bạn đang tìm kiếm gì trong    ${table.name} ?` }
             </DialogTitle>
-            <div className='flex items-center gap-2 py-2 text-light-textSoft dark:text-dark-textSoft font-normal'>
-             This table has been serving for:
-            <div className='text-light-text dark:text-dark-text'>
-            {getTimeLoading ? <div>00:00:00</div>: <TimeInterval reservationStartTime={reservationDetail?.startTime}/>} 
-            </div>
-            </div>
+            {table.status === "ISSERVING" && (
+              <div className="flex items-center gap-2 py-2 text-light-textSoft dark:text-dark-textSoft font-normal">
+                Bàn đã phục vụ trong:
+                <div className="text-light-text dark:text-dark-text">
+                  {getTimeLoading ? (
+                    <div>00:00:00</div>
+                  ) : (
+                    <TimeInterval
+                      reservationStartTime={reservationDetail?.startTime}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
           </DialogHeader>
           <div className="flex items-center justify-end py-2 gap-5">
 
-           <DialogClose>
-            <Button
-              onClick={()=>editReservation(reservationDetail._id)}
-              className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
+            {
+              table.status === "ISSERVING" ? (
+                <>
+                <DialogClose>
+              <Button
+                onClick={() => editReservation(reservationDetail._id)}
+                className="bg-blue-1 hover:bg-blue-1
               text-white dark:text-white hover:scale-90 transition-all ease-in"
-            >
-              Update
-            </Button>
-            </DialogClose>
-
-           <DialogClose>
-            <Button
-              onClick={()=>OrderFood(reservationDetail._id)}
-              className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
+              >
+                Update
+              </Button>
+                </DialogClose>
+                <DialogClose>
+                  <Button
+                    onClick={() => OrderFood(reservationDetail._id)}
+                    className="bg-yellow-1 hover:bg-yellow-1
+                  text-white dark:text-white hover:scale-90 transition-all ease-in"
+                  >
+                    Order food
+                  </Button>
+                </DialogClose>
+                </>
+              ) : (
+                <DialogClose>
+              <Button
+                onClick={()=>handleSelectTable(table._id)}
+                className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
               text-white dark:text-white hover:scale-90 transition-all ease-in"
-            >
-              Order food
-            </Button>
+              >
+                {type === "RESELECT" ? "Đổi bàn": type === "SELECT" ? "Chọn bàn" : " Tạo đơn"}
+              </Button>
             </DialogClose>
-
+              )
+            }
 
             <DialogClose asChild>
               <Button
-               className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
+                className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
             text-white dark:text-white hover:scale-90 transition-all ease-in"
               >
-                Close
+                Đóng
               </Button>
             </DialogClose>
-            
           </div>
         </DialogContent>
       </Dialog>
-     )} 
-        </>
-      )
-    }
     </div>
   )
 }

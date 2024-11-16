@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react"
 import { FaFacebookMessenger } from "react-icons/fa"
 import { motion, AnimatePresence } from "framer-motion"
 import { LucideMinus, SendHorizontal } from "lucide-react"
-import Logo from "../public/images/logo.png"
 import { Input } from "./ui/input"
 import { jwtDecode } from "jwt-decode"
 import { useFetchData } from "@/hooks/useFetchData"
@@ -155,6 +154,18 @@ const Messager = () => {
     }
   };
   const createConversation = async () => {
+    socket.emit("createConversation", {
+      lastMessage: { text: valueInput, seen: false, senderId: user._id },
+      _id: conversationId,
+      seen: false,
+      createdAt: new Date(),
+      userId: {
+        _id: user._id,
+        image: user.image,
+        userName: user.userName,
+      },
+    })
+    
     try {
       if(!decodedToken.id) return toast({variant: "destructive", title: "Bạn cần đăng nhập để nhắn tin"})
       const res  = await fetch(ServerUrl+"/api/conversation", {

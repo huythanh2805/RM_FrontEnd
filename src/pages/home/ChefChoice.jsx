@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import ProductDecor from "../../public/images/product-decorate.jpg"
+import ProductDecor from "/imgs/Screen2.jpg"
 
 import { Swiper, SwiperSlide } from "swiper/react"
 

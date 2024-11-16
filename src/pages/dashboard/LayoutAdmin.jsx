@@ -7,6 +7,7 @@ const LayoutAdmin = () => {
   return (
     <div className="flex w-screen">
       <Sidebar />
+      {/* <div className="min-w-[80px]"></div> */}
       <Outlet />
       <AdminMessager />
     </div>
