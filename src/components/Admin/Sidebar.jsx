@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { useProfile } from "@/hooks/home/useProfile";
 import { AiFillGolden, AiFillProduct } from "react-icons/ai";
 import { FaHome, FaRegMoneyBillAlt } from "react-icons/fa";
@@ -9,15 +10,30 @@ import { Link, useNavigate } from "react-router-dom";
 const Sidebar = () => {
   const navigate = useNavigate();
   const { user } = useProfile();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
+
+  const toggleSidebar = () => {
+    setIsCollapsed((prev) => !prev);
+  };
+
   return (
-    <div className="xl:w-96 w-80 xl:p-4 p-2 bg-white flex-col justify-start items-start gap-5 inline-flex border-r">
+    <div
+      className={`transition-all duration-300 ${
+        isCollapsed ? "w-28" : "xl:w-96 w-80"
+      } xl:p-4 p-2 bg-white flex-col justify-start items-start gap-5 inline-flex border-r`}
+    >
       <div className="w-full pt-4 justify-between items-center gap-2.5 inline-flex">
         <p>Golden Pork</p>
-        <a href="javascript:;" className="w-6 h-6 relative bg-white">
+        <a
+          href="javascript:;"
+          className="w-6 h-6 relative bg-white"
+          onClick={toggleSidebar}
+        >
           <svg
             width="24"
             height="24"
@@ -31,30 +47,34 @@ const Sidebar = () => {
                 id="icon"
                 d="M13 6H21M3 12H21M7 18H21"
                 stroke="#1F2937"
-                stroke-width="1.6"
-                stroke-linecap="round"
+                strokeWidth="1.6"
+                strokeLinecap="round"
               />
             </g>
           </svg>
         </a>
       </div>
-      <div className="w-full p-3 rounded-lg border border-gray-300">
-        <div className="w-full items-center flex">
-          <div className="w-full justify-between items-center inline-flex">
-            <div className="items-center flex">
-              <img
-                className="rounded-lg"
-                alt="User"
-                src={user?.image || "default-image-url.png"}
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  objectFit: "cover",
-                  borderRadius: "50%",
-                }}
-              />
 
-              <div className="flex-col inline-flex ml-2.5">
+      <div className="w-full items-center flex">
+        <div className="w-full justify-between items-center inline-flex">
+          <div className="items-center flex">
+            <img
+              className="rounded-lg"
+              alt="User"
+              src={user?.image || "default-image-url.png"}
+              style={{
+                width: "50px",
+                height: "50px",
+                objectFit: "cover",
+                borderRadius: "50%",
+              }}
+            />
+            <div className="flex-col inline-flex ml-2.5">
+              <div
+                className={`w-full p-3 rounded-lg border border-gray-300 ${
+                  isCollapsed ? "hidden" : "block"
+                }`}
+              >
                 <h2 className="text-gray-700 text-sm font-semibold leading-snug">
                   Xin chào, {user?.userName || "Khách"}
                 </h2>
@@ -63,49 +83,25 @@ const Sidebar = () => {
                 </h6>
               </div>
             </div>
-            <div className="flex items-center">
-              <a href="javascript:;" className="w-5 h-5 relative">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                >
-                  <g id="More Vertical">
-                    <path
-                      id="icon"
-                      d="M10.0156 14.9896V15.0396M10.0156 9.97595V10.026M10.0156 4.96228V5.01228"
-                      stroke="black"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                    />
-                  </g>
-                </svg>
-              </a>
-            </div>
           </div>
         </div>
       </div>
 
       {/* Menu */}
       <div className="w-full">
-        <div className="w-full h-8 px-3 items-center flex">
-          <h6 className="text-gray-500 text-xs font-semibold leading-4">
-            MENU
-          </h6>
-        </div>
-        <ul className="flex-col gap-1 flex">
+        <ul
+          className={`flex-col gap-1 flex ${isCollapsed ? "items-center" : ""}`}
+        >
           <li>
             <Link to="/admin">
               <div className="flex-col flex p-3 bg-white rounded-lg">
-                <div className="h-5 gap-3 flex">
-                  <div className="relative">
-                    <FaHome />
-                  </div>
-                  <h2 className="text-gray-500 text-sm font-medium leading-snug">
-                    Home
-                  </h2>
+                <div className="h-5 gap-3 flex items-center">
+                  <FaHome />
+                  {!isCollapsed && (
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                      Home
+                    </h2>
+                  )}
                 </div>
               </div>
             </Link>
@@ -118,9 +114,11 @@ const Sidebar = () => {
                     <div className="relative">
                       <FaUserGroup />
                     </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
-                      Account
-                    </h2>
+                    {!isCollapsed && (
+                      <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                        Account
+                      </h2>
+                    )}
                   </div>
                 </div>
               </div>
@@ -134,9 +132,11 @@ const Sidebar = () => {
                     <div className="relative">
                       <MdCategory />
                     </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
-                      Categories
-                    </h2>
+                    {!isCollapsed && (
+                      <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                        Categories
+                      </h2>
+                    )}
                   </div>
                 </div>
               </div>
@@ -152,9 +152,11 @@ const Sidebar = () => {
                       <div className="relative">
                         <AiFillProduct />
                       </div>
-                      <h2 className="text-gray-500 text-sm font-medium leading-snug">
-                        Dishes
-                      </h2>
+                      {!isCollapsed && (
+                        <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                          Dishes
+                        </h2>
+                      )}
                     </a>
                   </div>
                 </div>
@@ -185,9 +187,11 @@ const Sidebar = () => {
                       <div className="relative">
                         <AiFillGolden />
                       </div>
-                      <h2 className="text-gray-500 text-sm font-medium leading-snug">
-                        Combo
-                      </h2>
+                      {!isCollapsed && (
+                        <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                          Combo
+                        </h2>
+                      )}
                     </a>
                   </div>
                 </div>
@@ -203,9 +207,11 @@ const Sidebar = () => {
                     <div className="relative">
                       <SiAirtable />
                     </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
-                      Table
-                    </h2>
+                    {!isCollapsed && (
+                      <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                        Table
+                      </h2>
+                    )}
                   </div>
                 </div>
               </div>
@@ -219,9 +225,11 @@ const Sidebar = () => {
                     <div className="relative">
                       <MdRememberMe />
                     </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
-                      Employee
-                    </h2>
+                    {!isCollapsed && (
+                      <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                        Employee
+                      </h2>
+                    )}
                   </div>
                 </div>
               </div>
@@ -235,9 +243,11 @@ const Sidebar = () => {
                     <div className="relative">
                       <FaRegMoneyBillAlt />
                     </div>
-                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
-                      Bill
-                    </h2>
+                    {!isCollapsed && (
+                      <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                        Bill
+                      </h2>
+                    )}
                   </div>
                 </div>
               </div>
@@ -245,8 +255,6 @@ const Sidebar = () => {
           </li>
         </ul>
       </div>
-
-      {/* setting */}
       <div className="w-full flex-col flex">
         <div className="h-8 px-3 items-center inline-flex">
           <h6 className="text-gray-500 text-xs font-semibold leading-4">
@@ -261,9 +269,11 @@ const Sidebar = () => {
                   <div className="relative">
                     <MdAccountCircle />
                   </div>
-                  <h2 className="text-gray-500 text-sm font-medium leading-snug">
-                    Profile
-                  </h2>
+                  {!isCollapsed && (
+                    <h2 className="text-gray-500 text-sm font-medium leading-snug">
+                      Profile
+                    </h2>
+                  )}
                 </div>
               </div>
             </Link>
