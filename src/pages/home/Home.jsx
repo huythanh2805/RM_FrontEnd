@@ -8,7 +8,6 @@ import Menu from "./Menu";
 import ButtonViewMore from "@/components/ButtonViewMore";
 import ChefProfile from "./ChefProfile";
 import ChefChoice from "./ChefChoice";
-
 const Home = () => {
   const { isBoxed } = useThemeContext();
 

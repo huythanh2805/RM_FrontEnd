@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react"
 import { FaFacebookMessenger } from "react-icons/fa"
 import { motion, AnimatePresence } from "framer-motion"
 import { LucideMinus, SendHorizontal } from "lucide-react"
-import Logo from "../public/images/logo.png"
 import { Input } from "./ui/input"
 import { jwtDecode } from "jwt-decode"
 import { useFetchData } from "@/hooks/useFetchData"
@@ -21,19 +20,20 @@ const Messager = () => {
   const [newMessage, setNewMessage] = useState(null)
   const [user, setUser] = useState(null)
   const [decodedToken, setDecodeToken] = useState(()=>{
+    if(!localStorage.getItem("token")) return null 
       const token = localStorage.getItem('token')
       return jwtDecode(token)
        
   })
   const endOfMessagesRef = useRef(null);
-  const {data} = useFetchData(`${ServerUrl}/api/message/text/seen/${decodedToken.id}/client`)
+  const {data} = useFetchData(`${ServerUrl}/api/message/text/seen/${decodedToken?.id}/client`)
 
   const chatVariants = {
     hidden: { opacity: 0, scale: 0, x: "100%", y: "100%" },
     visible: { opacity: 1, scale: 1, x: "0%", y: "0%" },
   }
   // Lấy thông tin của người dùng dựa vào Id
-  const {data: userData} = useFetchData(`${ServerUrl}/users/get/v2/${decodedToken.id}`)
+  const {data: userData} = useFetchData(`${ServerUrl}/users/get/v2/${decodedToken?.id}`)
   useEffect(()=>{
     if(userData) setUser(userData.user)
   },[userData, isOpen])
@@ -97,8 +97,7 @@ const Messager = () => {
     }
     fetUnseenMessage()
  },[messages, isOpen, newMessage])
-   
-  console.log({user})
+   console.log({decodedToken})
   // Gửi tin nhắn
   const sendMessage = async (e) => {
     e.preventDefault()
@@ -155,6 +154,18 @@ const Messager = () => {
     }
   };
   const createConversation = async () => {
+    socket.emit("createConversation", {
+      lastMessage: { text: valueInput, seen: false, senderId: user._id },
+      _id: conversationId,
+      seen: false,
+      createdAt: new Date(),
+      userId: {
+        _id: user._id,
+        image: user.image,
+        userName: user.userName,
+      },
+    })
+    
     try {
       if(!decodedToken.id) return toast({variant: "destructive", title: "Bạn cần đăng nhập để nhắn tin"})
       const res  = await fetch(ServerUrl+"/api/conversation", {

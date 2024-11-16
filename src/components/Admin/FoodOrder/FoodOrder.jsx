@@ -10,11 +10,20 @@ export default function FoodOrder() {
   const { reservationId } = useParams()
   const [orderedFoods, setOrderedFoods] = useState([])
   const [loading, setLoading] = useState(false)
+  const [products, setProducts] = useState([])
 
   // Get all dishes and categories
   const { data: dishes, loading: dishLoading } = useFetchData(ServerUrl+"/dishes")
   const { data: categories, loading: categoryLoading } = useFetchData(ServerUrl+"/categories")
+  const { data: combos, loading: comboloading } = useFetchData(ServerUrl+"/api/orderedCombo")
 
+ console.log({orderedFoods})
+  useEffect(()=>{
+    if(dishes) setProducts(pre=>[...pre,...dishes.map(dish=>({...dish, type: "dish"}))])
+  },[dishes])
+  useEffect(()=>{
+    if(combos) setProducts(pre=>[...pre,...combos.map(combo=>({...combo, type: "combo"}))])
+  },[combos])
   //  Get ordered food for reservation
   useEffect(() => {
     if(!reservationId) return
@@ -43,8 +52,9 @@ export default function FoodOrder() {
     if (!res.ok) return null
     return { res, data }
   }
-  const updateOrderedFood = async (orderedFood_id, quantity) => {
-    const res = await fetch(ServerUrl+'/api/orderedFood/' + orderedFood_id, {
+  const updateOrderedFood = async (orderedFood_id, quantity, type) => {
+    const url = type === 'combo' ? ServerUrl+'/api/orderedCombo/' + orderedFood_id : ServerUrl+'/api/orderedFood/' + orderedFood_id
+    const res = await fetch(url, {
       headers: {
         "Content-Type": "application/json"
       },
@@ -61,12 +71,15 @@ export default function FoodOrder() {
         {
           categories && dishes && (
             <AdminMenu
+              products={products}
               dishes={dishes}
+              combos={combos}
               categories={categories}
               reservation_id={reservationId}
               orderedFoods={orderedFoods}
               setOrderedFoods={setOrderedFoods}
               deleteOrderedFood={deleteOrderedFood}
+              updateOrderedFood={updateOrderedFood}
             />
           )
         }

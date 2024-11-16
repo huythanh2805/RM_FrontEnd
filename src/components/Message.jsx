@@ -1,15 +1,14 @@
 import { jwtDecode } from "jwt-decode"
 import React, { useState } from "react"
-import Avatar from "../public/images/avatar.jpg"
+import Avatar from "/imgs/avatar.jpg"
 import { cn } from "@/lib/utils"
 import { formatDate } from "@/utilities/utils"
 const Message = ({message, isRecently,isSperated, previousTime, isFirstText, isAdmin}) => {
   const [decodedToken, setDecodeToken] = useState(() => {
-    const token = localStorage.getItem("token")
-    return jwtDecode(token)
+     if(!localStorage.getItem("token")) return null 
+       const token = localStorage.getItem("token")
+      return jwtDecode(token)
   })
-  // console.log("message.senderId",message.senderId)
-  // console.log("message.senderId",decodedToken.id )
   return (
     <>
      {

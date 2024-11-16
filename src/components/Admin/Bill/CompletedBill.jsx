@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { formatCurrency, formatDateAndTime, ServerUrl } from "@/utilities/utils"
 import { useNavigate, useParams } from "react-router-dom"
 import { toast } from "@/hooks/use-toast"
-import Logo from "../../../public/images/logo.png"
+import Logo from "/imgs/logoGolden.webp"
 import { useReactToPrint } from "react-to-print"
 const CompletedBill = () => {
   const router = useNavigate()

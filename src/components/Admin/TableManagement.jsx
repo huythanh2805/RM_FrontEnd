@@ -175,7 +175,7 @@ export default function TableManagement() {
         }
         const data = await res.json()
         toast({
-          variant: "sucess",
+          variant: "success",
           title: data.message,
         })
         // After updating table order trigger useState for fetching newest data
@@ -365,7 +365,7 @@ export default function TableManagement() {
                 </SortableContext>
                 <div
                   onClick={addNewLocation}
-                  className="h-[550px] flex items-center justify-center border border-dashed border-light-primaryColor dark:border-dark-primaryColor opacity-45"
+                  className="min-h-[736px] flex items-center justify-center border border-dashed border-light-primaryColor dark:border-dark-primaryColor opacity-45"
                 >
                   <button className="w-[50px] h-[50px] flex items-center justify-center rounded-full border border-dashed border-light-primaryColor dark:border-dark-primaryColor">
                     <Plus />
@@ -505,7 +505,7 @@ export default function TableManagement() {
         setLocations(freshLocations.locations)
         setNumberOfLocation(freshLocations.numberOfLocation)
         toast({
-          variant: "sucess",
+          variant: "success",
           title: "Add location successfully!",
         })
       } catch (error) {
@@ -545,7 +545,7 @@ export default function TableManagement() {
         setTables(freshTables.tables)
         setNumberOfTable(freshTables.numberOfTable)
         toast({
-          variant: "sucess",
+          variant: "success",
           title: "Add table successfully",
         })
       } catch (error) {

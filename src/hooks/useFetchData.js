@@ -12,10 +12,12 @@ export function useFetchData(url){
             method: "GET",
           })
           if(!res.ok) {
-           return toast({
-              variant: "destructive",
-              title: "Can't get any data!",
-            })
+          //  return toast({
+          //     variant: "destructive",
+          //     title: "Can't get any data!",
+          //   })
+            return null
+            setLoading(false)
           }
           const data = await res.json()
           setData(data)
@@ -23,10 +25,10 @@ export function useFetchData(url){
         } catch (error) {
           setError(error)
           setLoading(false)
-          toast({
-            variant: "destructive",
-            title: "Something wrong with useFetchData!",
-          })
+          // toast({
+          //   variant: "destructive",
+          //   title: "Something wrong with useFetchData!",
+          // })
         }
       }
       fetData()
