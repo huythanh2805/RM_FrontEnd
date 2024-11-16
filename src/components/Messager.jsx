@@ -20,19 +20,20 @@ const Messager = () => {
   const [newMessage, setNewMessage] = useState(null)
   const [user, setUser] = useState(null)
   const [decodedToken, setDecodeToken] = useState(()=>{
+    if(!localStorage.getItem("token")) return null 
       const token = localStorage.getItem('token')
       return jwtDecode(token)
        
   })
   const endOfMessagesRef = useRef(null);
-  const {data} = useFetchData(`${ServerUrl}/api/message/text/seen/${decodedToken.id}/client`)
+  const {data} = useFetchData(`${ServerUrl}/api/message/text/seen/${decodedToken?.id}/client`)
 
   const chatVariants = {
     hidden: { opacity: 0, scale: 0, x: "100%", y: "100%" },
     visible: { opacity: 1, scale: 1, x: "0%", y: "0%" },
   }
   // Lấy thông tin của người dùng dựa vào Id
-  const {data: userData} = useFetchData(`${ServerUrl}/users/get/v2/${decodedToken.id}`)
+  const {data: userData} = useFetchData(`${ServerUrl}/users/get/v2/${decodedToken?.id}`)
   useEffect(()=>{
     if(userData) setUser(userData.user)
   },[userData, isOpen])
@@ -96,8 +97,7 @@ const Messager = () => {
     }
     fetUnseenMessage()
  },[messages, isOpen, newMessage])
-   
-  console.log({user})
+   console.log({decodedToken})
   // Gửi tin nhắn
   const sendMessage = async (e) => {
     e.preventDefault()

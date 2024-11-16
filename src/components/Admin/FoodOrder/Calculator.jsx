@@ -87,7 +87,14 @@ const Calculator = ({
   }
   // Update orderedFood
   const handleMinus = async (orderedFood_id, quantity) => {
-    if (quantity < 2) return
+    if (quantity < 2) {
+      await deleteOrderedFood(orderedFood_id)
+      setOrderedFoods((prevOrderedFoods) =>
+        prevOrderedFoods.filter((item) =>
+          item._id !== orderedFood_id 
+        )
+      )
+    }
     // handleDeleteOrderedFood(orderedFood_id)
     await updateOrderedFood(orderedFood_id, quantity - 1)
     if (!setOrderedFoods) return

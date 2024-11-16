@@ -7,6 +7,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import ReactStars from "react-rating-stars-component";
 import { formatCurrency } from "@/utilities/utils";
 import { useCart } from "@/contexts/CartProvider";
+import MenuItem from "../MenuItem";
 
 const Menu = ({ limit }) => {
   const { colorCode } = useThemeContext();
@@ -14,7 +15,7 @@ const Menu = ({ limit }) => {
   const [dish, setDish] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
-  const [ratings, setRatings] = useState({});
+  
 
   const handleRatingChange = (newRating, dishId) => {
     setRatings({
@@ -111,67 +112,10 @@ const Menu = ({ limit }) => {
       {/* Main menu */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10 max-w-5xl mx-auto">
         {limitDishes.map((item) => (
-          <div
-            key={item._id}
-            className="relative group rounded shadow-lg overflow-hidden bg-white w-full"
-          >
-            <div className="relative overflow-hidden">
-              <img
-                src={item.images[0]}
-                className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-                alt={item.name}
-              />
-              <div className="absolute inset-0 bg-gray-400 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <div className="flex space-x-4">
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    className="p-2 text-white rounded-full"
-                    style={{ backgroundColor: colorCode }}
-                    onClick={() => handleAddToCart(item)}
-                  >
-                    <FaShoppingCart />
-                  </motion.button>
-                </div>
-              </div>
-            </div>
-
-            {/* Thông tin món ăn */}
-            <div className="p-4 relative">
-              <Link to={`/dishes/${item._id}`}>
-                <h3 className="text-lg font-bold cursor-pointer">
-                  {item.name}
-                </h3>
-              </Link>
-              <p className="text-sm text-gray-600">{item.desc}</p>
-
-              {/* Giá và đánh giá */}
-              <div className="flex justify-between items-center mt-4">
-                <span
-                  className="text-xl font-bold"
-                  style={{ color: colorCode }}
-                >
-                  {formatCurrency(item.price)}
-                </span>
-                <ReactStars
-                  count={5}
-                  onChange={(newRating) =>
-                    handleRatingChange(newRating, item._id)
-                  }
-                  size={24}
-                  activeColor="#ffd700"
-                  value={ratings[item._id] || item.rating}
-                />
-              </div>
-              <div className="absolute inset-x-0 bottom-0 flex justify-center items-center">
-                <div
-                  className="h-1 w-0 transition-all duration-500 group-hover:w-full"
-                  style={{ backgroundColor: colorCode }}
-                ></div>
-              </div>
-            </div>
-          </div>
+         <MenuItem item={item} onCLick={handleAddToCart} />
         ))}
       </div>
+
     </div>
   );
 };
