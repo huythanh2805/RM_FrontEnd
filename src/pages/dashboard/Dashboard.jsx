@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FaArrowUp, FaMoneyBillAlt, FaUserCheck } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiSolidDish } from "react-icons/bi";
+import Navbar from "@/components/Admin/Navbar";
 const Dashboard = () => {
   const [dataProduct, setDataProduct] = useState([]);
   useEffect(() => {
@@ -17,7 +18,10 @@ const Dashboard = () => {
       });
   }, []);
   return (
-    <div className="w-full min-h-screen bg-[#f5f6fa]">
+    <div className="w-full min-h-screen">
+      <div className="px-5 py-2">
+        <Navbar />
+      </div>
       <div className="px-5 py-2">
         <p className="text-[32px] font-semibold mb-4">Thống Kê</p>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
