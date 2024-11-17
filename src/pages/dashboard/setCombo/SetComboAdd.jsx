@@ -108,10 +108,11 @@ const SetComboAdd = () => {
 
       await axios.post(BASE_URL + "/setCombos", formData);
       console.log(formData);
-      navigate("/dashboard/setCombos");
+      navigate("/admin/setCombos");
       toast({ variant: "success", title: "Thêm combo thành công !" });
     } catch (error) {
       console.log(error);
+      toast({ variant: "destructive", title: error.response.data.message });
     }
   };
 
@@ -358,7 +359,7 @@ const SetComboAdd = () => {
 
           <div className="flex justify-end space-x-2">
             <Link
-              to="/dashboard/setCombos"
+              to="/admin/setCombos"
               className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300"
             >
               Quay lại

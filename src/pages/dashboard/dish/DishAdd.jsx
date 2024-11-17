@@ -76,6 +76,7 @@ const DishAdd = () => {
       toast({ variant: "success", title: "Thêm món ăn thành công !" });
     } catch (error) {
       console.log(error);
+      toast({ variant: "destructive", title: error.response.data.message });
     }
   };
 
