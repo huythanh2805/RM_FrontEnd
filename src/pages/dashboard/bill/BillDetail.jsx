@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "@/configs";
+import { formatCurrency } from "@/utilities/utils";
 
 const BillDetail = () => {
   const { id } = useParams();
@@ -23,9 +24,8 @@ const BillDetail = () => {
     return <div>Loading...</div>;
   }
 
-  // Kiểm tra nếu `reservation_id` không tồn tại, tránh lỗi destructure
   const {
-    reservation_id = {}, // Đảm bảo rằng nếu reservation_id không tồn tại, sẽ là object rỗng
+    reservation_id = {},
     original_money,
     VAT,
     status,
@@ -40,9 +40,9 @@ const BillDetail = () => {
     table_id,
     startTime,
     guests_count,
-  } = reservation_id || {}; // Cẩn thận với reservation_id có thể là null
+  } = reservation_id || {};
 
-  const { orderedDishes } = billDetail_id || {}; // Nếu billDetail_id không tồn tại, sẽ là null
+  const { orderedDishes } = billDetail_id || {};
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
@@ -165,27 +165,15 @@ const BillDetail = () => {
                     />
                   </td>
                   <td className="py-4 px-6 text-sm">
-                    {dish.price.toLocaleString("vi-VN")} VND
+                    {formatCurrency(dish.price)}
                   </td>
                   <td className="py-4 px-6 text-sm">{dish.quantity}</td>
                   <td className="py-4 px-6 text-sm">
-                    {(dish.price * dish.quantity).toLocaleString("vi-VN")} VND
+                    {formatCurrency(dish.price * dish.quantity)}
                   </td>
                 </tr>
               ))}
 
-              {/* Thêm các dòng cho tổng giá trị đơn, VAT, và tổng hóa đơn */}
-              <tr className="bg-gray-50">
-                <td
-                  className="table-cell py-4 px-6 font-semibold text-right"
-                  colSpan={4}
-                >
-                  Tổng giá trị đơn (chưa thuế)
-                </td>
-                <td className="py-4 px-6 font-semibold">
-                  {original_money.toLocaleString("vi-VN")} VND
-                </td>
-              </tr>
               <tr>
                 <td
                   className="table-cell py-4 px-6 font-semibold text-right"
@@ -205,11 +193,7 @@ const BillDetail = () => {
                   Tổng hóa đơn
                 </td>
                 <td className="py-4 px-6 font-semibold">
-                  {(
-                    original_money +
-                    (original_money * VAT) / 100
-                  ).toLocaleString("vi-VN")}{" "}
-                  VND
+                  {original_money.toLocaleString("vi-VN")} VND
                 </td>
               </tr>
             </tbody>
