@@ -39,6 +39,8 @@ import SetComboList from "@/pages/dashboard/setCombo/SetComboList";
 import SetComboAdd from "@/pages/dashboard/setCombo/setComboAdd";
 import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";
 import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
+import BillList from "@/pages/dashboard/bill/BillList";
+import BillDetail from "@/pages/dashboard/bill/BillDetail";
 
 const router = createBrowserRouter([
   {
@@ -206,6 +208,14 @@ const router = createBrowserRouter([
       {
         path: "setCombos/:id/detail",
         element: <SetComboDetail />,
+      },
+      {
+        path: "bills",
+        element: <BillList />,
+      },
+      {
+        path: "bills/:id/detail",
+        element: <BillDetail />,
       },
     ],
   },

@@ -205,7 +205,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <a href="javascript:;">
+            <Link to="/admin/bills">
               <div className="flex-col gap-1 flex">
                 <div className="flex-col flex bg-white rounded-lg p-3">
                   <div className="h-5 gap-3 flex">
@@ -214,13 +214,13 @@ const Sidebar = () => {
                     </div>
                     {!isCollapsed && (
                       <h2 className="text-gray-500 text-sm font-medium leading-snug">
-                        Bill
+                        Bills
                       </h2>
                     )}
                   </div>
                 </div>
               </div>
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
