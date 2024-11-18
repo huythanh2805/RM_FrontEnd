@@ -58,8 +58,6 @@ export const HistoryReservation = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
-
   // Kiểm tra nếu không có đơn đặt bàn
   if (!data?.reservations) {
     return (
@@ -106,13 +104,13 @@ export const HistoryReservation = () => {
                   statusClass = "bg-amber-50 text-amber-600 border border-amber-400";
                   break;
                 case "ISCONFIRMED":
-                  statusClass = "bg-green-50 text-green-600 border border-green-400";
+                  statusClass = "bg-green-200 text-green-600 border border-green-400";
                   break;
                 case "SEATED":
-                  statusClass = "bg-blue-50 text-blue-600 border border-blue-400";
+                  statusClass = "bg-green-200 text-green-600 border border-green-400";
                   break;
                 case "COMPLETED":
-                  statusClass = "bg-gray-200 text-gray-600 border border-gray-400";
+                  statusClass = "bg-green-200 text-green-600 border border-green-400";
                   break;
                 case "CANCELED":
                   statusClass = "bg-red-50 text-red-600 border border-red-400";
@@ -145,14 +143,16 @@ export const HistoryReservation = () => {
                   </td>
                   <td className="py-4 px-6 text-center">
                     <div className="flex items-center justify-center space-x-4">
-                      {reservation.status !== "CANCELED" && (
-                        <button
-                          onClick={() => handleCancelReservation(reservation._id)}
-                          className="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300 ease-in-out"
-                        >
-                          Hủy
-                        </button>
-                      )}
+                      {reservation.status !== "CANCELED" &&
+                        reservation.status !== "SEATED" &&
+                        reservation.status !== "COMPLETED" && (
+                          <button
+                            onClick={() => handleCancelReservation(reservation._id)}
+                            className="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300 ease-in-out"
+                          >
+                            Hủy
+                          </button>
+                        )}
                       <Link to={`/history-details/${reservation?._id}`}>
                         <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out">
                           Xem Chi Tiết
