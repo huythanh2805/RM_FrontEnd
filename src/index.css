@@ -26,6 +26,9 @@
   .separate_line{
     @apply bg-gradient-to-r from-transparent via-gray-400 dark:via-[#FFFFFF66] opacity-75 to-transparent w-full h-[1px] border-none
   }
+  .ver_separate_line{
+    @apply bg-gradient-to-b from-transparent via-gray-400 dark:via-[#FFFFFF66] opacity-75 to-transparent h-full w-[1px] border-none
+  }
 }
 
 @media only screen and (max-width: 1024px) {

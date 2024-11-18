@@ -1,9 +1,9 @@
 import { Check } from 'lucide-react'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { ServerUrl } from '@/utilities/utils'
 import MenuItem from '@/pages/MenuItem'
-
+import _ from "lodash";
 
  const AdminMenu =({ products ,dishes,combos, categories, reservation_id, orderedFoods, setOrderedFoods, deleteOrderedFood, updateOrderedFood})=>{
     const [activedLink, setActiveLink] = useState('all')
@@ -33,18 +33,26 @@ import MenuItem from '@/pages/MenuItem'
       if(!res.ok) return null
       return data.orderedFood
     }
-
-    const hanleChooseDish = async (item)=>{
-      const {_id: dish_id} = item
-      console.log({item})
+    const hanleChooseDish = async (dish)=>{
+      const {_id: dish_id} = dish
       try {
-      const existedOrderedFood = orderedFoods.find(item => item.dish_id._id === dish_id)
+        let existedOrderedFood
+         dish.type === 'combo' ? existedOrderedFood = orderedFoods.find(orderedFood => orderedFood.dish_id._id === dish.dish_id._id):
+         existedOrderedFood = orderedFoods.find(item => item.dish_id._id === dish_id)
       if(existedOrderedFood){
-        await updateOrderedFood(dish_id, existedOrderedFood.quantity + 1, item.type)
+        if(reservation_id) await updateOrderedFood(existedOrderedFood._id, existedOrderedFood.quantity + 1, dish.type)
         setOrderedFoods(pre=> [...pre.map(item=> item._id === existedOrderedFood._id ? {...item, quantity: item.quantity + 1} : item )]) 
       }else{
-       await addOrderedFood(reservation_id, dish_id, item.type)
-       setOrderedFoods(pre => [...pre, addedFood])
+
+        if(reservation_id) {
+          const newOrderedFood = await addOrderedFood(reservation_id, dish_id, dish.type)
+          dish.type === 'combo' ? setOrderedFoods(pre => [...pre, {...newOrderedFood}]):
+          setOrderedFoods(pre => [...pre, {...newOrderedFood}])
+        }else{
+          dish.type === 'combo' ? setOrderedFoods(pre => [...pre, {...dish, quantity: 1, status: "ISPREPARED"} ]):
+          setOrderedFoods(pre => [...pre, {...dish, quantity: 1, status: "ISPREPARED", dish_id: {_id: dish._id }}])
+        }
+
       }
       } catch (error) {
         console.log(error)

@@ -151,7 +151,7 @@ console.log({
             })
           }
            toast({
-            variant: "sucess",
+            variant: "success",
             title: data.message
           })
           router('/admin/listReser')

@@ -70,7 +70,7 @@ export default function ListReservation() {
         })
       }
       toast({
-        variant: "sucess",
+        variant: "success",
         title: "Successfully!",
       })
       const newReservations = reservations?.filter(
@@ -127,7 +127,7 @@ export default function ListReservation() {
     const data = await updateData(`${ServerUrl}/api/reservations/${reservationId}`, {status: "ISCOMFIRMED"})
     if(data.success){
       toast({
-        variant: "sucess",
+        variant: "success",
         title: "Confirmed reservation successfully!",
       })
       return setReservations(currentData=>(
@@ -145,7 +145,7 @@ export default function ListReservation() {
     const data = await updateData(`${ServerUrl}/api/reservations/${reservationId}`, {status: "CANCELED"})
     if(data.success){
       toast({
-        variant: "sucess",
+        variant: "success",
         title: "Cancel reservation successfully!",
       })
       return setReservations(currentData=>(
@@ -167,7 +167,7 @@ export default function ListReservation() {
   // }
 
   return (
-    <div>
+    <div className="w-full h-full flex justify-center py-8">
       {loading && (
         <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center">
           <FadeLoader
