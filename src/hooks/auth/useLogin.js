@@ -4,11 +4,13 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 export const useLogin = (setIsLoggedIn) => {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  
 
   const handleLoginSubmit = async (data) => {
     setError(null);
@@ -19,9 +21,9 @@ export const useLogin = (setIsLoggedIn) => {
       localStorage.setItem("token", token);
       setIsLoggedIn(true);
       if (role === "ADMIN") {
-        navigate("/admin"); // Đường dẫn cho quản trị viên
+        navigate("/admin");
       } else {
-        navigate("/"); // Đường dẫn cho người dùng bình thường
+        navigate("/");
       }
     } catch (error) {
       setError(error.response?.data?.message || "Đăng nhập thất bại");
@@ -29,5 +31,5 @@ export const useLogin = (setIsLoggedIn) => {
     }
   };
 
-  return { register, handleSubmit, handleLoginSubmit, error };
+  return { register, handleSubmit, handleLoginSubmit, error, errors };
 };
