@@ -1,9 +1,24 @@
 import { useUser } from "@/hooks/dashboard/useAccount";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Camera } from "lucide-react";
 import { useForm } from "react-hook-form";
+import * as Yup from "yup";
 
 const UserAdd = () => {
+  // Định nghĩa schema validation với yup
+  const validationSchema = Yup.object({
+    userName: Yup.string().required("Vui lòng nhập họ tên"),
+    email: Yup.string().email("Email không hợp lệ").required("Vui lòng nhập email"),
+    password: Yup.string().required("Vui lòng nhập mật khẩu"),
+    phoneNumber: Yup.string()
+      .required("Vui lòng nhập số điện thoại")
+      .matches(/^[0-9]+$/, "Số điện thoại chỉ được chứa chữ số"),
+    address: Yup.string().required("Vui lòng nhập địa chỉ"),
+  });
+
+  // Khởi tạo form với react-hook-form và yupResolver để áp dụng schema validation
   const form = useForm({
+    resolver: yupResolver(validationSchema),
     defaultValues: {
       userName: "",
       email: "",
@@ -12,12 +27,17 @@ const UserAdd = () => {
       address: "",
     },
   });
-  const { register, handleSubmit } = form;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = form;
   const { handleImageChange, handleAdd, selectedImage, isLoading } = useUser(null, form);
 
   const onSubmit = (data) => {
     handleAdd(data);
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mx-2 mt-11">
       <div className="text-2xl font-semibold mb-4">Thêm mới tài khoản</div>
@@ -64,6 +84,7 @@ const UserAdd = () => {
                 placeholder="Username"
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              {errors.userName && <p className="text-red-500 text-sm">{errors.userName.message}</p>}
             </div>
             <div>
               <label htmlFor="email">Email</label>
@@ -74,6 +95,7 @@ const UserAdd = () => {
                 placeholder="Email address"
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
             </div>
           </div>
 
@@ -87,6 +109,7 @@ const UserAdd = () => {
                 placeholder="Password"
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
             </div>
             <div>
               <label htmlFor="phoneNumber">Số điện thoại</label>
@@ -97,6 +120,7 @@ const UserAdd = () => {
                 placeholder="Enter phone number"
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>}
             </div>
           </div>
 
@@ -109,6 +133,7 @@ const UserAdd = () => {
               placeholder="Address"
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
+            {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
           </div>
         </div>
       </div>
