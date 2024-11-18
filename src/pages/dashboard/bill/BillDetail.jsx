@@ -42,7 +42,7 @@ const BillDetail = () => {
     guests_count,
   } = reservation_id || {};
 
-  const { orderedDishes } = billDetail_id || {};
+  const { orderedDishes, orderedCombos } = billDetail_id || {};
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
@@ -56,33 +56,25 @@ const BillDetail = () => {
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Tên khách hàng
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {userName || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{userName}</td>
               </tr>
               <tr className="border-b">
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Địa chỉ
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {detailAddress || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{detailAddress}</td>
               </tr>
               <tr className="border-b">
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Số điện thoại
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {phoneNumber || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{phoneNumber}</td>
               </tr>
               <tr>
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Hình thức thanh toán
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {payment_method || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{payment_method}</td>
               </tr>
             </tbody>
           </table>
@@ -99,25 +91,21 @@ const BillDetail = () => {
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Tên bàn
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {table_id?.name || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{table_id?.name}</td>
               </tr>
               <tr className="border-b">
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Số ghế
                 </th>
                 <td className="py-4 px-6 text-gray-600">
-                  {table_id?.number_of_seats || "Không có thông tin"}
+                  {table_id?.number_of_seats}
                 </td>
               </tr>
               <tr className="border-b">
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Số khách
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {guests_count || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{guests_count}</td>
               </tr>
               <tr>
                 <th className="py-4 px-6 text-gray-700 font-semibold">
@@ -174,6 +162,41 @@ const BillDetail = () => {
                 </tr>
               ))}
 
+              {orderedCombos?.map((combo) => (
+                <tr
+                  className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
+                  key={combo._id}
+                >
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
+                    {combo.name}
+                  </td>
+                  <td className="py-4 px-6 text-sm">
+                    <img
+                      src={combo.images[0]}
+                      alt={combo.name}
+                      className="w-20 h-20 object-cover"
+                    />
+                  </td>
+                  <td className="py-4 px-6 text-sm">
+                    {formatCurrency(combo.price)}
+                  </td>
+                  <td className="py-4 px-6 text-sm">{combo.quantity}</td>
+                  <td className="py-4 px-6 text-sm">
+                    {formatCurrency(combo.price * combo.quantity)}
+                  </td>
+                </tr>
+              ))}
+              <tr>
+                <td
+                  className="table-cell py-4 px-6 font-semibold text-right"
+                  colSpan={4}
+                >
+                  Tổng tiền (Trước thuế):
+                </td>
+                <td className="py-4 px-6 font-semibold">
+                  {formatCurrency(original_money)}
+                </td>
+              </tr>
               <tr>
                 <td
                   className="table-cell py-4 px-6 font-semibold text-right"
@@ -182,18 +205,20 @@ const BillDetail = () => {
                   Thuế VAT ({VAT}%)
                 </td>
                 <td className="py-4 px-6 font-semibold">
-                  {((original_money * VAT) / 100).toLocaleString("vi-VN")} VND
+                  {formatCurrency((original_money * VAT) / 100)}
                 </td>
               </tr>
-              <tr className="bg-gray-50">
+              <tr>
                 <td
                   className="table-cell py-4 px-6 font-semibold text-right"
                   colSpan={4}
                 >
-                  Tổng hóa đơn
+                  Tổng cộng (Sau thuế):
                 </td>
                 <td className="py-4 px-6 font-semibold">
-                  {original_money.toLocaleString("vi-VN")} VND
+                  {formatCurrency(
+                    original_money + (original_money * VAT) / 100
+                  )}
                 </td>
               </tr>
             </tbody>

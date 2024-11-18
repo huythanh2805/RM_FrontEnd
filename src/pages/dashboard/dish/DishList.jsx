@@ -168,11 +168,11 @@ const DishList = () => {
                   <td className="hidden lg:table-cell py-3 px-4 lg:px-6 text-sm">
                     {d.isShow ? (
                       <span className="px-2 py-1 text-xs font-semibold rounded-lg bg-green-100 text-green-800">
-                        Có sẵn
+                        Hiển thị
                       </span>
                     ) : (
                       <span className="px-2 py-1 text-xs font-semibold rounded-lg bg-gray-100 text-gray-700">
-                        Hết hàng
+                        Tạm ẩn
                       </span>
                     )}
                   </td>
