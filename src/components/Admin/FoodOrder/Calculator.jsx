@@ -53,24 +53,27 @@ const Calculator = ({
   orderedFoods,
   setOrderedFoods,
   deleteOrderedFood,
+  deletedOrderedCombo,
   updateOrderedFood,
 }) => {
   const [isPaid, setIsPaid] = useState(false)
   const [neededPaid, setNeededPaid] = useState(0)
   const [paidMoney, setPaidMoney] = useState(0)
   const [change, setChange] = useState(0)
+  const [VAT, setVAT] = useState(5)
 
   const [selectedRows, setSelectedRows] = useState([])
   const [billId, setBillId] = useState('')
 
   const totalPrice = orderedFoods.reduce((sum, item) => {
     if(item.status === "ISCANCELED") return sum + 0
-    return sum + item.quantity * item.dish_id.price
+    return sum + item.quantity * item.price
   }, 0)
   const router = useNavigate()
   // calculate neededPaid and Check whenever paidMoney change to calculate client'change
   useEffect(() => {
-    setNeededPaid(totalPrice)
+    const vat = 5/100 * totalPrice
+    setNeededPaid(totalPrice + vat)
     setChange(paidMoney - neededPaid)
   }, [paidMoney, totalPrice])
   // delete orderedFood
@@ -86,17 +89,19 @@ const Calculator = ({
       ])
   }
   // Update orderedFood
-  const handleMinus = async (orderedFood_id, quantity) => {
+  const handleMinus = async ( orderedFood_id, quantity, type) => {
     if (quantity < 2) {
-      await deleteOrderedFood(orderedFood_id)
+       type === 'combo' ?
+       await deletedOrderedCombo(orderedFood_id) :
+       await deleteOrderedFood(orderedFood_id)
       setOrderedFoods((prevOrderedFoods) =>
         prevOrderedFoods.filter((item) =>
           item._id !== orderedFood_id 
         )
       )
     }
-    // handleDeleteOrderedFood(orderedFood_id)
-    await updateOrderedFood(orderedFood_id, quantity - 1)
+    
+    await updateOrderedFood(orderedFood_id, quantity - 1, type)
     if (!setOrderedFoods) return
     setOrderedFoods((prevOrderedFoods) =>
       prevOrderedFoods.map((item) =>
@@ -104,8 +109,8 @@ const Calculator = ({
       )
     )
   }
-  const handlePlus = async (orderedFood_id, quantity) => {
-    await updateOrderedFood(orderedFood_id, quantity + 1)
+  const handlePlus = async (orderedFood_id, quantity, type) => {
+    await updateOrderedFood(orderedFood_id, quantity + 1, type)
     if (!setOrderedFoods) return
     setOrderedFoods((prevOrderedFoods) =>
       prevOrderedFoods.map((item) =>
@@ -209,9 +214,8 @@ const Calculator = ({
       })
     }
   }
-
   return (
-    <div className="px-3 py-4 max-h-[800px] overflow-scroll">
+    <div className="px-3 py-4 max-h-[800px] min-w-[650px] overflow-scroll">
       <Table>
         <TableHeader>
           <TableRow onClick={handleSelectAll}>
@@ -222,10 +226,10 @@ const Calculator = ({
                 checked={selectedRows.length === orderedFoods.length}
               />
             </TableHead>
-            <TableHead className="min-w-[200px]">Tên</TableHead>
-            <TableHead>Số lượng</TableHead>
-            <TableHead>Trạng thái</TableHead>
-            <TableHead className="text-right min-w-[105px]">
+            <TableHead className="min-w-[200px] text-xl">Tên</TableHead>
+            <TableHead className="text-xl">Số lượng</TableHead>
+            <TableHead className="text-xl">Trạng thái</TableHead>
+            <TableHead className="text-right min-w-[105px] text-xl">
               Thành tiền
             </TableHead>
             <TableHead className="max-w-[50px]"></TableHead>
@@ -248,14 +252,14 @@ const Calculator = ({
                 <div className="flex items-center justify-start gap-2 md:gap-4">
                   <div className="w-16 h-16 flex items-center justify-center overflow-hidden rounded-full">
                     <img
-                      src={orderedFood.dish_id.images[0]}
+                      src={orderedFood.images[0]}
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="flex flex-col leading-7 truncate">
-                    <h2>{orderedFood.dish_id.name}</h2>
-                    <p className="text-light-textSoft dark:text-dark-textSoft font-thin">
-                      {formatCurrency(orderedFood.dish_id.price)}
+                  <div className="flex flex-col leading-7 truncate w-[150px] text-nowrap text-ellipsis overflow-hidden">
+                    <h2 className="text-xl truncate">{orderedFood.name}</h2>
+                    <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-lg">
+                      {formatCurrency(orderedFood.price)}
                     </p>
                   </div>
                 </div>
@@ -265,18 +269,18 @@ const Calculator = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleMinus(orderedFood._id, orderedFood.quantity)
+                      handleMinus(orderedFood._id, orderedFood.quantity, orderedFood.type)
                     }}
                     className="px-3 py-2 text-white bg-blur_bg dark:bg-blur_bg rounded-lg cursor-pointer hover:scale-[80%] transition-all ease-in hover:shadow-button_shadow"
                   >
                     {" "}
                     -{" "}
                   </button>
-                  <span>{orderedFood.quantity}</span>
+                  <span className="text-2xl">{orderedFood.quantity}</span>
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
-                      handlePlus(orderedFood._id, orderedFood.quantity)
+                      handlePlus(orderedFood._id, orderedFood.quantity, orderedFood.type)
                     }}
                     className="px-3 py-2 text-white bg-blur_bg dark:bg-blur_bg rounded-lg cursor-pointer hover:scale-[80%] transition-all ease-in hover:shadow-button_shadow"
                   >
@@ -309,9 +313,9 @@ const Calculator = ({
                 </div>
               </TableCell>
 
-              <TableCell className="text-right">
+              <TableCell className="text-right text-xl">
                 {formatCurrency(
-                  orderedFood.quantity * orderedFood.dish_id.price
+                  orderedFood.quantity * orderedFood.price
                 )}
               </TableCell>
             </TableRow>
@@ -339,111 +343,213 @@ const Calculator = ({
           </TableRow>
 
           <TableRow className="bg-light-bg_2 dark:bg-dark-bg_2 w-full">
-            <TableCell colSpan={2} className="text-[20px] font-medium">
+            <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
               Tổng
             </TableCell>
 
            <TableCell/>
 
-            <TableCell colSpan={2} className="text-right">
+            <TableCell colSpan={2} className="text-right text-2xl">
               {formatCurrency(totalPrice)}
             </TableCell>
           </TableRow>
         </TableFooter>
       </Table>
 
-      <div className="w-full py-4 flex gap-5">
-        <Button
-          onClick={() => router("/admin/tables")}
-          className="flex-1 py-6 text-[17px] text-white dark:text-white bg-red-1 dark:bg-red-1 hover:scale-95 transition-transform duration-150 ease-linear"
-        >
-          Quay lại
-        </Button>
-        <Dialog>
-          <DialogTrigger className="flex-1">
-            <Button className="w-full py-6 text-[17px] text-white dark:text-white bg-green-1 dark:bg-green-1 hover:scale-95 transition-transform duration-150 ease-linear">
-              Thanh toán
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text gap-0">
-            <DialogHeader></DialogHeader>
-            <div className="w-full flex items-center py-2">
-              <p className="flex-1 h-full bg-light-bg_2 dark:bg-dark-bg_2 flex items-center justify-start px-2">
-                Tổng tiền
-              </p>
-              <Input
-                className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
-                 placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
-                disabled
-                type="number"
-                placeholder={formatCurrency(totalPrice)}
-              />
-            </div>
-            <div className="w-full flex items-center py-2">
-              <p className="flex-1 h-full bg-light-bg_2 dark:bg-dark-bg_2 flex items-center justify-start px-2">
-                Cần thanh toán
-              </p>
-              <Input
-                className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
-                 placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
-                disabled
-                type="number"
-                placeholder={formatCurrency(neededPaid)}
-              />
-            </div>
-            <div className="w-full flex items-center py-2">
-              <p className="flex-1 h-full bg-light-bg_2 dark:bg-dark-bg_2 flex items-center justify-start px-2">
-                Khách trả
-              </p>
-              <CurrencyInput
-                id="input-example"
-                className="flex-[2] shadow-input_shadow focus-within:shadow-indigo-500/50 focus:border-none focus:outline-none px-2 py-2 bg-transparent dark:bg-transparent "
-                name="input-name"
-                placeholder="Please enter a number"
-                decimalsLimit={2}
-                suffix="₫"
-                autoFocus
-                groupSeparator="."
-                value={paidMoney}
-                onValueChange={(value, name, values) =>
-                  handlePaidMoney(value, name, values)
-                }
-              />
-            </div>
-            <div className="w-full flex items-center py-2">
-              <p className="flex-1 h-full bg-light-bg_2 dark:bg-dark-bg_2 flex items-center justify-start px-2">
-                {change < 0 ? "Tiền thiếu" : "Tiền thừa"}
-              </p>
-              <Input
-                className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
-                 placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
-                disabled
-                type="number"
-                placeholder={formatCurrency(change)}
-              />
-            </div>
-            <div className="flex items-center justify-end py-2 gap-5">
-              <DialogClose asChild>
-                <Button
-                  className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
-                text-white dark:text-white hover:scale-90 transition-all ease-in"
-                >
-                  Đóng
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button
-                  onClick={() => handlePayment()}
-                  className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
-              text-white dark:text-white hover:scale-90 transition-all ease-in"
-                >
-                  Thanh toán
-                </Button>
-              </DialogClose>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+      {
+        reservation_id && (<div className="w-full py-4 flex gap-5">
+          <Button
+            onClick={() => router("/admin/tables")}
+            className="flex-1 py-6 text-[17px] text-white dark:text-white bg-red-1 dark:bg-red-1 hover:scale-95 transition-transform duration-150 ease-linear"
+          >
+            Quay lại
+          </Button>
+          <Dialog >
+            <DialogTrigger className="flex-1">
+              <Button className="w-full py-6 text-[17px] text-white dark:text-white bg-green-1 dark:bg-green-1 hover:scale-95 transition-transform duration-150 ease-linear">
+                Thanh toán
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-light-bg  gap-0 min-w-[400px] h-auto xl:min-w-[1200px] xl:h-[800px]">
+              <div className="flex items-start justify-between">
+              <div className="min-w-[450px] px-10 order-2 h-full ">
+              <div className="w-full flex items-center py-2">
+                  <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                    Tổng tiền
+                  </p>
+                  <Input
+                    className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                    placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
+                    disabled
+                    type="number"
+                    placeholder={formatCurrency(totalPrice)}
+                  />
+                </div>
+                <div className="w-full flex items-center py-2">
+                  <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                    VAT
+                  </p>
+                  <Input
+                    className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                    placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
+                    disabled
+                    type="number"
+                    placeholder={`${VAT}%`}
+                  />
+                </div>
+                <div className="w-full flex items-center py-2">
+                  <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                    Cần thanh toán
+                  </p>
+                  <Input
+                    className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                    placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
+                    disabled
+                    type="number"
+                    placeholder={formatCurrency(neededPaid)}
+                  />
+                </div>
+                <div className="w-full flex items-center py-2">
+                  <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                    Khách trả
+                  </p>
+                  <CurrencyInput
+                    id="input-example"
+                    className="flex-[2] shadow-input_shadow focus-within:shadow-indigo-500/50 focus:border-none focus:outline-none px-2 py-2 bg-transparent dark:bg-transparent "
+                    name="input-name"
+                    placeholder="Please enter a number"
+                    decimalsLimit={2}
+                    suffix="₫"
+                    autoFocus
+                    groupSeparator="."
+                    value={paidMoney}
+                    onValueChange={(value, name, values) =>
+                      handlePaidMoney(value, name, values)
+                    }
+                  />
+                </div>
+                <div className="w-full flex items-center py-2">
+                  <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                    {change < 0 ? "Tiền thiếu" : "Tiền thừa"}
+                  </p>
+                  <Input
+                    className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                    placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
+                    disabled
+                    type="number"
+                    placeholder={formatCurrency(change)}
+                  />
+                </div>
+                <div className="flex items-center justify-end py-2 gap-5">
+                  <DialogClose asChild>
+                    <Button
+                      className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
+                    text-white dark:text-white hover:scale-90 transition-all ease-in text-lg"
+                    >
+                      Đóng
+                    </Button>
+                  </DialogClose>
+                  <DialogClose asChild>
+                    <Button
+                      onClick={() => handlePayment()}
+                      className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
+                  text-white dark:text-white hover:scale-90 transition-all ease-in text-lg"
+                    >
+                      Thanh toán
+                    </Button>
+                  </DialogClose>
+                </div>
+              </div>
+              <Table className="max-w-[650px] order-1 hidden xl:block">
+          <TableHeader className="max-w-[650px]">
+            <TableRow>
+              <TableHead className="min-w-[200px] text-xl">Tên</TableHead>
+              <TableHead className="text-xl">Số lượng</TableHead>
+              <TableHead className="text-xl">Trạng thái</TableHead>
+              <TableHead className="text-right min-w-[105px] text-xl">
+                Thành tiền
+              </TableHead>
+              <TableHead className="max-w-[50px]"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="max-w-[650px]">
+            {orderedFoods?.map((orderedFood) => (
+              <TableRow
+                key={orderedFood._id}
+              >
+                <TableCell className="font-medium">
+                  <div className="flex items-center justify-start gap-2 md:gap-4">
+                    <div className="w-16 h-16 flex items-center justify-center overflow-hidden rounded-full">
+                      <img
+                        src={orderedFood.images[0]}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex flex-col leading-7 truncate w-[150px] text-nowrap text-ellipsis overflow-hidden">
+                      <h2 className="text-xl truncate">{orderedFood.name}</h2>
+                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-lg">
+                        {formatCurrency(orderedFood.price)}
+                      </p>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{orderedFood.quantity}</span>
+                  </div>
+                </TableCell>
+  
+                <TableCell>
+                  <div
+                    className={`
+                    py-1 px-3 text-white rounded-full
+                     ${
+                         orderedFood.status === "ISPREPARED"
+                         ? "bg-gray-1"
+                         : orderedFood.status === "ISCOMPLETED"
+                         ? "bg-yellow-1"
+                         : "bg-red-1"
+                     }
+                    `}
+                  >
+                    {
+                     orderedFood.status === "ISPREPARED"?
+                     <div className="text-nowrap text-center">Đang chuẩn bị</div>:
+                     orderedFood.status === "ISCOMPLETED"?
+                     <div className="text-nowrap text-center">Hoàn thành</div>: 
+                     <div className="text-nowrap text-center">Đã hủy</div>
+                    }
+                  </div>
+                </TableCell>
+  
+                <TableCell className="text-right text-xl">
+                  {formatCurrency(
+                    orderedFood.quantity * orderedFood.price
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow className="bg-light-bg  w-full">
+              <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
+                Tổng
+              </TableCell>
+  
+             <TableCell/>
+  
+              <TableCell colSpan={2} className="text-right text-2xl">
+                {formatCurrency(totalPrice)}
+              </TableCell>
+            </TableRow>
+          </TableFooter>
+              </Table>
+              <p className="ver_separate_line min-h-full hidden xl:block"></p>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>)
+      }
 
       <Dialog open={isPaid} onOpenChange={setIsPaid}>
         <DialogContent className="max-w-[330px] md:max-w-[450px] bg-light-bg_2 dark:bg-dark-bg_2 rounded-md text-white dark:text-white">

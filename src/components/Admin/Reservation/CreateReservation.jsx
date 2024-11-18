@@ -9,9 +9,10 @@ import CreateFoodOrder from "../FoodOrder/CreateFoodOrder"
 export default function CreateReservation() {
   let { tableId } = useParams();
   const [orderedFoodOpen, setOrderedFoodOpen] = useState(false)
+  const [orderedFoods, setOrderedFoods] = useState([])
   const [loading, setLoading] = useState(false)
   const [numberOfSeats, setNumberOfSeats] = useState()
-
+console.log('ordered food in create', orderedFoods)
   useEffect(() => {
     const fetData = async () => {
       setLoading(true)
@@ -62,12 +63,14 @@ export default function CreateReservation() {
               numberOfSeats={numberOfSeats}
               orderedFoodOpen={orderedFoodOpen}
               setOrderedFoodOpen={setOrderedFoodOpen}
+              orderedFoods={orderedFoods}
             />
           )}
         </div>
-        {/* {
-        orderedFoodOpen && <CreateFoodOrder />
-        } */}
+        <p className="separate_line"></p>
+        {
+        orderedFoodOpen && <CreateFoodOrder orderedFoods={orderedFoods} setOrderedFoods={setOrderedFoods} />
+        }
       </div>
     </div>
   )

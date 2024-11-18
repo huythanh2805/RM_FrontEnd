@@ -153,17 +153,17 @@ export const ReservationColumn = ({
         return <div>
           {
            status === "SEATED" && <div className="flex items-center gap-2">
-           <Button onClick={()=>updateTable(row.original._id )}>Đổi bàn</Button>
-           <Button onClick={()=>completedReservation(row.original._id )}>Tính tiền</Button>
+           <Button onClick={()=>updateTable(row.original._id )} className="bg-yellow-1 hover:bg-yellow-1">Đổi bàn</Button>
+           <Button onClick={()=>completedReservation(row.original._id )} className="bg-purple-1 hover:bg-purple-1" >Tính tiền</Button>
          </div>
           }
           {
-           status === "ISCOMFIRMED" && <Button onClick={()=>selectTable(row.original._id )}>Nhận bàn</Button>
+           status === "ISCOMFIRMED" && <Button onClick={()=>selectTable(row.original._id )} className="bg-orange-1 hover:bg-orange-1" >Nhận bàn</Button>
           }
           {
             status === "ISWAITING" && <div className="flex items-center gap-2">
-              <Button onClick={()=>cancelReser(row.original._id)}>Hủy Đơn</Button>
-              <Button onClick={()=>confirmReser(row.original._id)}>Xác nhận đơn</Button>
+              <Button onClick={()=>cancelReser(row.original._id)} className="bg-red-1 hover:bg-red-1" >Hủy Đơn</Button>
+              <Button onClick={()=>confirmReser(row.original._id)} className="bg-green-1 hover:bg-green-1">Xác nhận đơn</Button>
             </div>
           }
         </div>
