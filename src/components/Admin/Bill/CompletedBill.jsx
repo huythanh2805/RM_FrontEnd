@@ -153,25 +153,25 @@ const CompletedBill = () => {
               <div className="flex gap-8 max-w-[390px]">
                 <h1 className="min-w-fit text-[20px]">Bill to</h1>
                 <div className="flex flex-col">
-                  <p className="text-light-textSoft dark:text-dark-textSoft font-thin pb-2">
+                  <p className="text-light-textSoft dark:text-dark-textSoft font-thin pb-2 text-xl">
                     Tên:
-                    <span className="text-light-text dark:text-dark-text font-medium px-3">
+                    <span className="text-light-text dark:text-dark-text font-medium px-3 text-xl">
                       {bill.reservation_id.userName
                         ? bill.reservation_id.userName
                         : "Un-no"
                       }
                     </span>
                   </p>
-                  <p className="text-light-textSoft dark:text-dark-textSoft font-thin pb-2">
+                  <p className="text-light-textSoft dark:text-dark-textSoft font-thin pb-2 text-xl">
                     Địa chỉ:
-                    <span className="text-light-text dark:text-dark-text font-medium px-3">
+                    <span className="text-light-text dark:text-dark-text font-medium px-3 text-xl">
                       {bill.reservation_id.detailAddress}
                     </span>
                   </p>
                   {bill.reservation_id.user_id?.email && (
-                    <p className="text-light-textSoft dark:text-dark-textSoft font-thin pb-2">
+                    <p className="text-light-textSoft dark:text-dark-textSoft font-thin pb-2 text-xl">
                       Email:
-                      <span className="text-light-text dark:text-dark-text font-medium px-3">
+                      <span className="text-light-text dark:text-dark-text font-medium px-3 text-xl">
                         {bill.reservation_id.user_id?.email}
                       </span>
                     </p>
@@ -181,22 +181,22 @@ const CompletedBill = () => {
 
               <div className="flex flex-col min-w-[200px]">
                 <div className="w-full flex items-center justify-between pb-2">
-                  <p className="text-light-textSoft dark:text-dark-textSoft font-thin">
+                  <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">
                     Ngày:
                   </p>
-                  <p>{formatDateAndTime(bill.reservation_id.startTime).day}</p>
+                  <p className="text-xl">{formatDateAndTime(bill.reservation_id.startTime).day}</p>
                 </div>
                 <div className="w-full flex items-center justify-between pb-2">
-                  <p className="text-light-textSoft dark:text-dark-textSoft font-thin">
+                  <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">
                     Giờ:
                   </p>
-                  <p>{formatDateAndTime(bill.reservation_id.startTime).time}</p>
+                  <p className="text-xl">{formatDateAndTime(bill.reservation_id.startTime).time}</p>
                 </div>
                 <div className="w-full flex items-center justify-between pb-2">
-                  <p className="text-light-textSoft dark:text-dark-textSoft font-thin">
+                  <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">
                     Bàn:
                   </p>
-                  <p>{bill.reservation_id.table_id?.name}</p>
+                  <p className="text-xl">{bill.reservation_id.table_id?.name}</p>
                 </div>
               </div>
             </div>
@@ -204,24 +204,54 @@ const CompletedBill = () => {
             <Table className="w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="min-w-[200px]">Tên</TableHead>
-                  <TableHead className="min-w-[100px]">Ảnh</TableHead>
-                  <TableHead className="max-w-[100px] text-center">
+                  <TableHead className="min-w-[200px] text-xl">Tên</TableHead>
+                  <TableHead className="min-w-[100px] text-xl">Ảnh</TableHead>
+                  <TableHead className="max-w-[100px] text-xl text-center">
                     Số lượng
                   </TableHead>
-                  <TableHead className="text-right min-w-[135px]">
+                  <TableHead className="text-right min-w-[135px] text-xl">
                     Thành tiền
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
+                {bill.billDetail_id.orderedCombos &&
+                  bill.billDetail_id.orderedCombos.map((orderedCombo) => (
+                    <TableRow key={orderedCombo._id}>
+                      <TableCell className="font-medium text-lg">
+                        <div className="flex flex-col leading-7 truncate">
+                          <h2>{orderedCombo.name}</h2>
+                          <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-lg">
+                            {formatCurrency(orderedCombo.price)}
+                          </p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <img
+                          width={50}
+                          height={50}
+                          alt="dishImage"
+                          src={orderedCombo.images[0]}
+                          className="rounded-lg"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-center text-2xl">{orderedCombo.quantity}</p>
+                      </TableCell>
+                      <TableCell className="text-right text-lg">
+                        {formatCurrency(
+                          orderedCombo.quantity * orderedCombo.price
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 {bill.billDetail_id.orderedDishes &&
                   bill.billDetail_id.orderedDishes.map((orderedFood) => (
                     <TableRow key={orderedFood._id}>
-                      <TableCell className="font-medium">
+                      <TableCell className="font-medium text-xl">
                         <div className="flex flex-col leading-7 truncate">
                           <h2>{orderedFood.name}</h2>
-                          <p className="text-light-textSoft dark:text-dark-textSoft font-thin">
+                          <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-lg">
                             {formatCurrency(orderedFood.price)}
                           </p>
                         </div>
@@ -232,12 +262,13 @@ const CompletedBill = () => {
                           height={50}
                           alt="dishImage"
                           src={orderedFood.images[0]}
+                          className="rounded-lg"
                         />
                       </TableCell>
                       <TableCell>
-                        <p className="text-center">{orderedFood.quantity}</p>
+                        <p className="text-center text-2xl">{orderedFood.quantity}</p>
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-right text-lg">
                         {formatCurrency(
                           orderedFood.quantity * orderedFood.price
                         )}
@@ -247,10 +278,10 @@ const CompletedBill = () => {
               </TableBody>
               <TableFooter>
                 <TableRow className="bg-light-bg dark:bg-dark-bg">
-                  <TableCell colSpan={2} className="text-[20px] font-medium">
+                  <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
                     Tổng
                   </TableCell>
-                  <TableCell colSpan={2} className="text-right">
+                  <TableCell colSpan={2} className="text-right text-2xl">
                     {
                       bill.discounted_money ? formatCurrency(bill.discounted_money) : formatCurrency(bill.original_money)
                    

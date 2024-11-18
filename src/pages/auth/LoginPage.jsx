@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 
 export const LoginPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { register, handleSubmit, handleLoginSubmit, error } = useLogin(setIsLoggedIn);
+  const { register, handleSubmit, handleLoginSubmit, error, errors } = useLogin(setIsLoggedIn);
   const { onSuccess, onError } = useGoogleLogin();
-  
+
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -31,30 +31,39 @@ export const LoginPage = () => {
             <div className="mt-2">
               <input
                 type="email"
-                {...register("email")}
+                {...register("email", {
+                  required: "Vui lòng nhập email",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Email không hợp lệ",
+                  },
+                })}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
+              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
             </div>
           </div>
+
           <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                Mật khẩu
-              </label>
-              <div className="text-sm">
-                <Link to="/forgot-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                  Quên mật khẩu ?
-                </Link>
-              </div>
-            </div>
+            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+              Mật khẩu
+            </label>
             <div className="mt-2">
               <input
                 type="password"
-                {...register("password")}
+                {...register("password", {
+                  required: "Vui lòng nhập mật khẩu",
+                  minLength: {
+                    value: 6,
+                    message: "Mật khẩu phải có ít nhất 6 ký tự",
+                  },
+                })}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
+              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
             </div>
           </div>
+
           <div>
             <button
               type="submit"
@@ -63,9 +72,8 @@ export const LoginPage = () => {
               Đăng nhập
             </button>
           </div>
-          {error && ( // Hiển thị thông báo lỗi nếu có
-            <div className="mt-2 text-red-600">{error}</div>
-          )}
+
+          {error && <div className="mt-2 text-red-600">{error}</div>}
         </form>
         <div className="relative mt-6">
           <div className="absolute inset-0 flex items-center">

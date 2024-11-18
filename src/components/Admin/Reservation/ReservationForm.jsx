@@ -44,7 +44,8 @@ export default function ReservationForm({
   tableId,
   numberOfSeats,
   orderedFoodOpen,
-  setOrderedFoodOpen
+  setOrderedFoodOpen,
+  orderedFoods
 }) {
   const [loading, setLoading] = useState(false)
 
@@ -78,7 +79,7 @@ export default function ReservationForm({
           "Content-Type": "application/json"
         },
         method: reservation ? "PUT" : "POST",
-        body: JSON.stringify({ ...values, table_id:tableId, startTime: new Date()}),
+        body: JSON.stringify({ ...values, table_id:tableId, startTime: new Date(), orderedFoods}),
       })
       if (!res.ok) {
         return toast({
@@ -92,7 +93,7 @@ export default function ReservationForm({
       const reser = data.reservation
       setCreatedReservation(reser)
       toast({
-        variant: "sucess",
+        variant: "success",
         title: reservation
           ? data.message
           : "You added new reservation succesfully",
@@ -220,8 +221,31 @@ export default function ReservationForm({
 
         <div className="flex items-center">
           <Button
+            onClick={()=>router('/admin/tables')}
+            type="button"
+            className="mr-4 font-medium text-[16px] bg-red-1 hover:bg-red-1 hover:opacity-80 transition-all duration-300 ease-in-out"
+          >
+            Quay lại
+          </Button>
+          <Button
+            onClick={handleResetForm}
+            type="button"
+            className="mr-4 font-medium text-[16px] bg-yellow-1 hover:bg-yellow-1"
+          >
+            Làm mới
+          </Button>
+          {
+            tableId && <Button
+            onClick={()=>setOrderedFoodOpen(!orderedFoodOpen)}
+            type="button"
+            className="mr-4 font-medium text-[16px] bg-green-1 hover:bg-green-1"
+          >
+            Chọn món
+          </Button>
+          }
+          <Button
             type="submit"
-            className="mr-4 font-medium text-[16px]"
+            className="mr-4 font-medium text-[16px] bg-blue-1 hover:bg-blue-1"
             disabled={loading}
           >
             {loading ? (
@@ -237,30 +261,6 @@ export default function ReservationForm({
             ) : (
               "Đặt bàn"
             )}
-          </Button>
-
-          <Button
-            onClick={handleResetForm}
-            type="button"
-            className="mr-4 font-medium text-[16px]"
-          >
-            Làm mới
-          </Button>
-          {
-            tableId && <Button
-            onClick={()=>setOrderedFoodOpen(!orderedFoodOpen)}
-            type="button"
-            className="mr-4 font-medium text-[16px]"
-          >
-            Chọn món
-          </Button>
-          }
-          <Button
-            onClick={()=>router('/admin/tables')}
-            type="button"
-            className="mr-4 font-medium text-[16px] bg-red-1 hover:bg-red-1 hover:opacity-80 transition-all duration-300 ease-in-out"
-          >
-            Quay lại
           </Button>
         </div>
       </form>
