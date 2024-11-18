@@ -2,6 +2,7 @@ import { useUser } from "@/hooks/dashboard/useAccount";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Camera } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import * as Yup from "yup";
 
 const UserAdd = () => {
@@ -40,7 +41,7 @@ const UserAdd = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mx-2 mt-11">
-      <div className="text-2xl font-semibold mb-4">Thêm mới tài khoản</div>
+      <div className="text-2xl px-8 font-semibold mb-4">Thêm mới tài khoản</div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-9">
         <div className="flex flex-col items-center">
@@ -146,6 +147,9 @@ const UserAdd = () => {
         >
           {isLoading ? "Đang xử lý..." : "Thêm mới"}
         </button>
+        <Link to="/admin/users" className="ml-2 px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+          Quay lại
+        </Link>
       </div>
     </form>
   );
