@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useProfile } from "@/hooks/home/useProfile";
 import { Link, useNavigate } from "react-router-dom";
+import { IoIosNotifications } from "react-icons/io";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -25,14 +26,14 @@ const Navbar = () => {
         <input
           type="text"
           placeholder="Search"
-          className="p-3 rounded-lg bg-gray-200 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="p-3   bg-gray-200 text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
         />
       </div>
 
       <div className="relative">
         <div className="flex gap-2 items-center">
           <div>
-           Thong bao
+            <IoIosNotifications className="w-8 h-8" />
           </div>
           <div>
             <img

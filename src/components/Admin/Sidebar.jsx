@@ -21,7 +21,6 @@ import {
   SidebarMenuItem,
   SidebarMenuSubItem,
   SidebarMenuSub,
-  SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 
 import {
@@ -42,21 +41,21 @@ export function AppSidebar() {
     { title: "Bills", url: "/admin/bills", icon: DollarSign },
   ];
 
-  const SubItems = [
+  const subItems = [
     { title: "Item 1", url: "/" },
     { title: "Item 2", url: "/" },
   ];
 
   return (
-    <Sidebar>
-      <SidebarHeader>
-        <div className="flex items-center gap-2 p-4">
+    <Sidebar className="w-64 h-full bg-gray-800 text-white">
+      <SidebarHeader className="border-b ">
+        <div className="flex items-center gap-4 p-4">
           <img
             src="/imgs/logoGolden.webp"
             alt="Golden Fork Logo"
             className="h-16 w-16 object-cover rounded-full"
           />
-          <span className="font-bold text-lg">Golden Fork</span>
+          <span className="font-bold text-2xl text-gray-800">Golden Fork</span>
         </div>
       </SidebarHeader>
 
@@ -66,41 +65,45 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton className="my-2">
-                    <a href={item.url} className="flex items-center gap-2">
-                      <item.icon className="mr-2" />
-                      <span>{item.title}</span>
+                  <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
+                    <a
+                      href={item.url}
+                      className="flex items-center gap-3 text-sm font-medium"
+                    >
+                      <item.icon className="w-5 h-5 text-gray-800" />
+                      <span className="text-black">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
 
-              <Collapsible defaultOpen className="group/collapsible">
+              <Collapsible defaultOpen className="group">
                 <SidebarMenuItem>
-                  <SidebarMenuButton className="my-2">
+                  <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
                     <CollapsibleTrigger className="flex items-center justify-between w-full">
-                      <div className="flex items-center gap-2">
-                        <Contact className="mr-2" />
-                        <span>Item</span>
+                      <div className="flex items-center gap-3">
+                        <Contact className="w-5 h-5 text-gray-800" />
+                        <span className="text-sm font-medium text-gray-800">
+                          More Options
+                        </span>
                       </div>
-                      <ChevronDown className="transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                      <ChevronDown className="w-5 h-5 text-gray-   group-data-[state=open]:rotate-180 transition-transform" />
                     </CollapsibleTrigger>
                   </SidebarMenuButton>
 
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {SubItems.map((subItem) => (
+                      {subItems.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <a
                             href={subItem.url}
-                            className="ml-6 flex items-center gap-2"
+                            className="ml-8 flex items-center gap-2 text-sm text-gray-400 hover:text-white transition"
                           >
-                            <span>{subItem.title}</span>
+                            {subItem.title}
                           </a>
                         </SidebarMenuSubItem>
                       ))}
                     </SidebarMenuSub>
-                    <SidebarGroupContent />
                   </CollapsibleContent>
                 </SidebarMenuItem>
               </Collapsible>
