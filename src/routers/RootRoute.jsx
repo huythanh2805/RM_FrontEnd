@@ -41,6 +41,7 @@ import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";
 import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
 import BillList from "@/pages/dashboard/bill/BillList";
 import BillDetail from "@/pages/dashboard/bill/BillDetail";
+import ProtectedComponent from "@/components/ProtectedComponent";
 
 const router = createBrowserRouter([
   {
@@ -99,7 +100,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <LayoutAdmin />,
+    element:  <ProtectedComponent><LayoutAdmin /></ProtectedComponent>,
     children: [
       {
         path: "/admin",

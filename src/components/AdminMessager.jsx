@@ -106,7 +106,6 @@ const AdminMessager = () => {
       setConversation((prev) => [newConversation, ...prev])
       if(!currentConversation){
         setCurrentConversation(newConversation)
-        fetchMessages(newConversation._id)
       }
       setNewConversation(null)
     }
