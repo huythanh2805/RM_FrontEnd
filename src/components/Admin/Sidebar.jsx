@@ -39,7 +39,7 @@ export function AppSidebar() {
     { title: "Combo", url: "/admin/setCombos", icon: Layers },
     { title: "Table", url: "/admin/tables", icon: Table },
     { title: "Employee", url: "/admin/employees", icon: Contact },
-    { title: "Bills", url: "/admin/bills", icon: DollarSign },
+    { title: "Bills", url: "/admin/bills", icon: DollarSign},
   ];
 
   const SubItems = [

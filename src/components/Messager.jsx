@@ -154,18 +154,6 @@ const Messager = () => {
     }
   };
   const createConversation = async () => {
-    socket.emit("createConversation", {
-      lastMessage: { text: valueInput, seen: false, senderId: user._id },
-      _id: conversationId,
-      seen: false,
-      createdAt: new Date(),
-      userId: {
-        _id: user._id,
-        image: user.image,
-        userName: user.userName,
-      },
-    })
-    
     try {
       if(!decodedToken.id) return toast({variant: "destructive", title: "Bạn cần đăng nhập để nhắn tin"})
       const res  = await fetch(ServerUrl+"/api/conversation", {
