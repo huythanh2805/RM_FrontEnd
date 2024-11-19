@@ -1,98 +1,109 @@
+import Pagination from "@/components/Pagination";
 import { useUser } from "@/hooks/dashboard/useAccount";
+import { useState } from "react";
 import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 
 const UserList = () => {
   const { list, isLoading, error, deleteUser } = useUser();
-  const [filter, setFilter] = useState("all"); 
+  const [selectedRole, setSelectedRole] = useState("Tất cả");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading user list.</p>;
+  // Xử lý khi dữ liệu đang tải hoặc gặp lỗi
+  if (isLoading) return <p className="text-center text-blue-600">Loading...</p>;
+  if (error) return <p className="text-center text-red-600">Error loading user list.</p>;
 
+  // Hàm xóa người dùng
   const handleDelete = async (userId) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?")) {
       await deleteUser(userId);
     }
   };
 
-  const filteredUsers = list.filter((user) => {
-    if (filter === "all") return true;
-    return user.role === filter; 
-  });
+  // Lọc người dùng theo role
+  const filteredUsers = selectedRole === "Tất cả" ? list : list.filter((user) => user.role === selectedRole);
+
+  // Tính toán cho phân trang
+  const totalItems = filteredUsers.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+
+  // Xử lý khi thay đổi trang
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected + 1);
+  };
+
+  // Xử lý khi thay đổi bộ lọc
+  const handleRoleChange = (e) => {
+    setSelectedRole(e.target.value);
+    setCurrentPage(1); // Reset về trang 1 khi thay đổi bộ lọc
+  };
 
   return (
-    <div className="w-full min-h-screen bg-[#f5f6fa]">
-      <div className="px-5 py-2">
-        <div className="flex items-center justify-between">
-          <p className="text-[32px] font-semibold mb-4">Danh sách người dùng</p>
-          <Link to={"/admin/users/add"}>
-            <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-xs font-semibold hover:bg-green-300 transition">
+    <div className="w-full min-h-screen bg-gray-100 py-8 text-xl">
+      <div className="mx-auto px-6">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">Danh sách người dùng</h1>
+          <Link to="/admin/users/add">
+            <button className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition">
               Thêm +
-            </div>
+            </button>
           </Link>
         </div>
 
-        {/* Filter Options */}
+        {/* Bộ lọc người dùng */}
         <div className="mb-4">
           <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="bg-white border border-gray-300 rounded-md p-2"
+            value={selectedRole}
+            onChange={handleRoleChange}
+            className="bg-white text-sl border border-gray-300 rounded-md p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
           >
-            <option value="all">Tất cả</option>
-            <option value="client">Client</option>
-            <option value="admin">Admin</option>
+            <option value="Tất cả">Tất cả</option>
+            <option value="CLIENT">Client</option>
+            <option value="ADMIN">Admin</option>
           </select>
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
+        {/* Bảng danh sách người dùng */}
+        <div className="overflow-x-auto rounded-lg shadow-lg">
           <table className="min-w-full bg-white">
-            <thead className="border-b border-[#d5d5d5] text-left text-xs font-semibold text-[#202224] uppercase tracking-wider">
+            <thead className="bg-gray-200">
               <tr>
-                <th className="hidden lg:block py-3 px-6">STT</th>
-                <th className="py-3 px-6">Tên</th>
-                <th className="py-3 px-6">Email</th>
-                <th className="py-3 px-6">Địa chỉ</th>
-                <th className="py-3 px-6">Role</th>
-                <th className="py-3 px-6"></th>
+                <th className="hidden lg:table-cell py-3 px-6 text-left text-sl font-semibold text-gray-700">STT</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Tên</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Email</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Địa chỉ</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Vai trò</th>
+                <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Hành động</th>
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user, index) => (
-                <tr className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition" key={user._id}>
-                  <td className="hidden lg:block py-4 px-6 text-sm font-medium text-[#202224]">{index + 1}</td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224] max-w-[100px] lg:max-w-[250px] break-words">
-                    {user.userName}
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224] max-w-[100px] lg:max-w-[250px] break-words">
-                    {user.email}
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224] max-w-[100px] lg:max-w-[250px] break-words">
-                    {user.address}
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224] max-w-[100px] lg:max-w-[250px] break-words">
-                    {user.role}
-                  </td>
-
-                  <td className="py-4 px-6 text-sm flex items-center gap-1.5 lg:gap-3">
+              {currentItems.map((user, index) => (
+                <tr key={user._id} className="border-b hover:bg-gray-100 transition">
+                  <td className="hidden lg:table-cell py-4 px-6 text-sl text-gray-800">{index + 1 + startIndex}</td>
+                  <td className="py-4 px-6 text-sl text-gray-800">{user.userName}</td>
+                  <td className="py-4 px-6 text-sl text-gray-800">{user.email}</td>
+                  <td className="py-4 px-6 text-sl text-gray-800">{user.address}</td>
+                  <td className="py-4 px-6 text-sl text-gray-800">{user.role}</td>
+                  <td className="py-4 px-6 text-sl flex justify-center gap-3">
                     <Link to={`/admin/users/edit/${user._id}`}>
-                      <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">
-                        <FaPenToSquare />
-                      </div>
+                      <FaPenToSquare className="text-blue-600 hover:text-blue-800 cursor-pointer" />
                     </Link>
-                    <div
-                      className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-xs lg:text-base font-semibold hover:bg-red-300 transition"
+                    <FaRegTrashCan
+                      className="text-red-600 hover:text-red-800 cursor-pointer"
                       onClick={() => handleDelete(user._id)}
-                    >
-                      <FaRegTrashCan />
-                    </div>
+                    />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+
+        {/* Phân trang */}
+        <Pagination pageCount={totalPages} onPageChange={handlePageClick} />
       </div>
     </div>
   );

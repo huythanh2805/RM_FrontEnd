@@ -1,9 +1,25 @@
 import { useUser } from "@/hooks/dashboard/useAccount";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Camera } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import * as Yup from "yup";
 
 const UserAdd = () => {
+  // Định nghĩa schema validation với yup
+  const validationSchema = Yup.object({
+    userName: Yup.string().required("Vui lòng nhập họ tên"),
+    email: Yup.string().email("Email không hợp lệ").required("Vui lòng nhập email"),
+    password: Yup.string().required("Vui lòng nhập mật khẩu"),
+    phoneNumber: Yup.string()
+      .required("Vui lòng nhập số điện thoại")
+      .matches(/^[0-9]+$/, "Số điện thoại chỉ được chứa chữ số"),
+    address: Yup.string().required("Vui lòng nhập địa chỉ"),
+  });
+
+  // Khởi tạo form với react-hook-form và yupResolver để áp dụng schema validation
   const form = useForm({
+    resolver: yupResolver(validationSchema),
     defaultValues: {
       userName: "",
       email: "",
@@ -12,15 +28,20 @@ const UserAdd = () => {
       address: "",
     },
   });
-  const { register, handleSubmit } = form;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = form;
   const { handleImageChange, handleAdd, selectedImage, isLoading } = useUser(null, form);
 
   const onSubmit = (data) => {
     handleAdd(data);
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mx-2 mt-11">
-      <div className="text-2xl font-semibold mb-4">Thêm mới tài khoản</div>
+      <div className="text-2xl px-8 font-semibold mb-4">Thêm mới tài khoản</div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-9">
         <div className="flex flex-col items-center">
@@ -64,6 +85,7 @@ const UserAdd = () => {
                 placeholder="Username"
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              {errors.userName && <p className="text-red-500 text-sm">{errors.userName.message}</p>}
             </div>
             <div>
               <label htmlFor="email">Email</label>
@@ -74,6 +96,7 @@ const UserAdd = () => {
                 placeholder="Email address"
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
             </div>
           </div>
 
@@ -87,6 +110,7 @@ const UserAdd = () => {
                 placeholder="Password"
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
             </div>
             <div>
               <label htmlFor="phoneNumber">Số điện thoại</label>
@@ -97,6 +121,7 @@ const UserAdd = () => {
                 placeholder="Enter phone number"
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>}
             </div>
           </div>
 
@@ -109,6 +134,7 @@ const UserAdd = () => {
               placeholder="Address"
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
+            {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
           </div>
         </div>
       </div>
@@ -121,6 +147,9 @@ const UserAdd = () => {
         >
           {isLoading ? "Đang xử lý..." : "Thêm mới"}
         </button>
+        <Link to="/admin/users" className="ml-2 px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+          Quay lại
+        </Link>
       </div>
     </form>
   );

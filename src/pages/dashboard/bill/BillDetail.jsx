@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "@/configs";
+import { formatCurrency } from "@/utilities/utils";
 
 const BillDetail = () => {
   const { id } = useParams();
@@ -23,9 +24,8 @@ const BillDetail = () => {
     return <div>Loading...</div>;
   }
 
-  // Kiểm tra nếu `reservation_id` không tồn tại, tránh lỗi destructure
   const {
-    reservation_id = {}, // Đảm bảo rằng nếu reservation_id không tồn tại, sẽ là object rỗng
+    reservation_id = {},
     original_money,
     VAT,
     status,
@@ -40,9 +40,9 @@ const BillDetail = () => {
     table_id,
     startTime,
     guests_count,
-  } = reservation_id || {}; // Cẩn thận với reservation_id có thể là null
+  } = reservation_id || {};
 
-  const { orderedDishes } = billDetail_id || {}; // Nếu billDetail_id không tồn tại, sẽ là null
+  const { orderedDishes, orderedCombos } = billDetail_id || {};
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
@@ -56,33 +56,25 @@ const BillDetail = () => {
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Tên khách hàng
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {userName || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{userName}</td>
               </tr>
               <tr className="border-b">
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Địa chỉ
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {detailAddress || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{detailAddress}</td>
               </tr>
               <tr className="border-b">
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Số điện thoại
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {phoneNumber || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{phoneNumber}</td>
               </tr>
               <tr>
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Hình thức thanh toán
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {payment_method || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{payment_method}</td>
               </tr>
             </tbody>
           </table>
@@ -99,25 +91,21 @@ const BillDetail = () => {
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Tên bàn
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {table_id?.name || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{table_id?.name}</td>
               </tr>
               <tr className="border-b">
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Số ghế
                 </th>
                 <td className="py-4 px-6 text-gray-600">
-                  {table_id?.number_of_seats || "Không có thông tin"}
+                  {table_id?.number_of_seats}
                 </td>
               </tr>
               <tr className="border-b">
                 <th className="py-4 px-6 text-gray-700 font-semibold">
                   Số khách
                 </th>
-                <td className="py-4 px-6 text-gray-600">
-                  {guests_count || "Không có thông tin"}
-                </td>
+                <td className="py-4 px-6 text-gray-600">{guests_count}</td>
               </tr>
               <tr>
                 <th className="py-4 px-6 text-gray-700 font-semibold">
@@ -165,25 +153,48 @@ const BillDetail = () => {
                     />
                   </td>
                   <td className="py-4 px-6 text-sm">
-                    {dish.price.toLocaleString("vi-VN")} VND
+                    {formatCurrency(dish.price)}
                   </td>
                   <td className="py-4 px-6 text-sm">{dish.quantity}</td>
                   <td className="py-4 px-6 text-sm">
-                    {(dish.price * dish.quantity).toLocaleString("vi-VN")} VND
+                    {formatCurrency(dish.price * dish.quantity)}
                   </td>
                 </tr>
               ))}
 
-              {/* Thêm các dòng cho tổng giá trị đơn, VAT, và tổng hóa đơn */}
-              <tr className="bg-gray-50">
+              {orderedCombos?.map((combo) => (
+                <tr
+                  className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
+                  key={combo._id}
+                >
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
+                    {combo.name}
+                  </td>
+                  <td className="py-4 px-6 text-sm">
+                    <img
+                      src={combo.images[0]}
+                      alt={combo.name}
+                      className="w-20 h-20 object-cover"
+                    />
+                  </td>
+                  <td className="py-4 px-6 text-sm">
+                    {formatCurrency(combo.price)}
+                  </td>
+                  <td className="py-4 px-6 text-sm">{combo.quantity}</td>
+                  <td className="py-4 px-6 text-sm">
+                    {formatCurrency(combo.price * combo.quantity)}
+                  </td>
+                </tr>
+              ))}
+              <tr>
                 <td
                   className="table-cell py-4 px-6 font-semibold text-right"
                   colSpan={4}
                 >
-                  Tổng giá trị đơn (chưa thuế)
+                  Tổng tiền (Trước thuế):
                 </td>
                 <td className="py-4 px-6 font-semibold">
-                  {original_money.toLocaleString("vi-VN")} VND
+                  {formatCurrency(original_money)}
                 </td>
               </tr>
               <tr>
@@ -194,22 +205,20 @@ const BillDetail = () => {
                   Thuế VAT ({VAT}%)
                 </td>
                 <td className="py-4 px-6 font-semibold">
-                  {((original_money * VAT) / 100).toLocaleString("vi-VN")} VND
+                  {formatCurrency((original_money * VAT) / 100)}
                 </td>
               </tr>
-              <tr className="bg-gray-50">
+              <tr>
                 <td
                   className="table-cell py-4 px-6 font-semibold text-right"
                   colSpan={4}
                 >
-                  Tổng hóa đơn
+                  Tổng cộng (Sau thuế):
                 </td>
                 <td className="py-4 px-6 font-semibold">
-                  {(
-                    original_money +
-                    (original_money * VAT) / 100
-                  ).toLocaleString("vi-VN")}{" "}
-                  VND
+                  {formatCurrency(
+                    original_money + (original_money * VAT) / 100
+                  )}
                 </td>
               </tr>
             </tbody>

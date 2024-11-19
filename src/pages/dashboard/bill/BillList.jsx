@@ -77,7 +77,9 @@ const BillList = () => {
                   </td>
                   <td className="py-3 px-4 text-sm">
                     <Link to={`/admin/bills/${bill._id}/detail`}>
-                      {formatCurrency(bill.original_money)}
+                      {formatCurrency(
+                        bill.original_money + (bill.original_money * bill.VAT) / 100
+                      )}
                     </Link>
                   </td>
                   <td className="py-3 px-4 text-sm">
