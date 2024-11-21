@@ -33,17 +33,14 @@ export function AppSidebar() {
   const menuItems = [
     { title: "Home", url: "/admin", icon: Home },
     { title: "Account", url: "/admin/users", icon: User },
-    { title: "Categories", url: "/admin/categories", icon: Grid },
-    { title: "Dishes", url: "/admin/dishes", icon: Soup },
-    { title: "Combo", url: "/admin/setCombos", icon: Layers },
     { title: "Table", url: "/admin/tables", icon: Table },
     { title: "Employee", url: "/admin/employees", icon: Contact },
-    { title: "Bills", url: "/admin/bills", icon: DollarSign},
+    { title: "Bills", url: "/admin/bills", icon: DollarSign },
   ];
 
   const subItems = [
-    { title: "Item 1", url: "/" },
-    { title: "Item 2", url: "/" },
+    { title: "Combo", url: "/admin/setCombos", icon: Layers },
+    { title: "Categories", url: "/admin/categories", icon: Grid },
   ];
 
   return (
@@ -81,12 +78,15 @@ export function AppSidebar() {
                 <SidebarMenuItem>
                   <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
                     <CollapsibleTrigger className="flex items-center justify-between w-full">
-                      <div className="flex items-center gap-3">
-                        <Contact className="w-5 h-5 text-gray-800" />
+                      <a
+                        href="/admin/dishes"
+                        className="flex items-center gap-3"
+                      >
+                        <Soup className="w-5 h-5 text-gray-800" />
                         <span className="text-sm font-medium text-gray-800">
-                          More Options
+                          Dishes
                         </span>
-                      </div>
+                      </a>
                       <ChevronDown className="w-5 h-5 text-gray-   group-data-[state=open]:rotate-180 transition-transform" />
                     </CollapsibleTrigger>
                   </SidebarMenuButton>
@@ -97,8 +97,11 @@ export function AppSidebar() {
                         <SidebarMenuSubItem key={subItem.title}>
                           <a
                             href={subItem.url}
-                            className="ml-8 flex items-center gap-2 text-sm text-gray-400 hover:text-white transition"
+                            className="flex items-center text-sm text-gray-800 hover:bg-gray-400 rounded-lg transition p-2"
                           >
+                            {subItem.icon && (
+                              <subItem.icon className="w-4 h-4 text-gray-800 mr-2" />
+                            )}
                             {subItem.title}
                           </a>
                         </SidebarMenuSubItem>
