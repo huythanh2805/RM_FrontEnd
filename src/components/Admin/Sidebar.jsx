@@ -21,6 +21,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSubItem,
   SidebarMenuSub,
+  SidebarProvider,
 } from "@/components/ui/sidebar";
 
 import {
@@ -29,7 +30,11 @@ import {
   CollapsibleContent,
 } from "@radix-ui/react-collapsible";
 
+import React from "react";
+import { Link } from "react-router-dom";
+
 export function AppSidebar() {
+  const [open, setOpen] = React.useState(false);
   const menuItems = [
     { title: "Home", url: "/admin", icon: Home },
     { title: "Account", url: "/admin/users", icon: User },
@@ -58,18 +63,18 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupContent>
+          <SidebarGroupContent upContent>
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
-                    <a
-                      href={item.url}
+                    <Link
+                      to={item.url}
                       className="flex items-center gap-3 text-sm font-medium"
                     >
                       <item.icon className="w-5 h-5 text-gray-800" />
                       <span className="text-black">{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -78,15 +83,16 @@ export function AppSidebar() {
                 <SidebarMenuItem>
                   <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
                     <CollapsibleTrigger className="flex items-center justify-between w-full">
-                      <a
-                        href="/admin/dishes"
-                        className="flex items-center gap-3"
+                      <Link
+                        to="/admin/dishes"
+                        className="flex items-center gap-3 text-sm font-medium"
                       >
                         <Soup className="w-5 h-5 text-gray-800" />
                         <span className="text-sm font-medium text-gray-800">
                           Dishes
                         </span>
-                      </a>
+                      </Link>
+
                       <ChevronDown className="w-5 h-5 text-gray-   group-data-[state=open]:rotate-180 transition-transform" />
                     </CollapsibleTrigger>
                   </SidebarMenuButton>
@@ -95,15 +101,15 @@ export function AppSidebar() {
                     <SidebarMenuSub>
                       {subItems.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <a
-                            href={subItem.url}
+                          <Link
+                            to={subItem.url}
                             className="flex items-center text-sm text-gray-800 hover:bg-gray-400 rounded-lg transition p-2"
                           >
                             {subItem.icon && (
                               <subItem.icon className="w-4 h-4 text-gray-800 mr-2" />
                             )}
                             {subItem.title}
-                          </a>
+                          </Link>
                         </SidebarMenuSubItem>
                       ))}
                     </SidebarMenuSub>

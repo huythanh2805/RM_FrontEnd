@@ -5,8 +5,11 @@ import { FaArrowUp, FaMoneyBillAlt, FaUserCheck } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiSolidDish } from "react-icons/bi";
 import Navbar from "@/components/Admin/Navbar";
+
 const Dashboard = () => {
   const [dataProduct, setDataProduct] = useState([]);
+
+  // Lấy dữ liệu món ăn
   useEffect(() => {
     axios
       .get(BASE_URL + "/dishes")
@@ -17,71 +20,93 @@ const Dashboard = () => {
         console.log(error);
       });
   }, []);
+
+  // Lấy dữ liệu người dùng
+  const [dataUser, setDataUser] = useState([]);
+  useEffect(() => {
+    axios
+      .get(BASE_URL + "/users/admin/list")
+      .then((res) => {
+        setDataUser(res.data.users || []);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+  const clientCount = dataUser.filter(
+    (users) => users.role === "CLIENT"
+  ).length;
+
   return (
-    <div className="w-full min-h-screen">
-      <div className="px-5 py-2">
+    <div className="w-full min-h-screen bg-gray-50">
+      <div className="px-5 py-4">
         <Navbar />
       </div>
-      <div className="px-5 py-2">
-        <p className="text-[32px] font-semibold mb-4">Thống Kê</p>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+      <div className="px-5 py-4">
+        <p className="text-3xl font-semibold mb-6 text-gray-800">Thống Kê</p>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4 2xl:gap-8">
           {/* Tổng doanh Thu */}
-          <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default ">
+          <div className="rounded-lg border border-gray-300 bg-white py-6 px-8 shadow-lg hover:shadow-xl transition-shadow">
             <div className="px-6">
-              <div className="flex h-11.5 w-11.5 rounded-full bg-meta-2 dark:bg-meta-4">
-                <FaMoneyBillAlt size={25} />
+              <div className="flex h-10 w-10 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 p-3">
+                <FaMoneyBillAlt size={18} color="white" />
               </div>
-              <div className="mt-4 flex items-end justify-between">
+              <div className="mt-6 flex items-end justify-between">
                 <div>
-                  <h4 class="text-title-md font-bold text-black dark:text-white">
+                  <h4 className="text-xl font-bold text-gray-800 dark:text-white">
                     $3.456K
                   </h4>
-                  <span class="text-sm font-medium">Tổng doanh thu</span>
+                  <span className="text-sm font-medium text-gray-500">
+                    Tổng doanh thu
+                  </span>
                 </div>
-                <span class="flex items-center gap-1 text-sm font-medium text-meta-3 undefined ">
-                  42%
-                  <FaArrowUp color="green" />
+                <span className="flex items-center gap-1 text-sm font-medium text-green-600">
+                  42% <FaArrowUp />
                 </span>
               </div>
             </div>
           </div>
+
           {/* Tổng đơn hàng */}
-          <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default ">
+          <div className="rounded-lg border border-gray-300 bg-white py-6 px-8 shadow-lg hover:shadow-xl transition-shadow">
             <div className="px-6">
-              <div className="flex h-11.5 w-11.5 rounded-full bg-meta-2 dark:bg-meta-4">
-                <FaMoneyBillAlt size={25} />
+              <div className="flex h-10 w-10 rounded-full bg-gradient-to-r from-blue-400 to-teal-500 p-3">
+                <FaMoneyBillAlt size={18} color="white" />
               </div>
-              <div className="mt-4 flex items-end justify-between">
+              <div className="mt-6 flex items-end justify-between">
                 <div>
-                  <h4 class="text-title-md font-bold text-black dark:text-white">
+                  <h4 className="text-xl font-bold text-gray-800 dark:text-white">
                     $3.456K
                   </h4>
-                  <span class="text-sm font-medium">Tổng doanh thu</span>
+                  <span className="text-sm font-medium text-gray-500">
+                    Tổng đơn hàng
+                  </span>
                 </div>
-                <span class="flex items-center gap-1 text-sm font-medium text-meta-3 undefined ">
-                  42%
-                  <FaArrowUp color="green" />
+                <span className="flex items-center gap-1 text-sm font-medium text-green-600">
+                  42% <FaArrowUp />
                 </span>
               </div>
             </div>
           </div>
+
           {/* Tổng món ăn */}
           <Link to="/admin/dishes">
-            <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default ">
+            <div className="rounded-lg border border-gray-300 bg-white py-6 px-8 shadow-lg hover:shadow-xl transition-shadow">
               <div className="px-6">
-                <div className="flex h-11.5 w-11.5 rounded-full bg-meta-2 dark:bg-meta-4">
-                  <BiSolidDish size={25} />
+                <div className="flex h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-teal-400 p-3">
+                  <BiSolidDish size={18} color="white" />
                 </div>
-                <div className="mt-4 flex items-end justify-between">
+                <div className="mt-6 flex items-end justify-between">
                   <div>
-                    <h4 class="text-title-md font-bold text-black dark:text-white">
+                    <h4 className="text-xl font-bold text-gray-800 dark:text-white">
                       {dataProduct.length}
                     </h4>
-                    <span class="text-sm font-medium">Tổng món ăn</span>
+                    <span className="text-sm font-medium text-gray-500">
+                      Tổng món ăn
+                    </span>
                   </div>
-                  <span class="flex items-center gap-1 text-sm font-medium text-meta-3 undefined ">
-                    42%
-                    <FaArrowUp color="green" />
+                  <span className="flex items-center gap-1 text-sm font-medium text-green-600">
+                    42% <FaArrowUp />
                   </span>
                 </div>
               </div>
@@ -89,21 +114,22 @@ const Dashboard = () => {
           </Link>
 
           {/* Tổng khách hàng */}
-          <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default ">
+          <div className="rounded-lg border border-gray-300 bg-white py-6 px-8 shadow-lg hover:shadow-xl transition-shadow">
             <div className="px-6">
-              <div className="flex h-11.5 w-11.5 rounded-full bg-meta-2 dark:bg-meta-4">
-                <FaUserCheck size={25} />
+              <div className="flex h-10 w-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 p-3">
+                <FaUserCheck size={18} color="white" />
               </div>
-              <div className="mt-4 flex items-end justify-between">
+              <div className="mt-6 flex items-end justify-between">
                 <div>
                   <h4 class="text-title-md font-bold text-black dark:text-white">
-                    $3.456K
+                    {clientCount}
                   </h4>
-                  <span class="text-sm font-medium">Tổng khách hàng</span>
+                  <span className="text-sm font-medium text-gray-500">
+                    Tổng khách hàng
+                  </span>
                 </div>
-                <span class="flex items-center gap-1 text-sm font-medium text-meta-3 undefined ">
-                  42%
-                  <FaArrowUp color="green" />
+                <span className="flex items-center gap-1 text-sm font-medium text-green-600">
+                  42% <FaArrowUp />
                 </span>
               </div>
             </div>
