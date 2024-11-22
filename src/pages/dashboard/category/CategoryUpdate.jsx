@@ -46,12 +46,12 @@ const CategoryUpdate = () => {
     <>
       <div className="w-full min-h-screen bg-[#f5f6fa]">
         <div className="px-5 py-2 ">
-          <h2 className="text-[32px] font-semibold mb-4">Cập nhật danh mục</h2>
+          <h2 className="text-3xl font-semibold mb-4">Cập nhật danh mục</h2>
           <form className="space-y-6" onSubmit={handleSubmit(onsubmit)}>
             <div>
               <label
                 htmlFor="name"
-                className="text-sm font-medium text-gray-700"
+                className="text-sl font-medium text-gray-700"
               >
                 Tên danh mục:
               </label>
@@ -71,7 +71,7 @@ const CategoryUpdate = () => {
                 })}
               />
               {errors.name && (
-                <p className="mt-2 text-sm text-red-600">
+                <p className="mt-2 text-sl text-red-600">
                   {errors.name.message}
                 </p>
               )}
@@ -80,7 +80,7 @@ const CategoryUpdate = () => {
             <div>
               <label
                 htmlFor="desc"
-                className="text-sm font-medium text-gray-700"
+                className="text-sl font-medium text-gray-700"
               >
                 Mô tả:
               </label>
@@ -95,7 +95,7 @@ const CategoryUpdate = () => {
               <div className="flex items-center">
                 <label
                   htmlFor="isShow"
-                  className="text-sm font-medium text-gray-700"
+                  className="text-sl font-medium text-gray-700"
                 >
                   Có sẵn
                 </label>
@@ -110,14 +110,14 @@ const CategoryUpdate = () => {
             <div className="flex justify-end space-x-2">
               <Link
                 to="/admin/categories"
-                className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300 "
+                className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-gray-300 "
               >
                 Quay lại
               </Link>
 
               <button
                 type="submit"
-                className="bg-blue-200 text-blue-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-blue-300 transition"
+                className="bg-blue-200 text-blue-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-blue-300 transition"
               >
                 Cập nhật
               </button>

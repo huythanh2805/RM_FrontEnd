@@ -43,11 +43,17 @@ export const LoginPage = () => {
               {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
             </div>
           </div>
-
           <div>
-            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-              Mật khẩu
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                Mật khẩu
+              </label>
+              <div className="text-sm">
+                <Link to="/forgot-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                  Quên mật khẩu ?
+                </Link>
+              </div>
+            </div>
             <div className="mt-2">
               <input
                 type="password"
