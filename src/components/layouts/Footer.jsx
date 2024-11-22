@@ -6,13 +6,10 @@ import { useThemeContext } from "@/contexts/ThemeProvider";
 
 const Footer = () => {
   const { colorCode } = useThemeContext();
-
+  
   return (
     <div className="relative bg-black text-white mt-8 md:mt-0">
-      <div
-        className="absolute w-full h-full bg-cover bg-center bg-no-repeat opacity-100 bg-[url('/imgs/logoFooter.jpg')]"
- 
-      ></div>
+      <div className="absolute w-full h-full bg-cover bg-center bg-no-repeat opacity-100 bg-[url('/imgs/logoFooter.jpg')]"></div>
       <div className="relative flex flex-col md:flex-row justify-between p-8 md:px-32 px-5 z-10">
         <div className="w-full md:w-1/4">
           <Link to="/" className="flex flex-row items-center cursor-pointer">
@@ -26,13 +23,12 @@ const Footer = () => {
             Golden Fork
           </h1>
           <hr className="pt-2" />
-          <p className="text-white text-sm max-w-xs mx-auto md:mx-0">
-            Chúng tôi tự hào mang đến cho quý khách trải
-            nghiệm ẩm thực đa dạng với không gian ấm cúng, sang trọng. Đặt bàn
-            dễ dàng và tận hưởng những bữa ăn ngon miệng cùng dịch vụ chuyên
-            nghiệp tại Golden Fork.
+          <p className="text-white text-sm max-w-xs  ms:justify-start md:mx-0">
+            Chúng tôi tự hào mang đến cho quý khách trải nghiệm ẩm thực đa dạng
+            với không gian ấm cúng, sang trọng. Đặt bàn dễ dàng và tận hưởng
+            những bữa ăn ngon miệng cùng dịch vụ chuyên nghiệp tại Golden Fork.
           </p>
-          <div className="flex justify-center md:justify-start space-x-4 mt-4">
+          <div className="flex  ms:justify-start space-x-4 mt-4">
             <a
               href="https://facebook.com"
               target="_blank"
@@ -160,7 +156,7 @@ const Footer = () => {
         <div className="pt-4">
           <p className="text-center text-sm text-white">
             Copyright © 2024{" "}
-            <span style={{color: colorCode}}>GOLDEN FORK</span>. All Rights
+            <span style={{ color: colorCode }}>GOLDEN FORK</span>. All Rights
             Reserved
           </p>
         </div>

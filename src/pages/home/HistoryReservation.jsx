@@ -45,7 +45,7 @@ export const HistoryReservation = () => {
     switch (status) {
       case "ISWAITING":
         return "Đang chờ";
-      case "ISCONFIRMED":
+      case "ISCOMPLETED":
         return "Đã xác nhận";
       case "SEATED":
         return "Đã ngồi";
@@ -103,7 +103,7 @@ export const HistoryReservation = () => {
                 case "ISWAITING":
                   statusClass = "bg-amber-50 text-amber-600 border border-amber-400";
                   break;
-                case "ISCONFIRMED":
+                case "ISCOMPLETED":
                   statusClass = "bg-green-200 text-green-600 border border-green-400";
                   break;
                 case "SEATED":

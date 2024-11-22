@@ -42,6 +42,7 @@ import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
 import BillList from "@/pages/dashboard/bill/BillList";
 import BillDetail from "@/pages/dashboard/bill/BillDetail";
 import ProtectedComponent from "@/components/ProtectedComponent";
+import ContactUs from "@/pages/home/ContactUs";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
       {
         path: "reservation",
         element: <Reservation />,
+      },
+      {
+        path: "contact",
+        element: <ContactUs />,
       },
       {
         path: "dishes/:id",
@@ -166,12 +171,10 @@ const router = createBrowserRouter([
       {
         path: "reservations/updateReservation/:reservationId",
         element: <UpdateReservation />,
-        // loader: teamLoader,
       },
       {
         path: "listReser",
         element: <ListReservation />,
-        // loader: teamLoader,
       },
       {
         path: "foodOrder/:reservationId",
@@ -180,7 +183,6 @@ const router = createBrowserRouter([
       {
         path: "completedBill/:billId",
         element: <CompletedBill />,
-        // loader: teamLoader,
       },
       {
         path: "users",
