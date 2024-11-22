@@ -133,11 +133,11 @@ const SetComboUpdate = () => {
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
-        <h2 className="text-[32px] font-semibold mb-4">Cập nhật combo</h2>
+        <h2 className="text-3xl font-semibold mb-4">Cập nhật combo</h2>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {/* Tên combo */}
           <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="text-sl font-medium text-gray-700">
               Tên combo:
             </label>
             <input
@@ -150,7 +150,7 @@ const SetComboUpdate = () => {
               })}
             />
             {errors.name && (
-              <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>
+              <p className="mt-2 text-sl text-red-600">{errors.name.message}</p>
             )}
           </div>
 
@@ -158,7 +158,7 @@ const SetComboUpdate = () => {
           <div>
             <label
               htmlFor="price"
-              className="text-sm font-medium text-gray-700"
+              className="text-sl font-medium text-gray-700"
             >
               Giá bán:
             </label>
@@ -176,7 +176,7 @@ const SetComboUpdate = () => {
               })}
             />
             {errors.price && (
-              <p className="mt-2 text-sm text-red-600">
+              <p className="mt-2 text-sl text-red-600">
                 {errors.price.message}
               </p>
             )}
@@ -184,7 +184,7 @@ const SetComboUpdate = () => {
 
           {/* Hình ảnh combo */}
           <div>
-            <p className="text-sm font-medium text-gray-700">Ảnh combo:</p>
+            <p className="text-sl font-medium text-gray-700">Ảnh combo:</p>
             <input
               type="file"
               id="images"
@@ -195,7 +195,7 @@ const SetComboUpdate = () => {
             />
             <div className="mt-2">
               {imagesUpload && (
-                <div className="w-52 my-2 px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse">
+                <div className="w-52 my-2 px-3 py-1 text-sl font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse">
                   Đang tải ảnh lên...
                 </div>
               )}
@@ -249,7 +249,7 @@ const SetComboUpdate = () => {
               )}
 
               {imagesErr && (
-                <p className="mt-2 text-sm text-red-600">
+                <p className="mt-2 text-sl text-red-600">
                   {imagesErr ? "Vui lòng tải lên ít nhất 1 ảnh" : ""}
                 </p>
               )}
@@ -258,7 +258,7 @@ const SetComboUpdate = () => {
 
           {/* Món ăn trong combo */}
           <div>
-            <p className="text-sm font-medium text-gray-700">
+            <p className="text-sl font-medium text-gray-700">
               Món ăn trong combo:
             </p>
             {dishImage.length !== 0 ? (
@@ -345,7 +345,7 @@ const SetComboUpdate = () => {
 
           {/* Mô tả */}
           <div>
-            <label htmlFor="desc" className="text-sm font-medium text-gray-700">
+            <label htmlFor="desc" className="text-sl font-medium text-gray-700">
               Mô tả:
             </label>
             <textarea
@@ -359,7 +359,7 @@ const SetComboUpdate = () => {
             <div className="flex items-center">
               <label
                 htmlFor="isShow"
-                className="text-sm font-medium text-gray-700"
+                className="text-sl font-medium text-gray-700"
               >
                 Có sẵn
               </label>
@@ -374,14 +374,14 @@ const SetComboUpdate = () => {
           <div className="flex justify-end space-x-2">
             <Link
               to="/admin/setCombos"
-              className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300"
+              className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-gray-300"
             >
               Quay lại
             </Link>
 
             <button
               type="submit"
-              className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-green-300 transition"
+              className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition"
             >
               Cập nhật
             </button>
