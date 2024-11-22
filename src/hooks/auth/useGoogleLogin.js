@@ -15,10 +15,17 @@ export const useGoogleLogin = () => {
     setError(null);
 
     try {
-      const data = await googleAuthService(credential);
-      localStorage.setItem("token", data.token);
-      console.log("Login successful:", data);
-      navigate("/");
+      const response = await googleAuthService(credential);
+      console.log(response);
+      const token = response.token;
+      const role = response.user.role;
+      localStorage.setItem("token", token);
+      
+      if (role === "ADMIN") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message;
       setError(errorMessage);
