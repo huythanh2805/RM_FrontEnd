@@ -101,7 +101,7 @@ const SetComboDetail = () => {
               </div>
 
               <div className="mb-4">
-                <div className="text-sm font-medium text-gray-700 mb-1">
+                <div className="text-sl font-medium text-gray-700 mb-1">
                   Trạng thái:
                   {dataCombo.isShow ? (
                     <span className="bg-green-200 text-green-600 px-2 py-0.5 rounded-sm ml-2">

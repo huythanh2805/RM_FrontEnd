@@ -48,7 +48,7 @@ const BillDetail = () => {
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       {/* Thông tin người đặt */}
       <div className="px-5 py-2">
-        <p className="text-[32px] font-semibold mb-4">Thông tin người đặt</p>
+        <p className="text-3xl font-semibold mb-4">Thông tin người đặt</p>
         <div className="rounded-xl bg-white border border-[#d5d5d5]">
           <table className="min-w-full table-auto text-left">
             <tbody>
@@ -127,7 +127,7 @@ const BillDetail = () => {
         <p className="text-[32px] font-semibold mb-4">Chi tiết hóa đơn</p>
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
           <table className="min-w-full bg-white table-auto">
-            <thead className="border-b border-[#d5d5d5] text-left text-xs font-semibold text-[#202224] uppercase tracking-wider">
+            <thead className="border-b border-[#d5d5d5] text-left text-sl font-semibold text-[#202224] uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-4 lg:px-6">Tên món ăn</th>
                 <th className="py-3 px-4 lg:px-6">Hình ảnh</th>
@@ -142,21 +142,21 @@ const BillDetail = () => {
                   className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
                   key={dish._id}
                 >
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
+                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">
                     {dish.name}
                   </td>
-                  <td className="py-4 px-6 text-sm">
+                  <td className="py-4 px-6 text-sl">
                     <img
                       src={dish.images[0]}
                       alt={dish.name}
                       className="w-20 h-20 object-cover"
                     />
                   </td>
-                  <td className="py-4 px-6 text-sm">
+                  <td className="py-4 px-6 text-sl">
                     {formatCurrency(dish.price)}
                   </td>
-                  <td className="py-4 px-6 text-sm">{dish.quantity}</td>
-                  <td className="py-4 px-6 text-sm">
+                  <td className="py-4 px-6 text-sl">{dish.quantity}</td>
+                  <td className="py-4 px-6 text-sl">
                     {formatCurrency(dish.price * dish.quantity)}
                   </td>
                 </tr>
@@ -167,21 +167,21 @@ const BillDetail = () => {
                   className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
                   key={combo._id}
                 >
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
+                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">
                     {combo.name}
                   </td>
-                  <td className="py-4 px-6 text-sm">
+                  <td className="py-4 px-6 text-sl">
                     <img
                       src={combo.images[0]}
                       alt={combo.name}
                       className="w-20 h-20 object-cover"
                     />
                   </td>
-                  <td className="py-4 px-6 text-sm">
+                  <td className="py-4 px-6 text-sl">
                     {formatCurrency(combo.price)}
                   </td>
-                  <td className="py-4 px-6 text-sm">{combo.quantity}</td>
-                  <td className="py-4 px-6 text-sm">
+                  <td className="py-4 px-6 text-sl">{combo.quantity}</td>
+                  <td className="py-4 px-6 text-sl">
                     {formatCurrency(combo.price * combo.quantity)}
                   </td>
                 </tr>
@@ -229,12 +229,12 @@ const BillDetail = () => {
       {/* Footer */}
       <div className="px-5 py-4 flex justify-between items-center">
         <Link to={`/admin/bills`}>
-          <div className="bg-gray-200 flex gap-2 items-center text-gray-800 px-6 py-2 rounded-md hover:bg-gray-300">
+          <div className="bg-gray-200 flex text-sl gap-2 items-center text-gray-800 px-6 py-2 rounded-md hover:bg-gray-300">
             Quay lại
           </div>
         </Link>
         <div
-          className={`py-2 px-4 rounded-lg ${
+          className={`py-2 px-4 text-sl rounded-lg ${
             status === "ISPAID"
               ? "bg-green-100 text-green-800"
               : "bg-gray-100 text-gray-800"

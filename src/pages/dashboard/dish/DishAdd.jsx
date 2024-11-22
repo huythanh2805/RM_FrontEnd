@@ -83,11 +83,11 @@ const DishAdd = () => {
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
-        <h2 className="text-[32px] font-semibold mb-4">Thêm món ăn</h2>
+        <h2 className="text-3xl font-semibold mb-4">Thêm món ăn</h2>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {/* Tên món ăn */}
           <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="text-sl font-medium text-gray-700">
               Tên món ăn:
             </label>
             <input
@@ -100,7 +100,7 @@ const DishAdd = () => {
               })}
             />
             {errors.name && (
-              <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>
+              <p className="mt-2 text-sl text-red-600">{errors.name.message}</p>
             )}
           </div>
 
@@ -108,7 +108,7 @@ const DishAdd = () => {
           <div>
             <label
               htmlFor="price"
-              className="text-sm font-medium text-gray-700"
+              className="text-sl font-medium text-gray-700"
             >
               Giá bán:
             </label>
@@ -126,7 +126,7 @@ const DishAdd = () => {
               })}
             />
             {errors.price && (
-              <p className="mt-2 text-sm text-red-600">
+              <p className="mt-2 text-sl text-red-600">
                 {errors.price.message}
               </p>
             )}
@@ -136,7 +136,7 @@ const DishAdd = () => {
           <div>
             <label
               htmlFor="category"
-              className="text-sm font-medium text-gray-700"
+              className="text-sl font-medium text-gray-700"
             >
               Danh mục:
             </label>
@@ -156,7 +156,7 @@ const DishAdd = () => {
               ))}
             </select>
             {errors.category_id && (
-              <p className="mt-2 text-sm text-red-600">
+              <p className="mt-2 text-sl text-red-600">
                 {errors.category_id.message}
               </p>
             )}
@@ -164,7 +164,7 @@ const DishAdd = () => {
 
           {/* Hình ảnh món ăn */}
           <div>
-            <p className="text-sm font-medium text-gray-700">Ảnh món ăn:</p>
+            <p className="text-sl font-medium text-gray-700">Ảnh món ăn:</p>
             <input
               type="file"
               id="images"
@@ -175,7 +175,7 @@ const DishAdd = () => {
             />
             <div className="mt-2">
               {imagesUpload && (
-                <div className="w-52 my-2 px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse">
+                <div className="w-52 my-2 px-3 py-1 text-sl font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse">
                   Đang tải ảnh lên...
                 </div>
               )}
@@ -229,7 +229,7 @@ const DishAdd = () => {
               )}
 
               {imagesErr && (
-                <p className="mt-2 text-sm text-red-600">
+                <p className="mt-2 text-sl text-red-600">
                   {imagesErr ? "Vui lòng tải lên ít nhất 1 ảnh" : ""}
                 </p>
               )}
@@ -238,7 +238,7 @@ const DishAdd = () => {
 
           {/* Mô tả */}
           <div>
-            <label htmlFor="desc" className="text-sm font-medium text-gray-700">
+            <label htmlFor="desc" className="text-sl font-medium text-gray-700">
               Mô tả:
             </label>
             <textarea
@@ -252,7 +252,7 @@ const DishAdd = () => {
             <div className="flex items-center">
               <label
                 htmlFor="isShow"
-                className="text-sm font-medium text-gray-700"
+                className="text-sl font-medium text-gray-700"
               >
                 Có sẵn
               </label>
@@ -267,14 +267,14 @@ const DishAdd = () => {
           <div className="flex justify-end space-x-2">
             <Link
               to="/admin/dishes"
-              className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300"
+              className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-gray-300"
             >
               Quay lại
             </Link>
 
             <button
               type="submit"
-              className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-green-300 transition"
+              className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition"
             >
               Thêm +
             </button>

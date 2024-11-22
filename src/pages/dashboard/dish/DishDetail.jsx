@@ -54,7 +54,7 @@ const DishDetail = () => {
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
-        <h2 className="text-[32px] font-semibold mb-4">Chi tiết món ăn</h2>
+        <h2 className="text-3xl font-semibold mb-4">Chi tiết món ăn</h2>
         {dataDish ? (
           <div className="flex flex-wrap -mx-4">
             {/* Product Images */}
@@ -118,7 +118,7 @@ const DishDetail = () => {
               <p className="text-gray-700 mb-6">{dataDish.desc}</p>
 
               <div className="mb-6">
-                <div className="text-sm font-medium text-gray-700 mb-1">
+                <div className="text-sl font-medium text-gray-700 mb-1">
                   Trạng thái:
                   {dataDish.isShow ? (
                     <span className="bg-green-200 text-green-600 px-2 py-0.5 rounded-sm ml-2">
