@@ -7,7 +7,7 @@ import Pagination from "@/components/Pagination";
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const itemPerPage = 5;
 
   const fetchData = () => {
@@ -26,15 +26,13 @@ const CategoryList = () => {
     fetchData();
   }, []);
 
+  // phân trang
+  const startIndex = (currentPage - 1) * itemPerPage;
+  const currentItems = categories.slice(startIndex, startIndex + itemPerPage);
   const pageCount = Math.ceil(categories.length / itemPerPage);
 
-  const currentItems = categories.slice(
-    currentPage * itemPerPage,
-    (currentPage + 1) * itemPerPage
-  );
-
-  const handlePageChage = (e) => {
-    setCurrentPage(e.selected);
+  const handlePageClick = (e) => {
+    setCurrentPage(e.selected + 1);
   };
 
   const handleDelete = (id) => {
@@ -94,7 +92,7 @@ const CategoryList = () => {
                   key={d._id}
                 >
                   <td className="hidden lg:block py-4 px-6 text-sl font-medium text-[#202224]">
-                    {index + 1}
+                    {startIndex + index + 1}
                   </td>
                   <td className="py-4 px-6 text-sl font-medium text-[#202224] max-w-[100px] lg:max-w-[250px] break-words">
                     {d.name}
@@ -131,7 +129,8 @@ const CategoryList = () => {
             </tbody>
           </table>
 
-          <Pagination pageCount={pageCount} onPageChange={handlePageChage} />
+          {/* Phân trang */}
+          <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
         </div>
       </div>
     </div>

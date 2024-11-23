@@ -1,3 +1,4 @@
+import Pagination from "@/components/Pagination";
 import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
 import axios from "axios";
@@ -8,8 +9,10 @@ import { Link } from "react-router-dom";
 
 const BillList = () => {
   const [dataBill, setDataBill] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 5;
 
-  useEffect(() => {
+  const fetchData = () => {
     axios
       .get(BASE_URL + "/api/bills")
       .then((res) => {
@@ -18,7 +21,20 @@ const BillList = () => {
       .catch((err) => {
         console.error(err);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
+
+  // phân trang
+  const startIndex = (currentPage - 1) * itemPerPage;
+  const currentItems = dataBill.slice(startIndex, startIndex + itemPerPage);
+  const pageCount = Math.ceil(dataBill.length / itemPerPage);
+
+  const handlePageClick = (e) => {
+    setCurrentPage(e.selected + 1);
+  };
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
@@ -42,14 +58,14 @@ const BillList = () => {
               </tr>
             </thead>
             <tbody>
-              {dataBill.map((bill, index) => (
+              {currentItems.map((bill, index) => (
                 <tr
                   key={bill._id}
                   className="bg-white border-b hover:bg-gray-50 transition"
                 >
                   <td className="py-3 px-4 text-sl font-medium">
                     <Link to={`/admin/bills/${bill._id}/detail`}>
-                      {index + 1}
+                      {startIndex + index + 1}
                     </Link>
                   </td>
                   <td className="py-3 px-4 text-sl font-medium">
@@ -113,6 +129,9 @@ const BillList = () => {
               ))}
             </tbody>
           </table>
+
+          {/* Phân trang */}
+          <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
         </div>
       </div>
     </div>
