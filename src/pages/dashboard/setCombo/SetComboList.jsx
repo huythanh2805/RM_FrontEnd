@@ -11,13 +11,17 @@ import Pagination from "@/components/Pagination";
 
 const SetComboList = () => {
   const [combos, setCombos] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [priceRange, setPriceRange] = useState({ min: 0, max: Infinity });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 5;
 
   const fetchData = () => {
     axios
       .get(BASE_URL + "/setCombos")
       .then((res) => {
         setCombos(res.data);
-        // console.log(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -56,6 +60,34 @@ const SetComboList = () => {
     });
   };
 
+  const handleSearchValue = (e) => {
+    setSearchValue(e.target.value);
+    // console.log(e.target.value);
+  };
+
+  // Xử lí lọc
+  const filterSetCombos = combos.filter((setCombo) => {
+    const matchesPrice =
+      setCombo.price >= priceRange.min && setCombo.price <= priceRange.max;
+
+    const matchesSearchValue = setCombo.name
+      .toLowerCase()
+      .includes(searchValue.toLowerCase());
+
+    return matchesSearchValue && matchesPrice;
+  });
+
+  // Phân trang
+  const startIndex = (currentPage - 1) * itemPerPage;
+  const currentItems = filterSetCombos.slice(
+    startIndex,
+    startIndex + itemPerPage
+  );
+  const pageCount = Math.ceil(filterSetCombos.length / itemPerPage);
+
+  const handlePageClick = (e) => {
+    setCurrentPage(e.selected + 1);
+  };
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
@@ -68,21 +100,81 @@ const SetComboList = () => {
           </Link>
         </div>
 
-        {/* Lọc món */}
-        {/* <div className="flex justify-between mb-4">
-          <div class="max-w-sm">
-            <select
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5"
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              {categories.map((category) => (
-                <option value={category} key={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
+        {/* Bộ lọc */}
+        <div className="flex justify-between items-start">
+          <div className="flex gap-5 items-center">
+            {/* Lọc theo giá */}
+            <div className="flex justify-between mb-4">
+              <div className="max-w-sm">
+                <select
+                  className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full p-2.5"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === "all") {
+                      setPriceRange({ min: 0, max: Infinity });
+                    } else if (value === "range_1") {
+                      setPriceRange({ min: 0, max: 100000 });
+                    } else if (value === "range_2") {
+                      setPriceRange({ min: 100000, max: 200000 });
+                    } else if (value === "range_end") {
+                      setPriceRange({ min: 200000, max: Infinity });
+                    }
+                  }}
+                >
+                  <option value="all">Khoảng giá</option>
+                  <option value="range_1">
+                    {"< " + formatCurrency(100000)}
+                  </option>
+                  <option value="range_2">
+                    {formatCurrency(100000) + " - " + formatCurrency(200000)}
+                  </option>
+                  <option value="range_end">
+                    {"> " + formatCurrency(200000)}
+                  </option>
+                </select>
+              </div>
+            </div>
           </div>
-        </div> */}
+
+          {/* Search */}
+          <div className="relative w-full max-w-sm min-w-[200px]">
+            <label htmlFor="Search" className="sr-only">
+              Search
+            </label>
+
+            <input
+              type="text"
+              id="Search"
+              placeholder="Tìm kiếm..."
+              className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full p-2.5"
+              onChange={handleSearchValue}
+            />
+
+            <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
+              <button
+                type="button"
+                className="text-gray-600 hover:text-gray-700"
+              >
+                <span className="sr-only">Search</span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                  />
+                </svg>
+              </button>
+            </span>
+          </div>
+        </div>
 
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
           <table className="min-w-full bg-white">
@@ -102,82 +194,90 @@ const SetComboList = () => {
               </tr>
             </thead>
             <tbody>
-              {combos.map((d, index) => (
-                <tr
-                  className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
-                  key={d._id}
-                >
-                  <td className="hidden lg:table-cell">
-                    <div className="py-3 px-4 lg:px-6 text-sl font-medium text-[#202224]">
-                      {index + 1}
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 lg:px-6 text-sl font-medium text-[#202224] break-words">
-                    <Link
-                      to={`/admin/setCombos/${d._id}/detail`}
-                      className="hover:underline"
-                    >
-                      <span className="hidden lg:block">{d.name}</span>
-                    </Link>
-                  </td>
-                  <td className="py-3 px-4 lg:px-6 text-sl">
-                    <div className="flex items-center gap-2 lg:gap-4">
-                      {d.images && d.images.length > 0 ? (
-                        <img
-                          src={d.images[0]}
-                          alt=""
-                          className="w-16 h-20 lg:w-20 lg:h-25 object-cover"
-                        />
-                      ) : (
-                        <AiTwotoneFileImage className="w-16 h-20 lg:w-20 lg:h-25 object-cover" />
-                      )}
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 lg:px-6 text-sl">
-                    {formatCurrency(d.price)}
-                  </td>
-                  <td className="hidden lg:table-cell py-3 px-4 lg:px-6 text-sl">
-                    {d.desc}
-                  </td>
-
-                  <td className="hidden lg:table-cell py-3 px-4 lg:px-6 text-sl">
-                    {d.isShow ? (
-                      <span className="px-2 py-1 text-sl font-semibold rounded-lg bg-green-100 text-green-800">
-                        Hiển thị
-                      </span>
-                    ) : (
-                      <span className="px-2 py-1 text-sl font-semibold rounded-lg bg-gray-100 text-gray-700">
-                        Tạm ẩn
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-3 px-4 lg:px-6">
-                    <div className="flex items-center gap-2 lg:gap-3">
-                      <Link to={`/admin/setCombos/${d._id}/detail`}>
-                        <div className="hidden lg:block bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl lg:text-sl font-semibold hover:bg-yellow-300 transition">
-                          <FaEye size={18} />
-                        </div>
-                      </Link>
-                      <Link to={`/admin/setCombos/${d._id}/update`}>
-                        <div className="bg-blue-200 text-blue-800 px-2 py-1 rounded-lg text-sl lg:text-sl font-semibold hover:bg-blue-300 transition">
-                          <FaPenToSquare size={18} />
-                        </div>
-                      </Link>
-                      <div
-                        className="bg-red-200 text-red-800 px-2 py-1 rounded-lg cursor-pointer text-sl lg:text-sl font-semibold hover:bg-red-300 transition"
-                        onClick={() => handleDelete(d._id)}
-                      >
-                        <FaRegTrashCan size={18} />
+              {currentItems.length > 0 ? (
+                currentItems.map((d, index) => (
+                  <tr
+                    className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
+                    key={d._id}
+                  >
+                    <td className="hidden lg:table-cell">
+                      <div className="py-3 px-4 lg:px-6 text-sl font-medium text-[#202224]">
+                        {index + 1}
                       </div>
-                    </div>
+                    </td>
+                    <td className="py-3 px-4 lg:px-6 text-sl font-medium text-[#202224] break-words">
+                      <Link
+                        to={`/admin/setCombos/${d._id}/detail`}
+                        className="hover:underline"
+                      >
+                        <span className="hidden lg:block">{d.name}</span>
+                      </Link>
+                    </td>
+                    <td className="py-3 px-4 lg:px-6 text-sl">
+                      <div className="flex items-center gap-2 lg:gap-4">
+                        {d.images && d.images.length > 0 ? (
+                          <img
+                            src={d.images[0]}
+                            alt=""
+                            className="w-16 h-20 lg:w-20 lg:h-25 object-cover"
+                          />
+                        ) : (
+                          <AiTwotoneFileImage className="w-16 h-20 lg:w-20 lg:h-25 object-cover" />
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 lg:px-6 text-sl">
+                      {formatCurrency(d.price)}
+                    </td>
+                    <td className="hidden lg:table-cell py-3 px-4 lg:px-6 text-sl">
+                      {d.desc}
+                    </td>
+
+                    <td className="hidden lg:table-cell py-3 px-4 lg:px-6 text-sl">
+                      {d.isShow ? (
+                        <span className="px-2 py-1 text-sl font-semibold rounded-lg bg-green-100 text-green-800">
+                          Hiển thị
+                        </span>
+                      ) : (
+                        <span className="px-2 py-1 text-sl font-semibold rounded-lg bg-gray-100 text-gray-700">
+                          Tạm ẩn
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4 lg:px-6">
+                      <div className="flex items-center gap-2 lg:gap-3">
+                        <Link to={`/admin/setCombos/${d._id}/detail`}>
+                          <div className="hidden lg:block bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl lg:text-sl font-semibold hover:bg-yellow-300 transition">
+                            <FaEye size={18} />
+                          </div>
+                        </Link>
+                        <Link to={`/admin/setCombos/${d._id}/update`}>
+                          <div className="bg-blue-200 text-blue-800 px-2 py-1 rounded-lg text-sl lg:text-sl font-semibold hover:bg-blue-300 transition">
+                            <FaPenToSquare size={18} />
+                          </div>
+                        </Link>
+                        <div
+                          className="bg-red-200 text-red-800 px-2 py-1 rounded-lg cursor-pointer text-sl lg:text-sl font-semibold hover:bg-red-300 transition"
+                          onClick={() => handleDelete(d._id)}
+                        >
+                          <FaRegTrashCan size={18} />
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="text-center py-4 text-gray-500">
+                    Không tìm thấy món ăn..
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
 
           {/* Phân trang */}
-          {/* <Pagination pageCount={pageCount} onPageChange={handlePageClick} /> */}
+          <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
         </div>
       </div>
     </div>
