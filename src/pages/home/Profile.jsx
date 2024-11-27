@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useProfile } from "@/hooks/home/useProfile";
 import { toast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
@@ -6,6 +7,7 @@ import { useEffect, useState } from "react";
 export const Profile = () => {
   const { user, handleUpdateProfile } = useProfile();
   const [isLoading, setIsLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     userName: "",
     phoneNumber: "",
@@ -26,7 +28,7 @@ export const Profile = () => {
       });
       setCurrentImage(user.image || "");
     }
-  }, [user]);
+  }, [JSON.stringify(user)]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,6 +47,7 @@ export const Profile = () => {
   };
 
   const handleSubmit = (e) => {
+    console.log(123123);
     e.preventDefault();
     setIsLoading(true);
     if (!formData.userName || !formData.phoneNumber || !formData.address) {
@@ -74,12 +77,12 @@ export const Profile = () => {
             <h1 className="lg:text-3xl md:text-2xl sm:text-xl xs:text-xl font-serif font-extrabold mb-2 dark:text-white">
               Thông tin cá nhân
             </h1>
-            <form onSubmit={handleSubmit}>
+            <form action="#">
               <div className="w-full rounded-sm bg-[url('https://images.unsplash.com/photo-1449844908441-8829872d2607?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw2fHxob21lfGVufDB8MHx8fDE3MTA0MDE1NDZ8MA&ixlib=rb-4.0.3&q=80&w=1080')] bg-cover bg-center bg-no-repeat items-center">
                 <div className="mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full relative overflow-hidden top-11">
                   <img src={currentImage} alt="Profile" className="absolute inset-0 w-full h-full object-cover" />
                   <div className="bg-white/90 rounded-full w-8 h-8 text-center absolute top-4 right-2 flex items-center justify-center">
-                    <input type="file" name="image" id="image" onChange={handleImageChange} hidden />
+                    <input type="file" name="image" id="image" onChange={(value) => handleImageChange(value)} hidden />
                     <label htmlFor="image" className="cursor-pointer flex items-center justify-center">
                       <svg
                         data-slot="icon"
@@ -114,7 +117,7 @@ export const Profile = () => {
                     type="text"
                     name="userName"
                     value={formData.userName}
-                    onChange={handleChange}
+                    onChange={(value) => handleChange(value)}
                     className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
                     placeholder="Họ và tên"
                     required
@@ -126,7 +129,7 @@ export const Profile = () => {
                     type="text"
                     name="phoneNumber"
                     value={formData.phoneNumber}
-                    onChange={handleChange}
+                    onChange={(value) => handleChange(value)}
                     className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
                     placeholder="Số điện thoại"
                     required
@@ -140,7 +143,7 @@ export const Profile = () => {
                     type="email"
                     name="email"
                     value={formData.email}
-                    onChange={handleChange}
+                    onChange={(value) => handleChange(value)}
                     className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
                     placeholder="Email"
                     disabled
@@ -152,17 +155,24 @@ export const Profile = () => {
                     type="text"
                     name="address"
                     value={formData.address}
-                    onChange={handleChange}
+                    onChange={(value) => handleChange(value)}
                     className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
                     placeholder="Địa chỉ"
                     required
                   />
                 </div>
               </div>
-              <div className="flex justify-center w-full mb-4 mt-8">
+              <div className="flex justify-center w-full mb-4 mt-8 gap-5">
+                <div
+                  className="lg:w-[150px] md:w-full sm:w-full xs:w-full border border-input cursor-pointer dark:bg-blue-800 dark:text-white flex justify-center items-center rounded-md"
+                  onClick={() => setIsDialogOpen(!isDialogOpen)}
+                >
+                  {isLoading ? "Đang cập nhật..." : "Đổi mật khẩu"}
+                </div>
                 <Button
                   type="submit"
                   className="lg:w-[150px] md:w-full sm:w-full xs:w-full dark:bg-blue-800 dark:text-white"
+                  onClick={(value) => handleSubmit(value)}
                 >
                   {isLoading ? "Đang cập nhật..." : "Cập nhật"}
                 </Button>
@@ -171,6 +181,55 @@ export const Profile = () => {
           </div>
         </div>
       </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger></DialogTrigger>
+        <DialogContent className="bg-light-bg_2 dark:bg-dark-bg_2 text-light-text dark:text-dark-text">
+          <DialogHeader>
+            <DialogTitle className="text-light-textSoft dark:text-dark-textSoft font-normal text-[19px]">
+              Doi mat khau
+            </DialogTitle>
+            <form action="#">
+              <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
+                <div className="w-full mb-4 mt-6">
+                  <label className="mb-2 dark:text-gray-300">Nhập mật khẩu cũ</label>
+                  <input
+                    type="password"
+                    name="password"
+                    className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
+                    placeholder="Nhập mật khẩu cũ"
+                  />
+                </div>
+              </div>
+              <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
+                <div className="w-full">
+                  <label className="dark:text-gray-300">Nhập mật khẩu mới</label>
+                  <input
+                    type="password"
+                    name="newPassword"
+                    className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
+                    placeholder="Nhập mật khẩu mới"
+                  />
+                </div>
+              </div>
+            </form>
+          </DialogHeader>
+          <div className="flex items-center justify-end py-2 gap-5">
+            <DialogClose asChild>
+              <Button
+                className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
+            text-white dark:text-white hover:scale-90 transition-all ease-in"
+              >
+                Đóng
+              </Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button className="bg-primary text-white dark:text-white hover:scale-90 transition-all ease-in">
+                Đổi mật khẩu
+              </Button>
+            </DialogClose>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
