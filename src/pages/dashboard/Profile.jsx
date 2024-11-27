@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useProfile } from "@/hooks/home/useProfile";
 import { toast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
@@ -6,6 +7,9 @@ import { useEffect, useState } from "react";
 export const ProfileAdmin = () => {
   const { user, handleUpdateProfile } = useProfile();
   const [isLoading, setIsLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [formData, setFormData] = useState({
     userName: "",
     phoneNumber: "",
@@ -65,17 +69,104 @@ export const ProfileAdmin = () => {
         setIsLoading(false);
       });
   };
+  const handleChangePassword = async () => {
+    if (!oldPassword || !newPassword) {
+      toast({ variant: "destructive", title: "Vui lòng nhập đầy đủ mật khẩu" });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:1111/users/change-password",
+        { oldPassword, newPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      toast({ variant: "success", title: response.data.message });
+      setIsDialogOpen(false); // Đóng dialog khi đổi mật khẩu thành công
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Đổi mật khẩu thất bại";
+      toast({ variant: "destructive", title: errorMessage });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isDialogOpen) {
+      setOldPassword("");
+      setNewPassword("");
+    }
+  }, [isDialogOpen]);
 
   return (
-    <section className="py-10 mt-12 my-auto dark:bg-gray-900 w-full">
-      <div className="lg:text-2xl md:text-2xl sm:text-xl xs:text-xl font-serif font-extrabold mx-11 mb-2 dark:text-white">
-        Thông tin cá nhân
+    <section className="py-10 my-auto dark:bg-gray-900">
+      <div className=" flex items-center justify-between w-full my-6 ">
+        <h1 className="lg:text-3xl md:text-2xl sm:text-xl xs:text-xl font-serif font-extrabold dark:text-white ml-6">
+          Thông tin cá nhân
+        </h1>
+        <Dialog open={isDialogOpen} onOpenChange={(open) => setIsDialogOpen(open)}>
+          <DialogTrigger asChild>
+            <Button
+              className="bg-blue-500 dark:bg-blue-700 hover:bg-blue-600 dark:hover:bg-blue-800 
+            text-white dark:text-white hover:scale-90 transition-all ease-in mr-6"
+            >
+              Đổi mật khẩu
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="text-2xl">Đổi mật khẩu</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4">
+              <label className="dark:text-gray-300">Nhập mật khẩu cũ</label>
+              <input
+                type="password"
+                placeholder="Mật khẩu cũ"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+                className="p-4 w-full border-2 rounded-lg dark:bg-gray-800 dark:text-gray-200"
+              />
+              <label className="dark:text-gray-300">Nhập mật khẩu mới</label>
+              <input
+                type="password"
+                placeholder="Mật khẩu mới"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="p-4 w-full border-2 rounded-lg dark:bg-gray-800 dark:text-gray-200"
+              />
+              <div className="flex justify-end gap-2">
+                <DialogClose asChild>
+                  <Button
+                    className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
+            text-white dark:text-white hover:scale-90 transition-all ease-in"
+                  >
+                    Hủy
+                  </Button>
+                </DialogClose>
+                <Button
+                  onClick={handleChangePassword}
+                  className="bg-green-500 dark:bg-green-700 hover:bg-green-600 dark:hover:bg-green-800 
+            text-white dark:text-white hover:scale-90 transition-all ease-in"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Đang đổi..." : "Đổi mật khẩu"}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
       <div className="lg:w-[100%] md:w-[90%] xs:w-[96%] mx-auto flex gap-4">
         <div className="lg:w-[88%] md:w-[80%] sm:w-[88%] xs:w-full mx-auto shadow-2xl p-4 rounded-xl h-fit self-center dark:bg-gray-800/40">
           <div>
             <form onSubmit={handleSubmit}>
-              <div className="w-full rounded-sm bg-[url('https://images.unsplash.com/photo-1449844908441-8829872d2607?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw2fHxob21lfGVufDB8MHx8fDE3MTA0MDE1NDZ8MA&ixlib=rb-4.0.3&q=80&w=1080')] bg-cover bg-center bg-no-repeat items-center">
+              <div className="w-full rounded-sm bg-[url('https://cdn.pixabay.com/photo/2023/02/01/21/40/pink-7761356_640.png')] bg-cover bg-center bg-no-repeat items-center">
                 <div className="mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full relative overflow-hidden top-11">
                   <img src={currentImage} alt="Profile" className="absolute inset-0 w-full h-full object-cover" />
                   <div className="bg-white/90 rounded-full w-8 h-8 text-center absolute top-4 right-2 flex items-center justify-center">
@@ -160,11 +251,8 @@ export const ProfileAdmin = () => {
                 </div>
               </div>
               <div className="flex justify-center w-full mb-4 mt-8">
-                <Button
-                  type="submit"
-                  className="lg:w-[150px] md:w-full sm:w-full xs:w-full dark:bg-blue-800 dark:text-white"
-                >
-                  {isLoading ? "Đang cập nhật..." : "Cập nhật"}
+                <Button type="submit" className="bg-green-500 text-white">
+                  {isLoading ? "Đang cập nhật..." : "Lưu thay đổi"}
                 </Button>
               </div>
             </form>

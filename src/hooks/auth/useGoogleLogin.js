@@ -20,7 +20,7 @@ export const useGoogleLogin = () => {
       const token = response.token;
       const role = response.user.role;
       localStorage.setItem("token", token);
-      
+
       if (role === "ADMIN") {
         navigate("/admin");
       } else {
