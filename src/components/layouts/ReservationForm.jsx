@@ -14,7 +14,7 @@ import { useThemeContext } from "@/contexts/ThemeProvider";
 import { motion } from "framer-motion";
 import DatePicker from "react-datepicker";
 import { toast } from "@/hooks/use-toast";
-import {jwtDecode} from "jwt-decode";
+import jwtDecode from "jwt-decode";
 import { usePostData } from "@/hooks/usePostData";
 import { ServerUrl } from "@/utilities/utils";
 import { useCart } from "@/contexts/CartProvider";

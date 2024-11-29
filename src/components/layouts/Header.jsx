@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Cart from "../Cart";
-import { jwtDecode } from "jwt-decode";
+import  jwtDecode  from "jwt-decode";
 
 const headerLink = [
   { name: "TRANG CHỦ", link: "/" },
