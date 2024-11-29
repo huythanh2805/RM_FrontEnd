@@ -1,0 +1,200 @@
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import jwtDecode from "jwt-decode";
+import ReactStars from "react-rating-stars-component";
+import axios from "axios";
+import BASE_URL from "@/configs";
+import { toast } from "@/hooks/use-toast";
+import { HiOutlineUserCircle } from "react-icons/hi2";
+
+const Feedback = () => {
+  const { id } = useParams();
+  // console.log("Dish Id", id);
+
+  // Lấy id từ token
+  const dataUser = localStorage.getItem("token")
+    ? jwtDecode(localStorage.getItem("token"))
+    : null;
+
+  const userId = dataUser.id;
+  // console.log("User Id", userId);
+
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(5);
+  const [dataComment, setDataComment] = useState([]);
+  const [inforUser, setInforUser] = useState([]);
+
+  const fetchData = () => {
+    axios
+      .get(BASE_URL + "/feedbacks/dish/" + id)
+      .then((res) => {
+        setDataComment(res.data.feedbacks);
+        // console.log("Comment", res.data.feedbacks);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const fetchInforUser = () => {
+    axios
+      .get(BASE_URL + "/users/get/v2/" + userId)
+      .then((res) => {
+        setInforUser(res.data.user);
+        // console.log(res.data.user);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+    fetchInforUser();
+  }, []);
+
+  const handleCommentInput = (e) => {
+    const value = e.target.value;
+    setComment(value);
+  };
+
+  const handleRatingChange = (newRating) => {
+    setRating(newRating);
+    // console.log(newRating);
+  };
+
+  const handleSubmit = () => {
+    const data = {
+      dish_id: id,
+      user_id: userId,
+      comment,
+      rating,
+    };
+
+    // console.log(data);
+
+    axios
+      .post(BASE_URL + "/feedbacks", data)
+      .then((res) => {
+        // console.log(res);
+        toast({ variant: "success", title: "Đánh giá thành công !" });
+        fetchData();
+      })
+      .catch((err) => {
+        toast({ variant: "destructive", title: "Đánh giá thất bại !" });
+        console.log(err);
+      });
+
+    setComment(""); // reset input
+    setRating(5);
+  };
+  return (
+    <div class="py-2 relative">
+      <div class="w-full max-w-7xl px-4 mx-auto">
+        <div class="w-full flex-col justify-start items-start gap-7 inline-flex">
+          <h2 class="w-full text-gray-900 text-4xl font-bold font-manrope leading-normal">
+            Đánh giá
+          </h2>
+          {/* Input */}
+          <div class="w-full flex flex-col justify-start items-start gap-5">
+            <div class="w-full rounded-3xl justify-start items-start gap-3.5 inline-flex">
+              {inforUser.image ? (
+                <img
+                  src={inforUser?.image}
+                  alt=""
+                  className="w-10 h-10 object-cover rounded-full"
+                />
+              ) : (
+                <HiOutlineUserCircle size={40} />
+              )}
+              <textarea
+                name=""
+                rows="5"
+                class="w-full px-5 py-3 rounded-2xl border border-gray-300 shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] resize-none focus:outline-none placeholder-gray-400 text-gray-900 text-lg font-normal leading-7"
+                placeholder="Viết đánh giá của bạn về món ăn này..."
+                onChange={handleCommentInput}
+                value={comment}
+              ></textarea>
+            </div>
+            <div class="w-full flex justify-between">
+              <div className="flex gap-4 items-center">
+                <p>Chất lượng sản phẩm: </p>
+                <ReactStars
+                  count={5}
+                  size={30}
+                  activeColor="#ffd700"
+                  value={rating}
+                  onChange={handleRatingChange}
+                />
+              </div>
+              <button
+                class="px-5 py-2.5 bg-[#fb6340] hover:bg-[#e6532f] transition-all duration-700 ease-in-out rounded-xl shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] justify-center items-center flex"
+                onClick={() => handleSubmit()}
+              >
+                <span class="px-2 py-px text-white text-base font-semibold leading-relaxed">
+                  Gửi
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* List */}
+          <div class="w-full flex-col justify-start items-start gap-8 flex">
+            {dataComment?.length > 0 ? (
+              dataComment.map((item) => (
+                <div
+                  class="w-full pb-6 border-b border-gray-300 justify-start items-start gap-2.5 inline-flex"
+                  key={item._id}
+                >
+                  {item.user_id?.image ? (
+                    <img
+                      src={item.user_id.image}
+                      alt=""
+                      className="w-10 h-10 object-cover rounded-full"
+                    />
+                  ) : (
+                    <HiOutlineUserCircle size={40} />
+                  )}
+
+                  <div class="w-full flex-col justify-start items-start gap-3.5 inline-flex">
+                    <div class="w-full justify-start items-start flex-col flex gap-1">
+                      <div class="w-full justify-between items-start gap-1 inline-flex">
+                        <div>
+                          <h5 class="text-gray-900 text-sm font-semibold leading-snug">
+                            {item.user_id?._id === userId
+                              ? "Bạn"
+                              : item.user_id?.userName
+                              ? item.user_id?.userName
+                              : item.user_id?.email}
+                          </h5>
+
+                          <ReactStars
+                            count={5}
+                            size={20}
+                            value={item.rating}
+                            edit={false}
+                            activeColor="#ffd700"
+                          />
+                        </div>
+                        <span class="text-right text-gray-500 text-xs font-normal leading-5">
+                          {new Date(item.createdAt).toLocaleDateString("vi-VN")}
+                        </span>
+                      </div>
+                      <h5 class="text-gray-800 text-sm font-normal leading-snug">
+                        {item.comment}
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>Sản phẩm này chưa có đánh giá</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Feedback;

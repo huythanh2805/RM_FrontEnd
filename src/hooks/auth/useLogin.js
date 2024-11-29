@@ -1,4 +1,5 @@
 import { loginService } from "@/services/auth-service";
+import jwtDecode from "jwt-decode";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +18,8 @@ export const useLogin = (setIsLoggedIn) => {
     try {
       const response = await loginService(data);
       const token = response.data.token;
-      const role = response.data.result.role;
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken?.role;
       localStorage.setItem("token", token);
       setIsLoggedIn(true);
       if (role === "ADMIN") {

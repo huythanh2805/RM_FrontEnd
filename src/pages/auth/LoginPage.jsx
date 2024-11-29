@@ -48,11 +48,6 @@ export const LoginPage = () => {
               <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                 Mật khẩu
               </label>
-              <div className="text-sm">
-                <Link to="/forgot-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                  Quên mật khẩu ?
-                </Link>
-              </div>
             </div>
             <div className="mt-2">
               <input
@@ -67,6 +62,11 @@ export const LoginPage = () => {
                 className="block w-full p-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
               {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+            </div>
+            <div className="text-sm flex justify-end mt-2">
+              <Link to="/forgot-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                Quên mật khẩu ?
+              </Link>
             </div>
           </div>
 

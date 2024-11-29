@@ -109,7 +109,11 @@ const ProductDetail = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-4">
             <img
-              src={dish.images && dish.images.length > 0 ? dish.images[0] : "default-image.jpg"}
+              src={
+                dish.images && dish.images.length > 0
+                  ? dish.images[0]
+                  : "default-image.jpg"
+              }
               alt={dish.name}
               className="rounded-sm shadow-lg w-[600px] h-[450px] object-cover"
             />
@@ -191,13 +195,21 @@ const ProductDetail = () => {
           <div className="border-b flex space-x-8">
             <button
               onClick={() => setActiveTab("DESCRIPTIONS")}
-              className={`px-4 py-2 ${activeTab === "DESCRIPTIONS" ? "text-orange-500 border-b-2 border-orange-500" : "text-gray-500"}`}
+              className={`px-4 py-2 ${
+                activeTab === "DESCRIPTIONS"
+                  ? "text-orange-500 border-b-2 border-orange-500"
+                  : "text-gray-500"
+              }`}
             >
               MÔ TẢ
             </button>
             <button
               onClick={() => setActiveTab("REVIEWS")}
-              className={`px-4 py-2 ${activeTab === "REVIEWS" ? "text-orange-500 border-b-2 border-orange-500" : "text-gray-500"}`}
+              className={`px-4 py-2 ${
+                activeTab === "REVIEWS"
+                  ? "text-orange-500 border-b-2 border-orange-500"
+                  : "text-gray-500"
+              }`}
             >
               ĐÁNH GIÁ
             </button>
@@ -208,25 +220,27 @@ const ProductDetail = () => {
             {activeTab === "DESCRIPTIONS" ? (
               <p>{dish.desc}</p>
             ) : (
-              <div>
-                {dish.reviews && dish.reviews.length > 0 ? (
-                  dish.reviews.map((review) => (
-                    <div key={review.id} className="mb-4 flex items-start">
-                      <img
-                        src={review.avatar}
-                        alt={review.userName}
-                        className="w-10 h-10 rounded-full object-cover mr-4"
-                      />
-                      <div>
-                        <p className="font-semibold">{review.userName}</p>
-                        <p>{review.comment}</p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p>Chưa có đánh giá cho món này.</p>
-                )}
-              </div>
+              // <div>
+              //   {dish.reviews && dish.reviews.length > 0 ? (
+              //     dish.reviews.map((review) => (
+              //       <div key={review.id} className="mb-4 flex items-start">
+              //         <img
+              //           src={review.avatar}
+              //           alt={review.userName}
+              //           className="w-10 h-10 rounded-full object-cover mr-4"
+              //         />
+              //         <div>
+              //           <p className="font-semibold">{review.userName}</p>
+              //           <p>{review.comment}</p>
+              //         </div>
+              //       </div>
+              //     ))
+              //   ) : (
+              //     <p>Chưa có đánh giá cho món này.</p>
+              //   )}
+              // </div>
+
+              <Feedback />
             )}
           </div>
         </div>

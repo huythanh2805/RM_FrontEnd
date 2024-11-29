@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useProfile = () => {
   const queryClient = useQueryClient();
+  
 
   // Query để lấy thông tin profile
   const { isLoading, data: user } = useQuery({
@@ -24,3 +25,4 @@ export const useProfile = () => {
     handleUpdateProfile,
   };
 };
+
