@@ -5,14 +5,17 @@ import ListReservation from "@/components/Admin/Reservation/ListReservation";
 import UpdateReservation from "@/components/Admin/Reservation/UpdateReservation";
 import TableManagement from "@/components/Admin/TableManagement";
 import ProductDetail from "@/components/layouts/ProductDetail";
+import ProtectedComponent from "@/components/ProtectedComponent";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { ForgotPasswordPage } from "@/pages/auth/PasswordPage";
 import { RegisterPage } from "@/pages/auth/Register";
 import { ResetPasswordPage } from "@/pages/auth/ResetPasswordPage";
+import BillDetail from "@/pages/dashboard/bill/BillDetail";
+import BillList from "@/pages/dashboard/bill/BillList";
 import CategoryAdd from "@/pages/dashboard/category/CategoryAdd";
 import CategoryList from "@/pages/dashboard/category/CategoryList";
 import CategoryUpdate from "@/pages/dashboard/category/CategoryUpdate";
-import LayoutAdmin from "@/pages/dashboard/LayoutAdmin";
+import Dashboard from "@/pages/dashboard/Dashboard";
 import DishAdd from "@/pages/dashboard/dish/DishAdd";
 import DishDetail from "@/pages/dashboard/dish/DishDetail";
 import DishList from "@/pages/dashboard/dish/DishList";
@@ -20,11 +23,17 @@ import DishUpdate from "@/pages/dashboard/dish/DishUpdate";
 import EmployeeAdd from "@/pages/dashboard/employee/EmployeeAdd";
 import EmployeeList from "@/pages/dashboard/employee/EmployeeList";
 import EmployeeUpdate from "@/pages/dashboard/employee/EmployeeUpdate";
+import LayoutAdmin from "@/pages/dashboard/LayoutAdmin";
 import { ProfileAdmin } from "@/pages/dashboard/Profile";
+import SetComboAdd from "@/pages/dashboard/setCombo/setComboAdd";
+import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
+import SetComboList from "@/pages/dashboard/setCombo/SetComboList";
+import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";
 import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
 import UserUpdate from "@/pages/dashboard/users/UserUpdate";
 import About from "@/pages/home/About";
+import ContactUs from "@/pages/home/ContactUs";
 import { HistoryReservation } from "@/pages/home/HistoryReservation";
 import { HistoryReservationDetail } from "@/pages/home/HistoryReservationDetails";
 import Home from "@/pages/home/Home";
@@ -32,17 +41,9 @@ import HomeLayout from "@/pages/home/HomeLayout";
 import Menu from "@/pages/home/Menu";
 import NotFound from "@/pages/home/NotFound";
 import { Profile } from "@/pages/home/Profile";
+import Promotion from "@/pages/home/Promotion";
 import Reservation from "@/pages/home/Reservation";
 import { createBrowserRouter } from "react-router-dom";
-import Dashboard from "@/pages/dashboard/Dashboard";
-import SetComboList from "@/pages/dashboard/setCombo/SetComboList";
-import SetComboAdd from "@/pages/dashboard/setCombo/setComboAdd";
-import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";
-import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
-import BillList from "@/pages/dashboard/bill/BillList";
-import BillDetail from "@/pages/dashboard/bill/BillDetail";
-import ProtectedComponent from "@/components/ProtectedComponent";
-import ContactUs from "@/pages/home/ContactUs";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <About />,
+      },
+      {
+        path: "promotion",
+        element: <Promotion />,
       },
       {
         path: "menu",
@@ -105,7 +110,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element:  <ProtectedComponent><LayoutAdmin /></ProtectedComponent>,
+    element: (
+      <ProtectedComponent>
+        <LayoutAdmin />
+      </ProtectedComponent>
+    ),
     children: [
       {
         path: "/admin",

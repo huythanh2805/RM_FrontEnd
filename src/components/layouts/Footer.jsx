@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"; 
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
@@ -101,19 +101,18 @@ const Footer = () => {
           <hr className="pt-2" />
           <ul className="space-y-2">
             {[
-              "Trang chủ",
-              "Giới thiệu",
-              "Thực đơn",
-              "Đặt bàn",
-              "Liên hệ",
-              "Bài viết",
+              { name: "Trang chủ", path: "/" },
+              { name: "Giới thiệu", path: "/about" },
+              { name: "Thực đơn", path: "/menu" },
+              { name: "Đặt bàn", path: "/reservation" },
+              { name: "Liên hệ", path: "/contact" },
             ].map((link, index) => (
               <li key={index}>
                 <Link
-                  to={`/${link.toLowerCase()}`}
+                  to={link.path}
                   className="hover:text-orange-500"
                 >
-                  {link}
+                  {link.name}
                 </Link>
               </li>
             ))}

@@ -1,15 +1,9 @@
-import ButtonCustome from "@/components/ButtonCustome";
-import { useThemeContext } from "@/contexts/ThemeProvider";
 import React, { useState } from "react";
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaUser, FaComment } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 
 const ContactUs = () => {
   const [opacity, setOpacity] = useState(1);
   const [translateY, setTranslateY] = useState(0);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
 
   return (
     <>
@@ -34,67 +28,32 @@ const ContactUs = () => {
           <h1 className="text-5xl md:text-4xl sm:text-3xl font-bold">
             LIÊN HỆ
           </h1>
-          <p className="text-4xl md:text-xl sm:text-xl mt-4">
-            Hãy cho chúng tôi biết nếu bạn có bất kỳ thắc mắc nào về thực đơn,
-            dịch vụ của chúng tôi hoặc thông tin khác mà bạn muốn có
+          <p className="text-4xl md:text-xl sm:text-xl mt-4 flex items-center justify-center">
+            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
+            <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
+            <span className="ml-4">
+              Hãy cho chúng tôi biết nếu bạn có bất kỳ thắc mắc nào về thực đơn,
+              dịch vụ của chúng tôi hoặc thông tin khác mà bạn muốn có
+            </span>
+            <span className="bg-white h-[2px] w-[100px] ml-4 hidden lg:block"></span>
+            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
           </p>
         </div>
       </div>
 
       <div className="flex flex-col md:flex-row items-center justify-between gap-12 px-6 md:px-16 lg:px-32 py-12 bg-white shadow-lg">
-        {/* Contact Form */}
-        <div className="w-full md:w-1/2 text-white rounded-lg shadow-xl p-8"
-  style={{
-    backgroundColor: '#FF66 '
-  }}>
-          <h2 className="text-3xl font-bold text-black mb-4">Liên hệ</h2>
-          <div className="w-[100px] h-[2px] rounded-full bg-orange-1 mb-8"></div>
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Tên"
-                className="w-full p-4 pl-12 bg-white rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-blue-500 text-gray-700 focus:outline-none"
-              />
-              <span className="absolute left-4 top-4 text-gray-400">
-                <FaUser />
-              </span>
-            </div>
-            <div className="relative">
-              <input
-                type="email"
-                placeholder="Email"
-                className="w-full p-4 pl-12 bg-white rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-blue-500 text-gray-700 focus:outline-none"
-              />
-              <span className="absolute left-4 top-4 text-gray-400">
-                <FaEnvelope />
-              </span>
-            </div>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Số điện thoại"
-                className="w-full p-4 pl-12 bg-white rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-blue-500 text-gray-700 focus:outline-none"
-              />
-              <span className="absolute left-4 top-4 text-gray-400">
-                <FaPhoneAlt />
-              </span>
-            </div>
-            <div className="relative">
-              <textarea
-                placeholder="Ghi chú"
-                className="w-full p-4 pl-12 bg-white rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-blue-500 text-gray-700 focus:outline-none"
-                rows="4"
-              ></textarea>
-              <span className="absolute left-4 top-4 text-gray-400">
-                <FaComment />
-              </span>
-            </div>
-            <ButtonCustome buttonText='Gửi'/>
-          </form>
+        <div className="w-full md:w-1/2 h-[500px]">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14895.472351647697!2d105.7469268!3d21.0379635!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313455305afd834b%3A0x17268e09af37081e!2sT%C3%B2a%20nh%C3%A0%20FPT%20Polytechnic.!5e0!3m2!1svi!2s!4v1732871297615!5m2!1svi!2s"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
         </div>
 
-        {/* Contact Info */}
         <div className="w-full md:w-1/2 text-black space-y-8">
           <h2 className="text-3xl font-bold mb-4">Thông tin liên hệ</h2>
           <div className="w-[100px] h-[2px] rounded-full bg-orange-1 mb-8"></div>
@@ -105,7 +64,10 @@ const ContactUs = () => {
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold">Địa chỉ nhà hàng</h3>
-                <p className="text-gray-600">Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội</p>
+                <p className="text-gray-600">
+                  Tòa nhà FPT Polytechnic, Cổng số 2, 13 P. Trịnh Văn Bô, Xuân
+                  Phương, Nam Từ Liêm, Hà Nội
+                </p>
               </div>
             </li>
             <li className="flex items-center">
