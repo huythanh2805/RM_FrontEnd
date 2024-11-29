@@ -1,5 +1,3 @@
-"use client"
-
 import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
@@ -18,48 +16,49 @@ import {
   ChartLegend,
   ChartLegendContent
 } from "@/components/ui/chart"
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "June", desktop: 1, mobile: 5 },
-  { month: "June", desktop: 1, mobile: 5 },
-  { month: "June", desktop: 1, mobile: 5 },
-  { month: "June", desktop: 1, mobile: 5 },
-]
+// const chartData = [
+//   { month: "January", desktop: 186, mobile: 80 },
+//   { month: "February", desktop: 305, mobile: 200 },
+//   { month: "March", desktop: 237, mobile: 120 },
+//   { month: "April", desktop: 73, mobile: 190 },
+//   { month: "May", desktop: 209, mobile: 130 },
+//   { month: "June", desktop: 214, mobile: 140 },
+//   { month: "June", desktop: 214, mobile: 140 },
+//   { month: "June", desktop: 214, mobile: 140 },
+//   { month: "January", desktop: 186, mobile: 80 },
+//   { month: "February", desktop: 305, mobile: 200 },
+//   { month: "March", desktop: 237, mobile: 120 },
+//   { month: "April", desktop: 73, mobile: 190 },
+//   { month: "May", desktop: 209, mobile: 130 },
+//   { month: "June", desktop: 214, mobile: 140 },
+//   { month: "June", desktop: 214, mobile: 140 },
+//   { month: "June", desktop: 214, mobile: 140 },
+//   { month: "January", desktop: 186, mobile: 80 },
+//   { month: "February", desktop: 305, mobile: 200 },
+//   { month: "March", desktop: 237, mobile: 120 },
+//   { month: "April", desktop: 73, mobile: 190 },
+//   { month: "May", desktop: 209, mobile: 130 },
+//   { month: "June", desktop: 214, mobile: 140 },
+//   { month: "June", desktop: 214, mobile: 140 },
+//   { month: "June", desktop: 1, mobile: 5 },
+//   { month: "June", desktop: 1, mobile: 5 },
+//   { month: "June", desktop: 1, mobile: 5 },
+//   { month: "June", desktop: 1, mobile: 5 },
+// ]
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  
+  canceled: {
+    label: "Hủy",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  completed: {
+    label: "Thành công",
     color: "hsl(var(--chart-2))",
   },
 }
 
-export default function ReserVationChart() {
+export default function ReserVationChart({reservationStatusChart}) {
   return (
     <Card>
       <CardHeader>
@@ -68,22 +67,22 @@ export default function ReserVationChart() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="max-h-[350px] w-full">
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={reservationStatusChart}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="day"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              // tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
             <ChartLegend content={<ChartLegendContent />} />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <Bar dataKey="canceled" fill="var(--color-canceled)" radius={4} />
+            <Bar dataKey="completed" fill="var(--color-completed)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>

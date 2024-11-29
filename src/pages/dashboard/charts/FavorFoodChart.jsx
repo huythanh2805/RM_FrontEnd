@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import { TrendingUp } from "lucide-react"
 import { Label, Pie, PieChart } from "recharts"
@@ -28,36 +26,40 @@ const chartData = [
 ]
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  quantity: {
+    label: "Số lượng",
   },
-  chrome: {
-    label: "Chrome",
+  top_1: {
+    label: "top_1",
     color: "hsl(var(--chart-1))",
   },
-  safari: {
-    label: "Safari",
+  top_2: {
+    label: "top_2",
     color: "hsl(var(--chart-2))",
   },
-  firefox: {
-    label: "Firefox",
+  top_3: {
+    label: "top_3",
     color: "hsl(var(--chart-3))",
   },
-  edge: {
-    label: "Edge",
+  top_4: {
+    label: "top_4",
     color: "hsl(var(--chart-4))",
   },
-  other: {
-    label: "Other",
+  top_5: {
+    label: "top_5",
     color: "hsl(var(--chart-5))",
   },
 } 
 
-export default function FavorFoodChart() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
-  }, [])
-
+export default function FavorFoodChart({top5Dishes}) {
+//   const totalVisitors = React.useMemo(() => {
+//     return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
+//   }, [])
+ 
+  const modifiedTop5Dishes = React.useMemo(()=>{
+    return top5Dishes.map((item, index)=>({...item, fill: `var(--color-top_${index + 1})`,name: `top_${index+1}`}))
+  })
+  console.log({modifiedTop5Dishes})
   return (
     <Card className="flex flex-col h-full">
       <CardHeader className="items-center pb-0">
@@ -76,13 +78,13 @@ export default function FavorFoodChart() {
             />
             <ChartLegend content={<ChartLegendContent />} />
             <Pie
-              data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
+              data={modifiedTop5Dishes}
+              dataKey="quantity"
+              nameKey="name"
               innerRadius={60}
               strokeWidth={5}
             >
-              <Label
+              {/* <Label
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
@@ -110,7 +112,7 @@ export default function FavorFoodChart() {
                     )
                   }
                 }}
-              />
+              /> */}
             </Pie>
           </PieChart>
         </ChartContainer>

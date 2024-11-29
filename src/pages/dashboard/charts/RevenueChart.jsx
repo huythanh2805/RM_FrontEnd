@@ -16,29 +16,27 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "June2", desktop: 214, mobile: 140 },
-  { month: "octo", desktop: 214, mobile: 140 },
-]
+// const chartData = [
+//   { month: "January", desktop: 186, mobile: 80 },
+//   { month: "February", desktop: 305, mobile: 200 },
+//   { month: "March", desktop: 237, mobile: 120 },
+//   { month: "April", desktop: 73, mobile: 190 },
+//   { month: "May", desktop: 209, mobile: 130 },
+//   { month: "June", desktop: 214, mobile: 140 },
+//   { month: "June2", desktop: 214, mobile: 140 },
+//   { month: "octo", desktop: 214, mobile: 140 },
+// ]
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Mobile",
+ total_money: {
+    label: "Money",
     color: "hsl(var(--chart-2))",
   },
+ 
 }
 
-export default function RevenueChart() {
+export default function RevenueChart({allBillByMonth}) {
+    console.log(allBillByMonth)
   return (
     <Card >
       <CardHeader>
@@ -51,7 +49,7 @@ export default function RevenueChart() {
         <ChartContainer config={chartConfig} className="max-h-[250px] w-full">
           <AreaChart
             accessibilityLayer
-            data={chartData}
+            data={allBillByMonth}
             margin={{
               left: 12,
               right: 12,
@@ -59,11 +57,11 @@ export default function RevenueChart() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="day"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+            //   tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}
@@ -71,19 +69,11 @@ export default function RevenueChart() {
             />
             <ChartLegend content={<ChartLegendContent />} />
             <Area
-              dataKey="mobile"
-              type="natural"
-              fill="var(--color-mobile)"
+              dataKey="total_money"
+              fill="var(--color-total_money)"
               fillOpacity={0.4}
-              stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
               type="natural"
-              fill="var(--color-desktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
+              stroke="var(--color-total_money)"
               stackId="a"
             />
           </AreaChart>

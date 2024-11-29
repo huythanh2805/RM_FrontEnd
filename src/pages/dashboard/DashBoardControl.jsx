@@ -7,11 +7,13 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import DatePicker from "react-datepicker"
-function DashBoardControl() {
-  const [selectedDate, setSelectedDate] = useState(new Date())
+function DashBoardControl({
+  selectedDate,
+  setSelectedDate,
+  selectedMonth,
+  setSelectedMonth
+}) {
   const [months, setMonths] = useState(new Date().getMonth() + 1)
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
-  console.log({selectedMonth})
   useEffect(()=>{
     const currentYear = new Date().getFullYear();
 
