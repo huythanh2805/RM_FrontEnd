@@ -1,0 +1,34 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+
+// API để fetch danh sách thông báo
+const fetchNotifications = async () => {
+  const response = await axios.get("http://localhost:1111/api/notification");
+  return response.data;
+};
+
+// API để đánh dấu thông báo đã đọc
+const updateNotification = async (notificationId) => {
+  const response = await axios.put(`http://localhost:1111/api/notification/${notificationId}`, {
+    isRead: true,
+  });
+  return response.data;
+};
+
+// Hook để lấy danh sách thông báo
+export const useNotifications = () => {
+  return useQuery(["notifications"], fetchNotifications, {
+    staleTime: 5 * 60 * 1000, // Dữ liệu stale sau 5 phút
+  });
+};
+
+// Hook để cập nhật trạng thái thông báo
+export const useUpdateNotification = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(updateNotification, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["notifications"]); // Làm mới danh sách thông báo
+    },
+  });
+};

@@ -1,5 +1,5 @@
 import { useProfile } from "@/hooks/home/useProfile";
-import axios from "axios";
+import { useNotifications, useUpdateNotification } from "@/services/notificationService";
 import { useEffect, useState } from "react";
 import { IoIosNotifications } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,57 +10,44 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(false);
+
+  const { data: notifications = [], isLoading: loadingNotifications, refetch } = useNotifications();
+  const updateNotificationMutation = useUpdateNotification();
+
+  // Socket.IO để nhận thông báo mới
   useEffect(() => {
     const socket = io("http://localhost:1111");
+
     socket.on("new-notification", (notification) => {
-      setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+      refetch(); // Làm mới danh sách thông báo qua react-query
     });
+
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [refetch]);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  const toggleNotifications = async () => {
+
+  const toggleNotifications = () => {
     setIsNotificationOpen(!isNotificationOpen);
     if (!isNotificationOpen) {
-      setLoadingNotifications(true);
-      try {
-        const response = await axios.get("http://localhost:1111/api/notification");
-        setNotifications(response.data);
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      } finally {
-        setLoadingNotifications(false);
-      }
+      refetch(); // Load lại thông báo khi mở menu
     }
   };
+
+  const handleNotificationClick = (notification) => {
+    updateNotificationMutation.mutate(notification._id);
+    navigate("listReser");
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
-
-  const handleNotificationClick = async (notification) => {
-    const updatedNotifications = notifications.map((notif) =>
-      notif._id === notification._id ? { ...notif, isRead: true } : notif
-    );
-    setNotifications(updatedNotifications);
-    try {
-      await axios.put(`http://localhost:1111/api/notification/${notification._id}`, {
-        isRead: true,
-      });
-    } catch (error) {
-      console.error("Error updating notification:", error);
-    }
-    const unreadNotifications = updatedNotifications.filter((notif) => !notif.isRead);
-    navigate("listReser");
-  };
-
   const { user } = useProfile();
-
   return (
     <nav className="bg-white p-3 shadow-md flex items-center justify-between">
       <div className="flex items-center">
@@ -136,7 +123,6 @@ const Navbar = () => {
                   Account settings
                 </a>
               </li>
-
               <li>
                 <h2
                   onClick={() => {
