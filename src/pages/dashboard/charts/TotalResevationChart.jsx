@@ -1,4 +1,3 @@
-"use client"
 
 import { TrendingUp } from "lucide-react"
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
@@ -16,23 +15,23 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-const chartData = [
-  { month: "Tháng 1", desktop: 186 },
-  { month: "Tháng 2", desktop: 305 },
-  { month: "Tháng 3", desktop: 237 },
-  { month: "Tháng 4", desktop: 273 },
-  { month: "Tháng 5", desktop: 273 },
-  { month: "Tháng 6", desktop: 273 },
-]
+// const chartData = [
+//   { month: "Tháng 1", desktop: 186 },
+//   { month: "Tháng 2", desktop: 305 },
+//   { month: "Tháng 3", desktop: 237 },
+//   { month: "Tháng 4", desktop: 273 },
+//   { month: "Tháng 5", desktop: 273 },
+//   { month: "Tháng 6", desktop: 273 },
+// ]
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  total_money: {
+    label: "Money",
     color: "hsl(var(--chart-1))",
   },
 }
 
-export default function TotalResevationChart() {
+export default function TotalResevationChart({sixMonthRevenue}) {
   return (
     <Card>
       <CardHeader className="items-center pb-4">
@@ -46,13 +45,13 @@ export default function TotalResevationChart() {
           config={chartConfig}
           className="mx-auto aspect-square max-h-[250px]"
         >
-          <RadarChart data={chartData}>
+          <RadarChart data={sixMonthRevenue}>
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <PolarAngleAxis dataKey="month" />
             <PolarGrid />
             <Radar
-              dataKey="desktop"
-              fill="var(--color-desktop)"
+              dataKey="total_money"
+              fill="var(--color-total_money)"
               fillOpacity={0.6}
             />
           </RadarChart>

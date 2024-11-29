@@ -11,9 +11,20 @@ import ReserVationChart from "./charts/ReservationChart";
 import FavorFoodChart from "./charts/FavorFoodChart";
 import TotalResevationChart from "./charts/TotalResevationChart";
 import DashBoardControl from "./DashBoardControl";
+import { toast } from "@/hooks/use-toast";
+import { ServerUrl } from "@/utilities/utils";
 
 const Dashboard = () => {
   const [dataProduct, setDataProduct] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
+  const [allBillByMonth, setAllBillByMonth] = useState([])
+  const [top5Dishes, setTop5Dishes] = useState([])
+  const [sixMonthRevenue, setSixMonthRevenue] = useState([])
+  const [reservationStatusChart, setReservationStatusChart] = useState([])
+  console.log({top5Dishes})
+  console.log({sixMonthRevenue})
+  console.log({reservationStatusChart})
 
   // Lấy dữ liệu món ăn
   useEffect(() => {
@@ -42,6 +53,78 @@ const Dashboard = () => {
   const clientCount = dataUser.filter(
     (users) => users.role === "CLIENT"
   ).length;
+    // Get revenue
+    useEffect(() => {
+      if(!selectedMonth) return
+      const fetData = async () => {
+        const res = await fetch(`${ServerUrl}/api/dashboard/revenue/${selectedMonth}/${selectedDate.getFullYear()}` , {
+          method: "GET"
+        })
+        const data = await res.json() 
+        if (!res.ok) {
+          toast({
+            variant: "destructive",
+            title: "Can't get any data for ordered dishes!",
+          })
+        }
+       setAllBillByMonth(data)
+      }
+      fetData()
+    }, [selectedDate, selectedMonth])
+    // Get top 5 dishes
+    useEffect(() => {
+      if(!selectedMonth) return
+      const fetData = async () => {
+        const res = await fetch(`${ServerUrl}/api/dashboard/top5/${selectedMonth}/${selectedDate.getFullYear()}` , {
+          method: "GET"
+        })
+        const data = await res.json() 
+        if (!res.ok) {
+          toast({
+            variant: "destructive",
+            title: "Can't get any data for ordered dishes!",
+          })
+        }
+       setTop5Dishes(data)
+      }
+      fetData()
+    }, [selectedDate, selectedMonth])
+    // Get top 6 months revenue
+    useEffect(() => {
+      if(!selectedMonth) return
+      const fetData = async () => {
+        const res = await fetch(`${ServerUrl}/api/dashboard/revenue/6months/${selectedMonth}/${selectedDate.getFullYear()}` , {
+          method: "GET"
+        })
+        const data = await res.json() 
+        if (!res.ok) {
+          toast({
+            variant: "destructive",
+            title: "Can't get any data for ordered dishes!",
+          })
+        }
+       setSixMonthRevenue(data)
+      }
+      fetData()
+    }, [selectedDate, selectedMonth])
+    // Get reservation Status chart
+    useEffect(() => {
+      if(!selectedMonth) return
+      const fetData = async () => {
+        const res = await fetch(`${ServerUrl}/api/dashboard/reservationState/${selectedMonth}/${selectedDate.getFullYear()}` , {
+          method: "GET"
+        })
+        const data = await res.json() 
+        if (!res.ok) {
+          toast({
+            variant: "destructive",
+            title: "Can't get any data for ordered dishes!",
+          })
+        }
+       setReservationStatusChart(data)
+      }
+      fetData()
+    }, [selectedDate, selectedMonth])
 
   return (
     <div className="w-full min-h-screen bg-gray-50">
@@ -52,7 +135,12 @@ const Dashboard = () => {
         <div className="w-full flex items-center justify-between">
           <p className="text-3xl font-semibold text-gray-800">Thống Kê</p>
 
-          <DashBoardControl />
+          <DashBoardControl 
+           selectedDate={selectedDate}
+           setSelectedDate={setSelectedDate}
+           selectedMonth={selectedMonth}
+           setSelectedMonth={setSelectedMonth}
+          />
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4 2xl:gap-8 py-4">
@@ -96,16 +184,16 @@ const Dashboard = () => {
 
         <div class="grid grid-cols-4 gap-4">
           <div class="col-span-3 ">
-            <RevenueChart />
+            <RevenueChart allBillByMonth={allBillByMonth} />
           </div>
           <div class="col-span-1">
-            <FavorFoodChart />
+            <FavorFoodChart top5Dishes={top5Dishes}/>
           </div>
           <div class="col-span-1 ">
-            <TotalResevationChart />
+            <TotalResevationChart sixMonthRevenue={sixMonthRevenue} />
           </div>
           <div class="col-span-3">
-            <ReserVationChart />
+            <ReserVationChart reservationStatusChart={reservationStatusChart} />
           </div>
         </div>
       </div>
