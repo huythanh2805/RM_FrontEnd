@@ -18,45 +18,55 @@ export const HistoryReservation = () => {
   });
 
   // Mutation để hủy đặt bàn
-  const mutation = useMutation(
-    async (reservationId) => {
-      const response = await axios.put(`http://localhost:1111/api/reservations/cancel/${reservationId}`);
-      return response.data;
-    },
-    {
-      onSuccess: (data, reservationId) => {
-        if (data.message === "Đơn hàng đã được hủy.") {
-          queryClient.setQueryData(["reservations", userId], (old) => {
-            if (Array.isArray(old)) {
-              return old.filter((reservation) => reservation._id !== reservationId);
-            }
-            return old;
-          });
-          alert(data.message);
-        }
-      },
-      onError: (error) => {
-        if (error.response && error.response.data && error.response.data.message) {
-          alert(error.response.data.message);
-        } else {
-          alert("Đã xảy ra lỗi khi hủy đơn hàng.");
-        }
-      },
-    }
-  );
+ const [isCanceling, setIsCanceling] = useState(false);
 
-  const handleCancelReservation = (reservationId) => {
-    if (window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?")) {
-      mutation.mutate(reservationId);
-    }
-  };
+ const mutation = useMutation(
+   async (reservationId) => {
+     setIsCanceling(true); // Bắt đầu hủy
+     const response = await axios.put(
+       `http://localhost:1111/api/reservations/cancel/${reservationId}`,
+       {},
+       {
+         headers: {
+           "Content-Type": "application/json",
+         },
+       }
+     );
+     return response.data;
+   },
+   {
+     onSuccess: (data) => {
+       alert(data.message);
+       setIsCanceling(false); // Kết thúc hủy
+     },
+     onError: (error) => {
+       setIsCanceling(false); // Kết thúc hủy
+       if (error.response && error.response.data) {
+         alert(error.response.data.message || "Đã xảy ra lỗi khi hủy đơn hàng.");
+       } else {
+         alert("Đã xảy ra lỗi khi hủy đơn hàng.");
+       }
+     },
+   }
+ );
+
+ const handleCancelReservation = (reservationId) => {
+   if (isCanceling) {
+     alert("Đang hủy đơn hàng, vui lòng đợi.");
+     return;
+   }
+
+   if (window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?")) {
+     mutation.mutate(reservationId);
+   }
+ };
 
   // Chuyển đổi trạng thái sang tiếng Việt
   const getStatusInVietnamese = (status) => {
     switch (status) {
       case "ISWAITING":
         return "Đang chờ";
-      case "ISCOMPLETED":
+      case "ISCOMFIRMED":
         return "Đã xác nhận";
       case "SEATED":
         return "Đã ngồi";
@@ -136,7 +146,7 @@ export const HistoryReservation = () => {
                     case "ISWAITING":
                       statusClass = "bg-amber-50 text-amber-600 border border-amber-400";
                       break;
-                    case "ISCOMPLETED":
+                    case "ISCOMFIRMED":
                       statusClass = "bg-green-200 text-green-600 border border-green-400";
                       break;
                     case "SEATED":
