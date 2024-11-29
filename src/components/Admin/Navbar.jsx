@@ -44,7 +44,7 @@ const Navbar = () => {
             <img
               className="w-10 h-10 rounded-full cursor-pointer border-2 border-gray-400 hover:border-gray-600 transition object-cover"
               alt="User"
-              src={user?.image || "default-image-url.png"}
+              src={user?.image || "/imgs/avatar.jpg"}
               onClick={toggleMenu}
             />
           </div>

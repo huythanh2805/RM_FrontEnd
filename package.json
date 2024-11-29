@@ -56,6 +56,7 @@
     "react-scroll-parallax": "^3.4.5",
     "react-spinners": "^0.14.1",
     "react-to-print": "^2.15.1",
+    "recharts": "^2.13.3",
     "run-parallel": "^1.2.0",
     "socket.io-client": "^4.7.5",
     "sweetalert2": "^11.14.4",
