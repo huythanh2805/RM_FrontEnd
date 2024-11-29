@@ -20,6 +20,10 @@
 .messagerBody::-webkit-scrollbar-track {
   background-color: transparent; /* Màu nền của track thanh cuộn */
 }
+/* chart */
+.recharts-surface{
+  overflow: visible;
+}
 * {
   font-family: "Alegreya", serif; /* Đổi từ Poppins sang Alegreya */
   font-weight: 400;
