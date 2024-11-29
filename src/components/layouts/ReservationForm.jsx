@@ -14,7 +14,7 @@ import { useThemeContext } from "@/contexts/ThemeProvider";
 import { motion } from "framer-motion";
 import DatePicker from "react-datepicker";
 import { toast } from "@/hooks/use-toast";
-import {jwtDecode} from "jwt-decode";
+import jwtDecode from "jwt-decode";
 import { usePostData } from "@/hooks/usePostData";
 import { ServerUrl } from "@/utilities/utils";
 import { useCart } from "@/contexts/CartProvider";
@@ -124,7 +124,7 @@ const ReservationForm = () => {
             variants={imgAnimation}
           >
             <img
-              src="https://sun-themes.com/html/fooday/assets/images/pages/home3-deco-1.png"
+              src="/imgs/home3-deco-1.png"
               alt="Chef"
               className="absolute -left-[10px] -translate-y-7 max-w-[380px] transition-transform transform hover:scale-105 hover:-translate-x-5 hover:-translate-y-2" // Hiệu ứng hover
             />
@@ -138,8 +138,7 @@ const ReservationForm = () => {
               trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng
               tôi qua số điện thoại{" "}
               <span className="font-bold" style={{ color: colorCode }}>
-                {" "}
-                666-88888
+              (012) 978 645 312
               </span>
               .
             </p>
