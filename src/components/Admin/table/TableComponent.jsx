@@ -185,7 +185,7 @@ console.log({
       style={style}
       {...attributes}
       {...listeners}
-      className="relative max-h-[140px] min-w-[140px]"
+      className="relative max-h-[140px] min-w-[170px]"
       onClick={() => setIsDialogOpen(!isDialogOpen)}
     >
       <div

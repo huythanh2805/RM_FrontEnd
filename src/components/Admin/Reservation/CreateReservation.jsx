@@ -12,7 +12,6 @@ export default function CreateReservation() {
   const [orderedFoods, setOrderedFoods] = useState([])
   const [loading, setLoading] = useState(false)
   const [numberOfSeats, setNumberOfSeats] = useState()
-console.log('ordered food in create', orderedFoods)
   useEffect(() => {
     const fetData = async () => {
       setLoading(true)
@@ -66,7 +65,7 @@ console.log('ordered food in create', orderedFoods)
               orderedFoods={orderedFoods}
             />
           )}
-        </div>
+        </div>  
         <p className="separate_line"></p>
         {
         orderedFoodOpen && <CreateFoodOrder orderedFoods={orderedFoods} setOrderedFoods={setOrderedFoods} />

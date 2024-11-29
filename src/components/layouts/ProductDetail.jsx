@@ -5,6 +5,7 @@ import ButtonCustome from "../ButtonCustome";
 import { useThemeContext } from "@/contexts/ThemeProvider";
 import axios from "axios";
 import { useCart } from "@/contexts/CartProvider";
+import { toast } from "@/hooks/use-toast";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -49,14 +50,19 @@ const ProductDetail = () => {
   const decreaseQuantity = () => quantity > 1 && setQuantity(quantity - 1);
 
   const handleAddToCart = (dish) => {
+    toast({
+      variant: 'success',
+      title: 'Thêm thành công'+" "+ dish.name
+    })
     addItem({
       dish_id: dish._id,
       name: dish.name,
       price: dish.price,
       image: dish.images[0],
-      quantity: 1,
+      quantity: quantity,
       type: "dish",
     });
+    setQuantity(1)
   };
 
   if (!dish) {
@@ -139,7 +145,7 @@ const ProductDetail = () => {
                   +
                 </button>
               </div>
-              <ButtonCustome buttonText="Thêm vào giỏ hàng" onClick={handleAddToCart} />
+              <ButtonCustome buttonText="Thêm vào giỏ hàng" handleClick={()=>handleAddToCart(dish)} />
             </div>
             <hr />
             <div className="flex space-x-4 mt-4">

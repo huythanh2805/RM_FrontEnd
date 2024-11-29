@@ -45,6 +45,11 @@ export default function CreateFoodOrder({orderedFoods, setOrderedFoods}) {
   }, [reservationId])
 
   const deleteOrderedFood = async (orderedFood_id) => {
+    if(!reservationId) {
+     return setOrderedFoods((pre) => [
+        ...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id),
+      ])
+    }
     const res = await fetch(ServerUrl+'/api/orderedFood/'+ orderedFood_id+ "/"+ reservationId, {
       method: "DELETE",
     })
@@ -53,6 +58,11 @@ export default function CreateFoodOrder({orderedFoods, setOrderedFoods}) {
     return { res, data }
   }
   const deletedOrderedCombo = async (orderedFood_id) => {
+    if(!reservationId) {
+      return setOrderedFoods((pre) => [
+         ...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id),
+       ])
+     }
     const res = await fetch(ServerUrl+'/api/orderedCombo/' + orderedFood_id+"/"+reservationId, {
       method: "DELETE",
     })

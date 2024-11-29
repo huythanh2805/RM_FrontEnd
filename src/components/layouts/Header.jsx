@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Cart from "../Cart";
+import { jwtDecode } from "jwt-decode";
 
 const headerLink = [
   { name: "TRANG CHỦ", link: "/" },
@@ -36,12 +37,13 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { user } = useProfile();
   useEffect(() => {}, [user]);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-    if (token) {
-      toast({ variant: "success", title: "Đăng nhập thành công !" });
-    }
+    // if (token) {
+    //   toast({ variant: "success", title: "Đăng nhập thành công !" });
+    // }
   }, []);
 
   const handleLogout = () => {

@@ -4,6 +4,7 @@
   import React, { useEffect, useState } from "react";
   import { useCart } from "@/contexts/CartProvider";
   import MenuItem from "../MenuItem";
+import { toast } from "@/hooks/use-toast";
 
   const Menu = ({ limit }) => {
     const { colorCode } = useThemeContext();
@@ -66,6 +67,10 @@
     const limitDishes = limit ? filteredDishes.slice(0, limit) : filteredDishes;
 
     const handleAddToCart = (dish) => {
+      toast({
+        variant: 'success',
+        title: 'Thêm thành công'+" "+ dish.name
+      })
       addItem({
         dish_id: dish._id,
         name: dish.name,

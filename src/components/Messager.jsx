@@ -3,7 +3,7 @@ import { FaFacebookMessenger } from "react-icons/fa"
 import { motion, AnimatePresence } from "framer-motion"
 import { LucideMinus, SendHorizontal } from "lucide-react"
 import { Input } from "./ui/input"
-import  jwtDecode  from "jwt-decode"
+import  {jwtDecode}  from "jwt-decode"
 import { useFetchData } from "@/hooks/useFetchData"
 import { toast } from "@/hooks/use-toast"
 import { ServerUrl } from "@/utilities/utils"
@@ -34,6 +34,7 @@ const Messager = () => {
   }
   // Lấy thông tin của người dùng dựa vào Id
   const {data: userData} = useFetchData(`${ServerUrl}/users/get/v2/${decodedToken?.id}`)
+  
   useEffect(()=>{
     if(userData) setUser(userData.user)
   },[userData, isOpen])
@@ -63,7 +64,9 @@ const Messager = () => {
         })
       }
     }
-    fetData()
+    if(decodedToken && decodedToken !== null){
+      fetData()
+    }
   }, [])
   // nhận tin nhắn
   useEffect(() => {
@@ -79,23 +82,25 @@ const Messager = () => {
   }, []);
   
   // Update lại nhưng tin nhắn đã xem
-  useEffect(()=>{
-    const fetUnseenMessage = async ()=>{
-      if(isOpen){
-       await fetch(`${ServerUrl}/api/message/text/seen/${conversationId}/${decodedToken.id}`, {
-         method: "PUT",
-         headers: {
-          "Content-Type": "application/json"
-         },
-       })
-      }
-      const res = await fetch(`${ServerUrl}/api/message/text/seen/${decodedToken.id}/client`,{
-       method: "GET"
-      })
-      const data = await res.json()
-      setUnseenMessage(data.unseenMessageCount)
+  const fetUnseenMessage = async ()=>{
+    if(isOpen){
+     await fetch(`${ServerUrl}/api/message/text/seen/${conversationId}/${decodedToken.id}`, {
+       method: "PUT",
+       headers: {
+        "Content-Type": "application/json"
+       },
+     })
     }
-    fetUnseenMessage()
+    const res = await fetch(`${ServerUrl}/api/message/text/seen/${decodedToken.id}/client`,{
+     method: "GET"
+    })
+    const data = await res.json()
+    setUnseenMessage(data.unseenMessageCount)
+  }
+  useEffect(()=>{
+    if(decodedToken && decodedToken !== null) {
+      fetUnseenMessage()
+    }
  },[messages, isOpen, newMessage])
    console.log({decodedToken})
   // Gửi tin nhắn

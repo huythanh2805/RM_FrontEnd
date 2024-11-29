@@ -27,10 +27,10 @@ const toastVariants = cva(
         default:
           "bg-gray-500 py-4 px-4 rounded-md text-white text-center flex gap-4",
         destructive:
-          "bg-red-500 py-4 px-4 rounded-md text-white text-center flex gap-4",
+          "bg-red-500 py-4 px-4 rounded-md text-white text-center flex gap-4 border-none",
         success:
-          "bg-green-500 py-4 px-4 rounded-md text-white text-center flex gap-4",
-        info: "bg-blue-500 py-4 px-4 rounded-md text-white text-center flex gap-4",
+          "bg-green-500 py-4 px-4 rounded-md text-white text-center flex gap-4 border-none",
+        info: "bg-blue-500 py-4 px-4 rounded-md text-white text-center flex gap-4 border-none",
       },
     },
     defaultVariants: {
