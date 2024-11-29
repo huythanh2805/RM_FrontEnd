@@ -7,12 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useThemeContext } from "@/contexts/ThemeProvider";
 import { useProfile } from "@/hooks/home/useProfile";
 import { toast } from "@/hooks/use-toast";
@@ -24,6 +19,7 @@ import Cart from "../Cart";
 const headerLink = [
   { name: "TRANG CHỦ", link: "/" },
   { name: "GIỚI THIỆU", link: "/about" },
+  { name: "KHUYẾN MÃI", link: "/promotion" },
   { name: "THỰC ĐƠN", link: "/menu" },
   { name: "ĐẶT BÀN", link: "/reservation" },
   { name: "LIÊN HỆ", link: "/contact" },
@@ -56,21 +52,13 @@ const Header = () => {
       <div className="max-w-screen-2xl mx-auto">
         <div className="flex flex-row justify-between items-center p-4">
           <Link to="/" className="flex flex-row items-center cursor-pointer">
-            <img
-              src="/imgs/logoGolden.webp"
-              alt="Golden Fork Logo"
-              className="h-16 w-16 object-cover rounded-full"
-            />
+            <img src="/imgs/logoGolden.webp" alt="Golden Fork Logo" className="h-16 w-16 object-cover rounded-full" />
             <h1 className="text-xl font-semibold font-serif">Golden Fork</h1>
           </Link>
 
           <nav className="hidden md:flex flex-row items-center text-lg font-medium gap-8">
             {headerLink.map((item) => (
-              <Link
-                key={item.name}
-                to={item.link}
-                className="group transition-all cursor-pointer"
-              >
+              <Link key={item.name} to={item.link} className="group transition-all cursor-pointer">
                 {item.name}
                 <div
                   style={{ backgroundColor: colorCode }}
@@ -92,10 +80,7 @@ const Header = () => {
                   <nav className="flex flex-col items-center text-lg font-medium gap-8">
                     {headerLink.map((item) => (
                       <SheetClose asChild key={item.name}>
-                        <Link
-                          to={item.link}
-                          className="group hover:text-orange-500 transition-all cursor-pointer"
-                        >
+                        <Link to={item.link} className="group hover:text-orange-500 transition-all cursor-pointer">
                           {item.name}
                           <div className="h-[2px] bg-orange-1 w-0 group-hover:w-full transition-all ease-in duration-300"></div>
                         </Link>
@@ -127,9 +112,7 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    <DropdownMenuLabel className="text-gray-500">
-                      Xin chào , {user?.userName}
-                    </DropdownMenuLabel>
+                    <DropdownMenuLabel className="text-gray-500">Xin chào , {user?.userName}</DropdownMenuLabel>
                     <DropdownMenuItem className="hover:bg-gray-100 text-gray-800">
                       <Link to="/profile">Thông tin cá nhân</Link>
                     </DropdownMenuItem>
@@ -138,9 +121,7 @@ const Header = () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => {
-                        const confirmLogout = window.confirm(
-                          "Bạn có muốn đăng xuất không?"
-                        );
+                        const confirmLogout = window.confirm("Bạn có muốn đăng xuất không?");
                         if (confirmLogout) {
                           handleLogout();
                         }
