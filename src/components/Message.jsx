@@ -1,8 +1,8 @@
-import jwtDecode from "jwt-decode"
 import React, { useState } from "react"
 import Avatar from "/imgs/avatar.jpg"
 import { cn } from "@/lib/utils"
 import { formatDate } from "@/utilities/utils"
+import { jwtDecode } from "jwt-decode"
 const Message = ({message, isRecently,isSperated, previousTime, isFirstText, isAdmin}) => {
   const [decodedToken, setDecodeToken] = useState(() => {
      if(!localStorage.getItem("token")) return null 

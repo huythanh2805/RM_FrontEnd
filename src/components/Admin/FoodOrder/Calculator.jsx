@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select"
 
 import CurrencyInput from "react-currency-input-field"
-import { Check } from "lucide-react"
+import { Check, Trash } from "lucide-react"
 import { formatCurrency, ServerUrl } from "@/utilities/utils"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -77,16 +77,31 @@ const Calculator = ({
     setChange(paidMoney - neededPaid)
   }, [paidMoney, totalPrice])
   // delete orderedFood
-  const handleDeleteOrderedFood = async (orderedFood_id) => {
-    const { res, data } = await deleteOrderedFood(orderedFood_id)
-    if (
-      res.status === 201 &&
-      data.message === "Successfully" &&
-      setOrderedFoods
-    )
-      setOrderedFoods((pre) => [
-        ...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id),
-      ])
+  const handleDeleteOrderedFood = async (orderedFood_id, type) => {
+    console.log(type)
+    if(type === 'combo'){
+      const { res, data } = await deletedOrderedCombo(orderedFood_id)
+      if (
+        res.status === 201 &&
+        data.message === "Successfully" &&
+        setOrderedFoods
+      )
+        setOrderedFoods((pre) => [
+          ...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id),
+        ])
+    }
+    if(type === 'dish'){
+      const { res, data } = await deleteOrderedFood(orderedFood_id)
+      if (
+        res.status === 201 &&
+        data.message === "Successfully" &&
+        setOrderedFoods
+      )
+        setOrderedFoods((pre) => [
+          ...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id),
+        ])
+    }
+
   }
   // Update orderedFood
   const handleMinus = async ( orderedFood_id, quantity, type) => {
@@ -164,6 +179,7 @@ const Calculator = ({
     fetchData()
   }
 
+  console.log({orderedFoods})
   // Xử lí trạng thái của món ăn
   // Xử lý khi checkbox được chọn hoặc bỏ chọn
   const handleCheckboxChange = (id) => {
@@ -214,21 +230,51 @@ const Calculator = ({
       })
     }
   }
+  // const handleDeleteByArray = async (status) => {
+  //   if(selectedRows.length < 1) return
+  //   try {
+  //     const res = await fetch(ServerUrl+"/api/orderedFood", {
+  //       method: "DELETE",
+  //       headers: {
+  //         "Content-Type": "application/json"
+  //       },
+  //       body: JSON.stringify({
+  //         selectedRows: selectedRows,
+  //         statusValue: status
+  //       }),
+  //     })
+  //     const data = await res.json()
+  //     if (!res.ok) {
+  //       return toast({
+  //         variant: "destructive",
+  //         title: "Something wrong with update status",
+  //       })
+  //     }
+  //     setOrderedFoods( currenntStatus=>
+  //     currenntStatus.map(item=> selectedRows.includes(item._id) ? {...item, status: status} : item)
+  //     )
+  //   } catch (error) {
+  //     toast({
+  //       variant: "destructive",
+  //       title: "Something wrong with update status",
+  //     })
+  //   }
+  // }
   return (
     <div className="px-3 py-4 max-h-[800px] min-w-[650px] overflow-scroll">
       <Table>
         <TableHeader>
           <TableRow onClick={handleSelectAll}>
-            <TableHead className="min-w-[20px]">
+            {/* <TableHead className="min-w-[20px]">
               <input
                 type="checkbox"
                 onChange={handleSelectAll}
                 checked={selectedRows.length === orderedFoods.length}
               />
-            </TableHead>
+            </TableHead> */}
             <TableHead className="min-w-[200px] text-xl">Tên</TableHead>
             <TableHead className="text-xl">Số lượng</TableHead>
-            <TableHead className="text-xl">Trạng thái</TableHead>
+            {/* <TableHead className="text-xl">Trạng thái</TableHead> */}
             <TableHead className="text-right min-w-[105px] text-xl">
               Thành tiền
             </TableHead>
@@ -241,13 +287,13 @@ const Calculator = ({
               onClick={() => handleCheckboxChange(orderedFood._id)}
               key={orderedFood._id}
             >
-              <TableCell>
+              {/* <TableCell>
                 <input
                   type="checkbox"
                   checked={selectedRows.includes(orderedFood._id)}
                   onChange={() => handleCheckboxChange(orderedFood._id)}
                 />
-              </TableCell>
+              </TableCell> */}
               <TableCell className="font-medium">
                 <div className="flex items-center justify-start gap-2 md:gap-4">
                   <div className="w-16 h-16 flex items-center justify-center overflow-hidden rounded-full">
@@ -289,8 +335,9 @@ const Calculator = ({
                   </button>
                 </div>
               </TableCell>
+              
 
-              <TableCell>
+              {/* <TableCell>
                 <div
                   className={`
                   py-1 px-3 text-white rounded-full
@@ -311,22 +358,24 @@ const Calculator = ({
                    <div className="text-nowrap text-center">Đã hủy</div>
                   }
                 </div>
-              </TableCell>
+              </TableCell> */}
 
               <TableCell className="text-right text-xl">
                 {formatCurrency(
                   orderedFood.quantity * orderedFood.price
                 )}
               </TableCell>
+
+              <TableCell className={'max-w-8'}>
+                <button onClick={()=>handleDeleteOrderedFood(orderedFood._id, orderedFood.type)} className="w-full flex items-center justify-center text-xl text-red-1 hover:scale-110">X</button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
         <TableFooter>
-          <TableRow className="bg-light-bg_2 dark:bg-dark-bg_2">
-            <TableCell>
-
-            </TableCell>
-            <TableCell className="text-right">
+          {/* <TableRow className="bg-light-bg_2 dark:bg-dark-bg_2"> */}
+           
+            {/* <TableCell className="text-right">
               <Select onValueChange={value=> updateOrderedDishesStatus(value)}>
                 <SelectTrigger className="w-full focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none">
                   <SelectValue placeholder="Trạng thái"  className="focus-visible:right-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:border-none"/>
@@ -339,8 +388,16 @@ const Calculator = ({
                   ))}
                 </SelectContent>
               </Select>
+            </TableCell> */}
+            {/* <TableCell>
+            <button 
+            onClick={handleDeleteByArray()}
+            className="w-[40px] h-[40px] rounded-full flex items-center justify-center bg-red-1 hover:bg-green-1 transition-all duration-100 ease-in"
+            >
+              <Trash className="text-white" />
+            </button>
             </TableCell>
-          </TableRow>
+          </TableRow> */}
 
           <TableRow className="bg-light-bg_2 dark:bg-dark-bg_2 w-full">
             <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
@@ -465,7 +522,7 @@ const Calculator = ({
             <TableRow>
               <TableHead className="min-w-[200px] text-xl">Tên</TableHead>
               <TableHead className="text-xl">Số lượng</TableHead>
-              <TableHead className="text-xl">Trạng thái</TableHead>
+              {/* <TableHead className="text-xl">Trạng thái</TableHead> */}
               <TableHead className="text-right min-w-[105px] text-xl">
                 Thành tiền
               </TableHead>
@@ -499,7 +556,7 @@ const Calculator = ({
                   </div>
                 </TableCell>
   
-                <TableCell>
+                {/* <TableCell>
                   <div
                     className={`
                     py-1 px-3 text-white rounded-full
@@ -520,7 +577,7 @@ const Calculator = ({
                      <div className="text-nowrap text-center">Đã hủy</div>
                     }
                   </div>
-                </TableCell>
+                </TableCell> */}
   
                 <TableCell className="text-right text-xl">
                   {formatCurrency(

@@ -16,17 +16,15 @@ import { Textarea } from "@/components/ui/textarea"
 import { useEffect, useState } from "react"
 import ClipLoader from "react-spinners/ClipLoader"
 
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-import { useNavigate, useNavigation } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { ServerUrl } from "@/utilities/utils"
 import { toast } from "@/hooks/use-toast"
 const formSchemaFunc = (maxSeats) =>
   z.object({
-    userName: z.string().min(2).max(50),
-    detailAddress: z.string().min(2).max(50),
-    phoneNumber: z.string().min(8).max(13),
+    userName: z.string().optional(),
+    detailAddress: z.string().optional(),
+    phoneNumber: z.string().optional(),
     guests_count: z
       .number()
       .min(1)
@@ -107,6 +105,8 @@ export default function ReservationForm({
         variant: "destructive",
         title: "Something wrong with reservation form!",
       })
+    } finally {
+     setLoading(false)
     }
   }
   function handleResetForm(e) {
@@ -187,7 +187,7 @@ export default function ReservationForm({
           )}
         />
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name="payment_method"
           render={({ field }) => (
@@ -217,7 +217,7 @@ export default function ReservationForm({
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <div className="flex items-center">
           <Button

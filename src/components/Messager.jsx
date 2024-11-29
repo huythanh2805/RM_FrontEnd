@@ -1,14 +1,15 @@
-import { toast } from "@/hooks/use-toast";
-import { useFetchData } from "@/hooks/useFetchData";
-import { socket } from "@/main";
-import { ServerUrl } from "@/utilities/utils";
-import { AnimatePresence, motion } from "framer-motion";
-import jwtDecode from "jwt-decode";
-import { LucideMinus, SendHorizontal } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { FaFacebookMessenger } from "react-icons/fa";
-import Message from "./Message";
-import { Button } from "./ui/button";
+import React, { useEffect, useRef, useState } from "react"
+import { FaFacebookMessenger } from "react-icons/fa"
+import { motion, AnimatePresence } from "framer-motion"
+import { LucideMinus, SendHorizontal } from "lucide-react"
+import { Input } from "./ui/input"
+import  {jwtDecode}  from "jwt-decode"
+import { useFetchData } from "@/hooks/useFetchData"
+import { toast } from "@/hooks/use-toast"
+import { ServerUrl } from "@/utilities/utils"
+import { Button } from "./ui/button"
+import Message from "./Message"
+import { socket } from "@/main"
 
 const Messager = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,10 +32,11 @@ const Messager = () => {
     visible: { opacity: 1, scale: 1, x: "0%", y: "0%" },
   };
   // Lấy thông tin của người dùng dựa vào Id
-  const { data: userData } = useFetchData(`${ServerUrl}/users/get/v2/${decodedToken?.id}`);
-  useEffect(() => {
-    if (userData) setUser(userData.user);
-  }, [userData, isOpen]);
+  const {data: userData} = useFetchData(`${ServerUrl}/users/get/v2/${decodedToken?.id}`)
+  
+  useEffect(()=>{
+    if(userData) setUser(userData.user)
+  },[userData, isOpen])
   // Đồng bộ dữ liệu socket
   // Join phòng
   useEffect(() => {
@@ -60,9 +62,11 @@ const Messager = () => {
           title: "Something wrong with useFetchData!",
         });
       }
-    };
-    fetData();
-  }, []);
+    }
+    if(decodedToken && decodedToken !== null){
+      fetData()
+    }
+  }, [])
   // nhận tin nhắn
   useEffect(() => {
     const handleReceiveMessage = socket.on("receiveMessage", (mess) => {
@@ -77,25 +81,27 @@ const Messager = () => {
   }, []);
 
   // Update lại nhưng tin nhắn đã xem
-  useEffect(() => {
-    const fetUnseenMessage = async () => {
-      if (isOpen) {
-        await fetch(`${ServerUrl}/api/message/text/seen/${conversationId}/${decodedToken.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-      }
-      const res = await fetch(`${ServerUrl}/api/message/text/seen/${decodedToken.id}/client`, {
-        method: "GET",
-      });
-      const data = await res.json();
-      setUnseenMessage(data.unseenMessageCount);
-    };
-    fetUnseenMessage();
-  }, [messages, isOpen, newMessage]);
-  console.log({ decodedToken });
+  const fetUnseenMessage = async ()=>{
+    if(isOpen){
+     await fetch(`${ServerUrl}/api/message/text/seen/${conversationId}/${decodedToken.id}`, {
+       method: "PUT",
+       headers: {
+        "Content-Type": "application/json"
+       },
+     })
+    }
+    const res = await fetch(`${ServerUrl}/api/message/text/seen/${decodedToken.id}/client`,{
+     method: "GET"
+    })
+    const data = await res.json()
+    setUnseenMessage(data.unseenMessageCount)
+  }
+  useEffect(()=>{
+    if(decodedToken && decodedToken !== null) {
+      fetUnseenMessage()
+    }
+ },[messages, isOpen, newMessage])
+   console.log({decodedToken})
   // Gửi tin nhắn
   const sendMessage = async (e) => {
     e.preventDefault();

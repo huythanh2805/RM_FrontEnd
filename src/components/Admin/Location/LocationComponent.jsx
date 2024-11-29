@@ -127,7 +127,7 @@ export default function LocationComponent(Props) {
                </div>
      }
 
-      <div className="relative grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] auto-rows-max gap-x-11 gap-y-6 rounded-b-2xl bg-light-bg dark:bg-dark-bg overflow-auto px-8 py-2 h-full min-h-[736px] text-light-text dark:text-dark-text">
+      <div className="relative grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] auto-rows-max gap-x-11 gap-y-6 rounded-b-2xl bg-light-bg dark:bg-dark-bg overflow-auto px-8 py-2 h-full min-h-[736px] text-light-text dark:text-dark-text">
        <SortableContext items={tablesId} strategy={rectSortingStrategy}>
          {tables.map((table) => (
            <TableComponent 
@@ -140,7 +140,7 @@ export default function LocationComponent(Props) {
 
          <div
            onClick={() => addNewTable(location._id)}
-           className="min-h-[128px] min-w-[140px] flex items-center justify-center opacity-45 "
+           className="min-h-[128px] min-w-[170px] flex items-center justify-center opacity-45 "
          >
            <button className="w-[50px] h-[50px] flex items-center justify-center rounded-full border border-dashed border-light-primaryColor dark:border-dark-primaryColor">
              <Plus />
