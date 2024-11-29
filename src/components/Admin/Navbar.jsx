@@ -56,6 +56,7 @@ const Navbar = () => {
       console.error("Error updating notification:", error);
     }
     const unreadNotifications = updatedNotifications.filter((notif) => !notif.isRead);
+    navigate("listReser");
   };
 
   const { user } = useProfile();
