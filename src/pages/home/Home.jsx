@@ -17,8 +17,8 @@ const Home = () => {
       <section
         className={`${isBoxed ? "px-0" : ""} relative z-10 bg-white mx-auto`}
       >
-        {/* <ChefChoice/> */}
         <OurStory />
+        <ChefChoice/>
         <ReservationForm />
       </section>
       <ChefProfile className="w-full" />
