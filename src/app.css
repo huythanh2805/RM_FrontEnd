@@ -116,3 +116,46 @@
 .button:hover {
   background-color: #f0f18d;
 }
+
+/* Ẩn mặc định nút điều hướng của react-slick */
+.slick-prev,
+.slick-next {
+  display: none !important;
+}
+
+/* Hiển thị và tùy chỉnh nút điều hướng custom */
+.custom-prev,
+.custom-next {
+  display: block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 24px;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1;
+  border-radius: 50%;
+}
+
+.custom-prev {
+  left: -30px; /* Căn trái */
+}
+
+.custom-next {
+  right: -30px; /* Căn phải */
+}
+
+/* Thêm hiệu ứng hover */
+.custom-prev:hover,
+.custom-next:hover {
+  background-color: rgba(255, 87, 34, 0.8); /* Cam nhạt khi hover */
+}
+
+/* Căn chỉnh chấm điều hướng */
+.slick-dots {
+  bottom: -30px; /* Tăng khoảng cách so với slider */
+}
+
