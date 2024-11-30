@@ -23,6 +23,7 @@ import DishUpdate from "@/pages/dashboard/dish/DishUpdate";
 import EmployeeAdd from "@/pages/dashboard/employee/EmployeeAdd";
 import EmployeeList from "@/pages/dashboard/employee/EmployeeList";
 import EmployeeUpdate from "@/pages/dashboard/employee/EmployeeUpdate";
+import FeedbackList from "@/pages/dashboard/feedback/FeedbackList";
 import LayoutAdmin from "@/pages/dashboard/LayoutAdmin";
 import { ProfileAdmin } from "@/pages/dashboard/Profile";
 import SetComboAdd from "@/pages/dashboard/setCombo/setComboAdd";
@@ -228,6 +229,10 @@ const router = createBrowserRouter([
       {
         path: "bills/:id/detail",
         element: <BillDetail />,
+      },
+      {
+        path: "feedbacks",
+        element: <FeedbackList />,
       },
     ],
   },

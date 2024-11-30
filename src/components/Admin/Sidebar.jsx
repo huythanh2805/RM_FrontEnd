@@ -11,6 +11,8 @@ import {
   DollarSign,
   ChevronDown,
   List,
+  Salad,
+  MessageCircle,
 } from "lucide-react";
 
 import {
@@ -41,12 +43,14 @@ export function AppSidebar() {
     { title: "Bàn", url: "/admin/tables", icon: Table },
     { title: "Nhân viên", url: "/admin/employees", icon: Contact },
     { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
+    { title: "Đánh giá", url: "/admin/feedbacks", icon: MessageCircle },
     { title: "Danh sách đặt bàn", url: "/admin/listReser", icon: List },
   ];
 
   const subItems = [
-    { title: "Combo", url: "/admin/setCombos", icon: Layers },
     { title: "Categories", url: "/admin/categories", icon: Grid },
+    { title: "Dishes", url: "/admin/dishes", icon: Salad },
+    { title: "Combo", url: "/admin/setCombos", icon: Layers },
   ];
 
   return (
