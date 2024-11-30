@@ -58,12 +58,12 @@ const chartConfig = {
   },
 }
 
-export default function ReserVationChart({reservationStatusChart}) {
+export default function ReserVationChart({reservationStatusChart, month, year}) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Biểu đồ đơn đặt bàn</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardDescription>Tháng {month} {year}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="max-h-[350px] w-full">

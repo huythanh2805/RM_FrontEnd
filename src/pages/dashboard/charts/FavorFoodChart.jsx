@@ -51,20 +51,19 @@ const chartConfig = {
   },
 } 
 
-export default function FavorFoodChart({top5Dishes}) {
-//   const totalVisitors = React.useMemo(() => {
-//     return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
-//   }, [])
+export default function FavorFoodChart({top5Dishes, month, year}) {
+  // const totalVisitors = React.useMemo(() => {
+  //   return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
+  // }, [])
  
   const modifiedTop5Dishes = React.useMemo(()=>{
     return top5Dishes.map((item, index)=>({...item, fill: `var(--color-top_${index + 1})`,name: `top_${index+1}`}))
   })
-  console.log({modifiedTop5Dishes})
   return (
-    <Card className="flex flex-col h-full">
+    <Card className="flex flex-col ">
       <CardHeader className="items-center pb-0">
         <CardTitle>5 món ăn bán chạy</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardDescription>Tháng {month} {year}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -84,7 +83,7 @@ export default function FavorFoodChart({top5Dishes}) {
               innerRadius={60}
               strokeWidth={5}
             >
-              {/* <Label
+              <Label
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
@@ -99,30 +98,30 @@ export default function FavorFoodChart({top5Dishes}) {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {top5Dishes[0].quantity}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Top 1
                         </tspan>
                       </text>
                     )
                   }
                 }}
-              /> */}
+              />
             </Pie>
           </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
+      <CardFooter className="flex-col gap-2 text-sm py-4">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          {/* Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+           5 món ăn được yêu thích nhất tháng {month} {year}
         </div>
       </CardFooter>
     </Card>

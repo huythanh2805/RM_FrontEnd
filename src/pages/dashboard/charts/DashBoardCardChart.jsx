@@ -16,14 +16,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-const chartData = [
-  { month: "January", value: 134 },
-  { month: "February", value: 305 },
-  { month: "March", value: 237 },
-  { month: "April", value: 73 },
-  { month: "May", value: 209 },
-  { month: "June", value: 214 },
-]
+// const chartData = [
+//   { day: "January", value: 134 },
+//   { day: "February", value: 305 },
+//   { day: "March", value: 237 },
+//   { day: "April", value: 73 },
+//   { day: "May", value: 209 },
+//   { day: "June", value: 214 },
+// ]
 
 const chartConfig = {
   value: {
@@ -32,13 +32,13 @@ const chartConfig = {
   },
 }
 
-export default function DashBoardCardChart() {
+export default function DashBoardCardChart({modifiedData}) {
   return (
     <div className="w-full h-full">
       <ChartContainer config={chartConfig}>
     <LineChart
       accessibilityLayer
-      data={chartData}
+      data={ modifiedData}
      
     >
       <Line
