@@ -6,6 +6,7 @@ import { useThemeContext } from "@/contexts/ThemeProvider";
 import axios from "axios";
 import { useCart } from "@/contexts/CartProvider";
 import { toast } from "@/hooks/use-toast";
+import Feedback from "../Feedback";
 
 const ProductDetail = () => {
   const { id } = useParams();

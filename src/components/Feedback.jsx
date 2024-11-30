@@ -78,15 +78,14 @@ const Feedback = () => {
       .then((res) => {
         // console.log(res);
         toast({ variant: "success", title: "Đánh giá thành công !" });
+        setComment(""); // reset input
+        setRating(5);
         fetchData();
       })
       .catch((err) => {
         toast({ variant: "destructive", title: "Đánh giá thất bại !" });
         console.log(err);
       });
-
-    setComment(""); // reset input
-    setRating(5);
   };
   return (
     <div class="py-2 relative">
