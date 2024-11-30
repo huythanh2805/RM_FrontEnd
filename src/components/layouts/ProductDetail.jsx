@@ -7,6 +7,7 @@ import axios from "axios";
 import { useCart } from "@/contexts/CartProvider";
 import { toast } from "@/hooks/use-toast";
 import Feedback from "../Feedback";
+import RelatedDishes from "../RelatedDish";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -221,30 +222,11 @@ const ProductDetail = () => {
             {activeTab === "DESCRIPTIONS" ? (
               <p>{dish.desc}</p>
             ) : (
-              // <div>
-              //   {dish.reviews && dish.reviews.length > 0 ? (
-              //     dish.reviews.map((review) => (
-              //       <div key={review.id} className="mb-4 flex items-start">
-              //         <img
-              //           src={review.avatar}
-              //           alt={review.userName}
-              //           className="w-10 h-10 rounded-full object-cover mr-4"
-              //         />
-              //         <div>
-              //           <p className="font-semibold">{review.userName}</p>
-              //           <p>{review.comment}</p>
-              //         </div>
-              //       </div>
-              //     ))
-              //   ) : (
-              //     <p>Chưa có đánh giá cho món này.</p>
-              //   )}
-              // </div>
-
               <Feedback />
             )}
           </div>
         </div>
+        <RelatedDishes dishId={id}/>
       </div>
     </div>
   );
