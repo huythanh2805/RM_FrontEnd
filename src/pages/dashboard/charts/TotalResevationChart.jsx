@@ -31,13 +31,13 @@ const chartConfig = {
   },
 }
 
-export default function TotalResevationChart({sixMonthRevenue}) {
+export default function TotalResevationChart({sixMonthRevenue, month}) {
   return (
     <Card>
       <CardHeader className="items-center pb-4">
-        <CardTitle>Tổng đơn đặt bàn </CardTitle>
+        <CardTitle>Doanh số 6 tháng</CardTitle>
         <CardDescription>
-          Đơn đặt bàn 6 tháng gần đây nhất
+          Doanh số 6 tháng gần tháng {month} nhất
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-0">
@@ -59,10 +59,10 @@ export default function TotalResevationChart({sixMonthRevenue}) {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          {/* Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}
         </div>
         <div className="flex items-center gap-2 leading-none text-muted-foreground">
-          January - June 2024
+          Tháng {month} 2024
         </div>
       </CardFooter>
     </Card>

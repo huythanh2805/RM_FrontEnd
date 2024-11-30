@@ -35,14 +35,13 @@ const chartConfig = {
  
 }
 
-export default function RevenueChart({allBillByMonth}) {
-    console.log(allBillByMonth)
+export default function RevenueChart({allBillByMonth, month, year}) {
   return (
     <Card >
       <CardHeader>
         <CardTitle>Biểu đồ doanh số</CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Biểu hiện doanh số của tháng {month}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -83,10 +82,10 @@ export default function RevenueChart({allBillByMonth}) {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              {/* Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
+              Tháng {month} - {year}
             </div>
           </div>
         </div>
