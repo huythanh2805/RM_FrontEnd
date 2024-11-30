@@ -1,8 +1,7 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import AdminMessager from "@/components/AdminMessager";
 import { AppSidebar } from "@/components/Admin/Sidebar";
+import AdminMessager from "@/components/AdminMessager";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Outlet } from "react-router-dom";
 
 const LayoutAdmin = () => {
   return (
