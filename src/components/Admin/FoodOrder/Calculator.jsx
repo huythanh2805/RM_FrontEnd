@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import { formatCurrency, ServerUrl } from "@/utilities/utils";
 import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 
 const statusOptions = [
   {
@@ -37,10 +38,11 @@ const Calculator = ({
   const [paidMoney, setPaidMoney] = useState(0);
   const [change, setChange] = useState(0);
   const [VAT, setVAT] = useState(5);
-  const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [qrCodeUrl, setQrCodeUrl] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [billId, setBillId] = useState("");
-
+  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const navigate = useNavigate();
   const totalPrice = orderedFoods.reduce((sum, item) => {
     if (item.status === "ISCANCELED") return sum + 0;
     return sum + item.quantity * item.price;
@@ -67,6 +69,10 @@ const Calculator = ({
       if (res.status === 201 && data.message === "Successfully" && setOrderedFoods)
         setOrderedFoods((pre) => [...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id)]);
     }
+  };
+  const handleClose = () => {
+    setPaymentMethod("cash");
+    setQrCodeUrl(null);
   };
   // Update orderedFood
   const handleMinus = async (orderedFood_id, quantity, type) => {
@@ -96,14 +102,17 @@ const Calculator = ({
     router.back();
   };
   const generateQrCodeUrl = (total) => {
-    const bank = "VietinBank";
-    const account = "107883333857";
+    const bank = "MB";
+    const account = "0386426150";
     const template = "compact";
     const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(bank)}&acc=${encodeURIComponent(
       account
-    )}&template=${encodeURIComponent(template)}&amount=${encodeURIComponent(total)}`;
+    )}&template=${encodeURIComponent(template)}&amount=${encodeURIComponent(
+      total
+    )}&des=HDTT%5FGOLDENFORK%5F${reservation_id}`;
     return qrUrl;
   };
+
   const handlePaymentMethodChange = (value) => {
     if (value === "transfer") {
       const qrUrl = generateQrCodeUrl(total);
@@ -112,6 +121,11 @@ const Calculator = ({
       setQrCodeUrl("");
     }
   };
+  const handleMethodChange = (value) => {
+    setPaymentMethod(value);
+    handlePaymentMethodChange(value);
+  };
+
   const handlePayment = async () => {
     if (change < 0) {
       return toast({
@@ -120,7 +134,7 @@ const Calculator = ({
       });
     }
     try {
-      const res = await fetch(`https://9054-27-72-104-190.ngrok-free.app/api/bills`, {
+      const res = await fetch(`https://fc02-116-96-44-27.ngrok-free.app/api/bills`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -151,9 +165,6 @@ const Calculator = ({
     }
   };
 
-  console.log({ orderedFoods });
-  // Xử lí trạng thái của món ăn
-  // Xử lý khi checkbox được chọn hoặc bỏ chọn
   const handleCheckboxChange = (id) => {
     if (selectedRows.includes(id)) {
       setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
@@ -202,6 +213,19 @@ const Calculator = ({
       });
     }
   };
+
+  useEffect(() => {
+    const socket = io("http://localhost:1111");
+
+    socket.on("bank-payment-success", (notification) => {
+      console.log("da thanh toan thanh cong");
+      setIsPaid(true);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <div className="px-3 py-4 max-h-[800px] min-w-[650px] overflow-scroll">
@@ -344,12 +368,12 @@ const Calculator = ({
                     <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
                       Phương thức thanh toán
                     </p>
-                    <select onChange={(e) => handlePaymentMethodChange(e.target.value)}>
+                    <select onChange={(e) => handleMethodChange(e.target.value)}>
                       <option value="cash">Tiền mặt</option>
                       <option value="transfer">Chuyển khoản</option>
                     </select>
                   </div>
-                  {qrCodeUrl && (
+                  {paymentMethod === "transfer" && qrCodeUrl && (
                     <div className="mt-4 text-center">
                       <p>Quét mã QR để thanh toán:</p>
                       <img src={qrCodeUrl} alt="QR code for payment" className="mx-auto" />
@@ -359,21 +383,23 @@ const Calculator = ({
                   <div className="flex items-center justify-end py-2 gap-5 mt-12">
                     <DialogClose asChild>
                       <Button
+                        onClick={handleClose}
                         className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
                     text-white dark:text-white hover:scale-90 transition-all ease-in text-lg"
                       >
                         Đóng
                       </Button>
                     </DialogClose>
-                    <DialogClose asChild>
-                      <Button
-                        onClick={() => handlePayment()}
-                        className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
-                  text-white dark:text-white hover:scale-90 transition-all ease-in text-lg"
-                      >
-                        Thanh toán
-                      </Button>
-                    </DialogClose>
+                    {paymentMethod === "cash" && (
+                      <DialogClose asChild>
+                        <Button
+                          onClick={handlePayment}
+                          className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error text-white dark:text-white hover:scale-90 transition-all ease-in text-lg"
+                        >
+                          Thanh toán
+                        </Button>
+                      </DialogClose>
+                    )}
                   </div>
                 </div>
                 <Table className="max-w-[650px] order-1 hidden xl:block">
@@ -453,6 +479,7 @@ const Calculator = ({
           <div className="flex items-center justify-end py-2 gap-5">
             <DialogClose asChild>
               <Button
+                onClick={() => navigate("/admin/bills")}
                 className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
                 text-white dark:text-white hover:scale-90 transition-all ease-in"
               >
