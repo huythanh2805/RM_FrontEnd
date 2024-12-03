@@ -8,6 +8,7 @@ import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
 import { AiTwotoneFileImage } from "react-icons/ai";
 import Pagination from "@/components/Pagination";
+import Navbar from "@/components/Admin/Navbar";
 
 const SetComboList = () => {
   const [combos, setCombos] = useState([]);
@@ -89,10 +90,11 @@ const SetComboList = () => {
     setCurrentPage(e.selected + 1);
   };
   return (
-    <div className="w-full min-h-screen bg-[#f5f6fa]">
-      <div className="px-5 py-2">
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-[32px] font-semibold">Set Combo</p>
+    <div className="w-full min-h-screen bg-[#f9fafb]">
+      <Navbar />
+      <div className="px-5 py-5">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-[32px] font-semibold">Danh sách combo</p>
           <Link to={"/admin/setCombos/add"}>
             <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition">
               Thêm +
@@ -101,10 +103,10 @@ const SetComboList = () => {
         </div>
 
         {/* Bộ lọc */}
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start mb-4">
           <div className="flex gap-5 items-center">
             {/* Lọc theo giá */}
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between">
               <div className="max-w-sm">
                 <select
                   className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full p-2.5"
@@ -180,17 +182,27 @@ const SetComboList = () => {
           <table className="min-w-full bg-white">
             <thead className="border-b border-[#d5d5d5] text-left text-sl font-semibold text-[#202224] uppercase tracking-wider">
               <tr>
-                <th className="hidden lg:table-cell py-3 px-4 lg:px-6">STT</th>
-                <th className="py-3 px-4 lg:px-6">Tên combo</th>
-                <th className="py-3 px-4 lg:px-6">Hình ảnh</th>
-                <th className="py-3 px-4 lg:px-6">Giá</th>
-                <th className="hidden lg:table-cell py-3 px-4 lg:px-6">
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  STT
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Tên combo
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Hình ảnh
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Giá
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
                   Mô tả
                 </th>
-                <th className="hidden lg:table-cell py-3 px-4 lg:px-6">
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
                   Trạng thái
                 </th>
-                <th className="py-3 px-4 lg:px-6"></th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Hành động
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -200,20 +212,18 @@ const SetComboList = () => {
                     className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
                     key={d._id}
                   >
-                    <td className="hidden lg:table-cell">
-                      <div className="py-3 px-4 lg:px-6 text-sl font-medium text-[#202224]">
-                        {index + 1}
-                      </div>
+                    <td className="py-3 px-6 text-sl font-medium text-gray-800">
+                      {startIndex + index + 1}
                     </td>
-                    <td className="py-3 px-4 lg:px-6 text-sl font-medium text-[#202224] break-words">
+                    <td className="py-3 px-6 text-sl text-gray-800 break-words">
                       <Link
                         to={`/admin/setCombos/${d._id}/detail`}
                         className="hover:underline"
                       >
-                        <span className="hidden lg:block">{d.name}</span>
+                        <span>{d.name}</span>
                       </Link>
                     </td>
-                    <td className="py-3 px-4 lg:px-6 text-sl">
+                    <td className="py-3 px-6 text-sl text-gray-800 break-words">
                       <div className="flex items-center gap-2 lg:gap-4">
                         {d.images && d.images.length > 0 ? (
                           <img
@@ -226,14 +236,14 @@ const SetComboList = () => {
                         )}
                       </div>
                     </td>
-                    <td className="py-3 px-4 lg:px-6 text-sl">
+                    <td className="py-3 px-6 text-sl text-gray-800 break-words">
                       {formatCurrency(d.price)}
                     </td>
-                    <td className="hidden lg:table-cell py-3 px-4 lg:px-6 text-sl">
+                    <td className="py-3 px-6 text-sl text-gray-800 break-words">
                       {d.desc}
                     </td>
 
-                    <td className="hidden lg:table-cell py-3 px-4 lg:px-6 text-sl">
+                    <td className="py-3 px-6 text-sl text-gray-800 break-words">
                       {d.isShow ? (
                         <span className="px-2 py-1 text-sl font-semibold rounded-lg bg-green-100 text-green-800">
                           Hiển thị
@@ -244,15 +254,15 @@ const SetComboList = () => {
                         </span>
                       )}
                     </td>
-                    <td className="py-3 px-4 lg:px-6">
+                    <td className="py-3 px-6 text-sl text-gray-800 break-words">
                       <div className="flex items-center gap-2 lg:gap-3">
                         <Link to={`/admin/setCombos/${d._id}/detail`}>
-                          <div className="hidden lg:block bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl lg:text-sl font-semibold hover:bg-yellow-300 transition">
+                          <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">
                             <FaEye size={18} />
                           </div>
                         </Link>
                         <Link to={`/admin/setCombos/${d._id}/update`}>
-                          <div className="bg-blue-200 text-blue-800 px-2 py-1 rounded-lg text-sl lg:text-sl font-semibold hover:bg-blue-300 transition">
+                          <div className="bg-blue-200 text-blue-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-blue-300 transition">
                             <FaPenToSquare size={18} />
                           </div>
                         </Link>

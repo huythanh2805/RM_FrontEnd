@@ -41,15 +41,15 @@ export function AppSidebar() {
     { title: "Trang chủ", url: "/admin", icon: Home },
     { title: "Tài khoản", url: "/admin/users", icon: User },
     { title: "Bàn", url: "/admin/tables", icon: Table },
-    { title: "Nhân viên", url: "/admin/employees", icon: Contact },
+    // { title: "Nhân viên", url: "/admin/employees", icon: Contact },
     { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
     { title: "Đánh giá", url: "/admin/feedbacks", icon: MessageCircle },
     { title: "Danh sách đặt bàn", url: "/admin/listReser", icon: List },
   ];
 
   const subItems = [
-    { title: "Categories", url: "/admin/categories", icon: Grid },
-    { title: "Dishes", url: "/admin/dishes", icon: Salad },
+    { title: "Danh mục", url: "/admin/categories", icon: Grid },
+    { title: "Món ăn", url: "/admin/dishes", icon: Salad },
     { title: "Combo", url: "/admin/setCombos", icon: Layers },
   ];
 
@@ -90,9 +90,7 @@ export function AppSidebar() {
                     <CollapsibleTrigger className="flex items-center justify-between w-full">
                       <div className="flex items-center gap-3">
                         <Soup className="w-5 h-5 text-gray-800" />
-                        <span className="text-xl font-medium text-gray-800">
-                          Dishes
-                        </span>
+                        <span className="text-xl text-black">Món ăn</span>
                       </div>
 
                       <ChevronDown

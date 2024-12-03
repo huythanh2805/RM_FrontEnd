@@ -78,7 +78,7 @@ export function ReserDataTable({
   }
 
   return (
-    <div className="flex flex-col gap-5 min-w-[1500px]">
+    <div className="flex flex-col gap-5 w-full">
       <div className="w-fit flex items-center">
         <DataTableToolbar table={table} />
         <DatePicker
