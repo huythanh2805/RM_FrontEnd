@@ -52,11 +52,9 @@ const Messager = () => {
           method: "GET",
         });
         const data = await res.json();
-        console.log(data);
         if (data.messages) setMessages(data.messages);
         setConversationId(data.conversationId);
       } catch (error) {
-        console.log(error);
         toast({
           variant: "destructive",
           title: "Something wrong with useFetchData!",
@@ -101,7 +99,6 @@ const Messager = () => {
       fetUnseenMessage()
     }
  },[messages, isOpen, newMessage])
-   console.log({decodedToken})
   // Gửi tin nhắn
   const sendMessage = async (e) => {
     e.preventDefault();

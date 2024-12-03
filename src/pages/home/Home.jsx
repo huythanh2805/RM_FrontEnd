@@ -8,6 +8,8 @@ import Menu from "./Menu";
 import ButtonViewMore from "@/components/ButtonViewMore";
 import ChefProfile from "./ChefProfile";
 import ChefChoice from "./ChefChoice";
+import Testimonial from "./Testimonial";
+import Chefs from "./Chefs";
 const Home = () => {
   const { isBoxed } = useThemeContext();
 
@@ -17,14 +19,17 @@ const Home = () => {
       <section
         className={`${isBoxed ? "px-0" : ""} relative z-10 bg-white mx-auto`}
       >
-        <OurStory />
+        {/* <OurStory />
         <ChefChoice/>
-        <ReservationForm />
-      </section>
+        <ReservationForm /> */}
+      
       <ChefProfile className="w-full" />
       <Menu limit={6} />
       <ButtonViewMore />
+      <Chefs/>
+      <Testimonial/>
       <StatsCounter />
+      </section>
     </>
   );
 };

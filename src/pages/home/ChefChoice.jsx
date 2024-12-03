@@ -14,6 +14,7 @@ import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useThemeContext } from "@/contexts/ThemeProvider";
 import { formatCurrency } from "@/utilities/utils";
+import SectionTitle from "./SectionTitle";
 
 const ChefChoice = () => {
   const { addItem } = useCart();
@@ -87,6 +88,8 @@ const ChefChoice = () => {
           />
         </div>
 
+        {/* <SectionTitle title={'Nổi bật'} /> */}
+
         <div className="max-w-[555px]">
           <Swiper
             direction={"vertical"}
@@ -141,7 +144,7 @@ const ChefChoice = () => {
                       </div>
                     </div>
                     <div className="max-w-[360px] truncate text-nowrap">
-                      {dish.description}
+                      {dish.desc} 
                     </div>
                   </div>
                 </div>

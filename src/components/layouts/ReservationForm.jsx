@@ -199,6 +199,8 @@ const ReservationForm = () => {
                   dateFormat={"dd/MM/yyyy"}
                 />
               </div>
+               {/*  */}
+               <div></div>
               {/* time picker */}
               <div className="relative w-full border border-[#e5e7eb]-1 rounded-md">
                 <IoIosTime className="absolute top-3 left-3 min-h-5 min-w-5 text-gray-400" />

@@ -2,6 +2,7 @@ import ButtonCustome from "@/components/ButtonCustome";
 import { useThemeContext } from "@/contexts/ThemeProvider";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import SectionTitle from "./SectionTitle";
 
 const OurStory = () => {
   const { colorCode } = useThemeContext();
@@ -70,7 +71,8 @@ const OurStory = () => {
       </div>
 
       <div className="w-full lg:w-1/2 lg:pl-8 mt-8 lg:mt-0 flex flex-col items-center">
-        <div
+
+        {/* <div
           className="text-xl font-semibold mb-2 flex justify-center items-center"
           style={{ color: colorCode }}
         >
@@ -83,7 +85,9 @@ const OurStory = () => {
             className="border-t w-12 ml-2"
             style={{ borderColor: colorCode }}
           />
-        </div>
+        </div> */}
+        <SectionTitle title={'Khám phá'} />
+        
         <h2 className="text-5xl font-bold mb-4 text-center">
           Câu Chuyện Của Chúng Tôi
         </h2>
