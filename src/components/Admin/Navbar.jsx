@@ -56,7 +56,7 @@ const Navbar = () => {
   };
   const { user } = useProfile();
   return (
-    <nav className="bg-white p-3 shadow-md flex items-center justify-between">
+    <nav className="bg-white py-3 px-5 shadow-md flex items-center justify-between">
       {alertVisible && (
         <div
           id="alert-border-1"
@@ -106,6 +106,7 @@ const Navbar = () => {
           className="p-3 w-64 rounded-lg bg-gray-100 text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400"
         />
       </div>
+      
       <div className="relative">
         <div className="flex gap-4 items-center">
           {/* Thông báo */}

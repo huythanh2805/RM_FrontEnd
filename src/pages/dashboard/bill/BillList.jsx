@@ -1,3 +1,4 @@
+import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
@@ -37,60 +38,78 @@ const BillList = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#f5f6fa]">
-      <div className="px-5 py-2">
-        <div className="flex items-center justify-between mb-4">
-          <p className="text-3xl font-semibold">Hóa đơn</p>
+    <div className="w-full min-h-screen bg-[#f9fafb]">
+      <Navbar />
+
+      <div className="px-5 py-5">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-3xl font-semibold">Danh sách hóa đơn</p>
         </div>
 
-        <div className="overflow-x-auto rounded-lg border border-[#d5d5d5] bg-white shadow-sm">
+        <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
           <table className="min-w-full bg-white">
             <thead className="border-b border-[#d5d5d5] text-left text-sl font-semibold text-[#202224] uppercase tracking-wider">
               <tr>
-                <th className="py-3 px-4">STT</th>
-                <th className="py-3 px-4">Mã hóa đơn</th>
-                <th className="py-3 px-4">Tên khách hàng</th>
-                <th className="py-3 px-4">Số điện thoại</th>
-                <th className="py-3 px-4">Thời gian đặt bàn</th>
-                <th className="py-3 px-4">Số tiền</th>
-                <th className="py-3 px-4">Trạng thái</th>
-                <th className="py-3 px-4">Chi tiết</th>
+                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                  STT
+                </th>
+                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                  Mã hóa đơn
+                </th>
+                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                  Tên khách hàng
+                </th>
+                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                  Số điện thoại
+                </th>
+                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                  Thời gian đặt bàn
+                </th>
+                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                  Số tiền
+                </th>
+                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                  Trạng thái
+                </th>
+                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                  Chi tiết
+                </th>
               </tr>
             </thead>
             <tbody>
               {currentItems.map((bill, index) => (
                 <tr
                   key={bill._id}
-                  className="bg-white border-b hover:bg-gray-50 transition"
+                  className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
                 >
-                  <td className="py-3 px-4 text-sl font-medium">
+                  <td className="py-3 px-4 text-sl font-medium text-gray-800">
                     <Link to={`/admin/bills/${bill._id}/detail`}>
                       {startIndex + index + 1}
                     </Link>
                   </td>
-                  <td className="py-3 px-4 text-sl font-medium">
+                  <td className="py-3 px-4 text-sl text-gray-800">
                     <Link to={`/admin/bills/${bill._id}/detail`}>
                       {bill._id}
                     </Link>
                   </td>
-                  <td className="py-3 px-4 text-sl">
+                  <td className="py-3 px-4 text-sl text-gray-800">
                     <Link to={`/admin/bills/${bill._id}/detail`}>
                       {bill.reservation_id?.userName}
                     </Link>
                   </td>
-                  <td className="py-3 px-4 text-sl">
+                  <td className="py-3 px-4 text-sl text-gray-800">
                     <Link to={`/admin/bills/${bill._id}/detail`}>
                       {bill.reservation_id?.phoneNumber}
                     </Link>
                   </td>
-                  <td className="py-3 px-4 text-sl">
+                  <td className="py-3 px-4 text-sl text-gray-800">
                     <Link to={`/admin/bills/${bill._id}/detail`}>
                       {new Date(bill.reservation_id?.startTime).toLocaleString(
                         "vi-VN"
                       )}
                     </Link>
                   </td>
-                  <td className="py-3 px-4 text-sl">
+                  <td className="py-3 px-4 text-sl text-gray-800">
                     <Link to={`/admin/bills/${bill._id}/detail`}>
                       {formatCurrency(
                         bill.original_money +
@@ -98,7 +117,7 @@ const BillList = () => {
                       )}
                     </Link>
                   </td>
-                  <td className="py-3 px-4 text-sl">
+                  <td className="py-3 px-4 text-sl text-gray-800">
                     <Link to={`/admin/bills/${bill._id}/detail`}>
                       <span
                         className={`px-2 py-1 text-sl font-semibold rounded-lg ${
@@ -113,14 +132,14 @@ const BillList = () => {
                       </span>
                     </Link>
                   </td>
-                  <td className="py-3 px-4 text-sl cursor-pointer">
-                    <div className="flex items-center gap-2 lg:gap-3">
+                  <td className="py-3 px-4 text-sl text-gray-800 cursor-pointer">
+                    <div className="flex items-center gap-3">
                       <Link to={`/admin/bills/${bill._id}/detail`}>
-                        <div className="hidden lg:block bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl lg:text-sl font-semibold hover:bg-yellow-300 transition">
+                        <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">
                           <FaEye size={18} />
                         </div>
                       </Link>
-                      <div className="bg-red-200 text-red-800 px-2 py-1 rounded-lg cursor-pointer text-sl lg:text-sl font-semibold hover:bg-red-300 transition">
+                      <div className="bg-red-200 text-red-800 px-2 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-red-300 transition">
                         <FaRegTrashCan size={18} />
                       </div>
                     </div>

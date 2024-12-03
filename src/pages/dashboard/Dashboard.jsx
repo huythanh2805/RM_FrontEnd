@@ -16,18 +16,18 @@ import { formatCurrency, ServerUrl } from "@/utilities/utils";
 import { TbTruckDelivery } from "react-icons/tb";
 const Dashboard = () => {
   const [dataProduct, setDataProduct] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date())
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
-  const [allBillByMonth, setAllBillByMonth] = useState([])
-  const [top5Dishes, setTop5Dishes] = useState([])
-  const [sixMonthRevenue, setSixMonthRevenue] = useState([])
-  const [reservationStatusChart, setReservationStatusChart] = useState([])
-  
-  const [revenueCard, setRevenueCard] = useState(0)
-  const [totalReserCard, setToltalReserCard] = useState(0)
-  const [canceledReserCard, setCanceledReserCard] = useState(0)
-  const [successedReserCard, setSuccessedReserCard] = useState(0)
- console.log({reservationStatusChart})
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [allBillByMonth, setAllBillByMonth] = useState([]);
+  const [top5Dishes, setTop5Dishes] = useState([]);
+  const [sixMonthRevenue, setSixMonthRevenue] = useState([]);
+  const [reservationStatusChart, setReservationStatusChart] = useState([]);
+
+  const [revenueCard, setRevenueCard] = useState(0);
+  const [totalReserCard, setToltalReserCard] = useState(0);
+  const [canceledReserCard, setCanceledReserCard] = useState(0);
+  const [successedReserCard, setSuccessedReserCard] = useState(0);
+  console.log({ reservationStatusChart });
   // Lấy dữ liệu món ăn
   useEffect(() => {
     axios
@@ -55,96 +55,111 @@ const Dashboard = () => {
   const clientCount = dataUser.filter(
     (users) => users.role === "CLIENT"
   ).length;
-    // Get revenue
-    useEffect(() => {
-      if(!selectedMonth) return
-      const fetData = async () => {
-        const res = await fetch(`${ServerUrl}/api/dashboard/revenue/${selectedMonth}/${selectedDate.getFullYear()}` , {
-          method: "GET"
-        })
-        const data = await res.json() 
-        if (!res.ok) {
-          toast({
-            variant: "destructive",
-            title: "Can't get any data for ordered dishes!",
-          })
+  // Get revenue
+  useEffect(() => {
+    if (!selectedMonth) return;
+    const fetData = async () => {
+      const res = await fetch(
+        `${ServerUrl}/api/dashboard/revenue/${selectedMonth}/${selectedDate.getFullYear()}`,
+        {
+          method: "GET",
         }
-       setAllBillByMonth(data)
-       const total = data.reduce((sum, bill)=> sum += bill.total_money , 0)
-       setRevenueCard(total)
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        toast({
+          variant: "destructive",
+          title: "Can't get any data for ordered dishes!",
+        });
       }
-      fetData()
-    }, [selectedDate, selectedMonth])
-    // Get top 5 dishes
-    useEffect(() => {
-      if(!selectedMonth) return
-      const fetData = async () => {
-        const res = await fetch(`${ServerUrl}/api/dashboard/top5/${selectedMonth}/${selectedDate.getFullYear()}` , {
-          method: "GET"
-        })
-        const data = await res.json() 
-        if (!res.ok) {
-          toast({
-            variant: "destructive",
-            title: "Can't get any data for ordered dishes!",
-          })
+      setAllBillByMonth(data);
+      const total = data.reduce((sum, bill) => (sum += bill.total_money), 0);
+      setRevenueCard(total);
+    };
+    fetData();
+  }, [selectedDate, selectedMonth]);
+  // Get top 5 dishes
+  useEffect(() => {
+    if (!selectedMonth) return;
+    const fetData = async () => {
+      const res = await fetch(
+        `${ServerUrl}/api/dashboard/top5/${selectedMonth}/${selectedDate.getFullYear()}`,
+        {
+          method: "GET",
         }
-       setTop5Dishes(data)
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        toast({
+          variant: "destructive",
+          title: "Can't get any data for ordered dishes!",
+        });
       }
-      fetData()
-    }, [selectedDate, selectedMonth])
-    // Get top 6 months revenue
-    useEffect(() => {
-      if(!selectedMonth) return
-      const fetData = async () => {
-        const res = await fetch(`${ServerUrl}/api/dashboard/revenue/6months/${selectedMonth}/${selectedDate.getFullYear()}` , {
-          method: "GET"
-        })
-        const data = await res.json() 
-        if (!res.ok) {
-          toast({
-            variant: "destructive",
-            title: "Can't get any data for ordered dishes!",
-          })
+      setTop5Dishes(data);
+    };
+    fetData();
+  }, [selectedDate, selectedMonth]);
+  // Get top 6 months revenue
+  useEffect(() => {
+    if (!selectedMonth) return;
+    const fetData = async () => {
+      const res = await fetch(
+        `${ServerUrl}/api/dashboard/revenue/6months/${selectedMonth}/${selectedDate.getFullYear()}`,
+        {
+          method: "GET",
         }
-       setSixMonthRevenue(data)
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        toast({
+          variant: "destructive",
+          title: "Can't get any data for ordered dishes!",
+        });
       }
-      fetData()
-    }, [selectedDate, selectedMonth])
-    // Get reservation Status chart
-    useEffect(() => {
-      if(!selectedMonth) return
-      const fetData = async () => {
-        const res = await fetch(`${ServerUrl}/api/dashboard/reservationState/${selectedMonth}/${selectedDate.getFullYear()}` , {
-          method: "GET"
-        })
-        const data = await res.json() 
-        if (!res.ok) {
-          toast({
-            variant: "destructive",
-            title: "Can't get any data for ordered dishes!",
-          })
+      setSixMonthRevenue(data);
+    };
+    fetData();
+  }, [selectedDate, selectedMonth]);
+  // Get reservation Status chart
+  useEffect(() => {
+    if (!selectedMonth) return;
+    const fetData = async () => {
+      const res = await fetch(
+        `${ServerUrl}/api/dashboard/reservationState/${selectedMonth}/${selectedDate.getFullYear()}`,
+        {
+          method: "GET",
         }
-       setReservationStatusChart(data)
-       setCanceledReserCard(data.reduce((sum, item)=> (sum += item.canceled), 0))
-       setSuccessedReserCard(data.reduce((sum, item)=> (sum += item.completed), 0))
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        toast({
+          variant: "destructive",
+          title: "Can't get any data for ordered dishes!",
+        });
       }
-      fetData()
-    }, [selectedDate, selectedMonth])
+      setReservationStatusChart(data);
+      setCanceledReserCard(
+        data.reduce((sum, item) => (sum += item.canceled), 0)
+      );
+      setSuccessedReserCard(
+        data.reduce((sum, item) => (sum += item.completed), 0)
+      );
+    };
+    fetData();
+  }, [selectedDate, selectedMonth]);
   return (
     <div className="w-full min-h-screen bg-gray-50">
-      <div className="px-5 py-4">
-        <Navbar />
-      </div>
-      <div className="px-5 py-4">
+      <Navbar />
+
+      <div className="px-5 py-5">
         <div className="w-full flex items-center justify-between">
           <p className="text-3xl font-semibold text-gray-800">Thống Kê</p>
 
-          <DashBoardControl 
-           selectedDate={selectedDate}
-           setSelectedDate={setSelectedDate}
-           selectedMonth={selectedMonth}
-           setSelectedMonth={setSelectedMonth}
+          <DashBoardControl
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            selectedMonth={selectedMonth}
+            setSelectedMonth={setSelectedMonth}
           />
         </div>
 
@@ -158,19 +173,19 @@ const Dashboard = () => {
               </div>
             }
             data={allBillByMonth}
-            type={'revenue'}
+            type={"revenue"}
             month={selectedDate}
           />
           <DashBoardCard
             title={"Đơn đặt bàn"}
-            value={(successedReserCard + canceledReserCard)}
+            value={successedReserCard + canceledReserCard}
             icon={
               <div className="flex h-10 w-10 rounded-full bg-gradient-to-r  from-purple-400 to-pink-500 p-3">
-                <FaCalculator   size={18} color="white" />
+                <FaCalculator size={18} color="white" />
               </div>
             }
             data={reservationStatusChart}
-            type={'toalReser'}
+            type={"toalReser"}
             month={selectedDate}
           />
           <DashBoardCard
@@ -182,7 +197,7 @@ const Dashboard = () => {
               </div>
             }
             data={reservationStatusChart}
-            type={'successReser'}
+            type={"successReser"}
             month={selectedDate}
           />
           <DashBoardCard
@@ -190,32 +205,48 @@ const Dashboard = () => {
             value={canceledReserCard}
             icon={
               <div className="flex h-10 w-10 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 p-3">
-                <FaSyncAlt  size={18} color="white" />
+                <FaSyncAlt size={18} color="white" />
               </div>
             }
             data={reservationStatusChart}
-            type={'canceledReser'}
+            type={"canceledReser"}
             month={selectedDate}
           />
         </div>
 
         <div class="grid grid-cols-4 gap-4">
           <div class="col-span-3 ">
-            <RevenueChart allBillByMonth={allBillByMonth} month={selectedMonth} year={selectedDate.getFullYear()}/>
+            <RevenueChart
+              allBillByMonth={allBillByMonth}
+              month={selectedMonth}
+              year={selectedDate.getFullYear()}
+            />
           </div>
           <div class="col-span-1">
-            <TotalResevationChart sixMonthRevenue={sixMonthRevenue} month={selectedMonth} year={selectedDate.getFullYear()}/>
+            <TotalResevationChart
+              sixMonthRevenue={sixMonthRevenue}
+              month={selectedMonth}
+              year={selectedDate.getFullYear()}
+            />
           </div>
           <div class="col-span-1 ">
-          <FavorFoodChart top5Dishes={top5Dishes} month={selectedMonth} year={selectedDate.getFullYear()} />
+            <FavorFoodChart
+              top5Dishes={top5Dishes}
+              month={selectedMonth}
+              year={selectedDate.getFullYear()}
+            />
           </div>
           <div class="col-span-3">
-            <ReserVationChart reservationStatusChart={reservationStatusChart} month={selectedMonth} year={selectedDate.getFullYear()} />
+            <ReserVationChart
+              reservationStatusChart={reservationStatusChart}
+              month={selectedMonth}
+              year={selectedDate.getFullYear()}
+            />
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export default Dashboard;
