@@ -8,6 +8,7 @@ import Menu from "./Menu";
 import ButtonViewMore from "@/components/ButtonViewMore";
 import ChefProfile from "./ChefProfile";
 import ChefChoice from "./ChefChoice";
+import ContactUs from "./ContactUs";
 const Home = () => {
   const { isBoxed } = useThemeContext();
 
@@ -25,6 +26,7 @@ const Home = () => {
       <Menu limit={6} />
       <ButtonViewMore />
       <StatsCounter />
+      <ContactUs/>
     </>
   );
 };
