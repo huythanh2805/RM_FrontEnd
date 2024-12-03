@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .swiper-button-next:after, .swiper-rtl .swiper-button-prev:after {
   display: none
 }

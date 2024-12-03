@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Rancho&display=swap');
 * {
   scroll-behavior: smooth;
 }
@@ -24,6 +25,13 @@
 .recharts-surface{
   overflow: visible;
 }
+
+.rancho {
+  font-family: "Rancho", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 * {
   font-family: "Alegreya", serif; /* Đổi từ Poppins sang Alegreya */
   font-weight: 400;

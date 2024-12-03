@@ -5,6 +5,7 @@
   import { useCart } from "@/contexts/CartProvider";
   import MenuItem from "../MenuItem";
 import { toast } from "@/hooks/use-toast";
+import SectionTitle from "./SectionTitle";
 
   const Menu = ({ limit }) => {
     const { colorCode } = useThemeContext();
@@ -125,7 +126,7 @@ import { toast } from "@/hooks/use-toast";
           className="absolute right-0 transform translate-x-[40%] translate-y-[-2%] w-40 h-40 sm:w-auto sm:h-auto hidden lg:block"
         />
 
-        {!isMenuPage && (
+        {/* {!isMenuPage && (
           <div
             className="text-xl font-semibold mb-2 mt-8 flex justify-center items-center"
             style={{ color: colorCode }}
@@ -140,7 +141,8 @@ import { toast } from "@/hooks/use-toast";
               style={{ borderColor: colorCode }}
             />
           </div>
-        )}
+        )} */}
+        <SectionTitle title={'Thực đơn'}  desc={"Thực đơn hôm nay"} />
 
         {/* Bộ lọc danh mục */}
         <div className="flex flex-wrap justify-center items-center gap-8 mt-10 sm:flex-row sm:justify-center sm:gap-6 md:gap-8">
