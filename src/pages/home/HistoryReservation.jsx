@@ -18,48 +18,48 @@ export const HistoryReservation = () => {
   });
 
   // Mutation để hủy đặt bàn
- const [isCanceling, setIsCanceling] = useState(false);
+  const [isCanceling, setIsCanceling] = useState(false);
 
- const mutation = useMutation(
-   async (reservationId) => {
-     setIsCanceling(true); // Bắt đầu hủy
-     const response = await axios.put(
-       `http://localhost:1111/api/reservations/cancel/${reservationId}`,
-       {},
-       {
-         headers: {
-           "Content-Type": "application/json",
-         },
-       }
-     );
-     return response.data;
-   },
-   {
-     onSuccess: (data) => {
-       alert(data.message);
-       setIsCanceling(false); // Kết thúc hủy
-     },
-     onError: (error) => {
-       setIsCanceling(false); // Kết thúc hủy
-       if (error.response && error.response.data) {
-         alert(error.response.data.message || "Đã xảy ra lỗi khi hủy đơn hàng.");
-       } else {
-         alert("Đã xảy ra lỗi khi hủy đơn hàng.");
-       }
-     },
-   }
- );
+  const mutation = useMutation(
+    async (reservationId) => {
+      setIsCanceling(true); // Bắt đầu hủy
+      const response = await axios.put(
+        `http://localhost:1111/api/reservations/cancel/${reservationId}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    },
+    {
+      onSuccess: (data) => {
+        alert(data.message);
+        setIsCanceling(false); // Kết thúc hủy
+      },
+      onError: (error) => {
+        setIsCanceling(false); // Kết thúc hủy
+        if (error.response && error.response.data) {
+          alert(error.response.data.message || "Đã xảy ra lỗi khi hủy đơn hàng.");
+        } else {
+          alert("Đã xảy ra lỗi khi hủy đơn hàng.");
+        }
+      },
+    }
+  );
 
- const handleCancelReservation = (reservationId) => {
-   if (isCanceling) {
-     alert("Đang hủy đơn hàng, vui lòng đợi.");
-     return;
-   }
+  const handleCancelReservation = (reservationId) => {
+    if (isCanceling) {
+      alert("Đang hủy đơn hàng, vui lòng đợi.");
+      return;
+    }
 
-   if (window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?")) {
-     mutation.mutate(reservationId);
-   }
- };
+    if (window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?")) {
+      mutation.mutate(reservationId);
+    }
+  };
 
   // Chuyển đổi trạng thái sang tiếng Việt
   const getStatusInVietnamese = (status) => {
@@ -82,13 +82,13 @@ export const HistoryReservation = () => {
   return (
     <div>
       {/* Banner */}
-      <div className="relative w-full h-[400px] overflow-hidden">
+      <div className="relative w-full h-[200px] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('/imgs/pagetitle-reservation.jpg')", // Đảm bảo đường dẫn đúng
-            backgroundAttachment: "fixed", // Đảm bảo nó luôn bám vào màn hình
-            filter: "brightness(0.7)", // Áp dụng bộ lọc cho độ sáng
+            backgroundImage: "url('/imgs/pagetitle-reservation.jpg')",
+            backgroundAttachment: "fixed",
+            filter: "brightness(0.7)",
           }}
         ></div>
         <div className="absolute inset-0 bg-black opacity-30"></div>
