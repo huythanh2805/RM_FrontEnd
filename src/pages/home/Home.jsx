@@ -8,6 +8,7 @@ import Menu from "./Menu";
 import ButtonViewMore from "@/components/ButtonViewMore";
 import ChefProfile from "./ChefProfile";
 import ChefChoice from "./ChefChoice";
+import Testimonial from "./Testimonial";
 const Home = () => {
   const { isBoxed } = useThemeContext();
 
@@ -24,6 +25,7 @@ const Home = () => {
       <ChefProfile className="w-full" />
       <Menu limit={6} />
       <ButtonViewMore />
+      <Testimonial/>
       <StatsCounter />
     </>
   );

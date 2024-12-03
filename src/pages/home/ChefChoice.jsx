@@ -141,7 +141,7 @@ const ChefChoice = () => {
                       </div>
                     </div>
                     <div className="max-w-[360px] truncate text-nowrap">
-                      {dish.description}
+                      {dish.desc} 
                     </div>
                   </div>
                 </div>
