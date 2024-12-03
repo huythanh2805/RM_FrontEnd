@@ -85,7 +85,7 @@ import SectionTitle from "./SectionTitle";
     return (
       <div className="w-full relative">
         {isMenuPage && (
-          <div className="relative w-full h-[400px] overflow-hidden">
+          <div className="relative w-full h-[200px] overflow-hidden">
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
@@ -103,8 +103,8 @@ import SectionTitle from "./SectionTitle";
                 transition: "opacity 0.3s, transform 0.3s",
               }}
             >
-              <h1 className="text-5xl md:text-4xl sm:text-3xl font-bold">THỰC ĐƠN</h1>
-              <p className="text-4xl md:text-xl sm:text-xl mt-4 flex items-center justify-center">
+              <h1 className="text-4xl md:text-3xl sm:text-3xl font-bold">THỰC ĐƠN</h1>
+              <p className="text-3xl md:text-[20px] sm:text-[15px] mt-4 flex items-center justify-center">
                 <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
                 <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
                 <span className="ml-4">Những món ăn đa dạng đang chờ bạn đến thưởng thức</span>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useThemeContext } from "@/contexts/ThemeProvider";
+import { formatCurrency } from "@/utilities/utils";
 
 const RelatedDishes = ({ dishId }) => {
   const [relatedDishes, setRelatedDishes] = useState([]);
@@ -36,32 +37,31 @@ const RelatedDishes = ({ dishId }) => {
               className="border-t w-12 mr-2"
               style={{ borderColor: colorCode }}
             />
-            MÓN ĂN LIÊN QUAN
+            GỢI Ý MÓN ĂN
             <div
               className="border-t w-12 ml-2"
               style={{ borderColor: colorCode }}
             />
           </div>
 
-      {/* Container hiển thị sản phẩm */}
       <div className="flex justify-center items-center gap-4 mt-10">
         {relatedDishes.map((dish) => (
           <div
             key={dish._id}
-            className="dish-card shadow-md rounded-lg overflow-hidden w-[300px]"
+            className="dish-card shadow-md rounded-md overflow-hidden w-[300px]"
           >
             <Link to={`/dishes/${dish._id}`}>
               <img
                 src={dish.images[0] || "default-image.jpg"}
                 alt={dish.name}
-                className="w-full h-48 object-cover"
+                className="w-full h-[250px] object-cover"
               />
               <div className="p-4 text-center">
                 <h3 className="text-lg font-semibold text-gray-700">
                   {dish.name}
                 </h3>
-                <p className="text-orange-500 font-bold mt-2">
-                  {dish.price}₫
+                <p className="text-orange-500 font-bold text-[20px] mt-2">
+                  {formatCurrency(dish.price)}
                 </p>
               </div>
             </Link>

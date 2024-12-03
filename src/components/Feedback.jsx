@@ -92,7 +92,7 @@ const Feedback = () => {
       <div class="w-full max-w-7xl px-4 mx-auto">
         <div class="w-full flex-col justify-start items-start gap-7 inline-flex">
           <h2 class="w-full text-gray-900 text-4xl font-bold font-manrope leading-normal">
-            Đánh giá
+            Nhận xét
           </h2>
           {/* Input */}
           <div class="w-full flex flex-col justify-start items-start gap-5">
@@ -116,8 +116,8 @@ const Feedback = () => {
               ></textarea>
             </div>
             <div class="w-full flex justify-between">
-              <div className="flex gap-4 items-center">
-                <p>Chất lượng sản phẩm: </p>
+              <div className="flex gap-4 items-center text-lg">
+                <p className="font-semibold">Đánh giá món ăn: </p>
                 <ReactStars
                   count={5}
                   size={30}
@@ -138,7 +138,7 @@ const Feedback = () => {
           </div>
 
           {/* List */}
-          <div class="w-full flex-col justify-start items-start gap-8 flex">
+          <div class="w-full flex-col justify-start items-start gap-8 flex mt-16">
             {dataComment?.length > 0 ? (
               dataComment.map((item) => (
                 <div
@@ -159,7 +159,7 @@ const Feedback = () => {
                     <div class="w-full justify-start items-start flex-col flex gap-1">
                       <div class="w-full justify-between items-start gap-1 inline-flex">
                         <div>
-                          <h5 class="text-gray-900 text-sm font-semibold leading-snug">
+                          <h5 class="text-gray-900 text-lg font-semibold leading-snug">
                             {item.user_id?._id === userId
                               ? "Bạn"
                               : item.user_id?.userName
@@ -175,11 +175,11 @@ const Feedback = () => {
                             activeColor="#ffd700"
                           />
                         </div>
-                        <span class="text-right text-gray-500 text-xs font-normal leading-5">
+                        <span class="text-right text-gray-500 text-lg font-normal leading-5">
                           {new Date(item.createdAt).toLocaleDateString("vi-VN")}
                         </span>
                       </div>
-                      <h5 class="text-gray-800 text-sm font-normal leading-snug">
+                      <h5 class="text-gray-800 text-lg font-normal leading-snug">
                         {item.comment}
                       </h5>
                     </div>

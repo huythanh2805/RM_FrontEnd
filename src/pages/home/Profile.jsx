@@ -115,7 +115,7 @@ export const Profile = () => {
         <div className="lg:w-[88%] md:w-[80%] sm:w-[88%] xs:w-full mx-auto shadow-2xl p-4 rounded-xl h-fit self-center dark:bg-gray-800/40">
           <div>
             <div className="flex items-center justify-between w-full my-6">
-              <h1 className="lg:text-3xl md:text-2xl sm:text-xl xs:text-xl font-serif font-extrabold dark:text-white">
+              <h1 className="lg:text-3xl md:text-2xl sm:text-xl xs:text-xl font-bold dark:text-white">
                 Thông tin cá nhân
               </h1>
               <Dialog open={isDialogOpen} onOpenChange={(open) => setIsDialogOpen(open)}>
@@ -132,18 +132,18 @@ export const Profile = () => {
                     <DialogTitle className="text-2xl">Đổi mật khẩu</DialogTitle>
                   </DialogHeader>
                   <div className="grid gap-4">
-                    <label className="dark:text-gray-300">Nhập mật khẩu cũ</label>
+                    <label className="dark:text-gray-300 font-semibold">Mật khẩu hiện tại</label>
                     <input
                       type="password"
-                      placeholder="Mật khẩu cũ"
+                      placeholder="Nhập mật khẩu hiện tại..."
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
                       className="p-4 w-full border-2 rounded-lg dark:bg-gray-800 dark:text-gray-200"
                     />
-                    <label className="dark:text-gray-300">Nhập mật khẩu mới</label>
+                    <label className="dark:text-gray-300 font-semibold">Mật khẩu mới</label>
                     <input
                       type="password"
-                      placeholder="Mật khẩu mới"
+                      placeholder="Nhập mật khẩu mới..."
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       className="p-4 w-full border-2 rounded-lg dark:bg-gray-800 dark:text-gray-200"
@@ -206,7 +206,7 @@ export const Profile = () => {
               <h2 className="text-center font-semibold dark:text-gray-300 mt-11">Tải lên ảnh hồ sơ</h2>
               <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
                 <div className="w-full mb-4 mt-6">
-                  <label className="mb-2 dark:text-gray-300">Tên</label>
+                  <label className="mb-2 dark:text-gray-300 font-semibold">Tên</label>
                   <input
                     type="text"
                     name="userName"
@@ -218,7 +218,7 @@ export const Profile = () => {
                   />
                 </div>
                 <div className="w-full mb-4 lg:mt-6">
-                  <label className="dark:text-gray-300">Số điện thoại</label>
+                  <label className="dark:text-gray-300 font-semibold">Số điện thoại</label>
                   <input
                     type="text"
                     name="phoneNumber"
@@ -232,7 +232,7 @@ export const Profile = () => {
               </div>
               <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
                 <div className="w-full mb-4">
-                  <label className="mb-2 dark:text-gray-300">Địa chỉ</label>
+                  <label className="mb-2 dark:text-gray-300 font-semibold">Địa chỉ</label>
                   <input
                     type="text"
                     name="address"
@@ -244,7 +244,7 @@ export const Profile = () => {
                   />
                 </div>
                 <div className="w-full mb-4">
-                  <label className="dark:text-gray-300">Email</label>
+                  <label className="dark:text-gray-300 font-semibold">Email</label>
                   <input
                     type="text"
                     name="email"
