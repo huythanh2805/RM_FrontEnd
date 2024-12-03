@@ -53,7 +53,7 @@ const Header = () => {
         <div className="flex flex-row justify-between items-center p-4">
           <Link to="/" className="flex flex-row items-center cursor-pointer">
             <img src="/imgs/logoGolden.webp" alt="Golden Fork Logo" className="h-16 w-16 object-cover rounded-full" />
-            <h1 className="text-xl font-semibold font-serif">Golden Fork</h1>
+            <h1 className="text-[35px] font-semibold dancing">Golden Fork</h1>
           </Link>
 
           <nav className="hidden md:flex flex-row items-center text-lg font-medium gap-8">

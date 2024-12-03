@@ -103,7 +103,7 @@ import SectionTitle from "./SectionTitle";
                 transition: "opacity 0.3s, transform 0.3s",
               }}
             >
-              <h1 className="text-4xl md:text-3xl sm:text-3xl font-bold">THỰC ĐƠN</h1>
+              <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">Thực Đơn</h1>
               <p className="text-3xl md:text-[20px] sm:text-[15px] mt-4 flex items-center justify-center">
                 <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
                 <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
@@ -142,7 +142,7 @@ import SectionTitle from "./SectionTitle";
             />
           </div>
         )} */}
-        <SectionTitle title={'Thực đơn'}  desc={"Thực đơn hôm nay"} />
+        {!isMenuPage && (<SectionTitle title={'THỰC ĐƠN'}  desc={"Thực đơn hôm nay"} />)}
 
         {/* Bộ lọc danh mục */}
         <div className="flex flex-wrap justify-center items-center gap-8 mt-10 sm:flex-row sm:justify-center sm:gap-6 md:gap-8">

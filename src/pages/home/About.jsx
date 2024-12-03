@@ -86,8 +86,8 @@ const About = () => {
             transition: "opacity 0.3s, transform 0.3s",
           }}
         >
-          <h1 className="text-4xl md:text-3xl sm:text-3xl font-bold">
-            GIỚI THIỆU
+          <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">
+            Giới Thiệu
           </h1>
           <p className="text-3xl md:text-[20px] sm:text-[15px] mt-4 flex items-center justify-center">
             <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>

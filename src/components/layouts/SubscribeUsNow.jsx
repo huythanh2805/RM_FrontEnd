@@ -19,7 +19,7 @@ const SubscribeUsNow = () => {
                 className="absolute hidden lg:block w-[280px] ml-[500px] object-cover" 
             />
             <div className="flex flex-col items-center justify-center z-10 max-w-full sm:max-w-md">
-                <h2 className="text-2xl font-bold mb-2 text-center">Đăng Ký Với Chúng Tôi Ngay</h2>
+                <h2 className="text-[39px] dancing mb-2 text-center">Đăng ký với chúng tôi ngay</h2>
                 <span className="mb-4 text-gray-700 text-center">Nhận thêm tin tức và món ăn ngon mỗi ngày từ chúng tôi</span>
                 <div className="flex items-center border rounded-md overflow-hidden w-full max-w-[400px]">
                     <input
