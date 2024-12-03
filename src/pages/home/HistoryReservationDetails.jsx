@@ -32,7 +32,7 @@ export const HistoryReservationDetail = () => {
   const formattedTime = date.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
   return (
     <div>
-      <div className="relative w-full h-[400px] overflow-hidden">
+      <div className="relative w-full h-[200px] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
