@@ -14,6 +14,7 @@ import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useThemeContext } from "@/contexts/ThemeProvider";
 import { formatCurrency } from "@/utilities/utils";
+import SectionTitle from "./SectionTitle";
 
 const ChefChoice = () => {
   const { addItem } = useCart();
@@ -86,6 +87,8 @@ const ChefChoice = () => {
             style={{ borderColor: colorCode }}
           />
         </div>
+
+        {/* <SectionTitle title={'Nổi bật'} /> */}
 
         <div className="max-w-[555px]">
           <Swiper

@@ -11,6 +11,7 @@ import 'swiper/css/thumbs';
 
 import { FreeMode, Thumbs } from 'swiper/modules';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
+import SectionTitle from './SectionTitle';
 const testimonials = [
   {
     image: 'https://swiperjs.com/demos/images/nature-1.jpg',
@@ -48,20 +49,8 @@ function Testimonial() {
   const [secondSwiper, setSecondSwiper] = useState(null);
   return (
     <div className='container'>
-      <div className="py-4 md:py-6 flex items-center justify-center">
-        <div className="min-w-fit flex flex-col place-items-center">
-          <div className="w-full flex items-center justify-center">
-            <div className="h-[1px] relative w-full bg-orange-1 flex-1">
-              <span className="w-1 h-1 rounded-full bg-orange-1 absolute top-0 left-0 translate-y-[-50%]"></span>
-            </div>
-            <h5 className="text-[28px] text-orange-1 mx-1">Testimonial </h5>
-            <div className="relative h-[1px] w-full bg-orange-1 flex-1">
-              <span className="w-1 h-1 rounded-full bg-orange-1 absolute top-0 right-0 translate-y-[-50%]"></span>
-            </div>
-          </div>
-          <h5 className="text-[35px] rancho">Nhận xét của khách</h5>
-        </div>
-      </div>
+        <SectionTitle title={'Đánh giá'} desc={'Nhận xét của khách'} />
+        
 
       <div className="max-w-[500px] mx-auto">
         <Swiper
