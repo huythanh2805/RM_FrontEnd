@@ -101,7 +101,7 @@ const ReservationForm = () => {
 
   return (
     <div className="w-full">
-      <div
+      {/* <div
         className="text-xl font-semibold mb-2 flex justify-center items-center"
         style={{ color: colorCode }}
       >
@@ -114,7 +114,7 @@ const ReservationForm = () => {
           className="border-t w-12 ml-2"
           style={{ borderColor: colorCode }}
         />
-      </div>
+      </div> */}
       <div className="pt-10 w-full">
         <div className="relative w-full flex flex-col lg:flex-row justify-between items-start gap-10 px-10 py-12 border border-gray-200 shadow-lg rounded-md bg-white">
           <motion.div

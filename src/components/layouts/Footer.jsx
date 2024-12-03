@@ -19,7 +19,7 @@ const Footer = () => {
               className="h-[125px] w-16 object-cover rounded-full"
             />
           </Link>
-          <h1 className="text-[35px] font-semibold newFont mt-4">
+          <h1 className="text-[35px] dancing mb-4">
             Golden Fork
           </h1>
           <hr className="pt-2" />
@@ -66,7 +66,7 @@ const Footer = () => {
 
         {/* Open Hours Section */}
         <div>
-          <h1 className="font-semibold newFont text-[30px] pb-4 pt-5 md:pt-0">
+          <h1 className="text-[30px] pb-4 pt-5 md:pt-0 dancing">
             Giờ Mở Cửa{" "}
           </h1>
           <hr className="pt-2" />
@@ -95,7 +95,7 @@ const Footer = () => {
 
         {/* Links Section */}
         <div>
-          <h1 className="font-semibold newFont text-[30px] pb-4 pt-5 md:pt-0">
+          <h1 className="dancing text-[30px] pb-4 pt-5 md:pt-0">
             Liên Kết
           </h1>
           <hr className="pt-2" />
@@ -121,7 +121,7 @@ const Footer = () => {
 
         {/* Company Section */}
         <div>
-          <h3 className="font-semibold newFont text-[30px] pb-4 pt-5 md:pt-0">
+          <h3 className="dancing text-[30px] pb-4 pt-5 md:pt-0">
             Công Ty
           </h3>
           <hr className="pt-2" />

@@ -29,8 +29,8 @@ const ContactUs = () => {
               transition: "opacity 0.3s, transform 0.3s",
             }}
           >
-            <h1 className="text-4xl md:text-3xl sm:text-3xl font-bold">
-              LIÊN HỆ
+            <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">
+              Liên Hệ
             </h1>
             <p className="text-3xl md:text-[20px] sm:text-[15px] mt-4 flex items-center justify-center">
               <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
@@ -60,7 +60,7 @@ const ContactUs = () => {
         </div>
 
         <div className="w-full md:w-1/2 text-black space-y-8">
-          <h2 className="text-3xl font-bold mb-4">Thông tin liên hệ</h2>
+          <h2 className="text-[40px] dancing mb-4">Thông tin liên hệ</h2>
           <div className="w-[100px] h-[2px] rounded-full bg-orange-1 mb-8"></div>
           <ul className="space-y-8">
             <li className="flex items-center">
