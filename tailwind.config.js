@@ -10,7 +10,8 @@ export default {
   			'2000': '2000ms'
   		},
   		boxShadow: {
-  			panel: '1px 3px 10px 1px rgba(0, 0, 0, 0.3)'
+  			panel: '1px 3px 10px 1px rgba(0, 0, 0, 0.3)',
+  			coupon: '4px 6px 10px 0px rgba(0, 0, 0, 0.3)'
   		},
   		colors: {
   			blue: {

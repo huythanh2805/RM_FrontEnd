@@ -17,8 +17,18 @@
   border-radius: 4px; /* Bo góc thanh cuộn */
   cursor: pointer;
 }
-
 .messagerBody::-webkit-scrollbar-track {
+  background-color: transparent; /* Màu nền của track thanh cuộn */
+}
+.coupon_container::-webkit-scrollbar {
+  display: block; /* Hiển thị lại thanh cuộn */
+  width: 8px;
+}
+.coupon_container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3); /* Màu sắc của thanh cuộn */
+  cursor: pointer;
+}
+.coupon_container::-webkit-scrollbar-track {
   background-color: transparent; /* Màu nền của track thanh cuộn */
 }
 /* chart */
