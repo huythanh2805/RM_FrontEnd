@@ -72,15 +72,17 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
-                    <Link
-                      to={item.url}
-                      className="flex items-center gap-3 text-xl font-medium"
-                    >
-                      <item.icon className="w-5 h-5 text-gray-800" />
-                      <span className="text-black">{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
+                  <Link
+                    to={item.url}
+                    className="flex items-center gap-3 text-xl font-medium"
+                  >
+                    <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
+                      <div className="flex items-center gap-3 text-xl font-medium">
+                        <item.icon className="w-5 h-5 text-gray-800" />
+                        <span className="text-black">{item.title}</span>
+                      </div>
+                    </SidebarMenuButton>
+                  </Link>
                 </SidebarMenuItem>
               ))}
 
