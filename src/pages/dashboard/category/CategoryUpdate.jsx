@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
+import Navbar from "@/components/Admin/Navbar";
 
 const CategoryUpdate = () => {
   const { id } = useParams();
@@ -44,8 +45,10 @@ const CategoryUpdate = () => {
 
   return (
     <>
-      <div className="w-full min-h-screen bg-[#f5f6fa]">
-        <div className="px-5 py-2 ">
+      <div className="w-full min-h-screen bg-[#f9fafb]">
+        <Navbar />
+        
+        <div className="px-5 py-5">
           <h2 className="text-3xl font-semibold mb-4">Cập nhật danh mục</h2>
           <form className="space-y-6" onSubmit={handleSubmit(onsubmit)}>
             <div>

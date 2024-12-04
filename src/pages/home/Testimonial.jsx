@@ -8,48 +8,46 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import 'swiper/css/free-mode';
 import 'swiper/css/thumbs';
-
-import { FreeMode, Thumbs } from 'swiper/modules';
-import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import SectionTitle from './SectionTitle';
 const testimonials = [
   {
     image: 'https://swiperjs.com/demos/images/nature-1.jpg',
     name: "Thanh",
-    role: "Client",
-    comment: '1 Lorem ipsum dolor sit amet consectetur adipisicing elit.  Aut a omnis debitis? Laborum sit quidem quam olor sit amet consectetur adipisicing elit. Aut a omnis debitis? Laborum sit quidem quam'
+    role: "Khách hàng",
+    comment: 'Tôi thực sự ấn tượng với chất lượng món ăn tại đây. Từng món ăn được trình bày rất bắt mắt, hương vị đậm đà và chuẩn vị. Ngoài ra, nhân viên phục vụ vô cùng chu đáo, thân thiện và luôn sẵn sàng hỗ trợ. Đây là một nơi lý tưởng để thưởng thức các món ăn ngon cùng gia đình và bạn bè.',
   },
   {
     image: 'https://swiperjs.com/demos/images/nature-2.jpg',
-    name: "Thanh",
-    role: "Client",
-    comment: '2 Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut a omnis debitis? Laborum sit quidem quam'
+    name: "Lan",
+    role: "Khách hàng",
+    comment: 'Không gian của quán rất rộng rãi và thoải mái, với thiết kế hiện đại nhưng vẫn mang nét ấm cúng. Tôi cảm thấy thư giãn khi ngồi đây thưởng thức bữa ăn. Món ăn được phục vụ rất nhanh, nóng hổi và ngon miệng. Nhìn chung, tôi hoàn toàn hài lòng với trải nghiệm tại đây.',
   },
   {
     image: 'https://swiperjs.com/demos/images/nature-3.jpg',
-    name: "Thanh",
-    role: "Client",
-    comment: '3 Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut a omnis debitis? Laborum sit quidem quam'
+    name: "Minh",
+    role: "Khách hàng",
+    comment: 'Đây là một trong những nhà hàng mà tôi thích nhất! Các món ăn rất đa dạng, phù hợp với khẩu vị của mọi người. Tôi đặc biệt thích các món nướng vì chúng được chế biến rất vừa miệng và thơm ngon. Giá cả cũng rất hợp lý so với chất lượng. Chắc chắn tôi sẽ quay lại nhiều lần nữa.',
   },
   {
     image: 'https://swiperjs.com/demos/images/nature-4.jpg',
-    name: "Thanh",
-    role: "Client",
-    comment: '4 Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut a omnis debitis? Laborum sit quidem quam'
+    name: "Hoa",
+    role: "Khách hàng",
+    comment: 'Tôi đã thử rất nhiều món tại quán và mỗi món đều mang một hương vị riêng biệt, rất độc đáo. Đặc biệt, tôi thích cách quán chú trọng đến việc sử dụng nguyên liệu tươi ngon và đảm bảo vệ sinh an toàn thực phẩm. Đây là một điểm cộng lớn khiến tôi tin tưởng và yêu thích nơi này.',
   },
   {
     image: 'https://swiperjs.com/demos/images/nature-5.jpg',
-    name: "Thanh",
-    role: "Client",
-    comment: '5 Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut a omnis debitis? Laborum sit quidem quam'
+    name: "Phúc",
+    role: "Khách hàng",
+    comment: 'Một trải nghiệm ăn uống tuyệt vời! Tôi thích nhất là cách các món ăn được chế biến một cách tỉ mỉ, từ phần nguyên liệu đến cách nêm nếm. Nhân viên phục vụ rất nhiệt tình, luôn tươi cười và sẵn sàng giải đáp mọi thắc mắc. Đây chắc chắn là một địa điểm mà tôi sẽ giới thiệu cho gia đình và bạn bè của mình.',
   },
-]
+];
+
 function Testimonial() {
   const [firstSwiper, setFirstSwiper] = useState(null);
   const [secondSwiper, setSecondSwiper] = useState(null);
   return (
     <div className='container'>
-        <SectionTitle title={'Đánh giá'} desc={'Nhận xét của khách'} />
+        <SectionTitle title={'ĐÁNH GIÁ'} desc={'Nhận xét của khách'} />
         
 
       <div className="max-w-[500px] mx-auto">

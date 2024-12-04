@@ -45,7 +45,7 @@ function Chefs() {
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   return (
     <section>
-      <SectionTitle title={"Gặp gỡ"} desc={"Những người đầu bếp tuyệt vời "} />
+      <SectionTitle title={"GẶP GỠ"} desc={"Những người đầu bếp tuyệt vời "} />
 
       <div className=" mx-auto relative sm:w-[450px] md:w-[768px] xl:w-[1136px]">
       <Swiper

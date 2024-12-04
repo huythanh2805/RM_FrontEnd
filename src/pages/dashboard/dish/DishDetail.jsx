@@ -52,8 +52,10 @@ const DishDetail = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#f5f6fa]">
-      <div className="px-5 py-2">
+    <div className="w-full min-h-screen bg-[#f9fafb]">
+      <Navbar />
+
+      <div className="px-5 py-5">
         <h2 className="text-3xl font-semibold mb-4">Chi tiết món ăn</h2>
         {dataDish ? (
           <div className="flex flex-wrap -mx-4">

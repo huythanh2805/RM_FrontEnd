@@ -1,45 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation từ react-router-dom
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 
 const ContactUs = () => {
   const [opacity, setOpacity] = useState(1);
   const [translateY, setTranslateY] = useState(0);
+  const location = useLocation();
+  const isContactPage = location.pathname === '/contact';
 
   return (
     <>
-      <div className="relative w-full h-[400px] overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('imgs/pagetitle-about.jpg')",
-            backgroundAttachment: "fixed",
-            filter: "brightness(0.7)",
-          }}
-        ></div>
-        <div className="absolute inset-0 bg-black opacity-30"></div>
-        <div
-          className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white"
-          style={{
-            opacity: opacity,
-            transform: `translateY(-${translateY}px)`,
-            transition: "opacity 0.3s, transform 0.3s",
-          }}
-        >
-          <h1 className="text-5xl md:text-4xl sm:text-3xl font-bold">
-            LIÊN HỆ
-          </h1>
-          <p className="text-4xl md:text-xl sm:text-xl mt-4 flex items-center justify-center">
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
-            <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
-            <span className="ml-4">
-              Hãy cho chúng tôi biết nếu bạn có bất kỳ thắc mắc nào về thực đơn,
-              dịch vụ của chúng tôi hoặc thông tin khác mà bạn muốn có
-            </span>
-            <span className="bg-white h-[2px] w-[100px] ml-4 hidden lg:block"></span>
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
-          </p>
+      {isContactPage && (
+        <div className="relative w-full h-[200px] overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: "url('imgs/pagetitle-about.jpg')",
+              backgroundAttachment: "fixed",
+              filter: "brightness(0.7)",
+            }}
+          ></div>
+          <div className="absolute inset-0 bg-black opacity-30"></div>
+          <div
+            className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white"
+            style={{
+              opacity: opacity,
+              transform: `translateY(-${translateY}px)`,
+              transition: "opacity 0.3s, transform 0.3s",
+            }}
+          >
+            <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">
+              Liên Hệ
+            </h1>
+            <p className="text-3xl md:text-[20px] sm:text-[15px] mt-4 flex items-center justify-center">
+              <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
+              <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
+              <span className="ml-4">
+                Hãy cho chúng tôi biết nếu bạn có bất kỳ thắc mắc nào về thực đơn,
+                dịch vụ của chúng tôi hoặc thông tin khác mà bạn muốn có
+              </span>
+              <span className="bg-white h-[2px] w-[100px] ml-4 hidden lg:block"></span>
+              <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex flex-col md:flex-row items-center justify-between gap-12 px-6 md:px-16 lg:px-32 py-12 bg-white shadow-lg">
         <div className="w-full md:w-1/2 h-[500px]">
@@ -55,7 +60,7 @@ const ContactUs = () => {
         </div>
 
         <div className="w-full md:w-1/2 text-black space-y-8">
-          <h2 className="text-3xl font-bold mb-4">Thông tin liên hệ</h2>
+          <h2 className="text-[40px] dancing mb-4">Thông tin liên hệ</h2>
           <div className="w-[100px] h-[2px] rounded-full bg-orange-1 mb-8"></div>
           <ul className="space-y-8">
             <li className="flex items-center">

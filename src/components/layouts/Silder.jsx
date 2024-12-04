@@ -50,11 +50,11 @@ const Slider = () => {
         <p className="text-4xl md:text-2xl sm:text-xl mt-4 flex items-center justify-center">
           <span className="bg-white p-1 rounded-full ml-0 mr-0"></span>
           <span className="bg-white h-[2px] w-[200px]"></span>
-          <span className="ml-4">Tasty</span>
+          <span className="ml-4 dancing text-[35px]">Tasty</span>
           <span className="bg-white p-1 rounded-full ml-4 mr-4"></span>
-          <span>Delicious</span>
+          <span className="dancing text-[35px]">Delicious</span>
           <span className="bg-white p-1 rounded-full ml-4 mr-4"></span>
-          <span>Savoury</span>
+          <span className="dancing text-[35px]">Savoury</span>
           <span className="bg-white h-[2px] w-[200px] ml-4"></span>
           <span className="bg-white p-1 rounded-full ml-0 mr-0"></span>
         </p>

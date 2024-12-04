@@ -43,15 +43,15 @@ export function AppSidebar() {
     { title: "Trang chủ", url: "/admin", icon: Home },
     { title: "Tài khoản", url: "/admin/users", icon: User },
     { title: "Bàn", url: "/admin/tables", icon: Table },
-    { title: "Nhân viên", url: "/admin/employees", icon: Contact },
+    // { title: "Nhân viên", url: "/admin/employees", icon: Contact },
     { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
     { title: "Đánh giá", url: "/admin/feedbacks", icon: MessageCircle },
     { title: "Danh sách đặt bàn", url: "/admin/listReser", icon: List },
   ];
 
   const subItems = [
-    { title: "Categories", url: "/admin/categories", icon: Grid },
-    { title: "Dishes", url: "/admin/dishes", icon: Salad },
+    { title: "Danh mục", url: "/admin/categories", icon: Grid },
+    { title: "Món ăn", url: "/admin/dishes", icon: Salad },
     { title: "Combo", url: "/admin/setCombos", icon: Layers },
   ];
 
@@ -85,15 +85,17 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
-                    <Link
-                      to={item.url}
-                      className="flex items-center gap-3 text-xl font-medium"
-                    >
-                      <item.icon className="w-5 h-5 text-gray-800" />
-                      <span className="text-black">{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
+                  <Link
+                    to={item.url}
+                    className="flex items-center gap-3 text-xl font-medium"
+                  >
+                    <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
+                      <div className="flex items-center gap-3 text-xl font-medium">
+                        <item.icon className="w-5 h-5 text-gray-800" />
+                        <span className="text-black">{item.title}</span>
+                      </div>
+                    </SidebarMenuButton>
+                  </Link>
                 </SidebarMenuItem>
               ))}
 
@@ -103,9 +105,7 @@ export function AppSidebar() {
                     <CollapsibleTrigger className="flex items-center justify-between w-full">
                       <div className="flex items-center gap-3">
                         <Soup className="w-5 h-5 text-gray-800" />
-                        <span className="text-xl font-medium text-gray-800">
-                          Dishes
-                        </span>
+                        <span className="text-xl text-black">Món ăn</span>
                       </div>
 
                       <ChevronDown

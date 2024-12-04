@@ -8,6 +8,7 @@ import Menu from "./Menu";
 import ButtonViewMore from "@/components/ButtonViewMore";
 import ChefProfile from "./ChefProfile";
 import ChefChoice from "./ChefChoice";
+import ContactUs from "./ContactUs";
 import Testimonial from "./Testimonial";
 import Chefs from "./Chefs";
 const Home = () => {
@@ -30,6 +31,7 @@ const Home = () => {
       <Testimonial/>
       <StatsCounter />
       </section>
+      <ContactUs/>
     </>
   );
 };

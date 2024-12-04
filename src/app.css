@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rancho&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 * {
   scroll-behavior: smooth;
 }
@@ -36,8 +36,8 @@
   overflow: visible;
 }
 
-.rancho {
-  font-family: "Rancho", cursive;
+.dancing {
+  font-family: "Great Vibes", cursive;
   font-weight: 400;
   font-style: normal;
 }

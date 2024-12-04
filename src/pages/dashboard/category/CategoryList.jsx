@@ -4,6 +4,7 @@ import axios from "axios";
 import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import Pagination from "@/components/Pagination";
+import Navbar from "@/components/Admin/Navbar";
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
@@ -64,10 +65,12 @@ const CategoryList = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#f5f6fa]">
-      <div className="px-5 py-2">
-        <div className="flex items-center justify-between">
-          <p className="text-3xl font-semibold mb-4">Danh mục</p>
+    <div className="w-full min-h-screen bg-[#f9fafb]">
+      <Navbar />
+
+      <div className="px-5 py-5">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-3xl font-semibold text-gray-800">Danh mục</p>
           <Link to={"/admin/categories/add"}>
             <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition">
               Thêm +
@@ -78,29 +81,39 @@ const CategoryList = () => {
           <table className="min-w-full bg-white">
             <thead className="border-b border-[#d5d5d5] text-left text-sl font-semibold text-[#202224] uppercase tracking-wider">
               <tr>
-                <th className="hidden lg:block py-3 px-6">STT</th>
-                <th className="py-3 px-6">Tên</th>
-                <th className="py-3 px-6">Mô tả</th>
-                <th className="py-3 px-6">Trạng thái</th>
-                <th className="py-3 px-6"></th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  STT
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Tên
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Mô tả
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Trạng thái
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Hành động
+                </th>
               </tr>
             </thead>
             <tbody>
               {currentItems.map((d, index) => (
                 <tr
-                  className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
                   key={d._id}
+                  className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
                 >
-                  <td className="hidden lg:block py-4 px-6 text-sl font-medium text-[#202224]">
+                  <td className="py-3 px-6 text-sl font-medium text-gray-800">
                     {startIndex + index + 1}
                   </td>
-                  <td className="py-4 px-6 text-sl font-medium text-[#202224] max-w-[100px] lg:max-w-[250px] break-words">
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">
                     {d.name}
                   </td>
-                  <td className="py-4 px-6 text-sl font-medium text-[#202224] max-w-[100px] lg:max-w-[250px] break-words">
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">
                     {d.desc}
                   </td>
-                  <td className="py-4 px-6 text-sl">
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">
                     {d.isShow ? (
                       <span className="px-2 py-1 text-sl font-semibold rounded-lg bg-green-100 text-green-800">
                         Hiển thị
@@ -111,14 +124,14 @@ const CategoryList = () => {
                       </span>
                     )}
                   </td>
-                  <td className="py-4 px-6 text-sl flex items-center gap-1.5 lg:gap-3">
+                  <td className="py-4 px-6 text-sl flex items-center gap-3">
                     <Link to={`/admin/categories/${d._id}/update`}>
-                      <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-sl lg:text-base font-semibold hover:bg-blue-300 transition">
+                      <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-sl font-semibold hover:bg-blue-300 transition">
                         <FaPenToSquare size={18} />
                       </div>
                     </Link>
                     <div
-                      className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-sl lg:text-base font-semibold hover:bg-red-300 transition"
+                      className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-red-300 transition"
                       onClick={() => handleDelete(d._id)}
                     >
                       <FaRegTrashCan size={18} />
