@@ -46,6 +46,7 @@ const Calculator = ({
   const [discountValue, setDiscountValue] = useState(0)
   const [discount, setDiscount] = useState(null)
   const [newDiscount, setNewDiscount] = useState('')
+  const [VAT_money, setVAT_money] = useState(0)
   const navigate = useNavigate();
   const totalPrice = orderedFoods.reduce((sum, item) => {
     if (item.status === "ISCANCELED") return sum + 0;
@@ -65,10 +66,10 @@ const Calculator = ({
   },[totalPrice, discount])
 
   useEffect(() => {
-    const vat = (5 / 100) * totalPrice;
-    console.log({io: totalPrice - discountValue})
-    console.log({totalPrice, discountValue})
-    setNeededPaid((totalPrice - discountValue) + vat);
+    const discountedMoney = totalPrice - discountValue
+    const vat = (5 / 100) * discountedMoney;
+    setVAT_money(vat)
+    setNeededPaid(discountedMoney + vat);
 
     setChange(paidMoney - neededPaid);
   }, [paidMoney, totalPrice, discountValue]);
@@ -157,7 +158,9 @@ const Calculator = ({
             reservation_id,
             original_money: totalPrice,
             total_money: neededPaid,
-            userDiscountId: discount._id
+            discount_money: discountValue,
+            VAT_money: VAT_money,
+            userDiscountId: discount?._id
           }),
         });
         const data = await res.json();
