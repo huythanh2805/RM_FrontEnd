@@ -27,7 +27,8 @@ import {
   SidebarMenuSubItem,
   SidebarMenuSub,
 } from "@/components/ui/sidebar";
-
+import { MdOutlineDiscount } from "react-icons/md";
+import { CiViewList } from "react-icons/ci";
 import {
   Collapsible,
   CollapsibleTrigger,
@@ -36,6 +37,7 @@ import {
 
 export function AppSidebar() {
   const [isDishesOpen, setIsDishesOpen] = useState(false);
+  const [isSubOpen, setIsSubOpen] = useState(false)
 
   const menuItems = [
     { title: "Trang chủ", url: "/admin", icon: Home },
@@ -52,6 +54,17 @@ export function AppSidebar() {
     { title: "Dishes", url: "/admin/dishes", icon: Salad },
     { title: "Combo", url: "/admin/setCombos", icon: Layers },
   ];
+
+  const routes = [
+    {
+       title: "Phiếu giảm giá",
+       url: "/admin/discounts",
+       icon: MdOutlineDiscount ,
+       subs: [
+        { title: "Danh sách", url: "/admin/listDiscounts", icon: CiViewList },
+       ]
+    }
+  ]
 
   return (
     <Sidebar className="w-64 h-full bg-gray-800 text-white">
@@ -122,6 +135,57 @@ export function AppSidebar() {
                   </CollapsibleContent>
                 </SidebarMenuItem>
               </Collapsible>
+
+              {
+                routes.map(item=>(
+                  <Collapsible open={isSubOpen} onOpenChange={setIsSubOpen}>
+                <SidebarMenuItem>
+                  <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
+                    <CollapsibleTrigger className="flex items-center justify-between w-full">
+                      {/* <div className="flex items-center gap-3">
+                        <Soup className="w-5 h-5 text-gray-800" />
+                        <span className="text-xl font-medium text-gray-800">
+                          Dishes
+                        </span>
+                      </div> */}
+                      <Link
+                      to={item.url}
+                      className="flex items-center gap-3 text-xl font-medium"
+                    >
+                      <item.icon className="w-5 h-5 text-gray-800" />
+                      <span className="text-black">{item.title}</span>
+                    </Link>
+
+                      <ChevronDown
+                        className={`w-5 h-5 text-gray-800 transition-transform ${
+                          isSubOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </CollapsibleTrigger>
+                  </SidebarMenuButton>
+
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {item.subs.map((subItem) => (
+                        <SidebarMenuSubItem key={subItem.title}>
+                          <Link
+                            to={subItem.url}
+                            className="flex items-center text-base text-gray-800 hover:bg-gray-400 rounded-lg transition p-2"
+                          >
+                            {subItem.icon && (
+                              <subItem.icon className="w-4 h-4 text-gray-800 mr-2" />
+                            )}
+                            {subItem.title}
+                          </Link>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+                ))
+              }
+              
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
