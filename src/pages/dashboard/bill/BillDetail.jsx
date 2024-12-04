@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
+import Navbar from "@/components/Admin/Navbar";
 
 const BillDetail = () => {
   const { id } = useParams();
@@ -46,8 +47,10 @@ const BillDetail = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
+      <Navbar />
+
       {/* Thông tin người đặt */}
-      <div className="px-5 py-2">
+      <div className="px-5 py-5">
         <p className="text-3xl font-semibold mb-4">Thông tin người đặt</p>
         <div className="rounded-xl bg-white border border-[#d5d5d5]">
           <table className="min-w-full table-auto text-left">
