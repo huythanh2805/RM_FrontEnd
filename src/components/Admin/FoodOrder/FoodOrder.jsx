@@ -11,12 +11,13 @@ export default function FoodOrder() {
   const [orderedFoods, setOrderedFoods] = useState([])
   const [loading, setLoading] = useState(false)
   const [products, setProducts] = useState([])
-  console.log({orderedFoods})
-
+  
   // Get all dishes and categories
   const { data: combos, loading: comboloading } = useFetchData(ServerUrl+"/api/orderedCombo")
   const { data: dishes, loading: dishLoading } = useFetchData(ServerUrl+"/dishes")
   const { data: categories, loading: categoryLoading } = useFetchData(ServerUrl+"/categories")
+  const { data: discount, loading: discountLoading } = useFetchData(ServerUrl+"/api/userDiscount/reservation/"+reservationId)
+  console.log({discount})
   
   useEffect(()=>{
     if(!dishes) return
@@ -106,6 +107,7 @@ export default function FoodOrder() {
               deleteOrderedFood={deleteOrderedFood}
               deletedOrderedCombo={deletedOrderedCombo}
               updateOrderedFood={updateOrderedFood}
+              userDiscount={discount}
             />
           )
         }

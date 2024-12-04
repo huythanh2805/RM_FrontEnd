@@ -159,6 +159,7 @@ const Promotion = () => {
          key={discount._id}
          _id={discount._id}
          buttonTitle={'Lấy'}
+         loading={loading}
          type={discount.discountType}
          expriedDate={discount.expireDate}
          discountValue={discount.discountValue}

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
-import { formatCurrency, ServerUrl } from "@/utilities/utils";
+import { formatCurrency, ServerUrl, shortenNumber } from "@/utilities/utils";
 import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
@@ -32,6 +32,7 @@ const Calculator = ({
   deleteOrderedFood,
   deletedOrderedCombo,
   updateOrderedFood,
+  userDiscount
 }) => {
   const [isPaid, setIsPaid] = useState(false);
   const [neededPaid, setNeededPaid] = useState(0);
@@ -42,20 +43,38 @@ const Calculator = ({
   const [selectedRows, setSelectedRows] = useState([]);
   const [billId, setBillId] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [discountValue, setDiscountValue] = useState(0)
+  const [discount, setDiscount] = useState(null)
+  const [newDiscount, setNewDiscount] = useState('')
   const navigate = useNavigate();
   const totalPrice = orderedFoods.reduce((sum, item) => {
     if (item.status === "ISCANCELED") return sum + 0;
     return sum + item.quantity * item.price;
   }, 0);
   const router = useNavigate();
+  useEffect(()=>{
+   if(userDiscount) setDiscount(userDiscount)
+  },[userDiscount])
+  useEffect(()=>{
+    if(!discount) return
+    if(discount.discountId.discountType === "PERCENTAGE"){
+      setDiscountValue(totalPrice * (Number(discount.discountId.discountValue)/100))
+    }else{
+      setDiscountValue(Number(discount.discountId.discountValue))
+    }
+  },[totalPrice, discount])
 
   useEffect(() => {
     const vat = (5 / 100) * totalPrice;
-    setNeededPaid(totalPrice + vat);
+    console.log({io: totalPrice - discountValue})
+    console.log({totalPrice, discountValue})
+    setNeededPaid((totalPrice - discountValue) + vat);
+
     setChange(paidMoney - neededPaid);
-  }, [paidMoney, totalPrice]);
+  }, [paidMoney, totalPrice, discountValue]);
+
   const vt = (5 / 100) * totalPrice;
-  const total = totalPrice + vt;
+  const total = (totalPrice - discountValue) + vt;
   // delete orderedFood
   const handleDeleteOrderedFood = async (orderedFood_id, type) => {
     console.log(type);
@@ -127,41 +146,69 @@ const Calculator = ({
   };
 
   const handlePayment = async () => {
-    if (change < 0) {
-      return toast({
-        variant: "destructive",
-        title: "Please pay all for bill",
-      });
-    }
-    try {
-      const res = await fetch(`https://fc02-116-96-44-27.ngrok-free.app/api/bills`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          reservation_id,
-          original_money: totalPrice,
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
+    if(paymentMethod === 'cash'){
+      try {
+        const res = await fetch(`${ServerUrl}/api/bills`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            reservation_id,
+            original_money: totalPrice,
+            total_money: neededPaid,
+            userDiscountId: discount._id
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          return toast({
+            variant: "destructive",
+            title: "Something went wrong while creating the bill.",
+          });
+        }
+  
+        setBillId(data.bill_id);
+        setIsPaid(true);
+      } catch (error) {
+        
+      }
+    }else{
+      if (change < 0) {
         return toast({
+          variant: "destructive",
+          title: "Please pay all for bill",
+        });
+      }
+      try {
+        const res = await fetch(`https://fc02-116-96-44-27.ngrok-free.app/api/bills`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            reservation_id,
+            original_money: totalPrice,
+          }),
+        });
+  
+        const data = await res.json();
+        if (!res.ok) {
+          return toast({
+            variant: "destructive",
+            title: "Something went wrong while creating the bill.",
+          });
+        }
+  
+        setBillId(data.bill_id);
+        setIsPaid(true);
+      } catch (error) {
+        console.error(error);
+        toast({
           variant: "destructive",
           title: "Something went wrong while creating the bill.",
         });
       }
-
-      setBillId(data.bill_id);
-
-      setIsPaid(true);
-    } catch (error) {
-      console.error(error);
-      toast({
-        variant: "destructive",
-        title: "Something went wrong while creating the bill.",
-      });
     }
   };
 
@@ -226,7 +273,28 @@ const Calculator = ({
       socket.disconnect();
     };
   }, []);
-
+ const handleDiscountInput = async (e)=>{
+  e.preventDefault()
+  try {
+    const url = `${ServerUrl}/api/userDiscount/reservation/admin/${newDiscount}/${totalPrice}`
+   const res = await fetch(url, {
+    method: "GET"
+   })
+   const data = await res.json()
+   if(!res.ok) return toast({
+    variant: "destructive",
+    title: data.message,
+  });
+   console.log(data.userDiscount)
+   setDiscount(data.userDiscount)
+   setNewDiscount('')
+  } catch (error) {
+    toast({
+      variant: "destructive",
+      title: "Something went wrong with search discount",
+    });
+  }
+ }
   return (
     <div className="px-3 py-4 max-h-[800px] min-w-[650px] overflow-scroll">
       <Table>
@@ -340,7 +408,53 @@ const Calculator = ({
                       placeholder={formatCurrency(totalPrice)}
                     />
                   </div>
+
                   <div className="w-full flex items-center py-2">
+                    <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                      Nhập mã
+                    </p>
+                    <form onSubmit={handleDiscountInput} className="flex-[2] min-w-[244px]">
+                    <Input
+                      className=" rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                     placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px] "
+                      placeholder={`Nhập mã giảm giá mới`}
+                      onChange={(e)=>setNewDiscount(e.target.value)}
+                      value={newDiscount}
+                    />
+                    </form>
+                  </div>
+                 {
+                  discount &&
+                   <div className="w-full flex items-center py-2">
+                   <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                     Mã giảm
+                   </p>
+                   <Input
+                     className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                    placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
+                     disabled
+                     type="number"
+                     placeholder={
+                       discount.discountId?.discountType === "PERCENTAGE" ?
+                       `${discount.code}  (${discount.discountId.discountValue}%)`:
+                       `${discount.code} (${shortenNumber(Number(discount.discountId.discountValue))}k)`
+                     }
+                   />
+                 </div>
+                 }
+                 <div className="w-full flex items-center py-2">
+                   <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                     Số tiền giảm
+                   </p>
+                   <Input
+                     className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                   placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
+                     disabled
+                     type="number"
+                     placeholder={`${formatCurrency(discountValue)}`}
+                   />
+                 </div>
+                 <div className="w-full flex items-center py-2">
                     <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
                       VAT
                     </p>
@@ -352,6 +466,7 @@ const Calculator = ({
                       placeholder={`${VAT}%`}
                     />
                   </div>
+
                   <div className="w-full flex items-center py-2">
                     <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
                       Cần thanh toán

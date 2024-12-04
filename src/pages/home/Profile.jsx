@@ -9,6 +9,7 @@ import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import Discount from "./Discount";
 import SectionTitle from "./SectionTitle";
+import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
   const { user, handleUpdateProfile } = useProfile();
@@ -29,10 +30,9 @@ export const Profile = () => {
     if(!token) return null
     return jwtDecode(token)
   })
+  const navigate = useNavigate();
 
   const {data: userDiscounts} = useFetchData(`${ServerUrl}/api/userDiscount/${decodedToken?.id}`)
-
-  console.log({userDiscounts})
 
   useEffect(() => {
     if (user) {
@@ -124,7 +124,7 @@ export const Profile = () => {
   }, [isDialogOpen]);
  
   const handleUseCoupon = ()=>{
-    console.log('use')
+    navigate('/reservation')
   }
   return (
     <>
@@ -321,6 +321,8 @@ export const Profile = () => {
               <Discount
                 key={userDiscount._id}
                 _id={userDiscount._id}
+                code={userDiscount.code}
+                status={userDiscount.status}
                 buttonTitle={'Dùng'}
                 type={userDiscount.discountId.discountType}
                 expriedDate={userDiscount.discountId.expireDate}
