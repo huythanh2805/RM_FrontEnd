@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import Discount from "./Discount";
 import { useFetchData } from "@/hooks/useFetchData";
 import { ServerUrl } from "@/utilities/utils";
+import jwtDecode from "jwt-decode";
+import { toast } from "@/hooks/use-toast";
+import SectionTitle from "./SectionTitle";
 const data = [
   {
     year: 2012,
@@ -47,6 +50,14 @@ const Promotion = () => {
   const [opacity, setOpacity] = useState(1);
   const [translateY, setTranslateY] = useState(0);
   const [selectedYear, setSelectedYear] = useState(null);
+  const [loading, setLoading] = useState(false)
+
+  const [decodedToken, setDecodeToken] = useState(()=>{
+    const token = localStorage.getItem('token')
+    if(!token) return null
+    return jwtDecode(token)
+  })
+
   const { colorCode } = useThemeContext();
 
   const { data: discounts } = useFetchData(`${ServerUrl}/api/discount`)
@@ -67,7 +78,45 @@ const Promotion = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+  const handleTakeCoupon = async (coupon_id) =>{
+    if(!decodedToken.id) return toast({
+      variant: "destructive",
+      title: "Bạn cần đăng nhập",
+    })
+    try {
+      setLoading(true)
+      const url = `${ServerUrl}/api/userDiscount`
+      const res  = await fetch(url, {
+        method: "POST",
+        headers: {
+         "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+           discountId: coupon_id,
+           userId: decodedToken.id
+        }),
+      })
+      const data = await res.json()
+      setLoading(false)
+      if(!res.ok) return toast({
+        variant: "destructive",
+        title: data.message,
+      })
 
+      toast({
+        variant: "success",
+        title: data.message,
+      })
+      
+    } catch (error) {
+      setLoading(false)
+      return toast({
+        variant: "destructive",
+        title: "Something went wrong",
+      })
+    }
+
+  }
   return (
    <>
     <div>
@@ -101,15 +150,20 @@ const Promotion = () => {
       </div>
 
  {/* Coupon */}
+ <SectionTitle title={'Coupons'} desc={'Săn quà liền tay'} />
  <div className="w-screen overflow-scroll overflow-x-scroll px-5 py-5 coupon_container">
     <div className="flex w-fit gap-10">
     {
       discounts && discounts.map(discount=>(
-        <Discount 
+        <Discount
+         key={discount._id}
+         _id={discount._id}
+         buttonTitle={'Lấy'}
          type={discount.discountType}
          expriedDate={discount.expireDate}
          discountValue={discount.discountValue}
          minOrderValue={discount.minOrderValue}
+         handleClick={handleTakeCoupon}
         />
       ))
     }

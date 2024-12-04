@@ -1,6 +1,6 @@
 import { formatDateNoTime, shortenNumber } from "@/utilities/utils"
 
-function Discount({expriedDate, discountValue, minOrderValue, type}) {
+function Discount({_id , expriedDate, discountValue, minOrderValue, type, handleClick, buttonTitle}) {
   return (
         <div className="w-[400px] min-w-[400px] h-[130px] min-h-[130px] rounded-md flex items-center shadow-coupon overflow-hidden">
           <div className='flex-1 h-full bg-orange-1 relative'>
@@ -27,12 +27,14 @@ function Discount({expriedDate, discountValue, minOrderValue, type}) {
                 ` ${discountValue}% đơn ${shortenNumber(minOrderValue)}k`
                 }</span>
               </p>
-              <p className='font-medium text-base text-gray-1'>Đơn tối thiểu {minOrderValue}k</p>
+              <p className='font-medium text-base text-gray-1'>Đơn tối thiểu {shortenNumber(minOrderValue)}k</p>
               </div>
               <p className='text-base text-gray-1 text-nowrap'>HSD: {formatDateNoTime(expriedDate )} <span className='text-sm pl-1 text-[#1b74e4] cursor-pointer hover:underline'>điều kiện</span></p>
             </div>
             <div className='flex-1 flex items-center justify-center'>
-                <button className='w-full border border-orange-1 text-orange-1 text-lg rounded-sm transition-all duration-300 ease-in-out hover:shadow-panel'>Lấy</button>
+                <button onClick={()=>handleClick(_id)} className='w-full border border-orange-1 text-orange-1 text-lg rounded-sm transition-all duration-300 ease-in-out hover:shadow-panel'>
+                  {buttonTitle}
+                </button>
             </div>
 
             
