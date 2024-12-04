@@ -58,7 +58,7 @@ const CompletedBill = () => {
   });
   return (
     <>
-      <div className="fixed top-0 left-0 h-full w-full flex items-center justify-center bg-black/35">
+      <div className="fixed top-0 left-0 h-full w-full overflow-scroll flex items-center justify-center bg-black/35">
         <div className="w-full h-full bg-light-bg_2 dark:bg-dark-bg_2 rounded-md px-3 py-4">
           {loading && (
             <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
@@ -66,7 +66,7 @@ const CompletedBill = () => {
             </div>
           )}
           {bill && !loading && (
-            <div className="relative w-full h-full">
+            <div className="relative w-full h-fit overscroll-auto">
               <div className="flex items-center justify-between px-2 py-1">
                 <div className="relative md:absolute top-0 left-0 md:py-4 md:px-3">
                   <Button

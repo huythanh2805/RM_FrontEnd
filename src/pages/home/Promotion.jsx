@@ -1,52 +1,66 @@
 import { useThemeContext } from "@/contexts/ThemeProvider";
 import { useEffect, useState } from "react";
-
+import Discount from "./Discount";
+import { useFetchData } from "@/hooks/useFetchData";
+import { ServerUrl } from "@/utilities/utils";
+import jwtDecode from "jwt-decode";
+import { toast } from "@/hooks/use-toast";
+import SectionTitle from "./SectionTitle";
+const data = [
+  {
+    year: 2012,
+    content:
+      "Golden Fork được thành lập bởi một nhóm đầu bếp và doanh nhân đầy đam mê. Với tầm nhìn trở thành biểu tượng của nghệ thuật ẩm thực, nhà hàng ra đời với không gian ấm cúng, thực đơn phong phú, và hương vị kết hợp tinh hoa ẩm thực truyền thống Việt Nam cùng sự sáng tạo hiện đại. Ngay từ ngày đầu mở cửa, Golden Fork đã nhanh chóng thu hút thực khách nhờ chất lượng món ăn và phong cách phục vụ chu đáo.",
+    image: "imgs/timeline-1.jpg",
+  },
+  {
+    year: 2016,
+    content:
+      "Sau 4 năm hoạt động thành công, Golden Fork mở chi nhánh thứ hai tại trung tâm thành phố – một bước ngoặt lớn trong hành trình phát triển. Không gian của chi nhánh mới được thiết kế sang trọng hơn, kết hợp ánh sáng và nội thất hiện đại, tạo nên trải nghiệm tinh tế cho thực khách. Năm 2016 cũng đánh dấu việc nhà hàng chính thức ra mắt thực đơn 'Signature Dishes', gồm các món ăn độc quyền được tạo ra bởi đội ngũ đầu bếp giàu kinh nghiệm.",
+    image: "imgs/timeline-2.jpg",
+  },
+  {
+    year: 2020,
+    content:
+      "Golden Fork tự hào khi được vinh danh là 'Nhà hàng tốt nhất năm 2020' trong hạng mục ẩm thực tại khu vực. Giải thưởng này không chỉ ghi nhận chất lượng món ăn mà còn là minh chứng cho sự sáng tạo không ngừng của đội ngũ. Cũng trong năm này, nhà hàng bổ sung các món ăn chay vào thực đơn, đáp ứng nhu cầu đa dạng của khách hàng và cam kết phát triển bền vững.",
+    image: "imgs/timeline-3.jpg",
+  },
+  {
+    year: 2022,
+    content:
+      "Đại dịch COVID-19 đã đặt ra những thách thức lớn cho ngành ẩm thực, và Golden Fork không phải ngoại lệ. Tuy nhiên, với sự nhanh nhạy trong việc thay đổi, nhà hàng đã triển khai dịch vụ đặt món online và giao hàng tận nơi, giúp khách hàng vẫn có thể tận hưởng hương vị quen thuộc ngay tại nhà. Đội ngũ không ngừng sáng tạo, giới thiệu các chương trình ưu đãi đặc biệt nhằm giữ chân khách hàng trung thành.",
+    image: "imgs/timeline-4.jpg",
+  },
+  {
+    year: 2024,
+    content:
+      "Bước ngoặt lớn nhất trong hành trình của Golden Fork chính là việc khai trương chi nhánh quốc tế đầu tiên tại Singapore. Đây là một dấu mốc quan trọng, thể hiện tầm nhìn và tham vọng vươn ra thị trường toàn cầu. Chi nhánh mới được thiết kế với phong cách hiện đại, giữ nguyên giá trị cốt lõi của thương hiệu, đồng thời mang lại trải nghiệm ẩm thực tinh tế, đáp ứng khẩu vị của thực khách quốc tế.",
+    image: "imgs/timeline-5.jpg",
+  },
+];
+const logos = [
+  "imgs/partner-01.png",
+  "imgs/partner-02.png",
+  "imgs/partner-03.png",
+  "imgs/partner-02.png",
+  "imgs/partner-01.png",
+  "imgs/partner-02.png",
+];
 const Promotion = () => {
   const [opacity, setOpacity] = useState(1);
   const [translateY, setTranslateY] = useState(0);
   const [selectedYear, setSelectedYear] = useState(null);
+  const [loading, setLoading] = useState(false)
+
+  const [decodedToken, setDecodeToken] = useState(()=>{
+    const token = localStorage.getItem('token')
+    if(!token) return null
+    return jwtDecode(token)
+  })
+
   const { colorCode } = useThemeContext();
 
-  const data = [
-    {
-      year: 2012,
-      content:
-        "Golden Fork được thành lập bởi một nhóm đầu bếp và doanh nhân đầy đam mê. Với tầm nhìn trở thành biểu tượng của nghệ thuật ẩm thực, nhà hàng ra đời với không gian ấm cúng, thực đơn phong phú, và hương vị kết hợp tinh hoa ẩm thực truyền thống Việt Nam cùng sự sáng tạo hiện đại. Ngay từ ngày đầu mở cửa, Golden Fork đã nhanh chóng thu hút thực khách nhờ chất lượng món ăn và phong cách phục vụ chu đáo.",
-      image: "imgs/timeline-1.jpg",
-    },
-    {
-      year: 2016,
-      content:
-        "Sau 4 năm hoạt động thành công, Golden Fork mở chi nhánh thứ hai tại trung tâm thành phố – một bước ngoặt lớn trong hành trình phát triển. Không gian của chi nhánh mới được thiết kế sang trọng hơn, kết hợp ánh sáng và nội thất hiện đại, tạo nên trải nghiệm tinh tế cho thực khách. Năm 2016 cũng đánh dấu việc nhà hàng chính thức ra mắt thực đơn 'Signature Dishes', gồm các món ăn độc quyền được tạo ra bởi đội ngũ đầu bếp giàu kinh nghiệm.",
-      image: "imgs/timeline-2.jpg",
-    },
-    {
-      year: 2020,
-      content:
-        "Golden Fork tự hào khi được vinh danh là 'Nhà hàng tốt nhất năm 2020' trong hạng mục ẩm thực tại khu vực. Giải thưởng này không chỉ ghi nhận chất lượng món ăn mà còn là minh chứng cho sự sáng tạo không ngừng của đội ngũ. Cũng trong năm này, nhà hàng bổ sung các món ăn chay vào thực đơn, đáp ứng nhu cầu đa dạng của khách hàng và cam kết phát triển bền vững.",
-      image: "imgs/timeline-3.jpg",
-    },
-    {
-      year: 2022,
-      content:
-        "Đại dịch COVID-19 đã đặt ra những thách thức lớn cho ngành ẩm thực, và Golden Fork không phải ngoại lệ. Tuy nhiên, với sự nhanh nhạy trong việc thay đổi, nhà hàng đã triển khai dịch vụ đặt món online và giao hàng tận nơi, giúp khách hàng vẫn có thể tận hưởng hương vị quen thuộc ngay tại nhà. Đội ngũ không ngừng sáng tạo, giới thiệu các chương trình ưu đãi đặc biệt nhằm giữ chân khách hàng trung thành.",
-      image: "imgs/timeline-4.jpg",
-    },
-    {
-      year: 2024,
-      content:
-        "Bước ngoặt lớn nhất trong hành trình của Golden Fork chính là việc khai trương chi nhánh quốc tế đầu tiên tại Singapore. Đây là một dấu mốc quan trọng, thể hiện tầm nhìn và tham vọng vươn ra thị trường toàn cầu. Chi nhánh mới được thiết kế với phong cách hiện đại, giữ nguyên giá trị cốt lõi của thương hiệu, đồng thời mang lại trải nghiệm ẩm thực tinh tế, đáp ứng khẩu vị của thực khách quốc tế.",
-      image: "imgs/timeline-5.jpg",
-    },
-  ];
-  const logos = [
-    "imgs/partner-01.png",
-    "imgs/partner-02.png",
-    "imgs/partner-03.png",
-    "imgs/partner-02.png",
-    "imgs/partner-01.png",
-    "imgs/partner-02.png",
-  ];
+  const { data: discounts } = useFetchData(`${ServerUrl}/api/discount`)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,8 +78,47 @@ const Promotion = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+  const handleTakeCoupon = async (coupon_id) =>{
+    if(!decodedToken.id) return toast({
+      variant: "destructive",
+      title: "Bạn cần đăng nhập",
+    })
+    try {
+      setLoading(true)
+      const url = `${ServerUrl}/api/userDiscount`
+      const res  = await fetch(url, {
+        method: "POST",
+        headers: {
+         "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+           discountId: coupon_id,
+           userId: decodedToken.id
+        }),
+      })
+      const data = await res.json()
+      setLoading(false)
+      if(!res.ok) return toast({
+        variant: "destructive",
+        title: data.message,
+      })
 
+      toast({
+        variant: "success",
+        title: data.message,
+      })
+      
+    } catch (error) {
+      setLoading(false)
+      return toast({
+        variant: "destructive",
+        title: "Something went wrong",
+      })
+    }
+
+  }
   return (
+   <>
     <div>
       <div className="relative w-full h-[200px] overflow-hidden">
         <div
@@ -95,6 +148,28 @@ const Promotion = () => {
           </p>
         </div>
       </div>
+
+ {/* Coupon */}
+ <SectionTitle title={'Coupons'} desc={'Săn quà liền tay'} />
+ <div className="w-screen overflow-scroll overflow-x-scroll px-5 py-5 coupon_container">
+    <div className="flex w-fit gap-10">
+    {
+      discounts && discounts.map(discount=>(
+        <Discount
+         key={discount._id}
+         _id={discount._id}
+         buttonTitle={'Lấy'}
+         loading={loading}
+         type={discount.discountType}
+         expriedDate={discount.expireDate}
+         discountValue={discount.discountValue}
+         minOrderValue={discount.minOrderValue}
+         handleClick={handleTakeCoupon}
+        />
+      ))
+    }
+    </div>
+    </div>
 
       <section>
         <div className="bg-white py-12 px-6">
@@ -139,6 +214,7 @@ const Promotion = () => {
         </div>
       </section>
     </div>
+   </>
   );
 };
 

@@ -18,6 +18,17 @@ import jwtDecode from "jwt-decode";
 import { usePostData } from "@/hooks/usePostData";
 import { ServerUrl } from "@/utilities/utils";
 import { useCart } from "@/contexts/CartProvider";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { ComboBoxComponent } from "./ComboBoxComponent";
+import { useFetchData } from "@/hooks/useFetchData";
+
 
 const ReservationForm = () => {
   const { colorCode } = useThemeContext();
@@ -28,7 +39,16 @@ const ReservationForm = () => {
   const [datePicker, setDatePicker] = useState();
   const [timePicker, setTimePicker] = useState();
   const [loading, setLoading] = useState(false);
+  const [couponValue, setCouponValue] = useState("")
 
+  const [decodedToken, setDecodeToken] = useState(()=>{
+    const token = localStorage.getItem('token')
+    if(!token) return null
+    return jwtDecode(token)
+  })
+
+  const {data: userDiscounts} = useFetchData(`${ServerUrl}/api/userDiscount/reservation/client/getAvailableStatus/${decodedToken?.id}`)
+ 
   // Thiết lập animation cho hình ảnh
   const imgAnimation = {
     hidden: { x: -200, opacity: 0 }, // Vị trí ban đầu bên trái
@@ -47,6 +67,26 @@ const ReservationForm = () => {
   };
 
   const handleClick = async () => {
+    // console.log({couponValue})
+    // console.log(userDiscounts?.discountId?.minOrderValue)
+    
+    // console.log({discount})
+    
+    if(couponValue || couponValue !== ''){
+      const totalPrice = cart.reduce((acc, item)=>{
+        return acc += item.price
+      },0)
+      const discount = userDiscounts.find(item=> item._id === couponValue)
+      console.log({totalPrice})
+      console.log(discount.discountId.minOrderValue)
+       if(discount.discountId.minOrderValue > totalPrice) {
+         return toast({
+            variant: "destructive",
+            title: `Số tiền tối thiểu của mã là ${discount?.discountId?.minOrderValue}`,
+          });
+
+       }
+    }
     const token = localStorage.getItem("token");
     const decodedToken = jwtDecode(token);
     if (!token || !decodedToken.id)
@@ -73,6 +113,7 @@ const ReservationForm = () => {
       guests_count: personCount,
       phoneNumber,
       userName,
+      couponValue,
     };
 
     try {
@@ -87,6 +128,7 @@ const ReservationForm = () => {
         setPersonCount(1);
         setDatePicker(null);
         setTimePicker(null);
+        setCouponValue("")
         clearCart();
         toast({ variant: "success", title: message });
       }
@@ -138,7 +180,7 @@ const ReservationForm = () => {
               trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng
               tôi qua số điện thoại{" "}
               <span className="font-bold" style={{ color: colorCode }}>
-              (012) 978 645 312
+                (012) 978 645 312
               </span>
               .
             </p>
@@ -199,8 +241,11 @@ const ReservationForm = () => {
                   dateFormat={"dd/MM/yyyy"}
                 />
               </div>
-               {/*  */}
-               <div></div>
+              {/* mã giảm giá*/}
+             <ComboBoxComponent
+              userDiscounts={userDiscounts}
+              couponValue={couponValue} 
+              setCouponValue={setCouponValue}/>
               {/* time picker */}
               <div className="relative w-full border border-[#e5e7eb]-1 rounded-md">
                 <IoIosTime className="absolute top-3 left-3 min-h-5 min-w-5 text-gray-400" />
@@ -217,6 +262,7 @@ const ReservationForm = () => {
                 />
               </div>
             </div>
+
             <div className="mt-6 flex justify-center">
               <ButtonCustome
                 buttonText="Đặt Bàn"
@@ -224,11 +270,31 @@ const ReservationForm = () => {
                 loading={loading}
               />
             </div>
+
+            {/* <Dialog>
+              <DialogTrigger className="w-full mx-auto">
+                  <div className="mt-6 flex justify-center">
+                      <ButtonCustome
+                        buttonText="Đặt Bàn"
+                        handleClick={handleClick}
+                        loading={loading}
+                      />
+                    </div>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                   
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog> */}
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default ReservationForm;

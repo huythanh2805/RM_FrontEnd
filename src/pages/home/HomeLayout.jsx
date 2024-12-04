@@ -19,7 +19,7 @@ const HomeLayout = () => {
         } transition-all duration-500 ease-in-out mx-auto overflow-hidden relative z-10 bg-white`}
       >
         <Header />
-        <main className="">
+        <main >
           <Brush />
           {/* <ScrollToTopButton /> */}
           <Messager />
