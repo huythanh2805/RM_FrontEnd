@@ -88,8 +88,10 @@ const ReservationForm = () => {
         variant: "destructive",
         title: "Bạn chưa điền đầy đủ thông tin",
       });
-
+    const codeGen = `MD${Math.floor(100000 + Math.random() * 900000)}`;
     const startTime = combinedDateTime(datePicker, timePicker);
+    const isPayment = cart.length > 0 ? false : true;
+    const status = cart.length > 0 ? "ISPAYMENT" : "ISWAITING";
     const postData = {
       startTime,
       dishs: cart,
@@ -98,18 +100,23 @@ const ReservationForm = () => {
       phoneNumber,
       userName,
       couponValue,
+      code: codeGen,
+      isPayment,
+      status,
     };
 
     try {
       setLoading(true);
       const { message } = await usePostData(`${ServerUrl}/api/reservations/v2/client`, postData);
       if (cart.length > 0) {
-        // Lưu thông tin món ăn vào localStorage và chuyển hướng sang trang thanh toán
-        localStorage.setItem("reservationDetails", JSON.stringify(postData));
-        navigate("/payment");
+        const existingReservations = JSON.parse(localStorage.getItem("reservationDetails")) || [];
+        if (Array.isArray(existingReservations)) {
+          existingReservations.push(postData);
+          localStorage.setItem("reservationDetails", JSON.stringify(existingReservations));
+          navigate("/payment");
+          clearCart();
+        }
       } else {
-        // Nếu không có món ăn, chỉ lưu thông tin đặt bàn
-
         if (message) {
           setUserName("");
           setPhoneNumber("");

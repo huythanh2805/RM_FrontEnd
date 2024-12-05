@@ -2,14 +2,14 @@ import ButtonCustome from "@/components/ButtonCustome";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 export const HistoryReservation = () => {
   const { userId } = useParams();
   const queryClient = useQueryClient();
   const [opacity] = useState(1);
   const [translateY] = useState(0);
-
+  const navigate = useNavigate();
   // Fetch danh sách đặt bàn
   const { data, error, isLoading } = useQuery(["reservations", userId], async () => {
     const response = await axios.get(`http://localhost:1111/api/reservations/user/${userId}`);
@@ -60,7 +60,9 @@ export const HistoryReservation = () => {
       mutation.mutate(reservationId);
     }
   };
-
+  const handleBack = (code) => {
+    navigate("/payment", { state: { code: code } });
+  };
   // Chuyển đổi trạng thái sang tiếng Việt
   const getStatusInVietnamese = (status) => {
     switch (status) {
@@ -74,6 +76,8 @@ export const HistoryReservation = () => {
         return "Hoàn thành";
       case "CANCELED":
         return "Đã hủy";
+      case "ISPAYMENT":
+        return "Chờ thanh toán";
       default:
         return "Không xác định";
     }
@@ -152,6 +156,9 @@ export const HistoryReservation = () => {
                     case "SEATED":
                       statusClass = "bg-green-200 text-green-600 border border-green-400";
                       break;
+                    case "ISPAYMENT":
+                      statusClass = "bg-amber-50 text-amber-600 border border-amber-400";
+                      break;
                     case "COMPLETED":
                       statusClass = "bg-green-200 text-green-600 border border-green-400";
                       break;
@@ -186,21 +193,39 @@ export const HistoryReservation = () => {
                       </td>
                       <td className="py-4 px-6 text-center">
                         <div className="flex items-center justify-center space-x-4">
-                          {reservation.status !== "CANCELED" &&
-                            reservation.status !== "SEATED" &&
-                            reservation.status !== "COMPLETED" && (
+                          {/* Nếu trạng thái là ISWAITING, hiển thị nút Hủy và Xem Chi Tiết */}
+                          {reservation.status === "ISWAITING" && (
+                            <>
                               <button
                                 onClick={() => handleCancelReservation(reservation._id)}
                                 className="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300 ease-in-out"
                               >
                                 Hủy
                               </button>
-                            )}
-                          <Link to={`/history-details/${reservation?._id}`}>
-                            <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out">
-                              Xem Chi Tiết
+                              <Link to={`/history-details/${reservation?._id}`}>
+                                <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out">
+                                  Xem Chi Tiết
+                                </button>
+                              </Link>
+                            </>
+                          )}
+                          {/* Nếu trạng thái là IS_PAYMENT, hiển thị nút Tiếp tục thanh toán */}
+                          {reservation.status === "ISPAYMENT" && (
+                            <button
+                              onClick={handleBack(reservation.code)}
+                              className="p-2 bg-green-500 text-white rounded hover:bg-yellow-600 transition duration-300 ease-in-out"
+                            >
+                              Tiếp tục thanh toán
                             </button>
-                          </Link>
+                          )}
+                          {/* Nếu trạng thái là các giá trị khác, chỉ hiển thị nút Xem Chi Tiết */}
+                          {reservation.status !== "ISWAITING" && reservation.status !== "ISPAYMENT" && (
+                            <Link to={`/history-details/${reservation?._id}`}>
+                              <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out">
+                                Xem Chi Tiết
+                              </button>
+                            </Link>
+                          )}
                         </div>
                       </td>
                     </tr>
