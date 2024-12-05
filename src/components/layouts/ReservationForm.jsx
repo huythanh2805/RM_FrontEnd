@@ -1,34 +1,26 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useCart } from "@/contexts/CartProvider";
+import { useThemeContext } from "@/contexts/ThemeProvider";
+import { toast } from "@/hooks/use-toast";
+import { useFetchData } from "@/hooks/useFetchData";
+import { usePostData } from "@/hooks/usePostData";
+import { ServerUrl } from "@/utilities/utils";
+import { motion } from "framer-motion";
+import jwtDecode from "jwt-decode";
+import { useState } from "react";
+import DatePicker from "react-datepicker";
 import { FaCalendarCheck, FaPhoneAlt, FaUser } from "react-icons/fa";
 import { FaPerson } from "react-icons/fa6";
 import { IoIosTime, IoMdArrowDropdown } from "react-icons/io";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ButtonCustome from "../ButtonCustome";
-import { useThemeContext } from "@/contexts/ThemeProvider";
-import { motion } from "framer-motion";
-import DatePicker from "react-datepicker";
-import { toast } from "@/hooks/use-toast";
-import jwtDecode from "jwt-decode";
-import { usePostData } from "@/hooks/usePostData";
-import { ServerUrl } from "@/utilities/utils";
-import { useCart } from "@/contexts/CartProvider";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import { ComboBoxComponent } from "./ComboBoxComponent";
-import { useFetchData } from "@/hooks/useFetchData";
-
 
 const ReservationForm = () => {
   const { colorCode } = useThemeContext();
@@ -39,22 +31,20 @@ const ReservationForm = () => {
   const [datePicker, setDatePicker] = useState();
   const [timePicker, setTimePicker] = useState();
   const [loading, setLoading] = useState(false);
-  const [couponValue, setCouponValue] = useState("")
-
-  const [decodedToken, setDecodeToken] = useState(()=>{
-    const token = localStorage.getItem('token')
-    if(!token) return null
-    return jwtDecode(token)
-  })
-
-  const {data: userDiscounts} = useFetchData(`${ServerUrl}/api/userDiscount/reservation/client/getAvailableStatus/${decodedToken?.id}`)
- 
-  // Thiết lập animation cho hình ảnh
+  const [couponValue, setCouponValue] = useState("");
+  const navigate = useNavigate();
+  const [decodedToken, setDecodeToken] = useState(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+    return jwtDecode(token);
+  });
+  const { data: userDiscounts } = useFetchData(
+    `${ServerUrl}/api/userDiscount/reservation/client/getAvailableStatus/${decodedToken?.id}`
+  );
   const imgAnimation = {
-    hidden: { x: -200, opacity: 0 }, // Vị trí ban đầu bên trái
-    visible: { x: 0, opacity: 1, transition: { duration: 0.5 } }, // Vị trí cuối cùng
+    hidden: { x: -200, opacity: 0 },
+    visible: { x: 0, opacity: 1, transition: { duration: 0.5 } },
   };
-
   const combinedDateTime = (date, time) => {
     const fomartedDate = new Date(
       date.getFullYear(),
@@ -65,28 +55,22 @@ const ReservationForm = () => {
     );
     return fomartedDate;
   };
-
   const handleClick = async () => {
-    // console.log({couponValue})
-    // console.log(userDiscounts?.discountId?.minOrderValue)
-    
-    // console.log({discount})
-    
-    if(couponValue || couponValue !== ''){
-      const totalPrice = cart.reduce((acc, item)=>{
-        return acc += item.price
-      },0)
-      const discount = userDiscounts.find(item=> item._id === couponValue)
-      console.log({totalPrice})
-      console.log(discount.discountId.minOrderValue)
-       if(discount.discountId.minOrderValue > totalPrice) {
-         return toast({
-            variant: "destructive",
-            title: `Số tiền tối thiểu của mã là ${discount?.discountId?.minOrderValue}`,
-          });
+    if (couponValue || couponValue !== "") {
+      console.log(cart);
+      const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      const discount = userDiscounts.find((item) => item._id === couponValue);
+      console.log({ totalPrice });
+      console.log(discount?.discountId?.minOrderValue);
 
-       }
+      if (discount && discount.discountId.minOrderValue > totalPrice) {
+        return toast({
+          variant: "destructive",
+          title: `Số tiền tối thiểu của mã là ${discount.discountId.minOrderValue}`,
+        });
+      }
     }
+
     const token = localStorage.getItem("token");
     const decodedToken = jwtDecode(token);
     if (!token || !decodedToken.id)
@@ -118,24 +102,27 @@ const ReservationForm = () => {
 
     try {
       setLoading(true);
-      const { message } = await usePostData(
-        `${ServerUrl}/api/reservations/v2/client`,
-        postData
-      );
-      if (message) {
-        setUserName("");
-        setPhoneNumber("");
-        setPersonCount(1);
-        setDatePicker(null);
-        setTimePicker(null);
-        setCouponValue("")
-        clearCart();
-        toast({ variant: "success", title: message });
+      const { message } = await usePostData(`${ServerUrl}/api/reservations/v2/client`, postData);
+      if (cart.length > 0) {
+        // Lưu thông tin món ăn vào localStorage và chuyển hướng sang trang thanh toán
+        localStorage.setItem("reservationDetails", JSON.stringify(postData));
+        navigate("/payment");
+      } else {
+        // Nếu không có món ăn, chỉ lưu thông tin đặt bàn
+
+        if (message) {
+          setUserName("");
+          setPhoneNumber("");
+          setPersonCount(1);
+          setDatePicker(null);
+          setTimePicker(null);
+          setCouponValue("");
+          clearCart();
+          toast({ variant: "success", title: message });
+        }
       }
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
-      console.log(error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -143,20 +130,6 @@ const ReservationForm = () => {
 
   return (
     <div className="w-full">
-      {/* <div
-        className="text-xl font-semibold mb-2 flex justify-center items-center"
-        style={{ color: colorCode }}
-      >
-        <div
-          className="border-t w-12 mr-2"
-          style={{ borderColor: colorCode }}
-        />
-        ĐẶT BÀN
-        <div
-          className="border-t w-12 ml-2"
-          style={{ borderColor: colorCode }}
-        />
-      </div> */}
       <div className="pt-10 w-full">
         <div className="relative w-full flex flex-col lg:flex-row justify-between items-start gap-10 px-10 py-12 border border-gray-200 shadow-lg rounded-md bg-white">
           <motion.div
@@ -168,23 +141,19 @@ const ReservationForm = () => {
             <img
               src="/imgs/home3-deco-1.png"
               alt="Chef"
-              className="absolute -left-[10px] -translate-y-7 max-w-[380px] transition-transform transform hover:scale-105 hover:-translate-x-5 hover:-translate-y-2" // Hiệu ứng hover
+              className="absolute -left-[10px] -translate-y-7 max-w-[380px] transition-transform transform hover:scale-105 hover:-translate-x-5 hover:-translate-y-2"
             />
           </motion.div>
-
-          {/* Form */}
           <div className="w-full lg:w-2/3 flex-[2]">
             <p className="text-gray-800 text-center lg:text-left mb-6 newFont text-[20px]">
-              Chúng tôi rất vui được hỗ trợ bạn đặt chỗ trực tuyến thông qua hệ
-              thống hiện đại và tiện lợi của chúng tôi. <br /> Nếu bạn cần sự hỗ
-              trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng
-              tôi qua số điện thoại{" "}
+              Chúng tôi rất vui được hỗ trợ bạn đặt chỗ trực tuyến thông qua hệ thống hiện đại và tiện lợi của chúng
+              tôi. <br /> Nếu bạn cần sự hỗ trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng tôi qua số
+              điện thoại{" "}
               <span className="font-bold" style={{ color: colorCode }}>
                 (012) 978 645 312
               </span>
               .
             </p>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="relative">
                 <FaUser className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
@@ -219,10 +188,7 @@ const ReservationForm = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   {[1, 2, 3, 4, 5, 6].map((count) => (
-                    <DropdownMenuItem
-                      key={count}
-                      onClick={() => setPersonCount(count)}
-                    >
+                    <DropdownMenuItem key={count} onClick={() => setPersonCount(count)}>
                       {count} người
                     </DropdownMenuItem>
                   ))}
@@ -241,12 +207,13 @@ const ReservationForm = () => {
                   dateFormat={"dd/MM/yyyy"}
                 />
               </div>
-              {/* mã giảm giá*/}
-             <ComboBoxComponent
-              userDiscounts={userDiscounts}
-              couponValue={couponValue} 
-              setCouponValue={setCouponValue}/>
-              {/* time picker */}
+
+              <ComboBoxComponent
+                userDiscounts={userDiscounts}
+                couponValue={couponValue}
+                setCouponValue={setCouponValue}
+              />
+
               <div className="relative w-full border border-[#e5e7eb]-1 rounded-md">
                 <IoIosTime className="absolute top-3 left-3 min-h-5 min-w-5 text-gray-400" />
                 <DatePicker
@@ -264,11 +231,7 @@ const ReservationForm = () => {
             </div>
 
             <div className="mt-6 flex justify-center">
-              <ButtonCustome
-                buttonText="Đặt Bàn"
-                handleClick={handleClick}
-                loading={loading}
-              />
+              <ButtonCustome buttonText="Đặt Bàn" handleClick={handleClick} loading={loading} />
             </div>
 
             {/* <Dialog>
@@ -294,7 +257,7 @@ const ReservationForm = () => {
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export default ReservationForm;

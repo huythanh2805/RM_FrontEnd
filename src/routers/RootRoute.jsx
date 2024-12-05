@@ -36,6 +36,7 @@ import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
 import UserUpdate from "@/pages/dashboard/users/UserUpdate";
 import About from "@/pages/home/About";
+import { Checkout } from "@/pages/home/Checkout";
 import ContactUs from "@/pages/home/ContactUs";
 import { HistoryReservation } from "@/pages/home/HistoryReservation";
 import { HistoryReservationDetail } from "@/pages/home/HistoryReservationDetails";
@@ -92,6 +93,10 @@ const router = createBrowserRouter([
       {
         path: "history-details/:reservation_id",
         element: <HistoryReservationDetail />,
+      },
+      {
+        path: "payment",
+        element: <Checkout />,
       },
     ],
   },
