@@ -32,7 +32,7 @@ const Calculator = ({
   deleteOrderedFood,
   deletedOrderedCombo,
   updateOrderedFood,
-  userDiscount
+  userDiscount,
 }) => {
   const [isPaid, setIsPaid] = useState(false);
   const [neededPaid, setNeededPaid] = useState(0);
@@ -43,39 +43,39 @@ const Calculator = ({
   const [selectedRows, setSelectedRows] = useState([]);
   const [billId, setBillId] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
-  const [discountValue, setDiscountValue] = useState(0)
-  const [discount, setDiscount] = useState(null)
-  const [newDiscount, setNewDiscount] = useState('')
-  const [VAT_money, setVAT_money] = useState(0)
+  const [discountValue, setDiscountValue] = useState(0);
+  const [discount, setDiscount] = useState(null);
+  const [newDiscount, setNewDiscount] = useState("");
+  const [VAT_money, setVAT_money] = useState(0);
   const navigate = useNavigate();
   const totalPrice = orderedFoods.reduce((sum, item) => {
     if (item.status === "ISCANCELED") return sum + 0;
     return sum + item.quantity * item.price;
   }, 0);
   const router = useNavigate();
-  useEffect(()=>{
-   if(userDiscount) setDiscount(userDiscount)
-  },[userDiscount])
-  useEffect(()=>{
-    if(!discount) return
-    if(discount.discountId.discountType === "PERCENTAGE"){
-      setDiscountValue(totalPrice * (Number(discount.discountId.discountValue)/100))
-    }else{
-      setDiscountValue(Number(discount.discountId.discountValue))
+  useEffect(() => {
+    if (userDiscount) setDiscount(userDiscount);
+  }, [userDiscount]);
+  useEffect(() => {
+    if (!discount) return;
+    if (discount.discountId.discountType === "PERCENTAGE") {
+      setDiscountValue(totalPrice * (Number(discount.discountId.discountValue) / 100));
+    } else {
+      setDiscountValue(Number(discount.discountId.discountValue));
     }
-  },[totalPrice, discount])
+  }, [totalPrice, discount]);
 
   useEffect(() => {
-    const discountedMoney = totalPrice - discountValue
+    const discountedMoney = totalPrice - discountValue;
     const vat = (5 / 100) * discountedMoney;
-    setVAT_money(vat)
+    setVAT_money(vat);
     setNeededPaid(discountedMoney + vat);
 
     setChange(paidMoney - neededPaid);
   }, [paidMoney, totalPrice, discountValue]);
 
   const vt = (5 / 100) * totalPrice;
-  const total = (totalPrice - discountValue) + vt;
+  const total = totalPrice - discountValue + vt;
   // delete orderedFood
   const handleDeleteOrderedFood = async (orderedFood_id, type) => {
     console.log(type);
@@ -147,7 +147,7 @@ const Calculator = ({
   };
 
   const handlePayment = async () => {
-    if(paymentMethod === 'cash'){
+    if (paymentMethod === "cash") {
       try {
         const res = await fetch(`${ServerUrl}/api/bills`, {
           method: "POST",
@@ -160,7 +160,7 @@ const Calculator = ({
             total_money: neededPaid,
             discount_money: discountValue,
             VAT_money: VAT_money,
-            userDiscountId: discount?._id
+            userDiscountId: discount?._id,
           }),
         });
         const data = await res.json();
@@ -170,13 +170,11 @@ const Calculator = ({
             title: "Something went wrong while creating the bill.",
           });
         }
-  
+
         setBillId(data.bill_id);
         setIsPaid(true);
-      } catch (error) {
-        
-      }
-    }else{
+      } catch (error) {}
+    } else {
       if (change < 0) {
         return toast({
           variant: "destructive",
@@ -184,7 +182,7 @@ const Calculator = ({
         });
       }
       try {
-        const res = await fetch(`https://fc02-116-96-44-27.ngrok-free.app/api/bills`, {
+        const res = await fetch(` https://b1b4-27-72-104-190.ngrok-free.app/api/bills`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -194,7 +192,7 @@ const Calculator = ({
             original_money: totalPrice,
           }),
         });
-  
+
         const data = await res.json();
         if (!res.ok) {
           return toast({
@@ -202,7 +200,7 @@ const Calculator = ({
             title: "Something went wrong while creating the bill.",
           });
         }
-  
+
         setBillId(data.bill_id);
         setIsPaid(true);
       } catch (error) {
@@ -276,28 +274,29 @@ const Calculator = ({
       socket.disconnect();
     };
   }, []);
- const handleDiscountInput = async (e)=>{
-  e.preventDefault()
-  try {
-    const url = `${ServerUrl}/api/userDiscount/reservation/admin/${newDiscount}/${totalPrice}`
-   const res = await fetch(url, {
-    method: "GET"
-   })
-   const data = await res.json()
-   if(!res.ok) return toast({
-    variant: "destructive",
-    title: data.message,
-  });
-   console.log(data.userDiscount)
-   setDiscount(data.userDiscount)
-   setNewDiscount('')
-  } catch (error) {
-    toast({
-      variant: "destructive",
-      title: "Something went wrong with search discount",
-    });
-  }
- }
+  const handleDiscountInput = async (e) => {
+    e.preventDefault();
+    try {
+      const url = `${ServerUrl}/api/userDiscount/reservation/admin/${newDiscount}/${totalPrice}`;
+      const res = await fetch(url, {
+        method: "GET",
+      });
+      const data = await res.json();
+      if (!res.ok)
+        return toast({
+          variant: "destructive",
+          title: data.message,
+        });
+      console.log(data.userDiscount);
+      setDiscount(data.userDiscount);
+      setNewDiscount("");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Something went wrong with search discount",
+      });
+    }
+  };
   return (
     <div className="px-3 py-4 max-h-[800px] min-w-[650px] overflow-scroll">
       <Table>
@@ -417,47 +416,46 @@ const Calculator = ({
                       Nhập mã
                     </p>
                     <form onSubmit={handleDiscountInput} className="flex-[2] min-w-[244px]">
-                    <Input
-                      className=" rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                      <Input
+                        className=" rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
                      placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px] "
-                      placeholder={`Nhập mã giảm giá mới`}
-                      onChange={(e)=>setNewDiscount(e.target.value)}
-                      value={newDiscount}
-                    />
+                        placeholder={`Nhập mã giảm giá mới`}
+                        onChange={(e) => setNewDiscount(e.target.value)}
+                        value={newDiscount}
+                      />
                     </form>
                   </div>
-                 {
-                  discount &&
-                   <div className="w-full flex items-center py-2">
-                   <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
-                     Mã giảm
-                   </p>
-                   <Input
-                     className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                  {discount && (
+                    <div className="w-full flex items-center py-2">
+                      <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                        Mã giảm
+                      </p>
+                      <Input
+                        className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
                     placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
-                     disabled
-                     type="number"
-                     placeholder={
-                       discount.discountId?.discountType === "PERCENTAGE" ?
-                       `${discount.code}  (${discount.discountId.discountValue}%)`:
-                       `${discount.code} (${shortenNumber(Number(discount.discountId.discountValue))}k)`
-                     }
-                   />
-                 </div>
-                 }
-                 <div className="w-full flex items-center py-2">
-                   <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
-                     Số tiền giảm
-                   </p>
-                   <Input
-                     className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                        disabled
+                        type="number"
+                        placeholder={
+                          discount.discountId?.discountType === "PERCENTAGE"
+                            ? `${discount.code}  (${discount.discountId.discountValue}%)`
+                            : `${discount.code} (${shortenNumber(Number(discount.discountId.discountValue))}k)`
+                        }
+                      />
+                    </div>
+                  )}
+                  <div className="w-full flex items-center py-2">
+                    <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                      Số tiền giảm
+                    </p>
+                    <Input
+                      className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
                    placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
-                     disabled
-                     type="number"
-                     placeholder={`${formatCurrency(discountValue)}`}
-                   />
-                 </div>
-                 <div className="w-full flex items-center py-2">
+                      disabled
+                      type="number"
+                      placeholder={`${formatCurrency(discountValue)}`}
+                    />
+                  </div>
+                  <div className="w-full flex items-center py-2">
                     <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
                       VAT
                     </p>

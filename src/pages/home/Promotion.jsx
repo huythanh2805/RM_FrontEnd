@@ -1,10 +1,10 @@
 import { useThemeContext } from "@/contexts/ThemeProvider";
-import { useEffect, useState } from "react";
-import Discount from "./Discount";
+import { toast } from "@/hooks/use-toast";
 import { useFetchData } from "@/hooks/useFetchData";
 import { ServerUrl } from "@/utilities/utils";
 import jwtDecode from "jwt-decode";
-import { toast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
+import Discount from "./Discount";
 import SectionTitle from "./SectionTitle";
 const data = [
   {
@@ -50,17 +50,17 @@ const Promotion = () => {
   const [opacity, setOpacity] = useState(1);
   const [translateY, setTranslateY] = useState(0);
   const [selectedYear, setSelectedYear] = useState(null);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
-  const [decodedToken, setDecodeToken] = useState(()=>{
-    const token = localStorage.getItem('token')
-    if(!token) return null
-    return jwtDecode(token)
-  })
+  const [decodedToken, setDecodeToken] = useState(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+    return jwtDecode(token);
+  });
 
   const { colorCode } = useThemeContext();
 
-  const { data: discounts } = useFetchData(`${ServerUrl}/api/discount`)
+  const { data: discounts } = useFetchData(`${ServerUrl}/api/discount`);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,143 +78,107 @@ const Promotion = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  const handleTakeCoupon = async (coupon_id) =>{
-    if(!decodedToken.id) return toast({
-      variant: "destructive",
-      title: "Bạn cần đăng nhập",
-    })
+  const handleTakeCoupon = async (coupon_id) => {
+    if (!decodedToken.id)
+      return toast({
+        variant: "destructive",
+        title: "Bạn cần đăng nhập",
+      });
     try {
-      setLoading(true)
-      const url = `${ServerUrl}/api/userDiscount`
-      const res  = await fetch(url, {
+      setLoading(true);
+      const url = `${ServerUrl}/api/userDiscount`;
+      const res = await fetch(url, {
         method: "POST",
         headers: {
-         "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-           discountId: coupon_id,
-           userId: decodedToken.id
+          discountId: coupon_id,
+          userId: decodedToken.id,
         }),
-      })
-      const data = await res.json()
-      setLoading(false)
-      if(!res.ok) return toast({
-        variant: "destructive",
-        title: data.message,
-      })
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (!res.ok)
+        return toast({
+          variant: "destructive",
+          title: data.message,
+        });
 
       toast({
         variant: "success",
         title: data.message,
-      })
-      
+      });
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       return toast({
         variant: "destructive",
         title: "Something went wrong",
-      })
+      });
     }
-
-  }
+  };
   return (
-   <>
-    <div>
-      <div className="relative w-full h-[200px] overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('imgs/pagetitle-about.jpg')",
-            backgroundAttachment: "fixed",
-            filter: "brightness(0.7)",
-          }}
-        ></div>
-        <div className="absolute inset-0 bg-black opacity-30"></div>
-        <div
-          className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white"
-          style={{
-            opacity: opacity,
-            transform: `translateY(-${translateY}px)`,
-            transition: "opacity 0.3s, transform 0.3s",
-          }}
-        >
-          <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">Mã Giảm Giá</h1>
-          <p className="text-3xl md:text-[20px] sm:text-[15px] mt-4 flex items-center justify-center">
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
-            <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
-            <span className="ml-4">Hãy ghé thăm nhà hàng của chúng tôi để nhận được nhiều ưu đãi</span>
-            <span className="bg-white h-[2px] w-[100px] ml-4 hidden lg:block"></span>
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
-          </p>
-        </div>
-      </div>
-
- {/* Coupon */}
- <SectionTitle title={'Coupons'} desc={'Săn quà liền tay'} />
- <div className="w-screen overflow-scroll overflow-x-scroll px-5 py-5 coupon_container">
-    <div className="flex w-fit gap-10">
-    {
-      discounts && discounts.map(discount=>(
-        <Discount
-         key={discount._id}
-         _id={discount._id}
-         buttonTitle={'Lấy'}
-         loading={loading}
-         type={discount.discountType}
-         expriedDate={discount.expireDate}
-         discountValue={discount.discountValue}
-         minOrderValue={discount.minOrderValue}
-         handleClick={handleTakeCoupon}
-        />
-      ))
-    }
-    </div>
-    </div>
-
-      <section>
-        <div className="bg-white py-12 px-6">
-          <div className="max-w-6xl mx-auto space-y-16">
-            {/* Section 1: Ảnh bên trái - Chữ bên phải */}
-            <div className="flex flex-col md:flex-row items-center gap-10">
-              <div className="flex-1">
-                <img
-                  src="https://luatvietphong.vn/wp-content/uploads/2021/08/4f661eafa00b1b249da13268a1bf900f.jpg"
-                  alt="Laptop Sleeve"
-                  className="rounded-lg shadow-md"
-                />
-              </div>
-              <div className="flex-1">
-                <h2 className="text-2xl font-semibold mb-4">Minimal and thoughtful</h2>
-                <p className="text-gray-600 text-lg">
-                  Our laptop sleeve is compact and precisely fits 13" devices. The zipper allows you to access the
-                  interior with ease, and the front pouch provides a convenient place for your charger cable.
-                </p>
-              </div>
-            </div>
-
-            {/* Section 2: Ảnh bên phải - Chữ bên trái */}
-            <div className="flex flex-col md:flex-row items-center gap-10">
-              <div className="flex-1 md:order-2">
-                <img
-                  src="https://bizflyportal.mediacdn.vn/thumb_wm/1000,100/bizflyportal/images/cac16316297062493.jpeg"
-                  alt="Zipper Detail"
-                  className="rounded-lg shadow-md"
-                />
-              </div>
-              <div className="flex-1 md:order-1">
-                <h2 className="text-2xl font-semibold mb-4">Refined details</h2>
-                <p className="text-gray-600 text-lg">
-                  We design every detail with the best materials and finishes. This laptop sleeve features durable
-                  canvas with double-stitched construction, a felt interior, and a high-quality zipper that hold up to
-                  daily use.
-                </p>
-              </div>
-            </div>
+    <>
+      <div>
+        <div className="relative w-full h-[200px] overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: "url('imgs/pagetitle-about.jpg')",
+              backgroundAttachment: "fixed",
+              filter: "brightness(0.7)",
+            }}
+          ></div>
+          <div className="absolute inset-0 bg-black opacity-30"></div>
+          <div
+            className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white"
+            style={{
+              opacity: opacity,
+              transform: `translateY(-${translateY}px)`,
+              transition: "opacity 0.3s, transform 0.3s",
+            }}
+          >
+            <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">Mã Giảm Giá</h1>
+            <p className="text-3xl md:text-[20px] sm:text-[15px] mt-4 flex items-center justify-center">
+              <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
+              <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
+              <span className="ml-4">Hãy ghé thăm nhà hàng của chúng tôi để nhận được nhiều ưu đãi</span>
+              <span className="bg-white h-[2px] w-[100px] ml-4 hidden lg:block"></span>
+              <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
+            </p>
           </div>
         </div>
-      </section>
-    </div>
-   </>
+
+        {/* Coupon */}
+        {/* Coupon */}
+        <SectionTitle title={"Coupons"} desc={"Săn quà liền tay"} />
+        <div className="w-full px-5 py-5">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "2.5rem",
+              justifyItems: "center",
+            }}
+          >
+            {discounts &&
+              discounts.map((discount) => (
+                <Discount
+                  key={discount._id}
+                  _id={discount._id}
+                  buttonTitle={"Lấy"}
+                  loading={loading}
+                  type={discount.discountType}
+                  expriedDate={discount.expireDate}
+                  discountValue={discount.discountValue}
+                  minOrderValue={discount.minOrderValue}
+                  handleClick={handleTakeCoupon}
+                />
+              ))}
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
