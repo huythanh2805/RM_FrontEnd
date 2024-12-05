@@ -182,7 +182,7 @@ const Calculator = ({
         });
       }
       try {
-        const res = await fetch(` https://b1b4-27-72-104-190.ngrok-free.app/api/bills`, {
+        const res = await fetch(`https://8757-116-96-45-114.ngrok-free.app/api/bills`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

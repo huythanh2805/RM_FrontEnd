@@ -1,19 +1,17 @@
-import { Button } from "@/components/ui/button";
-import { DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useCart } from "@/contexts/CartProvider";
 import { toast } from "@/hooks/use-toast";
 import { useFetchData } from "@/hooks/useFetchData";
 import { ServerUrl } from "@/utilities/utils";
-import { Dialog } from "@radix-ui/react-dialog";
 import jwtDecode from "jwt-decode";
-import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 export const Checkout = () => {
   const [reservationDetails, setReservationDetails] = useState(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const navigate = useNavigate();
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
-  const [isPaid, setIsPaid] = useState(false);
+  const { cart, clearCart } = useCart();
   const [decodedToken, setDecodeToken] = useState(() => {
     const token = localStorage.getItem("token");
     if (!token) return null;
@@ -31,6 +29,24 @@ export const Checkout = () => {
       navigate("/");
     }
   }, [navigate]);
+  useEffect(() => {
+    const socket = io("http://localhost:1111");
+
+    socket.on("notification", (notification) => {
+      // Đảm bảo decodedToken tồn tại trước khi gọi navigate
+      if (decodedToken?.id) {
+        navigate(`/history/${decodedToken.id}`);
+        return toast({
+          variant: "success",
+          title: "Thanh Toán thành công",
+        });
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [decodedToken, navigate]);
   // Tính tổng tiền món ăn
   const computeTotalAmount = (dishes) => {
     return dishes.reduce((total, dish) => total + dish.price * dish.quantity, 0);
@@ -64,7 +80,7 @@ export const Checkout = () => {
   const totalAfterTaxAndDiscount = totalAmount + tax - discountAmount;
   const totalDeposit = (totalAfterTaxAndDiscount * 25) / 100;
   const generateQrCodeUrl = (totalDeposit, storedDetails) => {
-    const description = `${storedDetails?.phoneNumber} ${storedDetails?.user_id} ${storedDetails?.guests_count}`;
+    const description = `${storedDetails?.code}`;
     const bank = "MB";
     const account = "0386426150";
     const template = "compact";
@@ -73,7 +89,7 @@ export const Checkout = () => {
     )}&template=${encodeURIComponent(template)}&amount=${encodeURIComponent(totalDeposit)}&des=${description}`;
     return qrUrl;
   };
-  const handlePayment = async () => {
+  const handlePayment = () => {
     if (!reservationDetails) {
       toast({
         variant: "destructive",
@@ -81,49 +97,15 @@ export const Checkout = () => {
       });
       return;
     }
-
     // Tạo mã QR để hiển thị cho người dùng
     const qrCodeUrl = generateQrCodeUrl(totalDeposit, reservationDetails);
     console.log(qrCodeUrl);
     setQrCodeUrl(qrCodeUrl);
+    clearCart();
     toast({
       variant: "success",
       title: "Mã QR đã được tạo, vui lòng quét để thanh toán.",
     });
-
-    try {
-      const response = await fetch(`https://b1b4-27-72-104-190.ngrok-free.app/api/webhook/seepay/reservation`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: `${reservationDetails.phoneNumber} ${reservationDetails.user_id} ${reservationDetails.guests_count}`,
-          transferAmount: totalDeposit,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        toast({
-          variant: "success",
-          title: result.message || "Thanh toán thành công!",
-        });
-        setPaymentSuccess(true); // Có thể sử dụng state để điều hướng hoặc thông báo thêm
-
-        // Xóa giỏ hàng sau khi thanh toán thành công
-        clearCart();
-      } else {
-        throw new Error(result.message || "Thanh toán không thành công");
-      }
-    } catch (error) {
-      console.error("Thanh toán lỗi:", error);
-      toast({
-        variant: "destructive",
-        title: "Có lỗi xảy ra khi thanh toán.",
-      });
-    }
   };
 
   if (!reservationDetails) {
@@ -282,34 +264,6 @@ export const Checkout = () => {
           )}
         </div>
       </section>
-      <Dialog open={isPaid} onOpenChange={setIsPaid}>
-        <DialogContent className="max-w-[330px] md:max-w-[450px] bg-light-bg_2 dark:bg-dark-bg_2 rounded-md text-white dark:text-white">
-          <DialogHeader className="w-full flex flex-col items-center justify-center gap-3 ">
-            <DialogTitle className="text-[25px] font-normal text-light-text dark:text-dark-text">
-              Thank You!
-            </DialogTitle>
-            <div className="px-2 py-2 rounded-full border-[6px] border-green-1 ">
-              <Check width={85} height={85} className="text-green-1" />
-            </div>
-          </DialogHeader>
-          <div className="w-full">
-            <h2 className="leading-6 text-center text-light-text dark:text-dark-text">
-              Cảm ơn bạn đã dùng dịch vụ nhà hàng của chúng tôi. Check your bill?
-            </h2>
-          </div>
-          <div className="flex items-center justify-end py-2 gap-5">
-            <DialogClose asChild>
-              <Button
-                onClick={() => navigate("/admin/bills")}
-                className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
-                text-white dark:text-white hover:scale-90 transition-all ease-in"
-              >
-                Đóng
-              </Button>
-            </DialogClose>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
