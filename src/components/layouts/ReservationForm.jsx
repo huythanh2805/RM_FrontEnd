@@ -1,9 +1,3 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/contexts/CartProvider";
 import { useThemeContext } from "@/contexts/ThemeProvider";
@@ -17,7 +11,7 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import { FaCalendarCheck, FaPhoneAlt, FaUser } from "react-icons/fa";
 import { FaPerson } from "react-icons/fa6";
-import { IoIosTime, IoMdArrowDropdown } from "react-icons/io";
+import { IoIosTime } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import ButtonCustome from "../ButtonCustome";
 import { ComboBoxComponent } from "./ComboBoxComponent";
@@ -153,9 +147,8 @@ const ReservationForm = () => {
           </motion.div>
           <div className="w-full lg:w-2/3 flex-[2]">
             <p className="text-gray-800 text-center lg:text-left mb-6 newFont text-[20px]">
-              Chúng tôi rất vui được hỗ trợ bạn đặt chỗ trực tuyến thông qua hệ thống hiện đại và tiện lợi của chúng
-              tôi. <br /> Nếu bạn cần sự hỗ trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng tôi qua số
-              điện thoại{" "}
+              Chúng tôi rất vui được hỗ trợ bạn đặt chỗ trực tuyến thông qua hệ thống hiện đại của chúng tôi. <br /> Nếu
+              bạn cần sự hỗ trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng tôi qua số điện thoại{" "}
               <span className="font-bold" style={{ color: colorCode }}>
                 (012) 978 645 312
               </span>
@@ -180,27 +173,27 @@ const ReservationForm = () => {
                   className="pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <div className="relative">
-                    <FaPerson className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                    <Input
-                      value={`${personCount} người`}
-                      className="cursor-pointer pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
-                      readOnly
-                    />
-                    <IoMdArrowDropdown className="absolute right-3 top-3 h-5 w-5 text-gray-400" />{" "}
-                    {/* Mũi tên dropdown */}
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {[1, 2, 3, 4, 5, 6].map((count) => (
-                    <DropdownMenuItem key={count} onClick={() => setPersonCount(count)}>
-                      {count} người
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="relative">
+                <FaPerson className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                <Input
+                  type="number"
+                  min={1}
+                  value={personCount}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value, 10);
+                    if (!isNaN(value) && value > 0 && value <= 20) {
+                      setPersonCount(value);
+                    } else if (e.target.value === "") {
+                      setPersonCount("");
+                    }
+                  }}
+                  onBlur={() => {
+                    if (!personCount) setPersonCount(1);
+                  }}
+                  placeholder="Số người"
+                  className="pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </div>
 
               {/* date picker */}
               <div className="relative w-full border border-[#e5e7eb]-1 rounded-md">
@@ -240,26 +233,6 @@ const ReservationForm = () => {
             <div className="mt-6 flex justify-center">
               <ButtonCustome buttonText="Đặt Bàn" handleClick={handleClick} loading={loading} />
             </div>
-
-            {/* <Dialog>
-              <DialogTrigger className="w-full mx-auto">
-                  <div className="mt-6 flex justify-center">
-                      <ButtonCustome
-                        buttonText="Đặt Bàn"
-                        handleClick={handleClick}
-                        loading={loading}
-                      />
-                    </div>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Are you absolutely sure?</DialogTitle>
-                  <DialogDescription>
-                   
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog> */}
           </div>
         </div>
       </div>

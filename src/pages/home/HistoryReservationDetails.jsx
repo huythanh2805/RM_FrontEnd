@@ -50,7 +50,7 @@ export const HistoryReservationDetail = () => {
             transition: "opacity 0.3s, transform 0.3s",
           }}
         >
-          <h1 className="text-5xl md:text-4xl sm:text-3xl font-bold">CHI TIẾT LỊCH SỬ ĐẶT BÀN</h1>
+          <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">Chi tiết lịch sử đặt bàn</h1>
           <p className="text-4xl md:text-xl sm:text-xl mt-4 flex items-center justify-center">
             <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
             <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
