@@ -244,7 +244,7 @@ const CompletedBill = () => {
                   <TableFooter>
                     <TableRow className="bg-light-bg dark:bg-dark-bg">
                       <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
-                        Tổng tiền (Trước thuế)
+                        Tổng tiền
                       </TableCell>
                       <TableCell colSpan={2} className="text-right text-2xl">
                         {bill.discounted_money
@@ -262,7 +262,15 @@ const CompletedBill = () => {
                     </TableRow>
                     <TableRow className="bg-light-bg dark:bg-dark-bg">
                       <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
-                        Tổng tiền (Sau thuế)
+                        Đã cọc
+                      </TableCell>
+                      <TableCell colSpan={2} className="text-right text-2xl">
+                        {formatCurrency(bill.deposit_money)}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow className="bg-light-bg dark:bg-dark-bg">
+                      <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
+                        Tổng phải thanh toán
                       </TableCell>
                       <TableCell colSpan={2} className="text-right text-2xl">
                         {formatCurrency(bill.original_money + (bill.original_money * bill.VAT) / 100)}

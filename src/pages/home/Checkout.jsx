@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 export const Checkout = () => {
   const [reservationDetails, setReservationDetails] = useState(null);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const navigate = useNavigate();
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
   const { cart, clearCart } = useCart();
@@ -21,19 +20,24 @@ export const Checkout = () => {
     `${ServerUrl}/api/userDiscount/reservation/client/getAvailableStatus/${decodedToken?.id}`
   );
   useEffect(() => {
-    const storedDetails = localStorage.getItem("reservationDetails");
-    console.log(storedDetails);
-    if (storedDetails) {
-      setReservationDetails(JSON.parse(storedDetails));
+    const params = new URLSearchParams(location.search);
+    const currentCode = params.get("code");
+
+    const storedDetails = JSON.parse(localStorage.getItem("reservationDetails")) || [];
+    if (currentCode && Array.isArray(storedDetails)) {
+      const reservation = storedDetails.find((item) => item.code === currentCode);
+      if (reservation) {
+        setReservationDetails(reservation);
+      } else {
+        navigate("/");
+      }
     } else {
       navigate("/");
     }
-  }, [navigate]);
+  }, [location, navigate]);
   useEffect(() => {
     const socket = io("http://localhost:1111");
-
     socket.on("notification", (notification) => {
-      // Đảm bảo decodedToken tồn tại trước khi gọi navigate
       if (decodedToken?.id) {
         navigate(`/history/${decodedToken.id}`);
         return toast({
@@ -120,7 +124,7 @@ export const Checkout = () => {
     }).format(amount);
   };
   const handleBack = () => {
-    navigate("/reservation");
+    navigate(`/history/${decodedToken.id}`);
   };
   return (
     <div>

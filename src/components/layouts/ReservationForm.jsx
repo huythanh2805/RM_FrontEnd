@@ -113,9 +113,9 @@ const ReservationForm = () => {
         if (Array.isArray(existingReservations)) {
           existingReservations.push(postData);
           localStorage.setItem("reservationDetails", JSON.stringify(existingReservations));
-          navigate("/payment");
-          clearCart();
         }
+        navigate(`/payment?code=${codeGen}`);
+        clearCart();
       } else {
         if (message) {
           setUserName("");
