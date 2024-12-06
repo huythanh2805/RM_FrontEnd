@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 const BillList = () => {
   const [dataBill, setDataBill] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemPerPage = 5;
+  const itemPerPage = 10;
 
   const fetchData = () => {
     axios
@@ -111,10 +111,7 @@ const BillList = () => {
                   </td>
                   <td className="py-3 px-4 text-sl text-gray-800">
                     <Link to={`/admin/bills/${bill._id}/detail`}>
-                      {formatCurrency(
-                        bill.original_money +
-                          (bill.original_money * bill.VAT) / 100
-                      )}
+                      {formatCurrency(bill.total_money)}
                     </Link>
                   </td>
                   <td className="py-3 px-4 text-sl text-gray-800">
