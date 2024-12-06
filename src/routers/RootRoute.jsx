@@ -202,7 +202,7 @@ const router = createBrowserRouter([
         element: <ListReservation />,
       },
       {
-        path: "foodOrder/:reservationId",
+        path: "foodOrder/:reservationId/",
         element: <FoodOrder />,
       },
       {

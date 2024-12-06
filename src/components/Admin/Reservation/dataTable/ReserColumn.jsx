@@ -1,38 +1,18 @@
-
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Badge } from "@/components/ui/badge"
-import { useNavigate } from "react-router-dom"
-import { formatDate, formatPhoneNumber } from "@/utilities/utils"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { formatDate, formatPhoneNumber } from "@/utilities/utils";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const ReservationColumn = ({
-  updateTable,
-  selectTable,
-  cancelReser,
-  confirmReser,
-  completedReservation
- }) => {
-
+export const ReservationColumn = ({ updateTable, selectTable, cancelReser, confirmReser, completedReservation }) => {
   const columns = [
     {
       id: "select",
       header: ({ table }) => (
         <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
+          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
         />
@@ -54,8 +34,8 @@ export const ReservationColumn = ({
       header: "Tên khách",
       size: 200, //starting column size
       minSize: 200,
-      maxSize:400,
-      enableResizing: true
+      maxSize: 400,
+      enableResizing: true,
     },
     {
       accessorKey: "table_id",
@@ -64,32 +44,18 @@ export const ReservationColumn = ({
       minSize: 100,
       enableResizing: true,
       cell: ({ row }) => {
-        const table = row.original.table_id?.name
+        const table = row.original.table_id?.name;
         return (
           <div className="flex flex-wrap gap-1">
-           {
-            table ? (
-              <h3>{table}</h3>
-            ) : (
-              <div className="text-red-1">Chưa nhận bàn</div>
-            )
-           }
+            {table ? <h3>{table}</h3> : <div className="text-red-1">Chưa nhận bàn</div>}
           </div>
-        )
+        );
       },
     },
     {
       accessorKey: "guests_count",
-      header: ()=>(
-        <div className="w-full text-center">
-            Số người
-        </div>
-      ),
-      cell: ({row})=>(
-        <div className="w-full text-center">
-           {row.original.guests_count}
-        </div>
-      ),
+      header: () => <div className="w-full text-center">Số người</div>,
+      cell: ({ row }) => <div className="w-full text-center">{row.original.guests_count}</div>,
       size: 100, //starting column size
     },
     {
@@ -97,79 +63,103 @@ export const ReservationColumn = ({
       header: "Số điện thoại",
       size: 200, //starting column size
       minSize: 200,
-      maxSize:300,
-      cell: ({row})=>{
-        return <div className="font-sans">
-            {formatPhoneNumber(row.original.phoneNumber)}
-        </div>
-      }
+      maxSize: 300,
+      cell: ({ row }) => {
+        return <div className="font-sans">{formatPhoneNumber(row.original.phoneNumber)}</div>;
+      },
     },
     {
       accessorKey: "isOrderedOnline",
       header: "Kiểu đặt",
-      cell: ({row})=>{
-        const isOrderedOnline = row.original.isOrderedOnline
-        return isOrderedOnline ?
-        <Badge> Online </Badge>:
-        <Badge> Trực tiếp </Badge>
+      cell: ({ row }) => {
+        const isOrderedOnline = row.original.isOrderedOnline;
+        return isOrderedOnline ? <Badge> Online </Badge> : <Badge> Trực tiếp </Badge>;
       },
       size: 150, //starting column size
     },
     {
       accessorKey: "startTime",
       header: "Thời gian đặt bàn",
-      cell: ({row})=>{
-        const startTime = row.original.startTime
-        return formatDate(startTime)
+      cell: ({ row }) => {
+        const startTime = row.original.startTime;
+        return formatDate(startTime);
       },
       size: 150, //starting column size
     },
     {
       accessorKey: "status",
       header: "Trạng thái",
-      cell: ({row})=>{
-        const status = row.original.status
+      cell: ({ row }) => {
+        const status = row.original.status;
         let stt;
         let colorText;
-         status === "ISWAITING" ? (stt = 'Đang chờ', colorText= '#f5365c'):
-         status === "SEATED" ? (stt = 'Đang phục vụ', colorText= '#ff9800'):
-         status === "ISCOMFIRMED" ? (stt = 'Đã xác nhận', colorText= '#f5365c'):
-         status === "COMPLETED" ? (stt = 'Đã hoàn thành', colorText= '#fb6340'):
-         (stt = 'Đã hủy', colorText= '#f5365c')
-         
-        return <h4 style={{color: colorText, fontSize: '18px'}}>{stt}</h4>
+        status === "ISWAITING"
+          ? ((stt = "Đang chờ"), (colorText = "#f5365c"))
+          : status === "SEATED"
+          ? ((stt = "Đang phục vụ"), (colorText = "#ff9800"))
+          : status === "ISCOMFIRMED"
+          ? ((stt = "Đã xác nhận"), (colorText = "#f5365c"))
+          : status === "COMPLETED"
+          ? ((stt = "Đã hoàn thành"), (colorText = "#fb6340"))
+          : status === "ISPAYMENT"
+          ? ((stt = "Chờ thanh toán"), (colorText = "#0000FF"))
+          : ((stt = "Đã hủy"), (colorText = "#f5365c"));
+
+        return <h4 style={{ color: colorText, fontSize: "18px" }}>{stt}</h4>;
       },
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id))
-    },
+        return value.includes(row.getValue(id));
+      },
       size: 150, //starting column size
     },
     {
       accessorKey: "feature",
       header: "",
-      cell: ({row})=>{
-        const table_id = row.original.table_id
-        const status = row.original.status
-        return <div>
-          {
-           status === "SEATED" && <div className="flex items-center gap-2">
-           <Button onClick={()=>updateTable(row.original._id )} className="bg-yellow-1 hover:bg-yellow-1">Đổi bàn</Button>
-           <Button onClick={()=>completedReservation(row.original._id )} className="bg-purple-1 hover:bg-purple-1" >Tính tiền</Button>
-         </div>
-          }
-          {
-           status === "ISCOMFIRMED" && <Button onClick={()=>selectTable(row.original._id )} className="bg-orange-1 hover:bg-orange-1" >Nhận bàn</Button>
-          }
-          {
-            status === "ISWAITING" && <div className="flex items-center gap-2">
-              <Button onClick={()=>cancelReser(row.original._id)} className="bg-red-1 hover:bg-red-1" >Hủy Đơn</Button>
-              <Button onClick={()=>confirmReser(row.original._id)} className="bg-green-1 hover:bg-green-1">Xác nhận đơn</Button>
-            </div>
-          }
-        </div>
+      cell: ({ row }) => {
+        const table_id = row.original.table_id;
+        const status = row.original.status;
+        return (
+          <div>
+            {status === "SEATED" && (
+              <div className="flex items-center gap-2">
+                <Button onClick={() => updateTable(row.original._id)} className="bg-yellow-1 hover:bg-yellow-1">
+                  Đổi bàn
+                </Button>
+                <Button
+                  onClick={() => completedReservation(row.original._id)}
+                  className="bg-purple-1 hover:bg-purple-1"
+                >
+                  Tính tiền
+                </Button>
+              </div>
+            )}
+            {status === "ISCOMFIRMED" && (
+              <Button onClick={() => selectTable(row.original._id)} className="bg-orange-1 hover:bg-orange-1">
+                Nhận bàn
+              </Button>
+            )}
+            {status === "ISWAITING" && (
+              <div className="flex items-center gap-2">
+                <Button onClick={() => cancelReser(row.original._id)} className="bg-red-1 hover:bg-red-1">
+                  Hủy Đơn
+                </Button>
+                <Button onClick={() => confirmReser(row.original._id)} className="bg-green-1 hover:bg-green-1">
+                  Xác nhận đơn
+                </Button>
+              </div>
+            )}
+            {status === "ISPAYMENT" && (
+              <div className="flex items-center gap-2">
+                <Button onClick={() => cancelReser(row.original._id)} className="bg-red-1 hover:bg-red-1">
+                  Hủy Đơn
+                </Button>
+              </div>
+            )}
+          </div>
+        );
       },
       size: 150, //starting column size
     },
-  ]
-  return columns
-}
+  ];
+  return columns;
+};

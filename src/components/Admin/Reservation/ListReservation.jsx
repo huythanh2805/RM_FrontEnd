@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { FadeLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { updateData } from "@/hooks/useFetchData";
 import { ServerUrl } from "@/utilities/utils";
+import { useNavigate } from "react-router-dom";
+import { FadeLoader } from "react-spinners";
+import Navbar from "../Navbar";
 import { ReservationColumn } from "./dataTable/ReserColumn";
 import { ReserDataTable } from "./dataTable/ReserDataTable";
-import { updateData } from "@/hooks/useFetchData";
-import Navbar from "../Navbar";
 
 export default function ListReservation() {
   const [reservations, setReservations] = useState([]);
@@ -47,8 +47,6 @@ export default function ListReservation() {
   }, []);
   //   Delete selected row
   const handleDeleteDishes = async (IdArray) => {
-    //  There are two way to delete rows, 1: at DataTable component will task delete selected rows, 2: at Column component will task delete specific row
-    // All will be converted to string ids array
     if (IdArray.length <= 0) {
       toast({
         variant: "destructive",
@@ -74,9 +72,7 @@ export default function ListReservation() {
         variant: "success",
         title: "Successfully!",
       });
-      const newReservations = reservations?.filter(
-        (item) => !IdArray.includes(item._id)
-      );
+      const newReservations = reservations?.filter((item) => !IdArray.includes(item._id));
       setReservations(newReservations);
     } catch (error) {
       toast({
@@ -105,8 +101,7 @@ export default function ListReservation() {
         // Kiểm tra startTime lớn hơn thời gian của date, và không vượt quá 23:59
         const isWithinTime =
           startTime.getTime() >= selectedDate.getTime() &&
-          startTime.getTime() <=
-            new Date(selectedDate.setHours(23, 59, 59, 999)).getTime();
+          startTime.getTime() <= new Date(selectedDate.setHours(23, 59, 59, 999)).getTime();
 
         return isSameDay && isWithinTime;
       })
@@ -126,19 +121,14 @@ export default function ListReservation() {
   };
   // confirm reservation
   const confirmReser = async (reservationId) => {
-    const data = await updateData(
-      `${ServerUrl}/api/reservations/${reservationId}`,
-      { status: "ISCOMFIRMED" }
-    );
+    const data = await updateData(`${ServerUrl}/api/reservations/${reservationId}`, { status: "ISCOMFIRMED" });
     if (data.success) {
       toast({
         variant: "success",
         title: "Confirmed reservation successfully!",
       });
       return setReservations((currentData) => [
-        ...currentData.map((item) =>
-          item._id === reservationId ? { ...item, status: "ISCOMFIRMED" } : item
-        ),
+        ...currentData.map((item) => (item._id === reservationId ? { ...item, status: "ISCOMFIRMED" } : item)),
       ]);
     } else {
       toast({
@@ -149,19 +139,14 @@ export default function ListReservation() {
   };
   // Cancel reservation
   const cancelReser = async (reservationId) => {
-    const data = await updateData(
-      `${ServerUrl}/api/reservations/${reservationId}`,
-      { status: "CANCELED" }
-    );
+    const data = await updateData(`${ServerUrl}/api/reservations/${reservationId}`, { status: "CANCELED" });
     if (data.success) {
       toast({
         variant: "success",
         title: "Cancel reservation successfully!",
       });
       return setReservations((currentData) => [
-        ...currentData.map((item) =>
-          item._id === reservationId ? { ...item, status: "CANCELED" } : item
-        ),
+        ...currentData.map((item) => (item._id === reservationId ? { ...item, status: "CANCELED" } : item)),
       ]);
     } else {
       toast({
@@ -170,9 +155,12 @@ export default function ListReservation() {
       });
     }
   };
+
   // Tính tiền
   const completedReservation = async (reservationId) => {
-    router(`/admin/foodOrder/${reservationId}`);
+    const selectedReservation = reservations.find((reservation) => reservation._id === reservationId);
+    console.log(selectedReservation);
+    router(`/admin/foodOrder/${reservationId}?deposit=${selectedReservation.deposit}`);
   };
   // const getDetail = ()=>{
   //   router(`/dashboard/tables/${reservationId}?type=SELECT`)

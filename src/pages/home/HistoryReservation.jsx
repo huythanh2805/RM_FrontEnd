@@ -61,7 +61,7 @@ export const HistoryReservation = () => {
     }
   };
   const handleBack = (code) => {
-    navigate("/payment", { state: { code: code } });
+    navigate(`/payment?code=${code}`);
   };
   // Chuyển đổi trạng thái sang tiếng Việt
   const getStatusInVietnamese = (status) => {
@@ -212,7 +212,7 @@ export const HistoryReservation = () => {
                           {/* Nếu trạng thái là IS_PAYMENT, hiển thị nút Tiếp tục thanh toán */}
                           {reservation.status === "ISPAYMENT" && (
                             <button
-                              onClick={handleBack(reservation.code)}
+                              onClick={() => handleBack(reservation.code)}
                               className="p-2 bg-green-500 text-white rounded hover:bg-yellow-600 transition duration-300 ease-in-out"
                             >
                               Tiếp tục thanh toán

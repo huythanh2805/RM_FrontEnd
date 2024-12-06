@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { formatCurrency, ServerUrl, shortenNumber } from "@/utilities/utils";
 import { Check } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 const statusOptions = [
@@ -69,13 +69,15 @@ const Calculator = ({
     const discountedMoney = totalPrice - discountValue;
     const vat = (5 / 100) * discountedMoney;
     setVAT_money(vat);
-    setNeededPaid(discountedMoney + vat);
+    setNeededPaid(discountedMoney + vat - deposit);
 
     setChange(paidMoney - neededPaid);
   }, [paidMoney, totalPrice, discountValue]);
-
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const deposit = queryParams.get("deposit");
   const vt = (5 / 100) * totalPrice;
-  const total = totalPrice - discountValue + vt;
+  const total = totalPrice - discountValue + vt - deposit;
   // delete orderedFood
   const handleDeleteOrderedFood = async (orderedFood_id, type) => {
     console.log(type);
@@ -129,7 +131,7 @@ const Calculator = ({
       account
     )}&template=${encodeURIComponent(template)}&amount=${encodeURIComponent(
       total
-    )}&des=HDTT%5FGOLDENFORK%5F${reservation_id}`;
+    )}&des=${reservation_id} ${totalPrice} ${discountValue} ${deposit} `;
     return qrUrl;
   };
 
@@ -159,7 +161,7 @@ const Calculator = ({
             original_money: totalPrice,
             total_money: neededPaid,
             discount_money: discountValue,
-            VAT_money: VAT_money,
+            deposit_money: deposit,
             userDiscountId: discount?._id,
           }),
         });
@@ -182,7 +184,7 @@ const Calculator = ({
         });
       }
       try {
-        const res = await fetch(`https://8757-116-96-45-114.ngrok-free.app/api/bills`, {
+        const res = await fetch(`${ServerUrl}/api/bills`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -190,6 +192,9 @@ const Calculator = ({
           body: JSON.stringify({
             reservation_id,
             original_money: totalPrice,
+            total_money: neededPaid,
+            discount_money: discountValue,
+            deposit_money: deposit,
           }),
         });
 
@@ -212,6 +217,16 @@ const Calculator = ({
       }
     }
   };
+
+  //   const response = await axios.get(`http://localhost:1111/api/reservations/history-detail/${reservation_id}`);
+  //   return response.data;
+  // };
+  // const {
+  //   data: reservationDetails,
+  //   error,
+  //   isLoading,
+  // } = useQuery(["reservationDetails", reservation_id], fetchReservationDetails);
+  // console.log("reservationDetails:", reservationDetails);
 
   const handleCheckboxChange = (id) => {
     if (selectedRows.includes(id)) {
@@ -264,9 +279,12 @@ const Calculator = ({
 
   useEffect(() => {
     const socket = io("http://localhost:1111");
-
     socket.on("bank-payment-success", (notification) => {
-      console.log("da thanh toan thanh cong");
+      return toast({
+        variant: "success",
+        title: "Thanh Toán thành công",
+      });
+      setBillId(data.bill_id);
       setIsPaid(true);
     });
 
@@ -465,6 +483,18 @@ const Calculator = ({
                       disabled
                       type="number"
                       placeholder={`${VAT}%`}
+                    />
+                  </div>
+                  <div className="w-full flex items-center py-2">
+                    <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                      Đã cọc
+                    </p>
+                    <Input
+                      className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                   placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
+                      disabled
+                      type="text"
+                      placeholder={`${formatCurrency(Number(deposit))}`}
                     />
                   </div>
 
