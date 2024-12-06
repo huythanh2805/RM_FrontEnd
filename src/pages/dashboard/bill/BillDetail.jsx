@@ -26,9 +26,12 @@ const BillDetail = () => {
   }
 
   const {
-    reservation_id = {},
+    reservation_id,
     original_money,
     VAT,
+    total_money,
+    discount_money,
+    deposit_money,
     status,
     billDetail_id,
   } = dataBill;
@@ -205,12 +208,38 @@ const BillDetail = () => {
                   className="table-cell py-4 px-6 font-semibold text-right"
                   colSpan={4}
                 >
-                  Thuế VAT ({VAT}%)
+                  Thuế VAT ({VAT}%):
                 </td>
                 <td className="py-4 px-6 font-semibold">
                   {formatCurrency((original_money * VAT) / 100)}
                 </td>
               </tr>
+              {discount_money !== 0 && (
+                <tr>
+                  <td
+                    className="table-cell py-4 px-6 font-semibold text-right"
+                    colSpan={4}
+                  >
+                    Giảm giá:
+                  </td>
+                  <td className="py-4 px-6 font-semibold">
+                    {formatCurrency(discount_money)}
+                  </td>
+                </tr>
+              )}
+              {deposit_money !== 0 && (
+                <tr>
+                  <td
+                    className="table-cell py-4 px-6 font-semibold text-right"
+                    colSpan={4}
+                  >
+                    Tiền đã cọc:
+                  </td>
+                  <td className="py-4 px-6 font-semibold">
+                    {formatCurrency(deposit_money)}
+                  </td>
+                </tr>
+              )}
               <tr>
                 <td
                   className="table-cell py-4 px-6 font-semibold text-right"
@@ -219,9 +248,7 @@ const BillDetail = () => {
                   Tổng cộng (Sau thuế):
                 </td>
                 <td className="py-4 px-6 font-semibold">
-                  {formatCurrency(
-                    original_money + (original_money * VAT) / 100
-                  )}
+                  {formatCurrency(total_money)}
                 </td>
               </tr>
             </tbody>

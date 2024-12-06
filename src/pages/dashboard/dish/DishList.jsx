@@ -17,7 +17,7 @@ const DishList = () => {
   const [searchValue, setSearchValue] = useState("");
   const [priceRange, setPriceRange] = useState({ min: 0, max: Infinity });
   const [currentPage, setCurrentPage] = useState(1);
-  const itemPerPage = 5;
+  const itemPerPage = 10;
 
   const fetchData = () => {
     axios
