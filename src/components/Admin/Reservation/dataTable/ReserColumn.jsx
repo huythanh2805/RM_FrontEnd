@@ -3,9 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { formatDate, formatPhoneNumber } from "@/utilities/utils";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-
 export const ReservationColumn = ({ updateTable, selectTable, cancelReser, confirmReser, completedReservation }) => {
   const columns = [
     {
@@ -26,13 +23,13 @@ export const ReservationColumn = ({ updateTable, selectTable, cancelReser, confi
       ),
       enableSorting: false,
       enableHiding: false,
-      size: 50, //starting column size
+      size: 50,
       minSize: 50,
     },
     {
       accessorKey: "userName",
       header: "Tên khách",
-      size: 200, //starting column size
+      size: 200,
       minSize: 200,
       maxSize: 400,
       enableResizing: true,
@@ -40,7 +37,7 @@ export const ReservationColumn = ({ updateTable, selectTable, cancelReser, confi
     {
       accessorKey: "table_id",
       header: "Bàn số",
-      size: 100, //starting column size
+      size: 100,
       minSize: 100,
       enableResizing: true,
       cell: ({ row }) => {
@@ -56,35 +53,32 @@ export const ReservationColumn = ({ updateTable, selectTable, cancelReser, confi
       accessorKey: "guests_count",
       header: () => <div className="w-full text-center">Số người</div>,
       cell: ({ row }) => <div className="w-full text-center">{row.original.guests_count}</div>,
-      size: 100, //starting column size
+      size: 100,
     },
     {
       accessorKey: "phoneNumber",
       header: "Số điện thoại",
-      size: 200, //starting column size
+      size: 200,
       minSize: 200,
       maxSize: 300,
-      cell: ({ row }) => {
-        return <div className="font-sans">{formatPhoneNumber(row.original.phoneNumber)}</div>;
-      },
+      cell: ({ row }) => <div className="font-sans">{formatPhoneNumber(row.original.phoneNumber)}</div>,
     },
     {
       accessorKey: "isOrderedOnline",
       header: "Kiểu đặt",
       cell: ({ row }) => {
         const isOrderedOnline = row.original.isOrderedOnline;
-        return isOrderedOnline ? <Badge> Online </Badge> : <Badge> Trực tiếp </Badge>;
+        return isOrderedOnline ? <Badge>Online</Badge> : <Badge>Trực tiếp</Badge>;
       },
-      size: 150, //starting column size
+      size: 150,
     },
     {
-      accessorKey: "startTime",
-      header: "Thời gian đặt bàn",
-      cell: ({ row }) => {
-        const startTime = row.original.startTime;
-        return formatDate(startTime);
-      },
-      size: 150, //starting column size
+      accessorKey: "createdAt",
+      header: "Ngày tạo",
+      cell: ({ row }) => formatDate(row.original.createdAt),
+      size: 150,
+      sortingFn: (a, b) => new Date(b.original.createdAt) - new Date(a.original.createdAt),
+      sortDescFirst: true,
     },
     {
       accessorKey: "status",
@@ -93,30 +87,34 @@ export const ReservationColumn = ({ updateTable, selectTable, cancelReser, confi
         const status = row.original.status;
         let stt;
         let colorText;
-        status === "ISWAITING"
-          ? ((stt = "Đang chờ"), (colorText = "#f5365c"))
-          : status === "SEATED"
-          ? ((stt = "Đang phục vụ"), (colorText = "#ff9800"))
-          : status === "ISCOMFIRMED"
-          ? ((stt = "Đã xác nhận"), (colorText = "#f5365c"))
-          : status === "COMPLETED"
-          ? ((stt = "Đã hoàn thành"), (colorText = "#fb6340"))
-          : status === "ISPAYMENT"
-          ? ((stt = "Chờ thanh toán"), (colorText = "#0000FF"))
-          : ((stt = "Đã hủy"), (colorText = "#f5365c"));
-
+        if (status === "ISWAITING") {
+          stt = "Đang chờ";
+          colorText = "#f5365c";
+        } else if (status === "SEATED") {
+          stt = "Đang phục vụ";
+          colorText = "#ff9800";
+        } else if (status === "ISCOMFIRMED") {
+          stt = "Đã xác nhận";
+          colorText = "#f5365c";
+        } else if (status === "COMPLETED") {
+          stt = "Đã hoàn thành";
+          colorText = "#fb6340";
+        } else if (status === "ISPAYMENT") {
+          stt = "Chờ thanh toán";
+          colorText = "#0000FF";
+        } else {
+          stt = "Đã hủy";
+          colorText = "#f5365c";
+        }
         return <h4 style={{ color: colorText, fontSize: "18px" }}>{stt}</h4>;
       },
-      filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
-      },
-      size: 150, //starting column size
+      filterFn: (row, id, value) => value.includes(row.getValue(id)),
+      size: 150,
     },
     {
       accessorKey: "feature",
       header: "",
       cell: ({ row }) => {
-        const table_id = row.original.table_id;
         const status = row.original.status;
         return (
           <div>
@@ -158,8 +156,9 @@ export const ReservationColumn = ({ updateTable, selectTable, cancelReser, confi
           </div>
         );
       },
-      size: 150, //starting column size
+      size: 150,
     },
   ];
+
   return columns;
 };
