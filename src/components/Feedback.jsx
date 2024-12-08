@@ -25,36 +25,39 @@ const Feedback = () => {
   const [dataComment, setDataComment] = useState([]);
   const [inforUser, setInforUser] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemPerPage = 2;
-
-  const fetchData = () => {
-    axios
-      .get(BASE_URL + "/feedbacks/dish/" + id)
-      .then((res) => {
-        setDataComment(res.data.feedbacks);
-        // console.log("Comment", res.data.feedbacks);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const fetchInforUser = () => {
-    axios
-      .get(BASE_URL + "/users/get/v2/" + userId)
-      .then((res) => {
-        setInforUser(res.data.user);
-        // console.log(res.data.user);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const itemPerPage = 5;
 
   useEffect(() => {
+    const fetchData = () => {
+      axios
+        .get(BASE_URL + "/feedbacks/dish/" + id)
+        .then((res) => {
+          setDataComment(
+            res.data.feedbacks.filter((item) => item.isShow || [])
+          );
+          // console.log("Comment", res.data.feedbacks);
+        })
+        .catch((err) => {
+          console.log(err);
+          setDataComment([]);
+        });
+    };
+
+    const fetchInforUser = () => {
+      axios
+        .get(BASE_URL + "/users/get/v2/" + userId)
+        .then((res) => {
+          setInforUser(res.data.user);
+          // console.log(res.data.user);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
     fetchData();
     fetchInforUser();
-  }, []);
+  }, [id]);
 
   // phân trang
   const startIndex = (currentPage - 1) * itemPerPage;
@@ -151,7 +154,7 @@ const Feedback = () => {
 
           {/* List */}
           <div class="w-full flex-col justify-start items-start gap-8 flex mt-16">
-            {currentItems?.length > 0 ? (
+            {currentItems && currentItems.length > 0 ? (
               currentItems.map((item) => (
                 <div
                   class="w-full pb-6 border-b border-gray-300 justify-start items-start gap-2.5 inline-flex"
@@ -205,7 +208,12 @@ const Feedback = () => {
 
           {/* Phân trang */}
           <div className="flex justify-center items-center w-full">
-            <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
+            {pageCount > 0 && (
+              <Pagination
+                pageCount={pageCount}
+                onPageChange={handlePageClick}
+              />
+            )}
           </div>
         </div>
       </div>

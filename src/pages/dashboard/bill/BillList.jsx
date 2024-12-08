@@ -30,7 +30,9 @@ const BillList = () => {
 
   // phân trang
   const startIndex = (currentPage - 1) * itemPerPage;
-  const currentItems = dataBill.slice(startIndex, startIndex + itemPerPage);
+  const currentItems = dataBill
+    .reverse()
+    .slice(startIndex, startIndex + itemPerPage);
   const pageCount = Math.ceil(dataBill.length / itemPerPage);
 
   const handlePageClick = (e) => {

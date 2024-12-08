@@ -1,5 +1,20 @@
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -59,7 +74,9 @@ const Calculator = ({
   useEffect(() => {
     if (!discount) return;
     if (discount.discountId.discountType === "PERCENTAGE") {
-      setDiscountValue(totalPrice * (Number(discount.discountId.discountValue) / 100));
+      setDiscountValue(
+        totalPrice * (Number(discount.discountId.discountValue) / 100)
+      );
     } else {
       setDiscountValue(Number(discount.discountId.discountValue));
     }
@@ -83,13 +100,25 @@ const Calculator = ({
     console.log(type);
     if (type === "combo") {
       const { res, data } = await deletedOrderedCombo(orderedFood_id);
-      if (res.status === 201 && data.message === "Successfully" && setOrderedFoods)
-        setOrderedFoods((pre) => [...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id)]);
+      if (
+        res.status === 201 &&
+        data.message === "Successfully" &&
+        setOrderedFoods
+      )
+        setOrderedFoods((pre) => [
+          ...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id),
+        ]);
     }
     if (type === "dish") {
       const { res, data } = await deleteOrderedFood(orderedFood_id);
-      if (res.status === 201 && data.message === "Successfully" && setOrderedFoods)
-        setOrderedFoods((pre) => [...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id)]);
+      if (
+        res.status === 201 &&
+        data.message === "Successfully" &&
+        setOrderedFoods
+      )
+        setOrderedFoods((pre) => [
+          ...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id),
+        ]);
     }
   };
   const handleClose = () => {
@@ -99,21 +128,29 @@ const Calculator = ({
   // Update orderedFood
   const handleMinus = async (orderedFood_id, quantity, type) => {
     if (quantity < 2) {
-      type === "combo" ? await deletedOrderedCombo(orderedFood_id) : await deleteOrderedFood(orderedFood_id);
-      setOrderedFoods((prevOrderedFoods) => prevOrderedFoods.filter((item) => item._id !== orderedFood_id));
+      type === "combo"
+        ? await deletedOrderedCombo(orderedFood_id)
+        : await deleteOrderedFood(orderedFood_id);
+      setOrderedFoods((prevOrderedFoods) =>
+        prevOrderedFoods.filter((item) => item._id !== orderedFood_id)
+      );
     }
 
     await updateOrderedFood(orderedFood_id, quantity - 1, type);
     if (!setOrderedFoods) return;
     setOrderedFoods((prevOrderedFoods) =>
-      prevOrderedFoods.map((item) => (item._id === orderedFood_id ? { ...item, quantity: quantity - 1 } : item))
+      prevOrderedFoods.map((item) =>
+        item._id === orderedFood_id ? { ...item, quantity: quantity - 1 } : item
+      )
     );
   };
   const handlePlus = async (orderedFood_id, quantity, type) => {
     await updateOrderedFood(orderedFood_id, quantity + 1, type);
     if (!setOrderedFoods) return;
     setOrderedFoods((prevOrderedFoods) =>
-      prevOrderedFoods.map((item) => (item._id === orderedFood_id ? { ...item, quantity: quantity + 1 } : item))
+      prevOrderedFoods.map((item) =>
+        item._id === orderedFood_id ? { ...item, quantity: quantity + 1 } : item
+      )
     );
   };
   //  Format currency
@@ -127,9 +164,11 @@ const Calculator = ({
     const bank = "MB";
     const account = "0386426150";
     const template = "compact";
-    const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(bank)}&acc=${encodeURIComponent(
-      account
-    )}&template=${encodeURIComponent(template)}&amount=${encodeURIComponent(
+    const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(
+      bank
+    )}&acc=${encodeURIComponent(account)}&template=${encodeURIComponent(
+      template
+    )}&amount=${encodeURIComponent(
       total
     )}&des=${reservation_id} ${totalPrice} ${discountValue} ${deposit} `;
     return qrUrl;
@@ -267,7 +306,9 @@ const Calculator = ({
         });
       }
       setOrderedFoods((currenntStatus) =>
-        currenntStatus.map((item) => (selectedRows.includes(item._id) ? { ...item, status: status } : item))
+        currenntStatus.map((item) =>
+          selectedRows.includes(item._id) ? { ...item, status: status } : item
+        )
       );
     } catch (error) {
       toast({
@@ -323,17 +364,25 @@ const Calculator = ({
             <TableHead className="min-w-[200px] text-xl">Tên</TableHead>
             <TableHead className="text-xl">Số lượng</TableHead>
 
-            <TableHead className="text-right min-w-[105px] text-xl">Thành tiền</TableHead>
+            <TableHead className="text-right min-w-[105px] text-xl">
+              Thành tiền
+            </TableHead>
             <TableHead className="max-w-[50px]"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {orderedFoods?.map((orderedFood) => (
-            <TableRow onClick={() => handleCheckboxChange(orderedFood._id)} key={orderedFood._id}>
+            <TableRow
+              onClick={() => handleCheckboxChange(orderedFood._id)}
+              key={orderedFood._id}
+            >
               <TableCell className="font-medium">
                 <div className="flex items-center justify-start gap-2 md:gap-4">
                   <div className="w-16 h-16 flex items-center justify-center overflow-hidden rounded-full">
-                    <img src={orderedFood.images[0]} className="w-full h-full object-cover" />
+                    <img
+                      src={orderedFood.images[0]}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex flex-col leading-7 truncate w-[150px] text-nowrap text-ellipsis overflow-hidden">
                     <h2 className="text-xl truncate">{orderedFood.name}</h2>
@@ -348,7 +397,11 @@ const Calculator = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleMinus(orderedFood._id, orderedFood.quantity, orderedFood.type);
+                      handleMinus(
+                        orderedFood._id,
+                        orderedFood.quantity,
+                        orderedFood.type
+                      );
                     }}
                     className="px-3 py-2 text-white bg-blur_bg dark:bg-blur_bg rounded-lg cursor-pointer hover:scale-[80%] transition-all ease-in hover:shadow-button_shadow"
                   >
@@ -359,7 +412,11 @@ const Calculator = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handlePlus(orderedFood._id, orderedFood.quantity, orderedFood.type);
+                      handlePlus(
+                        orderedFood._id,
+                        orderedFood.quantity,
+                        orderedFood.type
+                      );
                     }}
                     className="px-3 py-2 text-white bg-blur_bg dark:bg-blur_bg rounded-lg cursor-pointer hover:scale-[80%] transition-all ease-in hover:shadow-button_shadow"
                   >
@@ -375,7 +432,9 @@ const Calculator = ({
 
               <TableCell className={"max-w-8"}>
                 <button
-                  onClick={() => handleDeleteOrderedFood(orderedFood._id, orderedFood.type)}
+                  onClick={() =>
+                    handleDeleteOrderedFood(orderedFood._id, orderedFood.type)
+                  }
                   className="w-full flex items-center justify-center text-xl text-red-1 hover:scale-110"
                 >
                   X
@@ -413,7 +472,7 @@ const Calculator = ({
                 Thanh toán
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-light-bg  gap-0 min-w-[400px] h-auto xl:min-w-[1200px] xl:h-[800px]">
+            <DialogContent className="bg-light-bg gap-0 min-w-[400px] max-h-[98vh] xl:min-w-[1200px] xl:h-[800px] overflow-y-auto">
               <div className="flex items-start justify-between">
                 <div className="min-w-[450px] px-10 order-2 h-full ">
                   <div className="w-full flex items-center py-2">
@@ -433,7 +492,10 @@ const Calculator = ({
                     <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
                       Nhập mã
                     </p>
-                    <form onSubmit={handleDiscountInput} className="flex-[2] min-w-[244px]">
+                    <form
+                      onSubmit={handleDiscountInput}
+                      className="flex-[2] min-w-[244px]"
+                    >
                       <Input
                         className=" rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
                      placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px] "
@@ -456,7 +518,9 @@ const Calculator = ({
                         placeholder={
                           discount.discountId?.discountType === "PERCENTAGE"
                             ? `${discount.code}  (${discount.discountId.discountValue}%)`
-                            : `${discount.code} (${shortenNumber(Number(discount.discountId.discountValue))}k)`
+                            : `${discount.code} (${shortenNumber(
+                                Number(discount.discountId.discountValue)
+                              )}k)`
                         }
                       />
                     </div>
@@ -514,15 +578,21 @@ const Calculator = ({
                     <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
                       Phương thức thanh toán
                     </p>
-                    <select onChange={(e) => handleMethodChange(e.target.value)}>
+                    <select
+                      onChange={(e) => handleMethodChange(e.target.value)}
+                    >
                       <option value="cash">Tiền mặt</option>
                       <option value="transfer">Chuyển khoản</option>
                     </select>
                   </div>
                   {paymentMethod === "transfer" && qrCodeUrl && (
-                    <div className="mt-4 text-center">
-                      <p>Quét mã QR để thanh toán:</p>
-                      <img src={qrCodeUrl} alt="QR code for payment" className="mx-auto" />
+                    <div className="flex flex-col justify-center items-center">
+                      <p class="mb-2">Quét mã QR để thanh toán:</p>
+                      <img
+                        src={qrCodeUrl}
+                        alt="QR code for payment"
+                        className="w-64 h-64 object-contain"
+                      />
                     </div>
                   )}
 
@@ -551,10 +621,14 @@ const Calculator = ({
                 <Table className="max-w-[650px] order-1 hidden xl:block">
                   <TableHeader className="max-w-[650px]">
                     <TableRow>
-                      <TableHead className="min-w-[200px] text-xl">Tên</TableHead>
+                      <TableHead className="min-w-[200px] text-xl">
+                        Tên
+                      </TableHead>
                       <TableHead className="text-xl">Số lượng</TableHead>
                       {/* <TableHead className="text-xl">Trạng thái</TableHead> */}
-                      <TableHead className="text-right min-w-[105px] text-xl">Thành tiền</TableHead>
+                      <TableHead className="text-right min-w-[105px] text-xl">
+                        Thành tiền
+                      </TableHead>
                       <TableHead className="max-w-[50px]"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -564,10 +638,15 @@ const Calculator = ({
                         <TableCell className="font-medium">
                           <div className="flex items-center justify-start gap-2 md:gap-4">
                             <div className="w-16 h-16 flex items-center justify-center overflow-hidden rounded-full">
-                              <img src={orderedFood.images[0]} className="w-full h-full object-cover" />
+                              <img
+                                src={orderedFood.images[0]}
+                                className="w-full h-full object-cover"
+                              />
                             </div>
                             <div className="flex flex-col leading-7 truncate w-[150px] text-nowrap text-ellipsis overflow-hidden">
-                              <h2 className="text-xl truncate">{orderedFood.name}</h2>
+                              <h2 className="text-xl truncate">
+                                {orderedFood.name}
+                              </h2>
                               <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-lg">
                                 {formatCurrency(orderedFood.price)}
                               </p>
@@ -576,19 +655,26 @@ const Calculator = ({
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <span className="text-2xl">{orderedFood.quantity}</span>
+                            <span className="text-2xl">
+                              {orderedFood.quantity}
+                            </span>
                           </div>
                         </TableCell>
 
                         <TableCell className="text-right text-xl">
-                          {formatCurrency(orderedFood.quantity * orderedFood.price)}
+                          {formatCurrency(
+                            orderedFood.quantity * orderedFood.price
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                   <TableFooter>
                     <TableRow className="bg-light-bg  w-full">
-                      <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
+                      <TableCell
+                        colSpan={2}
+                        className="text-[20px] font-medium text-xl"
+                      >
                         Tổng
                       </TableCell>
 
@@ -619,7 +705,8 @@ const Calculator = ({
           </DialogHeader>
           <div className="w-full">
             <h2 className="leading-6 text-center text-light-text dark:text-dark-text">
-              Cảm ơn bạn đã dùng dịch vụ nhà hàng của chúng tôi. Check your bill?
+              Cảm ơn bạn đã dùng dịch vụ nhà hàng của chúng tôi. Check your
+              bill?
             </h2>
           </div>
           <div className="flex items-center justify-end py-2 gap-5">

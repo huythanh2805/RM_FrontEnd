@@ -89,16 +89,21 @@ const SetComboDetail = () => {
             <div className="w-full md:w-2/3 md:pl-8">
               <h2 className="text-3xl font-bold mb-3">{dataCombo?.name}</h2>
               <p className="text-gray-700 mb-3">{dataCombo.desc}</p>
-              <div className="grid grid-cols-6 gap-4 mb-4">
+              <div className="grid grid-cols-6 gap-4 mb-4 w-full">
                 {dishInCombo[0]?.dishes.map((dish) => (
-                  <div key={dish._id}>
-                    <h3 className="text-lg font-semibold mb-2">{dish.name}</h3>
+                  <div key={dish._id} className="w-full">
+                    <h3
+                      className="text-lg font-semibold mb-2 truncate cursor-pointer"
+                      title={dish.name}
+                    >
+                      {dish.name}
+                    </h3>
                     <img
                       src={dish.images[0]}
                       alt={dish.name}
                       className="w-24 h-24 object-cover rounded-md"
                     />
-                    <p className="mt-2">{formatCurrency(dish.price)}</p>
+                    <p className="mt-2  w-full">{formatCurrency(dish.price)}</p>
                   </div>
                 ))}
               </div>
