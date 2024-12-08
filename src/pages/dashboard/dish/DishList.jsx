@@ -82,7 +82,9 @@ const DishList = () => {
 
   // Phân trang
   const startIndex = (currentPage - 1) * itemPerPage;
-  const currentItems = filterDishes.slice(startIndex, startIndex + itemPerPage);
+  const currentItems = filterDishes
+    .reverse()
+    .slice(startIndex, startIndex + itemPerPage);
   const pageCount = Math.ceil(filterDishes.length / itemPerPage);
 
   const handlePageClick = (e) => {

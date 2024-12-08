@@ -29,7 +29,9 @@ const CategoryList = () => {
 
   // phân trang
   const startIndex = (currentPage - 1) * itemPerPage;
-  const currentItems = categories.slice(startIndex, startIndex + itemPerPage);
+  const currentItems = categories
+    .reverse()
+    .slice(startIndex, startIndex + itemPerPage);
   const pageCount = Math.ceil(categories.length / itemPerPage);
 
   const handlePageClick = (e) => {

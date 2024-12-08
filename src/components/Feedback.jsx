@@ -6,6 +6,7 @@ import axios from "axios";
 import BASE_URL from "@/configs";
 import { toast } from "@/hooks/use-toast";
 import { HiOutlineUserCircle } from "react-icons/hi2";
+import Pagination from "./Pagination";
 
 const Feedback = () => {
   const { id } = useParams();
@@ -23,6 +24,8 @@ const Feedback = () => {
   const [rating, setRating] = useState(5);
   const [dataComment, setDataComment] = useState([]);
   const [inforUser, setInforUser] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 2;
 
   const fetchData = () => {
     axios
@@ -52,6 +55,15 @@ const Feedback = () => {
     fetchData();
     fetchInforUser();
   }, []);
+
+  // phân trang
+  const startIndex = (currentPage - 1) * itemPerPage;
+  const currentItems = dataComment.slice(startIndex, startIndex + itemPerPage);
+  const pageCount = Math.ceil(dataComment.length / itemPerPage);
+
+  const handlePageClick = (e) => {
+    setCurrentPage(e.selected + 1);
+  };
 
   const handleCommentInput = (e) => {
     const value = e.target.value;
@@ -139,8 +151,8 @@ const Feedback = () => {
 
           {/* List */}
           <div class="w-full flex-col justify-start items-start gap-8 flex mt-16">
-            {dataComment?.length > 0 ? (
-              dataComment.map((item) => (
+            {currentItems?.length > 0 ? (
+              currentItems.map((item) => (
                 <div
                   class="w-full pb-6 border-b border-gray-300 justify-start items-start gap-2.5 inline-flex"
                   key={item._id}
@@ -189,6 +201,11 @@ const Feedback = () => {
             ) : (
               <p>Sản phẩm này chưa có đánh giá</p>
             )}
+          </div>
+
+          {/* Phân trang */}
+          <div className="flex justify-center items-center w-full">
+            <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
           </div>
         </div>
       </div>

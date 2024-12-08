@@ -80,10 +80,9 @@ const SetComboList = () => {
 
   // Phân trang
   const startIndex = (currentPage - 1) * itemPerPage;
-  const currentItems = filterSetCombos.slice(
-    startIndex,
-    startIndex + itemPerPage
-  );
+  const currentItems = filterSetCombos
+    .reverse()
+    .slice(startIndex, startIndex + itemPerPage);
   const pageCount = Math.ceil(filterSetCombos.length / itemPerPage);
 
   const handlePageClick = (e) => {
@@ -92,7 +91,7 @@ const SetComboList = () => {
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
       <Navbar />
-      
+
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-3">
           <p className="text-[32px] font-semibold">Danh sách combo</p>

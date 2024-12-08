@@ -5,6 +5,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import ReactStars from "react-rating-stars-component";
+import Swal from "sweetalert2";
 
 const FeedbackList = () => {
   const [dataFeedback, setDataFeedback] = useState([]);
@@ -29,11 +30,48 @@ const FeedbackList = () => {
 
   // phân trang
   const startIndex = (currentPage - 1) * itemPerPage;
-  const currentItems = dataFeedback.slice(startIndex, startIndex + itemPerPage);
+  const currentItems = dataFeedback
+    .reverse()
+    .slice(startIndex, startIndex + itemPerPage);
   const pageCount = Math.ceil(dataFeedback.length / itemPerPage);
 
   const handlePageClick = (e) => {
     setCurrentPage(e.selected + 1);
+  };
+
+  // Xử lí ẩn, hiện feedback
+  const handleChangeStatus = (id, status) => {
+    Swal.fire({
+      title: status ? "Xác nhận ẩn đánh giá?" : "Xác nhận hiển thị đánh giá?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .put(`${BASE_URL}/feedbacks/${id}`, { isShow: !status })
+          .then(() => {
+            const action = status ? "ẩn" : "hiển thị";
+            Swal.fire(
+              `Đã ${action}!`,
+              `Đánh giá đã được ${action}.`,
+              "success"
+            );
+            fetchData();
+          })
+          .catch((err) => {
+            console.error("Lỗi khi cập nhật trạng thái:", err);
+            Swal.fire(
+              "Lỗi!",
+              "Có lỗi xảy ra khi cập nhật trạng thái. Vui lòng thử lại.",
+              "error"
+            );
+          });
+      }
+    });
   };
 
   return (
@@ -114,7 +152,12 @@ const FeedbackList = () => {
                   </td>
                   <td className="py-3 px-4 text-sl cursor-pointer">
                     <div className="flex items-center justify-center gap-3">
-                      <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">
+                      <div
+                        className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition"
+                        onClick={() =>
+                          handleChangeStatus(feedback._id, feedback.isShow)
+                        }
+                      >
                         <FaEye size={18} />
                       </div>
                     </div>
