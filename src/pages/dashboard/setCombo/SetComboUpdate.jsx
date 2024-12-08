@@ -7,6 +7,7 @@ import BASE_URL from "@/configs";
 import CLOUDINARY_URL from "@/configs/cloudinary_api";
 import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Admin/Navbar";
+import Pagination from "@/components/Pagination";
 
 const SetComboUpdate = () => {
   const { id } = useParams();
@@ -25,6 +26,8 @@ const SetComboUpdate = () => {
   const [images, setImages] = useState([]);
   const [imagesErr, setImagesErr] = useState(false);
   const [imagesUpload, setImagesUpload] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 9;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,6 +65,15 @@ const SetComboUpdate = () => {
       });
   }, [id, setValue]);
 
+  // Phân trang
+  const startIndex = (currentPage - 1) * itemPerPage;
+  const currentItems = dishes.slice(startIndex, startIndex + itemPerPage);
+  const pageCount = Math.ceil(dishes.length / itemPerPage);
+
+  const handlePageClick = (e) => {
+    setCurrentPage(e.selected + 1);
+  };
+
   const uploadImage = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -89,6 +101,7 @@ const SetComboUpdate = () => {
   };
 
   const handleOpenMenu = () => setIsMenu(true);
+  
   const handleCloseMenu = () => {
     setSelectDish([]);
     setDishImage([]);
@@ -302,23 +315,27 @@ const SetComboUpdate = () => {
             {/* Modal Menu */}
             {isMenu && (
               <div className="bg-[#75767a] fixed inset-0 z-50 bg-opacity-50 flex justify-center items-center">
-                <div className="bg-white p-4 ">
-                  <p className="text-center text-xl font-semibold mb-4 ">
-                    Menu
-                  </p>
-                  <div className="grid grid-cols-3 gap-3 mb-3">
-                    {dishes.map((dish) => (
-                      <div key={dish._id}>
+                <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-[600px]">
+                  <p className="text-center text-xl font-semibold mb-6">Menu</p>
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    {currentItems.map((dish) => (
+                      <div
+                        key={dish._id}
+                        className={`p-2 border rounded-lg hover:shadow-lg transition ${
+                          selectDish.includes(dish._id)
+                            ? "border-green-500"
+                            : "border-gray-200"
+                        }`}
+                      >
                         <div onClick={() => handleSelectDish(dish._id)}>
                           <img
                             src={dish.images[0]}
-                            alt=""
-                            className={`w-20 h-20 lg:w-20 lg:h-25 object-cover rounded-lg mb-1  ${
+                            alt={dish.name}
+                            className={`w-full h-24 object-cover rounded-lg mb-2 ${
                               selectDish.includes(dish._id) ? "opacity-50" : ""
-                            }
                             }`}
                           />
-                          <p className="text-center ">
+                          <p className="text-center text-sm font-medium truncate">
                             {selectDish.includes(dish._id)
                               ? "Đã chọn"
                               : dish.name}
@@ -327,19 +344,26 @@ const SetComboUpdate = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="flex justify-center items-center gap-5">
-                    <div
-                      className="bg-gray-200 text-gray-800 px-5 py-1 rounded-lg hover:bg-gray-300 cursor-pointer"
+                  <div className="flex justify-center mb-4">
+                    {/* Phân trang */}
+                    <Pagination
+                      pageCount={pageCount}
+                      onPageChange={handlePageClick}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center gap-4">
+                    <button
+                      className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
                       onClick={() => handleCloseMenu()}
                     >
                       Hủy bỏ
-                    </div>
-                    <div
-                      className="bg-green-200 text-green-800 px-5 py-1 rounded-lg hover:bg-green-300 cursor-pointer"
+                    </button>
+                    <button
+                      className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
                       onClick={handleConfirmDish}
                     >
                       Xác nhận
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>

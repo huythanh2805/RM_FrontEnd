@@ -35,9 +35,9 @@ const ProductDetail = () => {
 
   const handleAddToCart = (dish) => {
     toast({
-      variant: 'success',
-      title: 'Thêm thành công'+" "+ dish.name
-    })
+      variant: "success",
+      title: "Thêm thành công" + " " + dish.name,
+    });
     addItem({
       dish_id: dish._id,
       name: dish.name,
@@ -46,7 +46,7 @@ const ProductDetail = () => {
       quantity: quantity,
       type: "dish",
     });
-    setQuantity(1)
+    setQuantity(1);
   };
 
   if (!dish) {
@@ -72,7 +72,7 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <h1 className="text-3xl font-semibold">{dish.name}</h1>
             <p className="text-[30px] font-bold" style={{ color: colorCode }}>
-              {(dish.price)}
+              {formatCurrency(dish.price)}
             </p>
             <div className="space-y-2">
               <p className="text-gray-500 text-lg">{dish.desc}</p>
@@ -98,7 +98,10 @@ const ProductDetail = () => {
                   +
                 </button>
               </div>
-              <ButtonCustome buttonText="Thêm vào giỏ hàng" handleClick={() => handleAddToCart(dish)} />
+              <ButtonCustome
+                buttonText="Thêm vào giỏ hàng"
+                handleClick={() => handleAddToCart(dish)}
+              />
             </div>
             <hr />
             <div className="flex space-x-4 mt-4">
