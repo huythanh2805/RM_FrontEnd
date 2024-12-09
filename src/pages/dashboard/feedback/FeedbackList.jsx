@@ -33,7 +33,7 @@ const FeedbackList = () => {
   const currentItems = dataFeedback
     .reverse()
     .slice(startIndex, startIndex + itemPerPage);
-  const pageCount = Math.ceil(dataFeedback.length / itemPerPage);
+  const pageCount = Math.ceil(dataFeedback.reverse().length / itemPerPage);
 
   const handlePageClick = (e) => {
     setCurrentPage(e.selected + 1);
@@ -102,6 +102,9 @@ const FeedbackList = () => {
                   Số sao
                 </th>
                 <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                  Ngày
+                </th>
+                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
                   Đánh giá
                 </th>
                 <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
@@ -126,7 +129,9 @@ const FeedbackList = () => {
                       ? feedback.user_id.userName
                       : feedback.user_id.email}
                   </td>
-                  <td className="py-3 px-4 text-sl">{feedback.dish_id.name}</td>
+                  <td className="py-3 px-4 text-sl">
+                    {feedback?.dish_id?.name}
+                  </td>
                   <td className="py-3 px-4 text-sl">
                     <ReactStars
                       count={5}
@@ -136,7 +141,10 @@ const FeedbackList = () => {
                       activeColor="#ffd700"
                     />
                   </td>
-                  <td className="py-3 px-4 text-sl w-1/3 text-justify">
+                  <td className="py-3 px-4 text-sl text-justify">
+                    {new Date(feedback.createdAt).toLocaleDateString("vi-VN")}
+                  </td>
+                  <td className="py-3 px-4 text-sl w-1/4 text-justify">
                     {feedback.comment}
                   </td>
                   <td className="py-3 px-4 text-sl">

@@ -3,10 +3,36 @@ import { formatCurrency } from "@/utilities/utils";
 import { motion } from "framer-motion";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import ReactStars from "react-rating-stars-component";
+// import ReactStars from "react-rating-stars-component";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import BASE_URL from "@/configs";
 
 function MenuItem({ item, onCLick }) {
   const { colorCode } = useThemeContext();
+  const [totalFeedback, setTotalFeedback] = useState(0);
+
+  useEffect(() => {
+    const fetchAverageRating = () => {
+      axios
+        .get(BASE_URL + `/feedbacks/dish/${item._id}`)
+        .then((res) => {
+          console.log(res.data.feedbacks.length);
+          if (res.data.feedbacks.length > 0) {
+            setTotalFeedback(res.data.feedbacks.length);
+          } else {
+            setTotalFeedback(0);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          setTotalFeedback(0);
+        });
+    };
+
+    fetchAverageRating();
+  }, [item._id]);
 
   return (
     <div
@@ -52,7 +78,25 @@ function MenuItem({ item, onCLick }) {
           <span className="text-xl font-bold" style={{ color: colorCode }}>
             {formatCurrency(item.price)}
           </span>
-          <ReactStars count={5} size={24} activeColor="#ffd700" value={5} />
+          {/* <ReactStars
+            count={5}
+            size={24}
+            isHalf={true}
+            emptyIcon={<i className="far fa-star"></i>}
+            halfIcon={<i className="fa fa-star-half-alt"></i>}
+            fullIcon={<i className="fa fa-star"></i>}
+            activeColor="#ffd700"
+            value={4.9}
+            edit={false}
+          /> */}
+          <p className="text-sm font-medium text-gray-700">
+            <span className="text-gray-500">
+              {totalFeedback > 0 ? "Tổng lượt đánh giá: " : "Chưa có đánh giá"}
+            </span>
+            <span className="font-semibold">
+              {totalFeedback > 0 ? totalFeedback : ""}
+            </span>
+          </p>
         </div>
         <div className="absolute inset-x-0 bottom-0 flex justify-center items-center">
           <div

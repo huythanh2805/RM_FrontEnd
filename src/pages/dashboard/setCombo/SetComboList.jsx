@@ -83,7 +83,7 @@ const SetComboList = () => {
   const currentItems = filterSetCombos
     .reverse()
     .slice(startIndex, startIndex + itemPerPage);
-  const pageCount = Math.ceil(filterSetCombos.length / itemPerPage);
+  const pageCount = Math.ceil(filterSetCombos.reverse().length / itemPerPage);
 
   const handlePageClick = (e) => {
     setCurrentPage(e.selected + 1);

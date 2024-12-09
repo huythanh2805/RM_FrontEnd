@@ -32,7 +32,7 @@ const CategoryList = () => {
   const currentItems = categories
     .reverse()
     .slice(startIndex, startIndex + itemPerPage);
-  const pageCount = Math.ceil(categories.length / itemPerPage);
+  const pageCount = Math.ceil(categories.reverse().length / itemPerPage);
 
   const handlePageClick = (e) => {
     setCurrentPage(e.selected + 1);
