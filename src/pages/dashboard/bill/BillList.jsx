@@ -33,7 +33,7 @@ const BillList = () => {
   const currentItems = dataBill
     .reverse()
     .slice(startIndex, startIndex + itemPerPage);
-  const pageCount = Math.ceil(dataBill.length / itemPerPage);
+  const pageCount = Math.ceil(dataBill.reverse().length / itemPerPage);
 
   const handlePageClick = (e) => {
     setCurrentPage(e.selected + 1);

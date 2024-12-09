@@ -85,7 +85,7 @@ const DishList = () => {
   const currentItems = filterDishes
     .reverse()
     .slice(startIndex, startIndex + itemPerPage);
-  const pageCount = Math.ceil(filterDishes.length / itemPerPage);
+  const pageCount = Math.ceil(filterDishes.reverse().length / itemPerPage);
 
   const handlePageClick = (e) => {
     setCurrentPage(e.selected + 1);

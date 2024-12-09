@@ -27,22 +27,21 @@ const Feedback = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemPerPage = 5;
 
-  useEffect(() => {
-    const fetchData = () => {
-      axios
-        .get(BASE_URL + "/feedbacks/dish/" + id)
-        .then((res) => {
-          setDataComment(
-            res.data.feedbacks.filter((item) => item.isShow || [])
-          );
-          // console.log("Comment", res.data.feedbacks);
-        })
-        .catch((err) => {
-          console.log(err);
-          setDataComment([]);
-        });
-    };
+  const fetchData = () => {
+    axios
+      .get(BASE_URL + "/feedbacks/dish/" + id)
+      .then((res) => {
+        // console.log("res", res.data.feedbacks);
+        setDataComment(res.data.feedbacks.filter((item) => item.isShow));
+        // console.log("Comment", res.data.feedbacks);
+      })
+      .catch((err) => {
+        console.log(err);
+        setDataComment([]);
+      });
+  };
 
+  useEffect(() => {
     const fetchInforUser = () => {
       axios
         .get(BASE_URL + "/users/get/v2/" + userId)
@@ -57,7 +56,7 @@ const Feedback = () => {
 
     fetchData();
     fetchInforUser();
-  }, [id]);
+  }, [id, userId]);
 
   // phân trang
   const startIndex = (currentPage - 1) * itemPerPage;
@@ -91,9 +90,9 @@ const Feedback = () => {
     axios
       .post(BASE_URL + "/feedbacks", data)
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         toast({ variant: "success", title: "Đánh giá thành công !" });
-        setComment(""); // reset input
+        setComment("");
         setRating(5);
         fetchData();
       })
