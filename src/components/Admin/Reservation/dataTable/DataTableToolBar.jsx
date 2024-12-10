@@ -40,7 +40,7 @@ export function DataTableToolbar({
     <div className="flex items-center max-w-fit">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter userName..."
+          placeholder="Lọc tên khách hàng..."
           value={(table.getColumn("userName")?.getFilterValue()) ?? ""}
           onChange={(event) =>
             table.getColumn("userName")?.setFilterValue(event.target.value)
@@ -50,7 +50,7 @@ export function DataTableToolbar({
         {table.getColumn("status") && (
           <DataTableFacetedFilter
             column={table.getColumn("status")}
-            title="Status"
+            title="Trạng thái"
             options={statuses}
           />
         )}

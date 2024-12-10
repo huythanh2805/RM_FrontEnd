@@ -83,7 +83,7 @@ export function ReserDataTable({
         <DataTableToolbar table={table} />
         <DatePicker
           className="w-full bg-light-bg dark:bg-dark-bg focus:outline-none px-3 py-2 border border-gray-200 dark:border-gray-800 rounded-md"
-          placeholderText="Chose the date"
+          placeholderText="Chọn ngày"
           selected={dateValidation}
           onChange={(date) => handleDateValidation(date)}
           dateFormat={"dd/MM/yyyy, HH:mm"}
@@ -157,7 +157,7 @@ export function ReserDataTable({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Không có kết quả.
                 </TableCell>
               </TableRow>
             )}

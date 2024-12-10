@@ -62,7 +62,7 @@ export function AppSidebar() {
   ];
 
   return (
-    <Sidebar className="w-64 h-full bg-gray-800 text-white">
+    <Sidebar className="w-[270px] h-full bg-gray-800 text-white">
       <SidebarHeader className="border-b">
         <div className="flex items-center gap-4 p-4">
           <img
@@ -70,14 +70,14 @@ export function AppSidebar() {
             alt="Golden Fork Logo"
             className="h-16 w-16 object-cover rounded-full"
           />
-          <span className="font-bold text-2xl text-gray-800">Golden Fork</span>
+          <span className="dancing text-2xl text-gray-800">Golden Fork</span>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-4">
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <Link
