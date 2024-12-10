@@ -50,7 +50,7 @@ export const Checkout = () => {
     return () => {
       socket.disconnect();
     };
-  }, [decodedToken, navigate]);
+  }, [decodedToken.id, navigate]);
   // Tính tổng tiền món ăn
   const computeTotalAmount = (dishes) => {
     return dishes.reduce((total, dish) => total + dish.price * dish.quantity, 0);

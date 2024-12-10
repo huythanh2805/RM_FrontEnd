@@ -101,7 +101,10 @@ const ReservationForm = () => {
 
     try {
       setLoading(true);
-      const { message } = await usePostData(`${ServerUrl}/api/reservations/v2/client`, postData);
+      const { message } = await usePostData(
+        `https://8f30-27-72-104-190.ngrok-free.app/api/reservations/v2/client`,
+        postData
+      );
       if (cart.length > 0) {
         const existingReservations = JSON.parse(localStorage.getItem("reservationDetails")) || [];
         if (Array.isArray(existingReservations)) {
