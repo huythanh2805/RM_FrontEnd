@@ -18,9 +18,12 @@ function MenuItem({ item, onCLick }) {
       axios
         .get(BASE_URL + `/feedbacks/dish/${item._id}`)
         .then((res) => {
-          console.log(res.data.feedbacks.length);
           if (res.data.feedbacks.length > 0) {
-            setTotalFeedback(res.data.feedbacks.length);
+            const listFeedback = res.data.feedbacks.filter(
+              (item) => item.isShow
+            );
+
+            setTotalFeedback(listFeedback.length);
           } else {
             setTotalFeedback(0);
           }
