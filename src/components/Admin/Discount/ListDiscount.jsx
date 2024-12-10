@@ -10,10 +10,44 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Navbar from "../Navbar";
+import { toast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ListDiscount() {
-  const { data: discounts } = useFetchData(`${ServerUrl}/api/discount`);
+  const router = useNavigate()
+  const [discounts, setDiscounts] = useState([])
+  const { data: discountsData } = useFetchData(`${ServerUrl}/api/discount`);
   console.log({ discounts });
+  useEffect(()=>{
+   if(discountsData) setDiscounts(discountsData)
+  },[discountsData])
+
+const deleteDiscountById = async (id) =>{
+   try {
+    const res = await fetch(`${ServerUrl}/api/discount/${id}`,{
+      method: "DELETE"
+    })
+    const data = await res.json()
+    if(!res.ok){
+      toast({
+        variant: "destructive",
+        title: data.message,
+      })
+    }
+    toast({
+      variant: "success",
+      title: data.message,
+    })
+    setDiscounts(preData=>[...preData.filter(item=> item._id !== id)])
+   } catch (error) {
+    toast({
+      variant: "destructive",
+      title: "Something went wrong with delete discount",
+    })
+   }
+  }
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
       <Navbar />
@@ -80,6 +114,10 @@ function ListDiscount() {
                         </div>
                       )}
                     </TableCell>
+                    {/* <TableCell className="text-center text-xl">
+                      <Button onClick={()=>deleteDiscountById(discount._id)}>Xóa</Button>
+                      <Button onClick={()=>router('/admin/updateDiscount/'+discount._id)}>Sửa</Button>
+                    </TableCell> */}
                   </TableRow>
                 ))}
             </TableBody>

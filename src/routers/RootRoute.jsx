@@ -1,6 +1,7 @@
 import CompletedBill from "@/components/Admin/Bill/CompletedBill";
 import CreateDiscount from "@/components/Admin/Discount/CreateDiscount";
 import ListDiscount from "@/components/Admin/Discount/ListDiscount";
+import UpdateDiscount from "@/components/Admin/Discount/UpdateDiscount";
 import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
 import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
 import ListReservation from "@/components/Admin/Reservation/ListReservation";
@@ -135,6 +136,10 @@ const router = createBrowserRouter([
       {
         path: "listDiscounts",
         element: <ListDiscount />,
+      },
+      {
+        path: "updateDiscount/:id",
+        element: <UpdateDiscount />,
       },
       {
         path: "categories",
