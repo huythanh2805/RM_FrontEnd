@@ -102,7 +102,7 @@ const ReservationForm = () => {
     try {
       setLoading(true);
       const { message } = await usePostData(
-        `https://8f30-27-72-104-190.ngrok-free.app/api/reservations/v2/client`,
+        `https://4d46-113-185-55-86.ngrok-free.app/api/reservations/v2/client`,
         postData
       );
       if (cart.length > 0) {

@@ -34,7 +34,7 @@ const formSchemaFunc = () =>
   });
 
 // Form reusable for update and add reservation
-export default function DiscountForm() {
+export default function DiscountForm({discount, id}) {
   const [loading, setLoading] = useState(false);
   const [decodedToken, setDecodeToken] = useState(() => {
     const token = localStorage.getItem("token");
@@ -49,31 +49,31 @@ export default function DiscountForm() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      discountValue: 0,
-      expireDate: undefined,
-      minOrderValue: 0,
-      totalQuantity: 0,
+      discountValue: discount ? discount.discountValue : 0,
+      expireDate:  discount ? new Date(discount.expireDate): undefined,
+      minOrderValue:  discount ? discount.minOrderValue : 0,
+      totalQuantity:  discount ? discount.totalQuantity : 0,
       // isActive: true,
-      discountType: "FIXEDAMOUNT",
+      discountType: discount ? discount.discountType : "FIXEDAMOUNT",
     },
   });
-
+   
   async function onSubmit(values) {
     console.log({ ...values, userId: decodedToken.id });
-    const url = ServerUrl + "/api/discount";
+    const url = discount ? ServerUrl + "/api/discount/"+id : ServerUrl + "/api/discount";
     setLoading(true);
     try {
       const res = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
         },
-        method: "POST",
+        method: discount ? "PATCH" :"POST",
         body: JSON.stringify({ ...values, userId: decodedToken.id }),
       });
       if (!res.ok) {
         return toast({
           variant: "destructive",
-          title: "Không thể tạo phiếu",
+          title: "Something wrong with discount form!",
         });
       }
       const data = await res.json();
@@ -81,6 +81,9 @@ export default function DiscountForm() {
         variant: "success",
         title: data.message,
       });
+      if(discount){
+        router('/admin/listDiscounts')
+      }
       setLoading(false);
       form.reset();
     } catch (error) {
@@ -255,7 +258,7 @@ export default function DiscountForm() {
                 data-testid="loader"
               />
             ) : (
-              "Tạo Phiếu"
+              discount ? "Cập nhật" : "Tạo Phiếu"
             )}
           </Button>
         </div>

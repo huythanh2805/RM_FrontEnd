@@ -319,7 +319,7 @@ const CompletedBill = () => {
                         Đã cọc
                       </TableCell>
                       <TableCell colSpan={2} className="text-right text-2xl">
-                        {formatCurrency(bill.deposit_money)}
+                        {formatCurrency(bill?.deposit_money ? bill?.deposit_money : 0)}
                       </TableCell>
                     </TableRow>
                     <TableRow className="bg-light-bg dark:bg-dark-bg">
