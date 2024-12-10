@@ -1,6 +1,13 @@
 import TimeInterval from "@/components/custom_ui/TimeInterval";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { ServerUrl } from "@/utilities/utils";
@@ -28,7 +35,14 @@ export default function TableComponent({ table, updateTable }) {
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
 
-  const { setNodeRef, transform, transition, listeners, attributes, isDragging } = useSortable({
+  const {
+    setNodeRef,
+    transform,
+    transition,
+    listeners,
+    attributes,
+    isDragging,
+  } = useSortable({
     id: table._id,
     data: {
       type: "table",
@@ -112,7 +126,10 @@ export default function TableComponent({ table, updateTable }) {
   };
   // Func pick up reservation for reser which didn't order table online and reselect table
   const updateReservation = async (reservationId, table_id, type) => {
-    const URL = type == "SELECT" ? ServerUrl + "/api/reservations/select" : ServerUrl + "/api/reservations/reselect";
+    const URL =
+      type == "SELECT"
+        ? ServerUrl + "/api/reservations/select"
+        : ServerUrl + "/api/reservations/reselect";
     try {
       const res = await fetch(URL, {
         method: "PATCH",
@@ -225,7 +242,14 @@ export default function TableComponent({ table, updateTable }) {
           <div className="flex items-center gap-2">
             {/* <Annoyed width={20} height={20}/> */}
             <span className="text-[17px]">TT :</span>
-            <p className={cn("font-thin text-[17px]", table.status === "AVAILABLE" ? "text-black" : "text-yellow-1")}>
+            <p
+              className={cn(
+                "font-semibold",
+                table.status === "AVAILABLE"
+                  ? "text-gray-800 bg-gray-200 hover:bg-gray-300 px-4 py-0.5 rounded-md"
+                  : "text-yellow-800 bg-yellow-200 hover:bg-yellow-300 px-4 py-0.5 rounded-md"
+              )}
+            >
               {table.status === "AVAILABLE" ? "Có Sẵn" : "Đang phục vụ"}
             </p>
           </div>
@@ -254,7 +278,9 @@ export default function TableComponent({ table, updateTable }) {
                   {getTimeLoading ? (
                     <div>00:00:00</div>
                   ) : (
-                    <TimeInterval reservationStartTime={reservationDetail?.startTime} />
+                    <TimeInterval
+                      reservationStartTime={reservationDetail?.startTime}
+                    />
                   )}
                 </div>
               </div>
@@ -264,13 +290,13 @@ export default function TableComponent({ table, updateTable }) {
             {table.status === "ISSERVING" ? (
               <>
                 <DialogClose>
-                  <Button
+                  {/* <Button
                     onClick={() => editReservation(reservationDetail._id)}
                     className="bg-blue-1 hover:bg-blue-1
               text-white dark:text-white hover:scale-90 transition-all ease-in"
                   >
                     Cập nhật
-                  </Button>
+                  </Button> */}
                 </DialogClose>
                 <DialogClose>
                   <Button
@@ -289,7 +315,11 @@ export default function TableComponent({ table, updateTable }) {
                   className="bg-light-success dark:bg-dark-success hover:bg-light-success dark:hover:bg-dark-success 
               text-white dark:text-white hover:scale-90 transition-all ease-in"
                 >
-                  {type === "RESELECT" ? "Đổi bàn" : type === "SELECT" ? "Chọn bàn" : " Tạo đơn"}
+                  {type === "RESELECT"
+                    ? "Đổi bàn"
+                    : type === "SELECT"
+                    ? "Chọn bàn"
+                    : " Tạo đơn"}
                 </Button>
               </DialogClose>
             )}
