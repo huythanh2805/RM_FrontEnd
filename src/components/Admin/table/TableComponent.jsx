@@ -269,7 +269,7 @@ export default function TableComponent({ table, updateTable }) {
                     className="bg-blue-1 hover:bg-blue-1
               text-white dark:text-white hover:scale-90 transition-all ease-in"
                   >
-                    Update
+                    Cập nhật
                   </Button>
                 </DialogClose>
                 <DialogClose>
@@ -278,7 +278,7 @@ export default function TableComponent({ table, updateTable }) {
                     className="bg-yellow-1 hover:bg-yellow-1
                   text-white dark:text-white hover:scale-90 transition-all ease-in"
                   >
-                    Order food
+                    Đặt đồ ăn
                   </Button>
                 </DialogClose>
               </>

@@ -19,11 +19,11 @@ export function DataTableViewOptions({
           className="mx-2 hidden h-8 lg:flex py-5 px-3 bg-light-bg_2 dark:bg-dark-bg_2"
         >
           {/* <MixerHorizontalIcon className="mr-2 h-4 w-4" /> */}
-          Columns
+          Cột
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[200px] bg-light-bg_2 dark:bg-dark-bg_2" >
-        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+        <DropdownMenuLabel>Chuyển đổi cột</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
           .getAllColumns()
