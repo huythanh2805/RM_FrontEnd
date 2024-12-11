@@ -57,7 +57,7 @@ export default function FavorFoodChart({top5Dishes, month, year}) {
   // }, [])
  
   const modifiedTop5Dishes = React.useMemo(()=>{
-    return top5Dishes.map((item, index)=>({...item, fill: `var(--color-top_${index + 1})`,name: `top_${index+1}`}))
+    return top5Dishes.map((item, index)=>({...item, fill: `var(--color-top_${index + 1})`,name: item.name}))
   })
   return (
     <Card className="flex flex-col ">
@@ -75,7 +75,7 @@ export default function FavorFoodChart({top5Dishes, month, year}) {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <ChartLegend content={<ChartLegendContent />} />
+            {/* <ChartLegend content={<ChartLegendContent />} /> */}
             <Pie
               data={modifiedTop5Dishes}
               dataKey="quantity"
@@ -116,6 +116,7 @@ export default function FavorFoodChart({top5Dishes, month, year}) {
           </PieChart>
         </ChartContainer>
       </CardContent>
+      
       <CardFooter className="flex-col gap-2 text-sm py-4">
         <div className="flex items-center gap-2 font-medium leading-none">
           {/* Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}

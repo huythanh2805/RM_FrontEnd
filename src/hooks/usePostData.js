@@ -20,9 +20,10 @@ export async function usePostData(url, postData){
           }
           message = data.message
         } catch (error) {
+          console.log(error)
           toast({
             variant: "destructive",
-            title: "Something went wrong with usePostDate!",
+            title: "Something went wrong with usePostData!",
           })
         }
         return {message}

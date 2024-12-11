@@ -228,55 +228,6 @@ const Calculator = ({
   // } = useQuery(["reservationDetails", reservation_id], fetchReservationDetails);
   // console.log("reservationDetails:", reservationDetails);
 
-  const handleCheckboxChange = (id) => {
-    if (selectedRows.includes(id)) {
-      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
-    } else {
-      setSelectedRows([...selectedRows, id]);
-    }
-  };
-
-  // Xử lý khi checkbox "chọn tất cả" được thay đổi
-  const handleSelectAll = () => {
-    if (selectedRows.length === orderedFoods.length) {
-      setSelectedRows([]);
-    } else {
-      const allIds = orderedFoods.map((orderedFood) => orderedFood._id);
-      setSelectedRows(allIds);
-    }
-  };
-
-  const updateOrderedDishesStatus = async (status) => {
-    if (selectedRows.length < 1) return;
-    try {
-      const res = await fetch(ServerUrl + "/api/orderedFood", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          selectedRows: selectedRows,
-          statusValue: status,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        return toast({
-          variant: "destructive",
-          title: "Something wrong with update status",
-        });
-      }
-      setOrderedFoods((currenntStatus) =>
-        currenntStatus.map((item) => (selectedRows.includes(item._id) ? { ...item, status: status } : item))
-      );
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Something wrong with update status",
-      });
-    }
-  };
-
   useEffect(() => {
     const socket = io("http://localhost:1111");
     socket.on("bank-payment-success", (notification) => {
@@ -292,10 +243,11 @@ const Calculator = ({
       socket.disconnect();
     };
   }, []);
+console.log({discount})
   const handleDiscountInput = async (e) => {
     e.preventDefault();
     try {
-      const url = `${ServerUrl}/api/userDiscount/reservation/admin/${newDiscount}/${totalPrice}`;
+      const url = `${ServerUrl}/api/userDiscount/reservation/admin/${newDiscount}/${totalPrice}/${reservation_id}`;
       const res = await fetch(url, {
         method: "GET",
       });
@@ -305,8 +257,7 @@ const Calculator = ({
           variant: "destructive",
           title: data.message,
         });
-      console.log(data.userDiscount);
-      setDiscount(data.userDiscount);
+      setDiscount(data.newUserDiscount);
       setNewDiscount("");
     } catch (error) {
       toast({
@@ -319,7 +270,7 @@ const Calculator = ({
     <div className="px-3 py-4 max-h-[800px] min-w-[650px] overflow-scroll">
       <Table>
         <TableHeader>
-          <TableRow onClick={handleSelectAll}>
+          <TableRow>
             <TableHead className="min-w-[200px] text-xl">Tên</TableHead>
             <TableHead className="text-xl">Số lượng</TableHead>
 
@@ -329,7 +280,7 @@ const Calculator = ({
         </TableHeader>
         <TableBody>
           {orderedFoods?.map((orderedFood) => (
-            <TableRow onClick={() => handleCheckboxChange(orderedFood._id)} key={orderedFood._id}>
+            <TableRow>
               <TableCell className="font-medium">
                 <div className="flex items-center justify-start gap-2 md:gap-4">
                   <div className="w-16 h-16 flex items-center justify-center overflow-hidden rounded-full">

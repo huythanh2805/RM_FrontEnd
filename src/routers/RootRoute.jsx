@@ -192,7 +192,6 @@ const router = createBrowserRouter([
       {
         path: "tables/:reservationId",
         element: <TableManagement />,
-        // loader: teamLoader,
       },
       {
         path: "reservations/createReservation/:tableId",

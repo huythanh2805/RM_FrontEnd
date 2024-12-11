@@ -59,7 +59,7 @@ export default function ReservationForm({
       userName: reservation ? reservation?.userName : "",
       phoneNumber: reservation ? reservation?.phoneNumber : "",
       detailAddress: reservation ? reservation.detailAddress : "",
-      guests_count: reservation ? reservation.guests_count : 0,
+      guests_count: reservation ? reservation.guests_count : 1,
       payment_method: reservation ? reservation.payment_method : "CASHPAYMENT",
     },
   })

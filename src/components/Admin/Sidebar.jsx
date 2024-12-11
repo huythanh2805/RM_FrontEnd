@@ -42,12 +42,13 @@ export function AppSidebar() {
 
   const menuItems = [
     { title: "Trang chủ", url: "/admin", icon: Home },
-    { title: "Tài khoản", url: "/admin/users", icon: User },
-    { title: "Bàn", url: "/admin/tables", icon: Table },
-    // { title: "Nhân viên", url: "/admin/employees", icon: Contact },
-    { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
-    { title: "Đánh giá", url: "/admin/feedbacks", icon: MessageCircle },
     { title: "Danh sách đặt bàn", url: "/admin/listReser", icon: List },
+    { title: "Bàn", url: "/admin/tables", icon: Table },
+    { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
+    { title: "Tài khoản", url: "/admin/users", icon: User },
+    // { title: "Nhân viên", url: "/admin/employees", icon: Contact },
+    { title: "Đánh giá", url: "/admin/feedbacks", icon: MessageCircle },
+    
   ];
 
   const subItems = [

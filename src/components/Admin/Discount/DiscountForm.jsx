@@ -23,10 +23,10 @@ import { Label } from "@/components/ui/label";
 import jwtDecode from "jwt-decode";
 const formSchemaFunc = () =>
   z.object({
-    discountValue: z.number(),
-    expireDate: z.date().optional(),
+    discountValue: z.number().min(1,{ message: "Giá trị giảm giá phải lớn hơn hoặc bằng 1" }),
+    expireDate: z.date(),
     minOrderValue: z.number(),
-    totalQuantity: z.number(),
+    totalQuantity: z.number().min(1,{ message: "Số lượng mã phải lớn hơn hoặc bằng 1" }),
     // isActive: z.boolean().optional(),
     discountType: z.enum(["FIXEDAMOUNT", "PERCENTAGE"], {
       required_error: "Bạn cần phải chọn kiểu cho phiếu giảm giá",
@@ -70,13 +70,13 @@ export default function DiscountForm({discount, id}) {
         method: discount ? "PATCH" :"POST",
         body: JSON.stringify({ ...values, userId: decodedToken.id }),
       });
+      const data = await res.json();
       if (!res.ok) {
         return toast({
           variant: "destructive",
-          title: "Something wrong with discount form!",
+          title: data.message,
         });
       }
-      const data = await res.json();
       toast({
         variant: "success",
         title: data.message,

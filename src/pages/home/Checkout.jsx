@@ -24,6 +24,8 @@ export const Checkout = () => {
     const currentCode = params.get("code");
 
     const storedDetails = JSON.parse(localStorage.getItem("reservationDetails")) || [];
+    console.log({storedDetails})
+    console.log({currentCode})
     if (currentCode && Array.isArray(storedDetails)) {
       const reservation = storedDetails.find((item) => item.code === currentCode);
       if (reservation) {
