@@ -142,7 +142,7 @@ export const ReservationColumn = ({ updateTable, selectTable, cancelReser, confi
                   Hủy Đơn
                 </Button>
                 <Button onClick={() => confirmReser(row.original._id)} className="bg-green-1 hover:bg-green-1">
-                  Xác nhận đơn
+                  Xác nhận
                 </Button>
               </div>
             )}
@@ -150,6 +150,9 @@ export const ReservationColumn = ({ updateTable, selectTable, cancelReser, confi
               <div className="flex items-center gap-2">
                 <Button onClick={() => cancelReser(row.original._id)} className="bg-red-1 hover:bg-red-1">
                   Hủy Đơn
+                </Button>
+                <Button onClick={() => confirmReser(row.original._id)} className="bg-green-1 hover:bg-green-1">
+                  Xác nhận
                 </Button>
               </div>
             )}

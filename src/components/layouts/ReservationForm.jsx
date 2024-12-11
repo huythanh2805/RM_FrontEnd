@@ -7,7 +7,7 @@ import { usePostData } from "@/hooks/usePostData";
 import { ServerUrl } from "@/utilities/utils";
 import { motion } from "framer-motion";
 import jwtDecode from "jwt-decode";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { FaCalendarCheck, FaPhoneAlt, FaUser } from "react-icons/fa";
 import { FaPerson } from "react-icons/fa6";
@@ -15,6 +15,11 @@ import { IoIosTime } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import ButtonCustome from "../ButtonCustome";
 import { ComboBoxComponent } from "./ComboBoxComponent";
+
+const imgAnimation = {
+  hidden: { x: -200, opacity: 0 },
+  visible: { x: 0, opacity: 1, transition: { duration: 0.5 } },
+};
 
 const ReservationForm = () => {
   const { colorCode } = useThemeContext();
@@ -26,19 +31,20 @@ const ReservationForm = () => {
   const [timePicker, setTimePicker] = useState();
   const [loading, setLoading] = useState(false);
   const [couponValue, setCouponValue] = useState("");
+  const [userDiscounts, setUserDiscounts] = useState([])
   const navigate = useNavigate();
   const [decodedToken, setDecodeToken] = useState(() => {
     const token = localStorage.getItem("token");
     if (!token) return null;
     return jwtDecode(token);
   });
-  const { data: userDiscounts } = useFetchData(
+  const { data: discountData } = useFetchData(
     `${ServerUrl}/api/userDiscount/reservation/client/getAvailableStatus/${decodedToken?.id}`
   );
-  const imgAnimation = {
-    hidden: { x: -200, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { duration: 0.5 } },
-  };
+  useEffect(()=>{
+   if(discountData) setUserDiscounts(discountData)
+  },[discountData])
+ 
   const combinedDateTime = (date, time) => {
     const fomartedDate = new Date(
       date.getFullYear(),
@@ -54,8 +60,6 @@ const ReservationForm = () => {
       console.log(cart);
       const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
       const discount = userDiscounts.find((item) => item._id === couponValue);
-      console.log({ totalPrice });
-      console.log(discount?.discountId?.minOrderValue);
 
       if (discount && discount.discountId.minOrderValue > totalPrice) {
         return toast({
@@ -100,6 +104,21 @@ const ReservationForm = () => {
     };
 
     try {
+      // const { message } = await usePostData(
+      //   `${ServerUrl}/api/reservations/v2/client`,
+      //   postData
+      // );
+      // if (message) {
+      //   setUserName("");
+      //   setPhoneNumber("");
+      //   setPersonCount(1);
+      //   setDatePicker(null);
+      //   setTimePicker(null);
+      //   setCouponValue("");
+      //   clearCart();
+      //   toast({ variant: "success", title: message });
+      //   setUserDiscounts(preVal=>[...preVal.map(item=>item._id === couponValue ? {...item, status: 'USED'} : item)])
+      // }
       setLoading(true);
       const { message } = await usePostData(
         `https://4d46-113-185-55-86.ngrok-free.app/api/reservations/v2/client`,

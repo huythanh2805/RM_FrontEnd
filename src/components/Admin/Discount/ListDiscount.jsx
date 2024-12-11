@@ -14,12 +14,12 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Switch } from "@/components/ui/switch";
 
 function ListDiscount() {
   const router = useNavigate()
   const [discounts, setDiscounts] = useState([])
   const { data: discountsData } = useFetchData(`${ServerUrl}/api/discount`);
-  console.log({ discounts });
   useEffect(()=>{
    if(discountsData) setDiscounts(discountsData)
   },[discountsData])
@@ -48,6 +48,28 @@ const deleteDiscountById = async (id) =>{
     })
    }
   }
+  const handleUpdateActive = async (currentIsActive, id)=>{
+   const url =  ServerUrl + "/api/discount/"+id
+    try {
+      const res = await fetch(url, {
+        headers: {
+          'Content-type': 'application/json'
+        },
+        method: "PATCH",
+        body: JSON.stringify({isActive: !currentIsActive})
+      })
+      const data = await res.json()
+      if(!res.ok){
+        return toast({
+          variant: "destructive",
+          title: data.message,
+        })
+      }
+      setDiscounts(preVal=>[...preVal.map(item=> item._id === id ? {...item, isActive: !currentIsActive} : item)])
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
       <Navbar />
@@ -71,7 +93,8 @@ const deleteDiscountById = async (id) =>{
                 <TableHead className="text-center w-[200px] text-lg">
                   Số lượng còn lại
                 </TableHead>
-                <TableHead className="text-lg">Trạng thái</TableHead>
+                <TableHead className="text-lg min-w-[200px]">Trạng thái</TableHead>
+                <TableHead className="text-lg ">Hoạt động</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -113,11 +136,16 @@ const deleteDiscountById = async (id) =>{
                           Ngừng hoạt động
                         </div>
                       )}
+                    </TableCell >
+                    <TableCell className="text-center text-xl">
+                      {/* <Button onClick={()=>deleteDiscountById(discount._id)}>Xóa</Button>
+                      <Button onClick={()=>router('/admin/updateDiscount/'+discount._id)}>Sửa</Button> */}
+                    <Switch 
+                     className={'bg-blue-1'}
+                    checked={discount.isActive} 
+                    onCheckedChange={()=>handleUpdateActive(discount.isActive, discount._id)}
+                     />
                     </TableCell>
-                    {/* <TableCell className="text-center text-xl">
-                      <Button onClick={()=>deleteDiscountById(discount._id)}>Xóa</Button>
-                      <Button onClick={()=>router('/admin/updateDiscount/'+discount._id)}>Sửa</Button>
-                    </TableCell> */}
                   </TableRow>
                 ))}
             </TableBody>

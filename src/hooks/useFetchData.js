@@ -40,8 +40,7 @@ export function useFetchData(url){
       data,
     }
 }
-export function updateData(url, infor){
-  const updateData = async () => {
+export  async function updateData(url, infor){
     try {
       const res = await fetch(url, {
         method: "PUT",
@@ -57,7 +56,6 @@ export function updateData(url, infor){
     } catch (error) {
       return {success: false}
     }
-  }
-  return updateData()
+
 }
   
