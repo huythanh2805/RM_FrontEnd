@@ -23,11 +23,14 @@ export const Checkout = () => {
     const params = new URLSearchParams(location.search);
     const currentCode = params.get("code");
 
-    const storedDetails = JSON.parse(localStorage.getItem("reservationDetails")) || [];
-    console.log({storedDetails})
-    console.log({currentCode})
+    const storedDetails =
+      JSON.parse(localStorage.getItem("reservationDetails")) || [];
+    console.log({ storedDetails });
+    console.log({ currentCode });
     if (currentCode && Array.isArray(storedDetails)) {
-      const reservation = storedDetails.find((item) => item.code === currentCode);
+      const reservation = storedDetails.find(
+        (item) => item.code === currentCode
+      );
       if (reservation) {
         setReservationDetails(reservation);
       } else {
@@ -55,7 +58,10 @@ export const Checkout = () => {
   }, [decodedToken.id, navigate]);
   // Tính tổng tiền món ăn
   const computeTotalAmount = (dishes) => {
-    return dishes.reduce((total, dish) => total + dish.price * dish.quantity, 0);
+    return dishes.reduce(
+      (total, dish) => total + dish.price * dish.quantity,
+      0
+    );
   };
   // Tính thuế 5%
   const calculateTaxAmount = (amount) => {
@@ -79,10 +85,16 @@ export const Checkout = () => {
     }
     return 0;
   };
-  const totalAmount = reservationDetails ? computeTotalAmount(reservationDetails.dishs) : 0;
+  const totalAmount = reservationDetails
+    ? computeTotalAmount(reservationDetails.dishs)
+    : 0;
   const tax = totalAmount ? calculateTaxAmount(totalAmount) : 0;
-  const couponValue = reservationDetails ? reservationDetails.couponValue : null;
-  const discountAmount = couponValue ? calculateDiscountAmount(totalAmount, couponValue) : 0;
+  const couponValue = reservationDetails
+    ? reservationDetails.couponValue
+    : null;
+  const discountAmount = couponValue
+    ? calculateDiscountAmount(totalAmount, couponValue)
+    : 0;
   const totalAfterTaxAndDiscount = totalAmount + tax - discountAmount;
   const totalDeposit = (totalAfterTaxAndDiscount * 25) / 100;
   const generateQrCodeUrl = (totalDeposit, storedDetails) => {
@@ -90,9 +102,11 @@ export const Checkout = () => {
     const bank = "MB";
     const account = "0386426150";
     const template = "compact";
-    const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(bank)}&acc=${encodeURIComponent(
-      account
-    )}&template=${encodeURIComponent(template)}&amount=${encodeURIComponent(totalDeposit)}&des=${description}`;
+    const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(
+      bank
+    )}&acc=${encodeURIComponent(account)}&template=${encodeURIComponent(
+      template
+    )}&amount=${encodeURIComponent(totalDeposit)}&des=${description}`;
     return qrUrl;
   };
   const handlePayment = () => {
@@ -117,8 +131,12 @@ export const Checkout = () => {
   if (!reservationDetails) {
     return <div>Loading...</div>;
   }
-  const formattedDate = new Date(reservationDetails.startTime).toLocaleDateString();
-  const formattedTime = new Date(reservationDetails.startTime).toLocaleTimeString();
+  const formattedDate = new Date(
+    reservationDetails.startTime
+  ).toLocaleDateString();
+  const formattedTime = new Date(
+    reservationDetails.startTime
+  ).toLocaleTimeString();
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -140,14 +158,18 @@ export const Checkout = () => {
           }}
         ></div>
         <div className="absolute inset-0 bg-black opacity-30"></div>
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white">
-          <h1 className="text-5xl md:text-4xl sm:text-3xl font-bold">Thanh Toán</h1>
-          <p className="text-4xl md:text-xl sm:text-xl mt-4 flex items-center justify-center">
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
-            <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
-            <span className="ml-4">Vui lòng thanh toán trước 25% hóa đơn</span>
-            <span className="bg-white h-[2px] w-[100px] ml-4 hidden lg:block"></span>
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
+          <h1 className="text-4xl md:text-3xl sm:text-2xl font-bold">
+            Thanh Toán
+          </h1>
+          <p className="text-xl md:text-lg sm:text-base mt-4 flex flex-wrap items-center justify-center">
+            <span className="bg-white p-1 rounded-full hidden lg:block"></span>
+            <span className="bg-white h-[2px] w-[80px] hidden lg:block"></span>
+            <span className="ml-0 lg:ml-4 lg:mr-4 text-center">
+              Vui lòng thanh toán trước 25% hóa đơn
+            </span>
+            <span className="bg-white h-[2px] w-[80px] hidden lg:block"></span>
+            <span className="bg-white p-1 rounded-full hidden lg:block"></span>
           </p>
         </div>
       </div>
@@ -161,55 +183,92 @@ export const Checkout = () => {
                 </h2>
                 <div className="data py-6 border-b border-gray-200">
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Họ tên</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{reservationDetails.userName}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Họ tên
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {reservationDetails.userName}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Số điện thoại</p>
-                    <p className="font-medium text-lg leading-8 text-gray-600">{reservationDetails.phoneNumber}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Số điện thoại
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-600">
+                      {reservationDetails.phoneNumber}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Ngày đặt</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{formattedDate}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Ngày đặt
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {formattedDate}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Giờ đặt</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{formattedTime}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Giờ đặt
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {formattedTime}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Số người</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Số người
+                    </p>
                     <p className="font-medium text-lg leading-8 text-gray-900">
                       {reservationDetails.guests_count} người
                     </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Tổng tiền</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{formatCurrency(totalAmount)} </p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Tổng tiền
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {formatCurrency(totalAmount)}{" "}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Giảm giá</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{formatCurrency(discountAmount)}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Giảm giá
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {formatCurrency(discountAmount)}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Thuế (5%)</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{formatCurrency(tax)}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Thuế (5%)
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {formatCurrency(tax)}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Tổng cộng</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Tổng cộng
+                    </p>
                     <p className="font-medium text-lg leading-8 text-gray-900">
                       {formatCurrency(totalAfterTaxAndDiscount)}
                     </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Thanh toán trước ( 25% )</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{formatCurrency(totalDeposit)}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Thanh toán trước ( 25% )
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {formatCurrency(totalDeposit)}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
             <div className="w-full max-w-sm md:max-w-3xl max-xl:mx-auto">
               <div className="grid grid-cols-1 gap-6">
-                {Array.isArray(reservationDetails.dishs) && reservationDetails.dishs.length > 0 ? (
+                {Array.isArray(reservationDetails.dishs) &&
+                reservationDetails.dishs.length > 0 ? (
                   reservationDetails.dishs.map((orderedDish, index) => (
                     <div
                       key={orderedDish._id}
@@ -228,10 +287,14 @@ export const Checkout = () => {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 md:gap-8">
                         <div>
-                          <h2 className="font-medium text-xl leading-8 text-black mb-3">{orderedDish.dish_id.name}</h2>
+                          <h2 className="font-medium text-xl leading-8 text-black mb-3">
+                            {orderedDish.name}
+                          </h2>
                         </div>
                         <div className="flex items-center justify-between gap-8">
-                          <h6 className="font-medium text-xl leading-8 text-600">Số lượng: {orderedDish.quantity}</h6>
+                          <h6 className="font-medium text-xl leading-8 text-600">
+                            Số lượng: {orderedDish.quantity}
+                          </h6>
                           <h6 className="font-medium text-xl leading-8 text-600">
                             Giá : {formatCurrency(orderedDish.price)}
                           </h6>
@@ -249,7 +312,12 @@ export const Checkout = () => {
         {qrCodeUrl && (
           <div className="mt-4 text-center">
             <p>Quét mã QR để thanh toán:</p>
-            <img src={qrCodeUrl} alt="QR code for payment" className="mx-auto " width={400} />
+            <img
+              src={qrCodeUrl}
+              alt="QR code for payment"
+              className="mx-auto "
+              width={400}
+            />
           </div>
         )}
         <div className="flex gap-5 justify-center mt-4">
