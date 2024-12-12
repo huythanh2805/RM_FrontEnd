@@ -63,38 +63,38 @@ const StatsCounter = () => {
   return (
     <div
       ref={statsRef}
-      className="flex flex-col sm:flex-row justify-around p-20 bg-zinc-100 relative mt-[90px] h-[300px]"
+      className="flex flex-col sm:flex-row justify-center sm:justify-between items-center p-6 sm:p-20 bg-zinc-100 relative mt-[90px] h-[auto] sm:h-[300px]"
     >
       <img
         src="imgs/vegetable_01.png"
         alt="Vegetable 1"
-        className="absolute left-0 transform translate-x-[-50%] w-40 h-40 sm:w-auto sm:h-auto hidden lg:block"
+        className="absolute left-0 transform translate-x-[-50%] w-24 h-24 sm:w-40 sm:h-40 hidden lg:block"
       />
 
       <img
         src="imgs/vegetable_02.png"
         alt="Vegetable 2"
-        className="absolute right-0 transform translate-x-[50%] -translate-y-[60%] w-40 h-40 sm:w-auto sm:h-auto hidden lg:block"
+        className="absolute right-0 transform translate-x-[50%] -translate-y-[60%] w-24 h-24 sm:w-40 sm:h-40 hidden lg:block"
       />
 
       {stats.map((stat, index) => (
         <div
           key={index}
-          className="text-center flex flex-col items-center mb-6 sm:mb-0"
+          className="text-center flex flex-col items-center mb-6 sm:mb-0 sm:w-1/4"
         >
           <div className="flex items-baseline">
             <h2
-              className="text-4xl sm:text-5xl font-bold"
+              className="text-3xl sm:text-5xl font-bold"
               style={{ color: colorCode }}
             >
               {stat.value}
             </h2>
-            <span className="text-base sm:text-[20px] ml-1">{stat.label}</span>
+            <span className="text-sm sm:text-[20px] ml-1">{stat.label}</span>
           </div>
           <img
             src={images[index]}
             alt={stat.label}
-            className="mt-2 w-20 h-20 sm:w-auto sm:h-auto"
+            className="mt-2 w-16 h-16 sm:w-20 sm:h-20"
           />
         </div>
       ))}

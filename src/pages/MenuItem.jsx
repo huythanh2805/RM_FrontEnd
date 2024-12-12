@@ -38,10 +38,10 @@ function MenuItem({ item, onCLick }) {
   }, [item._id]);
 
   return (
-    <div
-      key={item._id}
-      className="max-w-[320px] relative group rounded shadow-lg overflow-hidden bg-white w-full"
-    >
+      <div
+        key={item._id}
+         className="max-w-full sm:max-w-[320px] md:max-w-[768px] lg:max-w-[900px] relative group rounded-lg shadow-lg overflow-hidden bg-white w-full"
+      >
       <div className="relative overflow-hidden">
         <img
           src={item.images[0]}
@@ -94,7 +94,7 @@ function MenuItem({ item, onCLick }) {
           /> */}
           <p className="text-sm font-medium text-gray-700">
             <span className="text-gray-500">
-              {totalFeedback > 0 ? "Tổng lượt đánh giá: " : "Chưa có đánh giá"}
+              {totalFeedback > 0 ? "Lượt đánh giá: " : "Chưa có đánh giá"}
             </span>
             <span className="font-semibold">
               {totalFeedback > 0 ? totalFeedback : ""}

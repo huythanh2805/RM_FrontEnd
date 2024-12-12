@@ -64,7 +64,9 @@ const Header = () => {
               alt="Golden Fork Logo"
               className="h-16 w-16 object-cover rounded-full"
             />
-            <h1 className="text-[35px] font-semibold dancing">Golden Fork</h1>
+            <h1 className="text-[28px] sm:text-[32px] md:text-[36px] font-semibold dancing">
+              Golden Fork
+            </h1>
           </Link>
 
           <nav className="hidden md:flex flex-row items-center text-lg font-medium gap-8">
@@ -85,7 +87,7 @@ const Header = () => {
             ))}
           </nav>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-1">
             <div className="flex md:hidden items-center justify-center">
               <Sheet>
                 <SheetTrigger>
