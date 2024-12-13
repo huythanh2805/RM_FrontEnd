@@ -125,7 +125,7 @@ const Calculator = ({
   };
   const generateQrCodeUrl = (total) => {
     const bank = "MB";
-    const account = "0386426150";
+    const account = "0979756291";
     const template = "compact";
     const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(bank)}&acc=${encodeURIComponent(
       account
@@ -243,7 +243,7 @@ const Calculator = ({
       socket.disconnect();
     };
   }, []);
-console.log({discount})
+  console.log({ discount });
   const handleDiscountInput = async (e) => {
     e.preventDefault();
     try {

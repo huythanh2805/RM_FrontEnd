@@ -1,8 +1,9 @@
 import ButtonCustome from "@/components/ButtonCustome";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { io } from "socket.io-client";
 
 export const HistoryReservation = () => {
   const { userId } = useParams();
@@ -16,13 +17,27 @@ export const HistoryReservation = () => {
 
     return response.data;
   });
+  useEffect(() => {
+    const socket = io("http://localhost:1111"); // URL của server WebSocket
+
+    // Lắng nghe sự kiện "reservation-canceled"
+    socket.on("new-notification", (data) => {
+      setReservations((prev) =>
+        prev.map((res) => (res._id === data.reservationId ? { ...res, status: data.status } : res))
+      );
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   // Mutation để hủy đặt bàn
   const [isCanceling, setIsCanceling] = useState(false);
 
   const mutation = useMutation(
     async (reservationId) => {
-      setIsCanceling(true); // Bắt đầu hủy
+      setIsCanceling(true);
       const response = await axios.put(
         `http://localhost:1111/api/reservations/cancel/${reservationId}`,
         {},
@@ -37,15 +52,12 @@ export const HistoryReservation = () => {
     {
       onSuccess: (data) => {
         alert(data.message);
-        setIsCanceling(false); // Kết thúc hủy
+        setIsCanceling(false);
+        queryClient.invalidateQueries(["reservations", userId]); // Cập nhật dữ liệu từ server
       },
       onError: (error) => {
-        setIsCanceling(false); // Kết thúc hủy
-        if (error.response && error.response.data) {
-          alert(error.response.data.message || "Đã xảy ra lỗi khi hủy đơn hàng.");
-        } else {
-          alert("Đã xảy ra lỗi khi hủy đơn hàng.");
-        }
+        setIsCanceling(false);
+        alert(error.response?.data?.message || "Đã xảy ra lỗi khi hủy đơn hàng.");
       },
     }
   );
