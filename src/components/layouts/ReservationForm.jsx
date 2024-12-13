@@ -41,9 +41,9 @@ const ReservationForm = () => {
   const { data: discountData } = useFetchData(
     `${ServerUrl}/api/userDiscount/reservation/client/getAvailableStatus/${decodedToken?.id}`
   );
-  useEffect(()=>{
-   if(discountData) setUserDiscounts(discountData)
-  },[discountData])
+  useEffect(() => {
+    if (discountData) setUserDiscounts(discountData);
+  }, [discountData]);
 
   const combinedDateTime = (date, time) => {
     const fomartedDate = new Date(
@@ -58,10 +58,7 @@ const ReservationForm = () => {
   const handleClick = async () => {
     if (couponValue || couponValue !== "") {
       console.log(cart);
-      const totalPrice = cart.reduce(
-        (acc, item) => acc + item.price * item.quantity,
-        0
-      );
+      const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
       const discount = userDiscounts.find((item) => item._id === couponValue);
 
       if (discount && discount.discountId.minOrderValue > totalPrice) {
@@ -100,7 +97,7 @@ const ReservationForm = () => {
       guests_count: personCount,
       phoneNumber,
       userName,
-      couponValue,
+      couponValue: couponValue && couponValue !== "" ? couponValue : null,
       code: codeGen,
       isPayment,
       status,
@@ -123,19 +120,12 @@ const ReservationForm = () => {
       //   setUserDiscounts(preVal=>[...preVal.map(item=>item._id === couponValue ? {...item, status: 'USED'} : item)])
       // }
       setLoading(true);
-      const { message } = await usePostData(
-        `https://4d46-113-185-55-86.ngrok-free.app/api/reservations/v2/client`,
-        postData
-      );
+      const { message } = await usePostData(`${ServerUrl}/api/reservations/v2/client`, postData);
       if (cart.length > 0) {
-        const existingReservations =
-          JSON.parse(localStorage.getItem("reservationDetails")) || [];
+        const existingReservations = JSON.parse(localStorage.getItem("reservationDetails")) || [];
         if (Array.isArray(existingReservations)) {
           existingReservations.push(postData);
-          localStorage.setItem(
-            "reservationDetails",
-            JSON.stringify(existingReservations)
-          );
+          localStorage.setItem("reservationDetails", JSON.stringify(existingReservations));
         }
         navigate(`/payment?code=${codeGen}`);
         clearCart();
@@ -176,10 +166,8 @@ const ReservationForm = () => {
           </motion.div>
           <div className="w-full lg:w-2/3 flex-[2]">
             <p className="text-gray-800 text-center lg:text-left mb-6 newFont text-[18px] sm:text-[20px]">
-              Chúng tôi rất vui được hỗ trợ bạn đặt chỗ trực tuyến thông qua hệ
-              thống hiện đại của chúng tôi. Nếu bạn cần sự hỗ trợ hoặc có bất kỳ
-              thắc mắc nào, đừng ngần ngại liên hệ với chúng tôi qua số điện
-              thoại{" "}
+              Chúng tôi rất vui được hỗ trợ bạn đặt chỗ trực tuyến thông qua hệ thống hiện đại của chúng tôi. Nếu bạn
+              cần sự hỗ trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng tôi qua số điện thoại{" "}
               <span className="font-bold" style={{ color: colorCode }}>
                 (012) 978 645 312
               </span>
@@ -262,11 +250,7 @@ const ReservationForm = () => {
             </div>
 
             <div className="mt-6 flex justify-center">
-              <ButtonCustome
-                buttonText="Đặt Bàn"
-                handleClick={handleClick}
-                loading={loading}
-              />
+              <ButtonCustome buttonText="Đặt Bàn" handleClick={handleClick} loading={loading} />
             </div>
           </div>
         </div>
