@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import ReactStars from "react-rating-stars-component";
 import axios from "axios";
@@ -17,7 +17,7 @@ const Feedback = () => {
     ? jwtDecode(localStorage.getItem("token"))
     : null;
 
-  const userId = dataUser.id;
+  const userId = dataUser ? dataUser.id : null;
   // console.log("User Id", userId);
 
   const [comment, setComment] = useState("");
@@ -42,20 +42,23 @@ const Feedback = () => {
   };
 
   useEffect(() => {
-    const fetchInforUser = () => {
-      axios
-        .get(BASE_URL + "/users/get/v2/" + userId)
-        .then((res) => {
-          setInforUser(res.data.user);
-          // console.log(res.data.user);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
+    if (userId) {
+      const fetchInforUser = () => {
+        axios
+          .get(BASE_URL + "/users/get/v2/" + userId)
+          .then((res) => {
+            setInforUser(res.data.user);
+            // console.log(res.data.user);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      };
+
+      fetchInforUser();
+    }
 
     fetchData();
-    fetchInforUser();
   }, [id, userId]);
 
   // phân trang
@@ -108,48 +111,61 @@ const Feedback = () => {
           <h2 class="w-full text-gray-900 text-4xl font-bold font-manrope leading-normal">
             Nhận xét
           </h2>
-          {/* Input */}
-          <div class="w-full flex flex-col justify-start items-start gap-5">
-            <div class="w-full rounded-3xl justify-start items-start gap-3.5 inline-flex">
-              {inforUser.image ? (
-                <img
-                  src={inforUser?.image}
-                  alt=""
-                  className="w-10 h-10 object-cover rounded-full"
-                />
-              ) : (
-                <HiOutlineUserCircle size={40} />
-              )}
-              <textarea
-                name=""
-                rows="5"
-                class="w-full px-5 py-3 rounded-2xl border border-gray-300 shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] resize-none focus:outline-none placeholder-gray-400 text-gray-900 text-lg font-normal leading-7"
-                placeholder="Viết đánh giá của bạn về món ăn này..."
-                onChange={handleCommentInput}
-                value={comment}
-              ></textarea>
-            </div>
-            <div class="w-full flex justify-between">
-              <div className="flex gap-4 items-center text-lg">
-                <p className="font-semibold">Đánh giá món ăn: </p>
-                <ReactStars
-                  count={5}
-                  size={30}
-                  activeColor="#ffd700"
-                  value={rating}
-                  onChange={handleRatingChange}
-                />
-              </div>
-              <button
-                class="px-5 py-2.5 bg-[#fb6340] hover:bg-[#e6532f] transition-all duration-700 ease-in-out rounded-xl shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] justify-center items-center flex"
-                onClick={() => handleSubmit()}
-              >
-                <span class="px-2 py-px text-white text-base font-semibold leading-relaxed">
-                  Gửi
+
+          {!userId ? (
+            <p className="text-red-600">
+              Bạn cần đăng nhập để đánh giá.{" "}
+              <Link to="/login">
+                <span className="cursor-pointer hover: underline ">
+                  Đăng nhập ngay!
                 </span>
-              </button>
-            </div>
-          </div>
+              </Link>
+            </p>
+          ) : (
+            <>
+              <div class="w-full flex flex-col justify-start items-start gap-5">
+                <div class="w-full rounded-3xl justify-start items-start gap-3.5 inline-flex">
+                  {inforUser.image ? (
+                    <img
+                      src={inforUser?.image}
+                      alt=""
+                      className="w-10 h-10 object-cover rounded-full"
+                    />
+                  ) : (
+                    <HiOutlineUserCircle size={40} />
+                  )}
+                  <textarea
+                    name=""
+                    rows="5"
+                    class="w-full px-5 py-3 rounded-2xl border border-gray-300 shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] resize-none focus:outline-none placeholder-gray-400 text-gray-900 text-lg font-normal leading-7"
+                    placeholder="Viết đánh giá của bạn về món ăn này..."
+                    onChange={handleCommentInput}
+                    value={comment}
+                  ></textarea>
+                </div>
+                <div class="w-full flex justify-between">
+                  <div className="flex gap-4 items-center text-lg">
+                    <p className="font-semibold">Đánh giá món ăn: </p>
+                    <ReactStars
+                      count={5}
+                      size={30}
+                      activeColor="#ffd700"
+                      value={rating}
+                      onChange={handleRatingChange}
+                    />
+                  </div>
+                  <button
+                    class="px-5 py-2.5 bg-[#fb6340] hover:bg-[#e6532f] transition-all duration-700 ease-in-out rounded-xl shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] justify-center items-center flex"
+                    onClick={() => handleSubmit()}
+                  >
+                    <span class="px-2 py-px text-white text-base font-semibold leading-relaxed">
+                      Gửi
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* List */}
           <div class="w-full flex-col justify-start items-start gap-8 flex mt-16">
