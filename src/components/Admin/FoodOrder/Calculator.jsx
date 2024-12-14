@@ -40,7 +40,6 @@ const Calculator = ({
   const [change, setChange] = useState(0);
   const [VAT, setVAT] = useState(5);
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
-  const [selectedRows, setSelectedRows] = useState([]);
   const [billId, setBillId] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [discountValue, setDiscountValue] = useState(0);
@@ -379,21 +378,23 @@ console.log({discount})
                       placeholder={formatCurrency(totalPrice)}
                     />
                   </div>
-
-                  <div className="w-full flex items-center py-2">
-                    <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
-                      Nhập mã
-                    </p>
-                    <form onSubmit={handleDiscountInput} className="flex-[2] min-w-[244px]">
-                      <Input
-                        className=" rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
-                     placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px] "
-                        placeholder={`Nhập mã giảm giá mới`}
-                        onChange={(e) => setNewDiscount(e.target.value)}
-                        value={newDiscount}
-                      />
-                    </form>
-                  </div>
+                  {
+                    (<div className="w-full flex items-center py-2">
+                      <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
+                        Nhập mã
+                      </p>
+                      <form onSubmit={handleDiscountInput} className="flex-[2] min-w-[244px]">
+                        <Input
+                          className=" rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
+                       placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px] "
+                          placeholder={`Nhập mã giảm giá mới`}
+                          onChange={(e) => setNewDiscount(e.target.value)}
+                          value={newDiscount}
+                        />
+                      </form>
+                    </div>)
+                  }
+                  
                   {discount && (
                     <div className="w-full flex items-center py-2">
                       <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
@@ -433,12 +434,12 @@ console.log({discount})
                     placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
                       disabled
                       type="number"
-                      placeholder={`${VAT}%`}
+                      placeholder={`${VAT}% ${formatCurrency(VAT_money)}`}
                     />
                   </div>
                   <div className="w-full flex items-center py-2">
                     <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
-                      Đã cọc
+                      Đã thanh toán
                     </p>
                     <Input
                       className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft

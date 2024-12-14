@@ -48,6 +48,7 @@ import NotFound from "@/pages/home/NotFound";
 import { Profile } from "@/pages/home/Profile";
 import Promotion from "@/pages/home/Promotion";
 import Reservation from "@/pages/home/Reservation";
+import ThanksPage from "@/pages/home/ThanksPage";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -98,6 +99,10 @@ const router = createBrowserRouter([
       {
         path: "payment",
         element: <Checkout />,
+      },
+      {
+        path: "thanks",
+        element: <ThanksPage />,
       },
     ],
   },

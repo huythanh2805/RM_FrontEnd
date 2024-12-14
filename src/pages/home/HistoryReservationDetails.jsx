@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/utilities/utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
@@ -98,6 +99,35 @@ export const HistoryReservationDetail = () => {
                       Số người
                     </p>
                     <p className="font-medium text-lg leading-8 text-gray-900">{reservationDetails.guests_count}</p>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 mb-5">
+                    <p className="font-normal text-lg leading-8 text-gray-400 transition-all duration-500 group-hover:text-gray-700">
+                      Cọc trước
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">{formatCurrency(reservationDetails.deposit)}</p>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 mb-5">
+                    <p className="font-normal text-lg leading-8 text-gray-400 transition-all duration-500 group-hover:text-gray-700">
+                      Phiểu giảm giá
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">{reservationDetails.userDiscountId?.code}</p>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 mb-5">
+                    <p className="font-normal text-lg leading-8 text-gray-400 transition-all duration-500 group-hover:text-gray-700">
+                      Đã sử dụng phiếu
+                    </p>
+
+                    <p className="font-medium text-lg leading-8 text-gray-900">{reservationDetails.isUsedDiscount ? 
+                      <span className="px-2 py-1 bg-red-1 text-white rounded-md">Đã sử dụng</span> :
+                      <span className="px-2 py-1 bg-blue-1 text-white rounded-md">Chưa sử dụng</span>}
+                    </p>
+                    
+                  </div>
+                  <div className="flex items-center justify-between gap-4 mb-5">
+                    <p className="font-normal text-lg leading-8 text-gray-400 transition-all duration-500 group-hover:text-gray-700">
+                      Hình thức thanh toán
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">{reservationDetails.payment_method}</p>
                   </div>
                 </div>
               </div>

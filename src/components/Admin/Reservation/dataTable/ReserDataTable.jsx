@@ -44,7 +44,7 @@ export function ReserDataTable({
     getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
-        pageSize: 5,
+        pageSize: 10,
         // pageIndex:0
       },
     },

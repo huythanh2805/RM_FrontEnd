@@ -1,11 +1,16 @@
 import ButtonCustome from "@/components/ButtonCustome";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 export const HistoryReservation = () => {
-  const { userId } = useParams();
+  // const { userId } = useParams();
+  const [userId, setUserId] = useState(()=>{
+      const token = localStorage.getItem('token')
+      return jwtDecode(token).id
+    })
   const queryClient = useQueryClient();
   const [opacity] = useState(1);
   const [translateY] = useState(0);
@@ -210,12 +215,12 @@ export const HistoryReservation = () => {
                             </>
                           )}
                           {/* Nếu trạng thái là IS_PAYMENT, hiển thị nút Tiếp tục thanh toán */}
-                          {reservation.status === "ISPAYMENT" && (
+                          {(reservation.status === "ISWAITING" || reservation.status === "ISCOMFIRMED") && reservation.deposit == 0 && (
                             <button
                               onClick={() => handleBack(reservation.code)}
                               className="p-2 bg-green-500 text-white rounded hover:bg-yellow-600 transition duration-300 ease-in-out"
                             >
-                              Tiếp tục thanh toán
+                              Thanh toán
                             </button>
                           )}
                           {/* Nếu trạng thái là các giá trị khác, chỉ hiển thị nút Xem Chi Tiết */}

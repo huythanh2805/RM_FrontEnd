@@ -17,7 +17,8 @@ export default function FoodOrder() {
   const { data: dishes, loading: dishLoading } = useFetchData(ServerUrl+"/dishes")
   const { data: categories, loading: categoryLoading } = useFetchData(ServerUrl+"/categories")
   const { data: discount, loading: discountLoading } = useFetchData(ServerUrl+"/api/userDiscount/reservation/"+reservationId)
-  console.log({discount})
+  const { data: reservationDetail, loading: reservationDetailLoading } = useFetchData(ServerUrl+"/api/reservations/"+reservationId)
+  console.log({reservationDetail})
   
   useEffect(()=>{
     if(!dishes) return
