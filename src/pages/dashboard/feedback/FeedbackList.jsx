@@ -130,7 +130,7 @@ const FeedbackList = () => {
                       : feedback.user_id.email}
                   </td>
                   <td className="py-3 px-4 text-sl">
-                    {feedback?.dish_id?.name}
+                    {feedback?.dish_id?.name || feedback?.setcombo_id?.name}
                   </td>
                   <td className="py-3 px-4 text-sl">
                     <ReactStars
