@@ -11,7 +11,7 @@ function ThanksPage() {
     // const data = JSON.parse(Buffer.from(extraData, "base64").toString("utf-8"));
     // console.log({data})
     useEffect(()=>{
-      // clearCart()
+      clearCart()
     },[])
   return (
     <div>ThanksPage</div>

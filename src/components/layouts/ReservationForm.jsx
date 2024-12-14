@@ -111,7 +111,7 @@ const ReservationForm = () => {
       }
       // Lưu 'postData' mới vào localStorage
       localStorage.setItem("postData", JSON.stringify(postData))
-      navigate("/payment")
+      navigate("/payment?type=CREATE")
   };
 
   return (
