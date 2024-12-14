@@ -2,7 +2,7 @@ import ButtonCustome from "@/components/ButtonCustome";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 
@@ -77,8 +77,35 @@ export const HistoryReservation = () => {
       mutation.mutate(reservationId);
     }
   };
-  const handleBack = (code) => {
-    navigate(`/payment?code=${code}`);
+  const handleBack = (reservationId) => {
+    const reservation = data?.reservations.find(item=> item._id === reservationId)
+    const dishs = reservation.ordered_dishes.map(item=>({
+       quantity: item.quantity,
+       dish_id: item.dish_id._id,
+       name: item.dish_id.name,
+       price: item.dish_id.price,
+       type: 'dish',
+       image: item.dish_id.images[0],
+      }))
+    const postData = {
+      _id: reservation._id,
+      startTime: reservation.startTime,
+      dishs: dishs,
+      user_id: reservation.user_id,
+      guests_count: reservation.guests_count,
+      phoneNumber: reservation.phoneNumber,
+      userName: reservation.userName,
+      couponValue: reservation.userDiscountId      ,
+    };
+      if (localStorage.getItem("postData")) {
+        // Nếu có, xóa 'postData' cũ
+        localStorage.removeItem("postData")
+      }
+      console.log(reservation._id)
+      // Lưu 'postData' mới vào localStorage
+      localStorage.setItem("postData", JSON.stringify(postData))
+      navigate("/payment?type=UPDATE")
+
   };
   // Chuyển đổi trạng thái sang tiếng Việt
   const getStatusInVietnamese = (status) => {
@@ -229,7 +256,7 @@ export const HistoryReservation = () => {
                           {/* Nếu trạng thái là IS_PAYMENT, hiển thị nút Tiếp tục thanh toán */}
                           {(reservation.status === "ISWAITING" || reservation.status === "ISCOMFIRMED") && reservation.deposit == 0 && (
                             <button
-                              onClick={() => handleBack(reservation.code)}
+                              onClick={() => handleBack(reservation._id)}
                               className="p-2 bg-green-500 text-white rounded hover:bg-yellow-600 transition duration-300 ease-in-out"
                             >
                               Thanh toán

@@ -4,7 +4,7 @@ import { useFetchData } from "@/hooks/useFetchData"
 import { ServerUrl } from "@/utilities/utils"
 import jwtDecode from "jwt-decode"
 import { useEffect, useMemo, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { io } from "socket.io-client"
 import {
   Select,
@@ -25,6 +25,9 @@ export const Checkout = () => {
     return jwtDecode(token)
   })
   const navigate = useNavigate()
+  const { clearCart } = useCart()
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get("type");
 
   const { data: userDiscounts } = useFetchData(
     `${ServerUrl}/api/userDiscount/reservation/client/getAvailableStatus/${decodedToken?.id}`
@@ -50,6 +53,7 @@ export const Checkout = () => {
       socket.disconnect()
     }
   }, [decodedToken.id, navigate])
+  console.log({reservationDetails})
   // Tính tổng tiền món ăn
   const computeTotalAmount = useMemo(() => {
     return reservationDetails?.dishs.reduce((total, dish) => total + dish.price * dish.quantity, 0)
@@ -106,6 +110,12 @@ export const Checkout = () => {
         title: "Số tiền đặt cọc phải tồn tại",
       })
     }
+    if(type === "UPDATE" && paymentMethod === 'CASH') 
+      return toast({
+        variant: "destructive",
+        title: "Bạn phải thanh toán online",
+      })
+
     const url = paymentMethod === 'CASH' ?
      `${ServerUrl}/api/reservations/v2/client` :
      paymentMethod === "ZALOPAY" ?
@@ -121,9 +131,10 @@ export const Checkout = () => {
         },
         body: JSON.stringify({
            ...reservationDetails,
+           type,
            totalPrice: totalDeposit,
            payment_method: paymentMethod,
-           deposit: totalDeposit,
+           deposit: paymentMethod === "CASH" ? 0 : totalDeposit,
            isUsedDiscount,
            isOrderedOnline: true,
           })
@@ -136,7 +147,8 @@ export const Checkout = () => {
         })
       }
       setLoading(false)
-      if(paymentMethod === 'CASH') return navigate(`/history/${decodedToken.id}`)
+      clearCart()
+     if(paymentMethod === 'CASH') return navigate(`/history/${decodedToken.id}`)
 
      if(paymentMethod === 'MOMO') window.location = data.data.payUrl
      if(paymentMethod === 'ZALOPAY') window.location = data.data.order_url
