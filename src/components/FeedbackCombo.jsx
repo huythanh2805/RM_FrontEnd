@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import ReactStars from "react-rating-stars-component";
 import axios from "axios";
@@ -10,15 +10,13 @@ import Pagination from "./Pagination";
 
 const FeedbackCombo = () => {
   const { id } = useParams();
-  // console.log("Combo Id", id);
 
   // Lấy id từ token
   const dataUser = localStorage.getItem("token")
     ? jwtDecode(localStorage.getItem("token"))
     : null;
 
-  const userId = dataUser.id;
-  console.log("User Id", userId);
+  const userId = dataUser ? dataUser.id : null;
 
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(5);
@@ -31,9 +29,7 @@ const FeedbackCombo = () => {
     axios
       .get(BASE_URL + "/feedbacks/combo/" + id)
       .then((res) => {
-        // console.log("res", res.data.feedbacks);
         setDataComment(res.data.feedbacks.filter((item) => item.isShow));
-        // console.log("Comment", res.data.feedbacks);
       })
       .catch((err) => {
         console.log(err);
@@ -42,20 +38,22 @@ const FeedbackCombo = () => {
   };
 
   useEffect(() => {
-    const fetchInforUser = () => {
-      axios
-        .get(BASE_URL + "/users/get/v2/" + userId)
-        .then((res) => {
-          setInforUser(res.data.user);
-          // console.log(res.data.user);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
+    if (userId) {
+      const fetchInforUser = () => {
+        axios
+          .get(BASE_URL + "/users/get/v2/" + userId)
+          .then((res) => {
+            setInforUser(res.data.user);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      };
+
+      fetchInforUser();
+    }
 
     fetchData();
-    fetchInforUser();
   }, [id, userId]);
 
   // phân trang
@@ -74,7 +72,6 @@ const FeedbackCombo = () => {
 
   const handleRatingChange = (newRating) => {
     setRating(newRating);
-    // console.log(newRating);
   };
 
   const handleSubmit = () => {
@@ -85,12 +82,9 @@ const FeedbackCombo = () => {
       rating,
     };
 
-    // console.log(data);
-
     axios
       .post(BASE_URL + "/feedbacks", data)
       .then((res) => {
-        console.log(res);
         toast({ variant: "success", title: "Đánh giá thành công !" });
         setComment("");
         setRating(5);
@@ -101,62 +95,76 @@ const FeedbackCombo = () => {
         console.log(err);
       });
   };
+
   return (
-    <div class="py-2 relative">
-      <div class="w-full max-w-7xl px-4 mx-auto">
-        <div class="w-full flex-col justify-start items-start gap-7 inline-flex">
-          <h2 class="w-full text-gray-900 text-4xl font-bold font-manrope leading-normal">
+    <div className="py-2 relative">
+      <div className="w-full max-w-7xl px-4 mx-auto">
+        <div className="w-full flex-col justify-start items-start gap-7 inline-flex">
+          <h2 className="w-full text-gray-900 text-4xl font-bold font-manrope leading-normal">
             Nhận xét
           </h2>
-          {/* Input */}
-          <div class="w-full flex flex-col justify-start items-start gap-5">
-            <div class="w-full rounded-3xl justify-start items-start gap-3.5 inline-flex">
-              {inforUser.image ? (
-                <img
-                  src={inforUser?.image}
-                  alt=""
-                  className="w-10 h-10 object-cover rounded-full"
-                />
-              ) : (
-                <HiOutlineUserCircle size={40} />
-              )}
-              <textarea
-                name=""
-                rows="5"
-                class="w-full px-5 py-3 rounded-2xl border border-gray-300 shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] resize-none focus:outline-none placeholder-gray-400 text-gray-900 text-lg font-normal leading-7"
-                placeholder="Viết đánh giá của bạn về món ăn này..."
-                onChange={handleCommentInput}
-                value={comment}
-              ></textarea>
-            </div>
-            <div class="w-full flex justify-between">
-              <div className="flex gap-4 items-center text-lg">
-                <p className="font-semibold">Đánh giá món ăn: </p>
-                <ReactStars
-                  count={5}
-                  size={30}
-                  activeColor="#ffd700"
-                  value={rating}
-                  onChange={handleRatingChange}
-                />
-              </div>
-              <button
-                class="px-5 py-2.5 bg-[#fb6340] hover:bg-[#e6532f] transition-all duration-700 ease-in-out rounded-xl shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] justify-center items-center flex"
-                onClick={() => handleSubmit()}
-              >
-                <span class="px-2 py-px text-white text-base font-semibold leading-relaxed">
-                  Gửi
+
+          {!userId ? (
+            <p className="text-red-600">
+              Bạn cần đăng nhập để đánh giá.{" "}
+              <Link to="/login">
+                <span className="cursor-pointer hover: underline ">
+                  Đăng nhập ngay!
                 </span>
-              </button>
-            </div>
-          </div>
+              </Link>
+            </p>
+          ) : (
+            <>
+              <div className="w-full flex flex-col justify-start items-start gap-5">
+                <div className="w-full rounded-3xl justify-start items-start gap-3.5 inline-flex">
+                  {inforUser.image ? (
+                    <img
+                      src={inforUser?.image}
+                      alt=""
+                      className="w-10 h-10 object-cover rounded-full"
+                    />
+                  ) : (
+                    <HiOutlineUserCircle size={40} />
+                  )}
+                  <textarea
+                    name=""
+                    rows="5"
+                    className="w-full px-5 py-3 rounded-2xl border border-gray-300 shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] resize-none focus:outline-none placeholder-gray-400 text-gray-900 text-lg font-normal leading-7"
+                    placeholder="Viết đánh giá của bạn về món ăn này..."
+                    onChange={handleCommentInput}
+                    value={comment}
+                  ></textarea>
+                </div>
+                <div className="w-full flex justify-between">
+                  <div className="flex gap-4 items-center text-lg">
+                    <p className="font-semibold">Đánh giá món ăn: </p>
+                    <ReactStars
+                      count={5}
+                      size={30}
+                      activeColor="#ffd700"
+                      value={rating}
+                      onChange={handleRatingChange}
+                    />
+                  </div>
+                  <button
+                    className="px-5 py-2.5 bg-[#fb6340] hover:bg-[#e6532f] transition-all duration-700 ease-in-out rounded-xl shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] justify-center items-center flex"
+                    onClick={handleSubmit}
+                  >
+                    <span className="px-2 py-px text-white text-base font-semibold leading-relaxed">
+                      Gửi
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* List */}
-          <div class="w-full flex-col justify-start items-start gap-8 flex mt-16">
+          <div className="w-full flex-col justify-start items-start gap-8 flex mt-16">
             {currentItems && currentItems.length > 0 ? (
               currentItems.map((item) => (
                 <div
-                  class="w-full pb-6 border-b border-gray-300 justify-start items-start gap-2.5 inline-flex"
+                  className="w-full pb-6 border-b border-gray-300 justify-start items-start gap-2.5 inline-flex"
                   key={item._id}
                 >
                   {item.user_id?.image ? (
@@ -169,11 +177,11 @@ const FeedbackCombo = () => {
                     <HiOutlineUserCircle size={40} />
                   )}
 
-                  <div class="w-full flex-col justify-start items-start gap-3.5 inline-flex">
-                    <div class="w-full justify-start items-start flex-col flex gap-1">
-                      <div class="w-full justify-between items-start gap-1 inline-flex">
+                  <div className="w-full flex-col justify-start items-start gap-3.5 inline-flex">
+                    <div className="w-full justify-start items-start flex-col flex gap-1">
+                      <div className="w-full justify-between items-start gap-1 inline-flex">
                         <div>
-                          <h5 class="text-gray-900 text-lg font-semibold leading-snug">
+                          <h5 className="text-gray-900 text-lg font-semibold leading-snug">
                             {item.user_id?._id === userId
                               ? "Bạn"
                               : item.user_id?.userName
@@ -189,11 +197,11 @@ const FeedbackCombo = () => {
                             activeColor="#ffd700"
                           />
                         </div>
-                        <span class="text-right text-gray-500 text-lg font-normal leading-5">
+                        <span className="text-right text-gray-500 text-lg font-normal leading-5">
                           {new Date(item.createdAt).toLocaleDateString("vi-VN")}
                         </span>
                       </div>
-                      <h5 class="text-gray-800 text-lg font-normal leading-snug">
+                      <h5 className="text-gray-800 text-lg font-normal leading-snug">
                         {item.comment}
                       </h5>
                     </div>
@@ -219,7 +227,5 @@ const FeedbackCombo = () => {
     </div>
   );
 };
-
-
 
 export default FeedbackCombo;

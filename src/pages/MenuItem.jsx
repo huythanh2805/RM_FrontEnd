@@ -34,7 +34,28 @@ function MenuItem({ item, onCLick }) {
         });
     };
 
+    const fetchTotalFeedbackForCombo = () => {
+      axios
+        .get(BASE_URL + `/feedbacks/combo/${item._id}`)
+        .then((res) => {
+          if (res.data.feedbacks.length > 0) {
+            const listFeedback = res.data.feedbacks.filter(
+              (item) => item.isShow
+            );
+
+            setTotalFeedback(listFeedback.length);
+          } else {
+            setTotalFeedback(0);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          setTotalFeedback(0);
+        });
+    };
+
     fetchTotalFeedback();
+    fetchTotalFeedbackForCombo();
   }, [item._id]);
 
   return (
