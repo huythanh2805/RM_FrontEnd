@@ -3,7 +3,6 @@ import { useCart } from "@/contexts/CartProvider";
 import { useThemeContext } from "@/contexts/ThemeProvider";
 import { toast } from "@/hooks/use-toast";
 import { useFetchData } from "@/hooks/useFetchData";
-import { usePostData } from "@/hooks/usePostData";
 import { ServerUrl } from "@/utilities/utils";
 import { motion } from "framer-motion";
 import jwtDecode from "jwt-decode";
@@ -29,9 +28,8 @@ const ReservationForm = () => {
   const [userName, setUserName] = useState("");
   const [datePicker, setDatePicker] = useState();
   const [timePicker, setTimePicker] = useState();
-  const [loading, setLoading] = useState(false);
-  const [couponValue, setCouponValue] = useState("");
-  const [userDiscounts, setUserDiscounts] = useState([]);
+  const [couponValue, setCouponValue] = useState(null);
+  const [userDiscounts, setUserDiscounts] = useState([])
   const navigate = useNavigate();
   const [decodedToken, setDecodeToken] = useState(() => {
     const token = localStorage.getItem("token");
@@ -41,10 +39,22 @@ const ReservationForm = () => {
   const { data: discountData } = useFetchData(
     `${ServerUrl}/api/userDiscount/reservation/client/getAvailableStatus/${decodedToken?.id}`
   );
-  useEffect(() => {
-    if (discountData) setUserDiscounts(discountData);
-  }, [discountData]);
+  useEffect(()=>{
+   if(discountData) setUserDiscounts(discountData)
+  },[discountData])
 
+  useEffect(() => {
+    if(!localStorage.getItem("postData")) return
+    const storedDetails = JSON.parse(localStorage.getItem("postData")) || []
+    const datPicker = new Date(storedDetails.startTime) < new Date() ? new Date() : new Date(storedDetails.startTime)
+    setUserName(storedDetails.userName)
+    setCouponValue(storedDetails.couponValue)
+    setPhoneNumber(storedDetails.phoneNumber)
+    setUserName(storedDetails.userName)
+    setDatePicker(datPicker)
+    setTimePicker(new Date(storedDetails.startTime))
+  }, [])
+ 
   const combinedDateTime = (date, time) => {
     const fomartedDate = new Date(
       date.getFullYear(),
@@ -57,7 +67,6 @@ const ReservationForm = () => {
   };
   const handleClick = async () => {
     if (couponValue || couponValue !== "") {
-      console.log(cart);
       const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
       const discount = userDiscounts.find((item) => item._id === couponValue);
 
@@ -86,10 +95,7 @@ const ReservationForm = () => {
         variant: "destructive",
         title: "Bạn chưa điền đầy đủ thông tin",
       });
-    const codeGen = `MD${Math.floor(100000 + Math.random() * 900000)}`;
     const startTime = combinedDateTime(datePicker, timePicker);
-    const isPayment = cart.length > 0 ? false : true;
-    const status = cart.length > 0 ? "ISPAYMENT" : "ISWAITING";
     const postData = {
       startTime,
       dishs: cart,
@@ -97,55 +103,15 @@ const ReservationForm = () => {
       guests_count: personCount,
       phoneNumber,
       userName,
-      couponValue: couponValue && couponValue !== "" ? couponValue : null,
-      code: codeGen,
-      isPayment,
-      status,
+      couponValue,
     };
-
-    try {
-      // const { message } = await usePostData(
-      //   `${ServerUrl}/api/reservations/v2/client`,
-      //   postData
-      // );
-      // if (message) {
-      //   setUserName("");
-      //   setPhoneNumber("");
-      //   setPersonCount(1);
-      //   setDatePicker(null);
-      //   setTimePicker(null);
-      //   setCouponValue("");
-      //   clearCart();
-      //   toast({ variant: "success", title: message });
-      //   setUserDiscounts(preVal=>[...preVal.map(item=>item._id === couponValue ? {...item, status: 'USED'} : item)])
-      // }
-      setLoading(true);
-      const { message } = await usePostData(`${ServerUrl}/api/reservations/v2/client`, postData);
-      if (cart.length > 0) {
-        const existingReservations = JSON.parse(localStorage.getItem("reservationDetails")) || [];
-        if (Array.isArray(existingReservations)) {
-          existingReservations.push(postData);
-          localStorage.setItem("reservationDetails", JSON.stringify(existingReservations));
-        }
-        navigate(`/payment?code=${codeGen}`);
-        clearCart();
-      } else {
-        if (message) {
-          setUserName("");
-          setPhoneNumber("");
-          setPersonCount(1);
-          setDatePicker(null);
-          setTimePicker(null);
-          setCouponValue("");
-          clearCart();
-          toast({ variant: "success", title: message });
-        }
+      if (localStorage.getItem("postData")) {
+        // Nếu có, xóa 'postData' cũ
+        localStorage.removeItem("postData")
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+      // Lưu 'postData' mới vào localStorage
+      localStorage.setItem("postData", JSON.stringify(postData))
+      navigate("/payment")
   };
 
   return (
@@ -250,7 +216,7 @@ const ReservationForm = () => {
             </div>
 
             <div className="mt-6 flex justify-center">
-              <ButtonCustome buttonText="Đặt Bàn" handleClick={handleClick} loading={loading} />
+              <ButtonCustome buttonText="Đặt Bàn" handleClick={handleClick}  loading={false}/>
             </div>
           </div>
         </div>
