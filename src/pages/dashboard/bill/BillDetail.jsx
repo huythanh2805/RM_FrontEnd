@@ -214,7 +214,7 @@ const BillDetail = () => {
                   {formatCurrency((original_money * VAT) / 100)}
                 </td>
               </tr>
-              {discount_money !== 0 && (
+              {discount_money !== null && discount_money !== 0 && (
                 <tr>
                   <td
                     className="table-cell py-4 px-6 font-semibold text-right"
@@ -227,7 +227,7 @@ const BillDetail = () => {
                   </td>
                 </tr>
               )}
-              {deposit_money !== 0 && (
+              {deposit_money !== null && deposit_money !== 0 && (
                 <tr>
                   <td
                     className="table-cell py-4 px-6 font-semibold text-right"

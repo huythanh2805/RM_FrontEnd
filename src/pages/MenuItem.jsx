@@ -14,7 +14,7 @@ function MenuItem({ item, onCLick }) {
   const [totalFeedback, setTotalFeedback] = useState(0);
 
   useEffect(() => {
-    const fetchAverageRating = () => {
+    const fetchTotalFeedback = () => {
       axios
         .get(BASE_URL + `/feedbacks/dish/${item._id}`)
         .then((res) => {
@@ -34,13 +34,34 @@ function MenuItem({ item, onCLick }) {
         });
     };
 
-    fetchAverageRating();
+    const fetchTotalFeedbackForCombo = () => {
+      axios
+        .get(BASE_URL + `/feedbacks/combo/${item._id}`)
+        .then((res) => {
+          if (res.data.feedbacks.length > 0) {
+            const listFeedback = res.data.feedbacks.filter(
+              (item) => item.isShow
+            );
+
+            setTotalFeedback(listFeedback.length);
+          } else {
+            setTotalFeedback(0);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          setTotalFeedback(0);
+        });
+    };
+
+    fetchTotalFeedback();
+    fetchTotalFeedbackForCombo();
   }, [item._id]);
 
   return (
     <div
       key={item._id}
-      className="max-w-[320px] relative group rounded shadow-lg overflow-hidden bg-white w-full"
+      className="max-w-full sm:max-w-[320px] md:max-w-[768px] lg:max-w-[900px] relative group rounded-lg shadow-lg overflow-hidden bg-white w-full"
     >
       <div className="relative overflow-hidden">
         <img
@@ -64,7 +85,13 @@ function MenuItem({ item, onCLick }) {
 
       {/* Thông tin món ăn */}
       <div className="p-4 relative">
-        <Link to={`/dishes/${item._id}`}>
+        <Link
+          to={
+            item?.type === "combo"
+              ? `/combos/${item._id}`
+              : `/dishes/${item._id}`
+          }
+        >
           <h3 className="text-lg font-bold cursor-pointer">
             {item.name}
             {item?.type === "combo" && (
@@ -94,7 +121,7 @@ function MenuItem({ item, onCLick }) {
           /> */}
           <p className="text-sm font-medium text-gray-700">
             <span className="text-gray-500">
-              {totalFeedback > 0 ? "Tổng lượt đánh giá: " : "Chưa có đánh giá"}
+              {totalFeedback > 0 ? "Lượt đánh giá: " : "Chưa có đánh giá"}
             </span>
             <span className="font-semibold">
               {totalFeedback > 0 ? totalFeedback : ""}

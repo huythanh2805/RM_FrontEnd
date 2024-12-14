@@ -71,8 +71,7 @@ const About = () => {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage:
-              "url('imgs/pagetitle-about.jpg')",
+            backgroundImage: "url('imgs/pagetitle-about.jpg')",
             backgroundAttachment: "fixed",
             filter: "brightness(0.7)",
           }}
@@ -89,15 +88,15 @@ const About = () => {
           <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">
             Giới Thiệu
           </h1>
-          <p className="text-3xl md:text-[20px] sm:text-[15px] mt-4 flex items-center justify-center">
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
-            <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
-            <span className="ml-4">
+          <p className="text-lg md:text-base sm:text-sm mt-4 flex items-center justify-center flex-wrap">
+            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden sm:block"></span>
+            <span className="bg-white h-[2px] w-[50px] md:w-[80px] lg:w-[100px] hidden sm:block"></span>
+            <span className="ml-4 text-center sm:ml-2">
               Chúng tôi mang đến cho bạn những khoảnh khắc khó quên với những
               món ăn ngon của chúng tôi
             </span>
-            <span className="bg-white h-[2px] w-[100px] ml-4 hidden lg:block"></span>
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
+            <span className="bg-white h-[2px] w-[50px] md:w-[80px] lg:w-[100px] ml-4 hidden sm:block"></span>
+            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden sm:block"></span>
           </p>
         </div>
       </div>
@@ -153,8 +152,7 @@ const About = () => {
         <div
           className="relative bg-cover bg-center h-auto w-full mt-8"
           style={{
-            backgroundImage:
-              "url('imgs/bg7.jpg')",
+            backgroundImage: "url('imgs/bg7.jpg')",
           }}
         >
           <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-center space-x-0 md:space-x-8 space-y-8 md:space-y-0">
@@ -162,19 +160,24 @@ const About = () => {
               <img
                 src="imgs/ab_team_01.png"
                 alt="Chef"
-                className="h-[415px] object-cover mb-8 lg:block hidden"
+                className="h-[300px] object-cover mb-8  hidden md:block"
               />
             </div>
 
             <div className="text-center md:text-left text-white max-w-xl">
-              <p className="text-2xl md:text-2xl italic font-light leading-relaxed">
-                <span className="text-4xl text-white font-semibold">“</span>
+              <p className="text-xl md:text-2xl italic font-light leading-normal md:leading-relaxed text-center px-4 sm:px-8">
+                <span className="text-3xl sm:text-4xl text-white font-semibold">
+                  “
+                </span>
                 Chúng tôi không chỉ mang đến những món ăn ngon, mà còn là những
                 trải nghiệm tuyệt vời cho mỗi khách hàng. Đến với chúng tôi, bạn
                 sẽ không chỉ thưởng thức những món ăn ngon mà còn cảm nhận được
                 không gian ấm cúng và đẳng cấp.
-                <span className="text-4xl text-white font-semibold">”</span>
+                <span className="text-3xl sm:text-4xl text-white font-semibold">
+                  ”
+                </span>
               </p>
+
               <div className="mt-6">
                 <p
                   className="text-sm font-semibold"

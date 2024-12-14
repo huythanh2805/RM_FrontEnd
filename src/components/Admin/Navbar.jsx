@@ -47,7 +47,7 @@ const Navbar = () => {
 
   const handleNotificationClick = (notification) => {
     updateNotificationMutation.mutate(notification._id);
-    navigate("listReser");
+    navigate("/admin/listReser");
   };
 
   const handleLogout = () => {
@@ -106,7 +106,7 @@ const Navbar = () => {
           className="p-3 w-64 rounded-lg bg-gray-100 text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400"
         />
       </div>
-      
+
       <div className="relative">
         <div className="flex gap-4 items-center">
           {/* Thông báo */}

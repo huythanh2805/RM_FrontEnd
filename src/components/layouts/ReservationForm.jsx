@@ -117,7 +117,7 @@ const ReservationForm = () => {
   return (
     <div className="w-full">
       <div className="pt-10 w-full">
-        <div className="relative w-full flex flex-col lg:flex-row justify-between items-start gap-10 px-10 py-12 border border-gray-200 shadow-lg rounded-md bg-white">
+        <div className="relative w-full flex flex-col lg:flex-row justify-between items-center lg:items-start gap-10 px-6 py-8 lg:px-10 lg:py-12 border border-gray-200 shadow-lg rounded-md bg-white">
           <motion.div
             className="relative flex-1 hidden lg:block"
             initial="hidden"
@@ -127,13 +127,13 @@ const ReservationForm = () => {
             <img
               src="/imgs/home3-deco-1.png"
               alt="Chef"
-              className="absolute -left-[10px] -translate-y-7 max-w-[380px] transition-transform transform hover:scale-105 hover:-translate-x-5 hover:-translate-y-2"
+              className="absolute -left-[10px] -translate-y-7 max-w-[250px] lg:max-w-[380px] transition-transform transform hover:scale-105 hover:-translate-x-5 hover:-translate-y-2"
             />
           </motion.div>
           <div className="w-full lg:w-2/3 flex-[2]">
-            <p className="text-gray-800 text-center lg:text-left mb-6 newFont text-[20px]">
-              Chúng tôi rất vui được hỗ trợ bạn đặt chỗ trực tuyến thông qua hệ thống hiện đại của chúng tôi. <br /> Nếu
-              bạn cần sự hỗ trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng tôi qua số điện thoại{" "}
+            <p className="text-gray-800 text-center lg:text-left mb-6 newFont text-[18px] sm:text-[20px]">
+              Chúng tôi rất vui được hỗ trợ bạn đặt chỗ trực tuyến thông qua hệ thống hiện đại của chúng tôi. Nếu bạn
+              cần sự hỗ trợ hoặc có bất kỳ thắc mắc nào, đừng ngần ngại liên hệ với chúng tôi qua số điện thoại{" "}
               <span className="font-bold" style={{ color: colorCode }}>
                 (012) 978 645 312
               </span>
@@ -184,7 +184,7 @@ const ReservationForm = () => {
               <div className="relative w-full border border-[#e5e7eb]-1 rounded-md">
                 <FaCalendarCheck className="absolute top-3 left-3 min-h-5 min-w-5 text-gray-400" />
                 <DatePicker
-                  className="w-full md:min-w-[380x] sm:min-w-[333px] lg:min-w-[333px] xl:min-w-[463px] bg-transparent focus:outline-none px-10 py-2 border-none"
+                  className="w-full bg-transparent focus:outline-none px-10 py-2 border-none"
                   placeholderText="Chọn ngày"
                   selected={datePicker}
                   minDate={new Date()}
@@ -202,7 +202,7 @@ const ReservationForm = () => {
               <div className="relative w-full border border-[#e5e7eb]-1 rounded-md">
                 <IoIosTime className="absolute top-3 left-3 min-h-5 min-w-5 text-gray-400" />
                 <DatePicker
-                  className="w-full md:min-w-[380px] sm:min-w-[333px] lg:min-w-[333px] xl:min-w-[463px] bg-transparent focus:outline-none px-10 py-2 border-none"
+                  className="w-full bg-transparent focus:outline-none px-10 py-2 border-none"
                   placeholderText="Chọn giờ"
                   selected={timePicker}
                   onChange={(time) => setTimePicker(time)}

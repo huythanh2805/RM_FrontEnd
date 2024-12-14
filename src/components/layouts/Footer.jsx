@@ -1,4 +1,4 @@
-import React from "react"; 
+import React from "react";
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
@@ -6,11 +6,11 @@ import { useThemeContext } from "@/contexts/ThemeProvider";
 
 const Footer = () => {
   const { colorCode } = useThemeContext();
-  
+
   return (
     <div className="relative bg-black text-white mt-8 md:mt-0">
       <div className="absolute w-full h-full bg-cover bg-center bg-no-repeat opacity-100 bg-[url('/imgs/logoFooter.jpg')]"></div>
-      <div className="relative flex flex-col md:flex-row justify-between p-8 md:px-32 px-5 z-10">
+      <div className="relative flex flex-col md:flex-row justify-between p-8 md:px-8 px-5 z-10">
         <div className="w-full md:w-1/4">
           <Link to="/" className="flex flex-row items-center cursor-pointer">
             <img
@@ -19,9 +19,7 @@ const Footer = () => {
               className="h-[125px] w-16 object-cover rounded-full"
             />
           </Link>
-          <h1 className="text-[35px] dancing mb-4">
-            Golden Fork
-          </h1>
+          <h1 className="text-[35px] dancing mb-4">Golden Fork</h1>
           <hr className="pt-2" />
           <p className="text-white text-sm max-w-xs  ms:justify-start md:mx-0">
             Chúng tôi tự hào mang đến cho quý khách trải nghiệm ẩm thực đa dạng
@@ -66,9 +64,7 @@ const Footer = () => {
 
         {/* Open Hours Section */}
         <div>
-          <h1 className="text-[30px] pb-4 pt-5 md:pt-0 dancing">
-            Giờ Mở Cửa{" "}
-          </h1>
+          <h1 className="text-[30px] pb-4 pt-5 md:pt-0 dancing">Giờ Mở Cửa </h1>
           <hr className="pt-2" />
           <ul className="space-y-2 text-white">
             {[
@@ -95,9 +91,7 @@ const Footer = () => {
 
         {/* Links Section */}
         <div>
-          <h1 className="dancing text-[30px] pb-4 pt-5 md:pt-0">
-            Liên Kết
-          </h1>
+          <h1 className="dancing text-[30px] pb-4 pt-5 md:pt-0">Liên Kết</h1>
           <hr className="pt-2" />
           <ul className="space-y-2">
             {[
@@ -108,10 +102,7 @@ const Footer = () => {
               { name: "Liên hệ", path: "/contact" },
             ].map((link, index) => (
               <li key={index}>
-                <Link
-                  to={link.path}
-                  className="hover:text-orange-500"
-                >
+                <Link to={link.path} className="hover:text-orange-500">
                   {link.name}
                 </Link>
               </li>
@@ -121,9 +112,7 @@ const Footer = () => {
 
         {/* Company Section */}
         <div>
-          <h3 className="dancing text-[30px] pb-4 pt-5 md:pt-0">
-            Công Ty
-          </h3>
+          <h3 className="dancing text-[30px] pb-4 pt-5 md:pt-0">Công Ty</h3>
           <hr className="pt-2" />
           <ul className="space-y-2">
             {[

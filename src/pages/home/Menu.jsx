@@ -11,7 +11,8 @@ import BASE_URL from "@/configs";
 const Menu = ({ limit }) => {
   const { colorCode } = useThemeContext();
   const { addItem } = useCart();
-  const [dish, setDish] = useState([]);
+  const [dishes, setDishes] = useState([]);
+  const [combos, setCombos] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const [opacity, setOpacity] = useState(1);
@@ -48,11 +49,31 @@ const Menu = ({ limit }) => {
     axios
       .get(BASE_URL + "/dishes")
       .then((res) => {
-        setDish(res.data.filter((item) => item.isShow));
-        const uniqueCategories = [
+        setDishes(res.data.filter((item) => item.isShow));
+        const allCategoryName = [
           ...new Set(res.data.map((item) => item.category_id.name)),
         ];
-        setCategories(["Tất cả", ...uniqueCategories]);
+        setCategories(["Tất cả", "Combo món", ...allCategoryName]);
+      })
+      .catch((error) => {
+        console.error(
+          error.response ? error.response.data.data : error.message
+        );
+      });
+
+    axios
+      .get(BASE_URL + "/setCombos")
+      .then((res) => {
+        const filteredCombos = res.data.filter((item) => item.isShow);
+
+        const combosWithType = filteredCombos.map((item) => {
+          return {
+            ...item,
+            type: "combo",
+          };
+        });
+
+        setCombos(combosWithType);
       })
       .catch((error) => {
         console.error(
@@ -61,12 +82,14 @@ const Menu = ({ limit }) => {
       });
   }, []);
 
-  const filteredDishes =
+  const combinedItems =
     selectedCategory === "Tất cả"
-      ? dish
-      : dish.filter((dish) => dish.category_id.name === selectedCategory);
+      ? [...dishes, ...combos]
+      : selectedCategory === "Combo món"
+      ? combos
+      : dishes.filter((dish) => dish.category_id.name === selectedCategory);
 
-  const limitDishes = limit ? filteredDishes.slice(0, limit) : filteredDishes;
+  const limitDishes = limit ? combinedItems.slice(0, limit) : combinedItems;
 
   const handleAddToCart = (dish) => {
     toast({

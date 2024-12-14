@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useProfile } from "@/hooks/home/useProfile";
 import { toast } from "@/hooks/use-toast";
 import { useFetchData } from "@/hooks/useFetchData";
@@ -20,19 +27,21 @@ export const Profile = () => {
   const [formData, setFormData] = useState({
     userName: "",
     phoneNumber: "",
-    address: "",  
+    address: "",
     image: "",
     email: "",
   });
   const [currentImage, setCurrentImage] = useState("");
-  const [decodedToken, setDecodeToken] = useState(()=>{
-    const token = localStorage.getItem('token')
-    if(!token) return null
-    return jwtDecode(token)
-  })
+  const [decodedToken, setDecodeToken] = useState(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+    return jwtDecode(token);
+  });
   const navigate = useNavigate();
 
-  const {data: userDiscounts} = useFetchData(`${ServerUrl}/api/userDiscount/${decodedToken?.id}`)
+  const { data: userDiscounts } = useFetchData(
+    `${ServerUrl}/api/userDiscount/${decodedToken?.id}`
+  );
 
   useEffect(() => {
     if (user) {
@@ -69,7 +78,10 @@ export const Profile = () => {
 
     // Kiểm tra nếu thông tin chưa đầy đủ
     if (!formData.userName || !formData.phoneNumber || !formData.address) {
-      toast({ variant: "destructive", title: "Vui lòng điền đầy đủ thông tin" });
+      toast({
+        variant: "destructive",
+        title: "Vui lòng điền đầy đủ thông tin",
+      });
       setIsLoading(false);
       return;
     }
@@ -109,7 +121,8 @@ export const Profile = () => {
       toast({ variant: "success", title: response.data.message });
       setIsDialogOpen(false); // Đóng dialog khi đổi mật khẩu thành công
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Đổi mật khẩu thất bại";
+      const errorMessage =
+        error.response?.data?.message || "Đổi mật khẩu thất bại";
       toast({ variant: "destructive", title: errorMessage });
     } finally {
       setIsLoading(false);
@@ -122,10 +135,10 @@ export const Profile = () => {
       setNewPassword("");
     }
   }, [isDialogOpen]);
- 
-  const handleUseCoupon = ()=>{
-    navigate('/reservation')
-  }
+
+  const handleUseCoupon = () => {
+    navigate("/reservation");
+  };
   return (
     <>
       <section className="py-10 my-auto dark:bg-gray-900">
@@ -313,9 +326,9 @@ export const Profile = () => {
         </div>
       </section>
       {/* Coupon */}
-      <SectionTitle title={'Coupons'} desc={'Phiếu giảm giá của bạn'} />
-      <div className="w-screen overflow-scroll overflow-x-scroll px-5 py-5 coupon_container">
-        <div className="flex w-fit gap-10">
+      <SectionTitle title={"Coupons"} desc={"Phiếu giảm giá của bạn"} />
+      <div className="w-screen overflow-x-auto px-5 py-5 coupon_container">
+        <div className="flex gap-5">
           {userDiscounts &&
             userDiscounts.map((userDiscount) => (
               <Discount
@@ -323,7 +336,7 @@ export const Profile = () => {
                 _id={userDiscount._id}
                 code={userDiscount.code}
                 status={userDiscount.status}
-                buttonTitle={'Dùng'}
+                buttonTitle={"Dùng"}
                 type={userDiscount.discountId.discountType}
                 expriedDate={userDiscount.discountId.expireDate}
                 discountValue={userDiscount.discountId.discountValue}
@@ -334,5 +347,5 @@ export const Profile = () => {
         </div>
       </div>
     </>
-  )
+  );
 };

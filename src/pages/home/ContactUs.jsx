@@ -6,7 +6,7 @@ const ContactUs = () => {
   const [opacity, setOpacity] = useState(1);
   const [translateY, setTranslateY] = useState(0);
   const location = useLocation();
-  const isContactPage = location.pathname === '/contact';
+  const isContactPage = location.pathname === "/contact";
 
   return (
     <>
@@ -32,12 +32,12 @@ const ContactUs = () => {
             <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">
               Liên Hệ
             </h1>
-            <p className="text-3xl md:text-[20px] sm:text-[15px] mt-4 flex items-center justify-center">
+            <p className="text-xl md:text-[20px] sm:text-[14px] mt-4 flex items-center justify-center px-4 md:px-0">
               <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
               <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
-              <span className="ml-4">
-                Hãy cho chúng tôi biết nếu bạn có bất kỳ thắc mắc nào về thực đơn,
-                dịch vụ của chúng tôi hoặc thông tin khác mà bạn muốn có
+              <span className="ml-4 text-sm sm:text-xs">
+                Hãy cho chúng tôi biết nếu bạn có bất kỳ thắc mắc nào về thực
+                đơn, dịch vụ của chúng tôi hoặc thông tin khác mà bạn muốn có
               </span>
               <span className="bg-white h-[2px] w-[100px] ml-4 hidden lg:block"></span>
               <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
@@ -60,37 +60,48 @@ const ContactUs = () => {
         </div>
 
         <div className="w-full md:w-1/2 text-black space-y-8">
-          <h2 className="text-[40px] dancing mb-4">Thông tin liên hệ</h2>
-          <div className="w-[100px] h-[2px] rounded-full bg-orange-1 mb-8"></div>
-          <ul className="space-y-8">
-            <li className="flex items-center">
+          <h2 className="text-2xl sm:text-[28px] md:text-[40px] dancing mb-4">
+            Thông tin liên hệ
+          </h2>
+          <div className="w-[80px] md:w-[100px] h-[2px] rounded-full bg-orange-1 mb-8"></div>
+          <ul className="space-y-6 sm:space-y-8">
+            <li className="items-center flex">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-blue-600">
-                <FaMapMarkerAlt />
+                <FaMapMarkerAlt className="text-lg sm:text-xl" />
               </div>
               <div className="ml-4">
-                <h3 className="text-lg font-semibold">Địa chỉ nhà hàng</h3>
-                <p className="text-gray-600">
-                  Tòa nhà FPT Polytechnic, Cổng số 2, 13 P. Trịnh Văn Bô, Xuân
-                  Phương, Nam Từ Liêm, Hà Nội
+                <h3 className="text-sm sm:text-lg font-semibold">
+                  Địa chỉ nhà hàng
+                </h3>
+                <p className="text-gray-600 flex text-xs sm:text-sm">
+                  Tòa nhà FPT Polytechnic, Cổng số 2 <br />
+                  13 P. Trịnh Văn Bô, Xuân Phương <br />
+                  Nam Từ Liêm, Hà Nội
                 </p>
               </div>
             </li>
-            <li className="flex items-center">
+            <li className="flex items-center flex-wrap">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-blue-600">
-                <FaPhoneAlt />
+                <FaPhoneAlt className="text-lg sm:text-xl" />
               </div>
               <div className="ml-4">
-                <h3 className="text-lg font-semibold">Số điện thoại</h3>
-                <p className="text-gray-600">(012) 978 645 312</p>
+                <h3 className="text-sm sm:text-lg font-semibold">
+                  Số điện thoại
+                </h3>
+                <p className="text-gray-600 text-xs sm:text-sm">
+                  (012) 978 645 312
+                </p>
               </div>
             </li>
-            <li className="flex items-center">
+            <li className="flex items-center flex-wrap">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-blue-600">
-                <FaEnvelope />
+                <FaEnvelope className="text-lg sm:text-xl" />
               </div>
               <div className="ml-4">
-                <h3 className="text-lg font-semibold">Email</h3>
-                <p className="text-gray-600">goldenfork@gmail.com</p>
+                <h3 className="text-sm sm:text-lg font-semibold">Email</h3>
+                <p className="text-gray-600 text-xs sm:text-sm">
+                  goldenfork@gmail.com
+                </p>
               </div>
             </li>
           </ul>
