@@ -8,27 +8,35 @@ import { io } from "socket.io-client";
 
 export const HistoryReservation = () => {
   // const { userId } = useParams();
-  const [userId, setUserId] = useState(()=>{
-      const token = localStorage.getItem('token')
-      return jwtDecode(token).id
-    })
+  const [userId, setUserId] = useState(() => {
+    const token = localStorage.getItem("token");
+    return jwtDecode(token).id;
+  });
   const queryClient = useQueryClient();
   const [opacity] = useState(1);
   const [translateY] = useState(0);
   const navigate = useNavigate();
   // Fetch danh sách đặt bàn
-  const { data, error, isLoading } = useQuery(["reservations", userId], async () => {
-    const response = await axios.get(`http://localhost:1111/api/reservations/user/${userId}`);
+  const { data, error, isLoading } = useQuery(
+    ["reservations", userId],
+    async () => {
+      const response = await axios.get(
+        `http://localhost:1111/api/reservations/user/${userId}`
+      );
 
-    return response.data;
-  });
+      return response.data;
+    }
+  );
+
   useEffect(() => {
     const socket = io("http://localhost:1111"); // URL của server WebSocket
 
     // Lắng nghe sự kiện "reservation-canceled"
     socket.on("new-notification", (data) => {
       setReservations((prev) =>
-        prev.map((res) => (res._id === data.reservationId ? { ...res, status: data.status } : res))
+        prev.map((res) =>
+          res._id === data.reservationId ? { ...res, status: data.status } : res
+        )
       );
     });
 
@@ -62,7 +70,9 @@ export const HistoryReservation = () => {
       },
       onError: (error) => {
         setIsCanceling(false);
-        alert(error.response?.data?.message || "Đã xảy ra lỗi khi hủy đơn hàng.");
+        alert(
+          error.response?.data?.message || "Đã xảy ra lỗi khi hủy đơn hàng."
+        );
       },
     }
   );
@@ -78,15 +88,17 @@ export const HistoryReservation = () => {
     }
   };
   const handleBack = (reservationId) => {
-    const reservation = data?.reservations.find(item=> item._id === reservationId)
-    const dishs = reservation.ordered_dishes.map(item=>({
-       quantity: item.quantity,
-       dish_id: item.dish_id._id,
-       name: item.dish_id.name,
-       price: item.dish_id.price,
-       type: 'dish',
-       image: item.dish_id.images[0],
-      }))
+    const reservation = data?.reservations.find(
+      (item) => item._id === reservationId
+    );
+    const dishs = reservation.ordered_dishes.map((item) => ({
+      quantity: item.quantity,
+      dish_id: item.dish_id._id,
+      name: item.dish_id.name,
+      price: item.dish_id.price,
+      type: "dish",
+      image: item.dish_id.images[0],
+    }));
     const postData = {
       _id: reservation._id,
       startTime: reservation.startTime,
@@ -95,17 +107,16 @@ export const HistoryReservation = () => {
       guests_count: reservation.guests_count,
       phoneNumber: reservation.phoneNumber,
       userName: reservation.userName,
-      couponValue: reservation.userDiscountId      ,
+      couponValue: reservation.userDiscountId,
     };
-      if (localStorage.getItem("postData")) {
-        // Nếu có, xóa 'postData' cũ
-        localStorage.removeItem("postData")
-      }
-      console.log(reservation._id)
-      // Lưu 'postData' mới vào localStorage
-      localStorage.setItem("postData", JSON.stringify(postData))
-      navigate("/payment?type=UPDATE")
-
+    if (localStorage.getItem("postData")) {
+      // Nếu có, xóa 'postData' cũ
+      localStorage.removeItem("postData");
+    }
+    console.log(reservation._id);
+    // Lưu 'postData' mới vào localStorage
+    localStorage.setItem("postData", JSON.stringify(postData));
+    navigate("/payment?type=UPDATE");
   };
   // Chuyển đổi trạng thái sang tiếng Việt
   const getStatusInVietnamese = (status) => {
@@ -115,7 +126,7 @@ export const HistoryReservation = () => {
       case "ISCOMFIRMED":
         return "Đã xác nhận";
       case "SEATED":
-        return "Đã ngồi";
+        return "Đang phục vụ";
       case "COMPLETED":
         return "Hoàn thành";
       case "CANCELED":
@@ -148,14 +159,9 @@ export const HistoryReservation = () => {
             transition: "opacity 0.3s, transform 0.3s",
           }}
         >
-          <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">Lịch sử đặt bàn</h1>
-          <p className="text-3xl md:text-[20px] sm:text-[15px] mt-4 flex items-center justify-center">
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
-            <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
-            <span className="ml-4">Khám phá tất cả các lần đặt bàn trước đây của bạn</span>
-            <span className="bg-white h-[2px] w-[100px] ml-4 hidden lg:block"></span>
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
-          </p>
+          <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">
+            Lịch sử đặt bàn
+          </h1>
         </div>
       </div>
 
@@ -172,111 +178,117 @@ export const HistoryReservation = () => {
               </div>
             </div>
           ) : (
-            <table className="min-w-full mt-6 bg-gray-50 border border-gray-200">
-              <thead>
-                <tr className="bg-gray-200 text-gray-500 text-base font-normal leading-relaxed">
-                  <th className="py-4 px-6 text-left">Thông tin</th>
-                  <th className="py-4 px-6 text-center">Ngày đặt</th>
-                  <th className="py-4 px-6 text-center">Giờ đặt</th>
-                  <th className="py-4 px-6 text-center">Số người</th>
-                  <th className="py-4 px-6 text-center">Trạng thái</th>
-                  <th className="py-4 px-6 text-center"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.reservations?.map((reservation) => {
-                  const date = new Date(reservation.startTime);
-                  const formattedDate = date.toLocaleDateString("vi-VN");
-                  const formattedTime = date.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+            <div className="space-y-6">
+              {" "}
+              {/* Chỉnh sửa để các đơn hàng hiển thị theo một dòng riêng biệt */}
+              {data?.reservations?.map((reservation) => {
+                const date = new Date(reservation.startTime);
+                const formattedDate = date.toLocaleDateString("vi-VN");
+                const formattedTime = date.toLocaleTimeString("vi-VN", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
 
-                  let statusClass = "";
-                  switch (reservation.status) {
-                    case "ISWAITING":
-                      statusClass = "bg-amber-50 text-amber-600 border border-amber-400";
-                      break;
-                    case "ISCOMFIRMED":
-                      statusClass = "bg-green-200 text-green-600 border border-green-400";
-                      break;
-                    case "SEATED":
-                      statusClass = "bg-green-200 text-green-600 border border-green-400";
-                      break;
-                    case "ISPAYMENT":
-                      statusClass = "bg-amber-50 text-amber-600 border border-amber-400";
-                      break;
-                    case "COMPLETED":
-                      statusClass = "bg-green-200 text-green-600 border border-green-400";
-                      break;
-                    case "CANCELED":
-                      statusClass = "bg-red-50 text-red-600 border border-red-400";
-                      break;
-                    default:
-                      statusClass = "bg-gray-50 text-gray-600 border border-gray-400";
-                  }
+                let statusClass = "";
+                switch (reservation.status) {
+                  case "ISWAITING":
+                    statusClass = "bg-amber-50 text-amber-600 border ";
+                    break;
+                  case "ISCOMFIRMED":
+                    statusClass = "bg-blue-100 text-blue-600 border ";
+                    break;
+                  case "SEATED":
+                    statusClass = "bg-purple-100 text-purple-600 border ";
+                    break;
+                  case "ISPAYMENT":
+                    statusClass = "bg-amber-50 text-amber-600 border ";
+                    break;
+                  case "COMPLETED":
+                    statusClass = "bg-green-100 text-green-600 border ";
+                    break;
+                  case "CANCELED":
+                    statusClass = "bg-red-50 text-red-600 border";
+                    break;
+                  default:
+                    statusClass = "bg-gray-50 text-gray-600 border ";
+                }
 
-                  return (
-                    <tr key={reservation._id} className="border-b border-gray-200">
-                      <td className="py-4 px-6 flex flex-col items-start">
-                        <h4 className="text-black text-lg font-medium leading-8">{reservation.userName}</h4>
-                        <h4 className="text-black text-lg font-medium leading-8">{reservation.phoneNumber}</h4>
-                      </td>
-                      <td className="py-4 px-6 text-center text-black text-lg font-medium leading-relaxed">
-                        {formattedDate}
-                      </td>
-                      <td className="py-4 px-6 text-center text-black text-lg font-medium leading-relaxed">
-                        {formattedTime}
-                      </td>
-                      <td className="py-4 px-6 text-center text-black text-lg font-medium leading-relaxed">
-                        {reservation.guests_count}
-                      </td>
-                      <td className="py-4 px-6 text-center">
+                return (
+                  <div
+                    key={reservation._id}
+                    className="flex flex-col md:flex-row items-start justify-between p-4 border border-gray-200 rounded-lg bg-white shadow-sm space-y-4 md:space-y-0 md:space-x-6"
+                  >
+                    <div className="flex-1">
+                      <h4 className="text-gray-800 text-lg font-semibold">
+                        <strong>Người đặt:</strong> {reservation.userName}
+                      </h4>
+                      <p className="text-gray-600 text-sm">
+                        <strong>Số điện thoại:</strong>{" "}
+                        {reservation.phoneNumber}
+                      </p>
+                      <p className="text-gray-600 text-sm">
+                        <strong>Ngày đặt:</strong> {formattedDate}
+                      </p>
+                      <p className="text-gray-600 text-sm">
+                        <strong>Giờ đặt:</strong> {formattedTime}
+                      </p>
+                      <div>
+                        <p className="text-gray-600 text-sm">
+                          <strong>Số người:</strong> {reservation.guests_count}
+                        </p>
+                      </div>
+                      <div className="mt-2">
                         <span
-                          className={`flex items-center justify-center ${statusClass} text-xs font-medium mr-2 px-1.5 rounded-full py-1`}
+                          className={` ${statusClass} text-base font-medium py-2 px-1 rounded-md`}
                         >
                           {getStatusInVietnamese(reservation.status)}
                         </span>
-                      </td>
-                      <td className="py-4 px-6 text-center">
-                        <div className="flex items-center justify-center space-x-4">
-                          {/* Nếu trạng thái là ISWAITING, hiển thị nút Hủy và Xem Chi Tiết */}
-                          {reservation.status === "ISWAITING" && (
-                            <>
-                              <button
-                                onClick={() => handleCancelReservation(reservation._id)}
-                                className="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300 ease-in-out"
-                              >
-                                Hủy
-                              </button>
-                              <Link to={`/history-details/${reservation?._id}`}>
-                                <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out">
-                                  Xem Chi Tiết
-                                </button>
-                              </Link>
-                            </>
-                          )}
-                          {/* Nếu trạng thái là IS_PAYMENT, hiển thị nút Tiếp tục thanh toán */}
-                          {(reservation.status === "ISWAITING" || reservation.status === "ISCOMFIRMED") && reservation.deposit == 0 && (
-                            <button
-                              onClick={() => handleBack(reservation._id)}
-                              className="p-2 bg-green-500 text-white rounded hover:bg-yellow-600 transition duration-300 ease-in-out"
-                            >
-                              Thanh toán
+                      </div>
+                    </div>
+
+                    {/* Button */}
+                    <div className="flex flex-col  gap-2 w-full md:w-auto">
+                      {(reservation.status === "ISWAITING" ||
+                        reservation.status === "ISCOMFIRMED") &&
+                        reservation.deposit === 0 && (
+                          <button
+                            onClick={() => handleBack(reservation._id)}
+                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 w-full "
+                          >
+                            Thanh toán
+                          </button>
+                        )}
+                      {reservation.status === "ISWAITING" && (
+                        <>
+                          <Link to={`/history-details/${reservation?._id}`}>
+                            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600  w-full ">
+                              Xem Chi Tiết
                             </button>
-                          )}
-                          {/* Nếu trạng thái là các giá trị khác, chỉ hiển thị nút Xem Chi Tiết */}
-                          {reservation.status !== "ISWAITING" && reservation.status !== "ISPAYMENT" && (
-                            <Link to={`/history-details/${reservation?._id}`}>
-                              <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out">
-                                Xem Chi Tiết
-                              </button>
-                            </Link>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                          </Link>
+                          <button
+                            onClick={() =>
+                              handleCancelReservation(reservation._id)
+                            }
+                            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600  w-full"
+                          >
+                            Hủy
+                          </button>
+                        </>
+                      )}
+
+                      {reservation.status !== "ISWAITING" &&
+                        reservation.status !== "ISPAYMENT" && (
+                          <Link to={`/history-details/${reservation?._id}`}>
+                            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out w-full">
+                              Xem Chi Tiết
+                            </button>
+                          </Link>
+                        )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
       </section>

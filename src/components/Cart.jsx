@@ -139,7 +139,7 @@ const Cart = () => {
             <SheetClose asChild className="flex-1">
               <button
                 onClick={() => router("/reservation")}
-                className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-[#11c4ef] to-[#1187ef]  text-white font-medium text-center hover:scale-95 transition-transform"
+                className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-[#fb6340] to-[#ff8252] text-white font-medium text-center hover:scale-95 transition-transform"
               >
                 Tạo đơn
               </button>
