@@ -120,7 +120,7 @@ const Promotion = () => {
   return (
     <>
       <div>
-        <div className="relative w-full h-[200px] overflow-hidden">
+        <div className="relative w-full h-[250px] sm:h-[300px] lg:h-[400px] overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
@@ -131,28 +131,27 @@ const Promotion = () => {
           ></div>
           <div className="absolute inset-0 bg-black opacity-30"></div>
           <div
-            className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white"
+            className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4 sm:px-6 lg:px-8"
             style={{
               opacity: opacity,
               transform: `translateY(-${translateY}px)`,
               transition: "opacity 0.3s, transform 0.3s",
             }}
           >
-            <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">
               Mã Giảm Giá
             </h1>
-            <p className="text-xl sm:text-lg md:text-2xl mt-4 flex items-center justify-center">
-              <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
-              <span className="bg-white h-[2px] w-[80px] sm:w-[60px] md:w-[100px] hidden lg:block"></span>
-              <span className="ml-4 text-sm sm:text-base lg:text-lg">
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg mt-4 flex items-center justify-center text-center">
+              <span className="bg-white p-1 rounded-full mr-2 hidden lg:block"></span>
+              <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] hidden lg:block"></span>
+              <span className="ml-2 sm:ml-4">
                 Hãy ghé thăm nhà hàng của chúng tôi để nhận được nhiều ưu đãi
               </span>
-              <span className="bg-white h-[2px] w-[80px] sm:w-[60px] md:w-[100px] ml-4 hidden lg:block"></span>
-              <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
+              <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] ml-2 sm:ml-4 hidden lg:block"></span>
+              <span className="bg-white p-1 rounded-full ml-2 hidden lg:block"></span>
             </p>
           </div>
         </div>
-
         {/* Coupon */}
         {/* Coupon */}
         <SectionTitle title={"Coupons"} desc={"Săn quà liền tay"} />
