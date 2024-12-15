@@ -38,7 +38,7 @@ export const HistoryReservationDetail = () => {
   });
   return (
     <div>
-      <div className="relative w-full h-[200px] sm:h-[150px] overflow-hidden">
+      <div className="relative w-full h-[250px] sm:h-[300px] lg:h-[400px] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -49,26 +49,19 @@ export const HistoryReservationDetail = () => {
         ></div>
         <div className="absolute inset-0 bg-black opacity-30"></div>
         <div
-          className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4"
+          className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4 sm:px-6 lg:px-8"
           style={{
             opacity: opacity,
             transform: `translateY(-${translateY}px)`,
             transition: "opacity 0.3s, transform 0.3s",
           }}
         >
-          <h1 className="text-3xl sm:text-3xl md:text-4xl md:leading-tight font-bold dancing">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">
             Chi tiết lịch sử đặt bàn
           </h1>
-
-          <p className="text-sm sm:text-xs md:text-xl mt-2 md:mt-4 flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0">
-            <span className="hidden lg:block bg-white p-1 rounded-full"></span>
-            <span className="hidden lg:block bg-white h-[2px] w-[50px] md:w-[100px]"></span>
-            <span>Khám phá tất cả các lần đặt bàn trước đây của bạn</span>
-            <span className="hidden lg:block bg-white h-[2px] w-[50px] md:w-[100px]"></span>
-            <span className="hidden lg:block bg-white p-1 rounded-full"></span>
-          </p>
         </div>
       </div>
+
       <section className="py-24 relative">
         <div className="w-full max-w-7xl px-4 md:px-5 lg:px-6 mx-auto">
           <div className="flex items-start flex-col gap-6 xl:flex-row">

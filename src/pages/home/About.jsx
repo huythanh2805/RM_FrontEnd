@@ -67,7 +67,7 @@ const About = () => {
 
   return (
     <div>
-      <div className="relative w-full h-[200px] overflow-hidden">
+      <div className="relative w-full h-[250px] sm:h-[300px] lg:h-[400px] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -78,29 +78,28 @@ const About = () => {
         ></div>
         <div className="absolute inset-0 bg-black opacity-30"></div>
         <div
-          className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white"
+          className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4 sm:px-6 lg:px-8"
           style={{
             opacity: opacity,
             transform: `translateY(-${translateY}px)`,
             transition: "opacity 0.3s, transform 0.3s",
           }}
         >
-          <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">
             Giới Thiệu
           </h1>
-          <p className="text-lg md:text-base sm:text-sm mt-4 flex items-center justify-center flex-wrap">
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden sm:block"></span>
-            <span className="bg-white h-[2px] w-[50px] md:w-[80px] lg:w-[100px] hidden sm:block"></span>
-            <span className="ml-4 text-center sm:ml-2">
+          <p className="text-xs sm:text-sm md:text-base lg:text-lg mt-4 flex items-center justify-center text-center">
+            <span className="bg-white p-1 rounded-full mr-2 hidden lg:block"></span>
+            <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] hidden lg:block"></span>
+            <span className="ml-2 sm:ml-4">
               Chúng tôi mang đến cho bạn những khoảnh khắc khó quên với những
               món ăn ngon của chúng tôi
             </span>
-            <span className="bg-white h-[2px] w-[50px] md:w-[80px] lg:w-[100px] ml-4 hidden sm:block"></span>
-            <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden sm:block"></span>
+            <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] ml-2 sm:ml-4 hidden lg:block"></span>
+            <span className="bg-white p-1 rounded-full ml-2 hidden lg:block"></span>
           </p>
         </div>
       </div>
-
       <section>
         <h2 className="text-3xl font-bold text-center mb-4">Lịch Sử</h2>
 

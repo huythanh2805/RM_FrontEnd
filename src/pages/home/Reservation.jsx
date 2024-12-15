@@ -45,7 +45,7 @@ const Reservation = () => {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('imgs/pagetitle-reservation.jpg')",
+            backgroundImage: "url('imgs/pagetitle-about.jpg')",
             backgroundAttachment: "fixed",
             filter: "brightness(0.7)",
           }}
