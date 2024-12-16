@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 export const HistoryReservation = () => {
@@ -17,16 +17,11 @@ export const HistoryReservation = () => {
   const [translateY] = useState(0);
   const navigate = useNavigate();
   // Fetch danh sách đặt bàn
-  const { data, error, isLoading } = useQuery(
-    ["reservations", userId],
-    async () => {
-      const response = await axios.get(
-        `http://localhost:1111/api/reservations/user/${userId}`
-      );
+  const { data, error, isLoading } = useQuery(["reservations", userId], async () => {
+    const response = await axios.get(`http://localhost:1111/api/reservations/user/${userId}`);
 
-      return response.data;
-    }
-  );
+    return response.data;
+  });
 
   useEffect(() => {
     const socket = io("http://localhost:1111"); // URL của server WebSocket
@@ -34,9 +29,7 @@ export const HistoryReservation = () => {
     // Lắng nghe sự kiện "reservation-canceled"
     socket.on("new-notification", (data) => {
       setReservations((prev) =>
-        prev.map((res) =>
-          res._id === data.reservationId ? { ...res, status: data.status } : res
-        )
+        prev.map((res) => (res._id === data.reservationId ? { ...res, status: data.status } : res))
       );
     });
 
@@ -70,9 +63,7 @@ export const HistoryReservation = () => {
       },
       onError: (error) => {
         setIsCanceling(false);
-        alert(
-          error.response?.data?.message || "Đã xảy ra lỗi khi hủy đơn hàng."
-        );
+        alert(error.response?.data?.message || "Đã xảy ra lỗi khi hủy đơn hàng.");
       },
     }
   );
@@ -88,9 +79,7 @@ export const HistoryReservation = () => {
     }
   };
   const handleBack = (reservationId) => {
-    const reservation = data?.reservations.find(
-      (item) => item._id === reservationId
-    );
+    const reservation = data?.reservations.find((item) => item._id === reservationId);
     const dishs = reservation.ordered_dishes.map((item) => ({
       quantity: item.quantity,
       dish_id: item.dish_id._id,
@@ -141,7 +130,7 @@ export const HistoryReservation = () => {
   return (
     <div className="w-full relative">
       {/* Banner */}
-      
+
       <div className="relative w-full h-[250px] sm:h-[300px] lg:h-[400px] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -160,15 +149,11 @@ export const HistoryReservation = () => {
             transition: "opacity 0.3s, transform 0.3s",
           }}
         >
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">
-            Lịch sử đặt bàn
-          </h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">Lịch sử đặt bàn</h1>
           <p className="text-xs sm:text-sm md:text-base lg:text-lg mt-4 flex items-center justify-center text-center">
             <span className="bg-white p-1 rounded-full mr-2 hidden lg:block"></span>
             <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] hidden lg:block"></span>
-            <span className="ml-2 sm:ml-4">
-              Khám phá tất cả các lần đặt bàn trước đây của bạn
-            </span>
+            <span className="ml-2 sm:ml-4">Khám phá tất cả các lần đặt bàn trước đây của bạn</span>
             <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] ml-2 sm:ml-4 hidden lg:block"></span>
             <span className="bg-white p-1 rounded-full ml-2 hidden lg:block"></span>
           </p>
@@ -233,8 +218,7 @@ export const HistoryReservation = () => {
                         <strong>Người đặt:</strong> {reservation.userName}
                       </h4>
                       <p className="text-gray-600 text-sm">
-                        <strong>Số điện thoại:</strong>{" "}
-                        {reservation.phoneNumber}
+                        <strong>Số điện thoại:</strong> {reservation.phoneNumber}
                       </p>
                       <p className="text-gray-600 text-sm">
                         <strong>Ngày đặt:</strong> {formattedDate}
@@ -248,9 +232,7 @@ export const HistoryReservation = () => {
                         </p>
                       </div>
                       <div className="mt-2">
-                        <span
-                          className={` ${statusClass} text-base font-medium py-2 px-1 rounded-md`}
-                        >
+                        <span className={` ${statusClass} text-base font-medium py-2 px-1 rounded-md`}>
                           {getStatusInVietnamese(reservation.status)}
                         </span>
                       </div>
@@ -258,8 +240,7 @@ export const HistoryReservation = () => {
 
                     {/* Button */}
                     <div className="flex flex-col  gap-2 w-full md:w-auto">
-                      {(reservation.status === "ISWAITING" ||
-                        reservation.status === "ISCOMFIRMED") &&
+                      {(reservation.status === "ISWAITING" || reservation.status === "ISCOMFIRMED") &&
                         reservation.deposit === 0 && (
                           <button
                             onClick={() => handleBack(reservation._id)}
@@ -276,9 +257,7 @@ export const HistoryReservation = () => {
                             </button>
                           </Link>
                           <button
-                            onClick={() =>
-                              handleCancelReservation(reservation._id)
-                            }
+                            onClick={() => handleCancelReservation(reservation._id)}
                             className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600  w-full"
                           >
                             Hủy
@@ -286,14 +265,13 @@ export const HistoryReservation = () => {
                         </>
                       )}
 
-                      {reservation.status !== "ISWAITING" &&
-                        reservation.status !== "ISPAYMENT" && (
-                          <Link to={`/history-details/${reservation?._id}`}>
-                            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out w-full">
-                              Xem Chi Tiết
-                            </button>
-                          </Link>
-                        )}
+                      {reservation.status !== "ISWAITING" && reservation.status !== "ISPAYMENT" && (
+                        <Link to={`/history-details/${reservation?._id}`}>
+                          <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out w-full">
+                            Xem Chi Tiết
+                          </button>
+                        </Link>
+                      )}
                     </div>
                   </div>
                 );
