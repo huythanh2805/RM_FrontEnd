@@ -109,7 +109,7 @@ const Menu = ({ limit }) => {
   return (
     <div className="w-full relative">
       {isMenuPage && (
-        <div className="relative w-full h-[250px] sm:h-[300px] lg:h-[400px] overflow-hidden">
+        <div className="relative w-full h-[150px] sm:h-[200px] lg:h-[300px] overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{

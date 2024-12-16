@@ -198,7 +198,7 @@ export const Checkout = () => {
   };
   return (
     <div>
-      <div className="relative w-full h-[250px] sm:h-[300px] lg:h-[400px] overflow-hidden">
+      <div className="relative w-full h-[150px] sm:h-[200px] lg:h-[300px] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -370,7 +370,7 @@ export const Checkout = () => {
                       key={orderedDish._id}
                       className="rounded-3xl p-6 bg-gray-100 border border-gray-100 flex flex-col md:flex-row md:items-center gap-5 transition-all duration-500 hover:border-gray-400"
                     >
-                      <div className="img-box">
+                      <div className="img-box flex">
                         {orderedDish.image ? (
                           <img
                             src={orderedDish.image}
@@ -384,7 +384,7 @@ export const Checkout = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 md:gap-8">
                         <div>
                           <h2 className="font-medium text-xl leading-8 text-black mb-3">
-                            {orderedDish.dish_id.name}
+                            {orderedDish.name}
                           </h2>
                         </div>
                         <div className="flex items-center justify-between gap-8">
