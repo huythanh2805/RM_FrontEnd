@@ -23,6 +23,7 @@ const Menu = ({ limit }) => {
     "Tất cả": "tatca.png",
     "Đồ uống": "douong.png",
     "Tráng miệng": "trangmieng.png",
+    "Combo món": "monchinh.png",
   };
 
   const location = useLocation();
