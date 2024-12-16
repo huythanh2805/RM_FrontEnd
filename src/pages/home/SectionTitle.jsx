@@ -4,7 +4,7 @@ import React from "react";
 function SectionTitle({ title, desc }) {
   const { colorCode } = useThemeContext();
   return (
-    <div className="py-4 md:py-6 flex items-center justify-center">
+    <div className="py-6 flex items-center justify-center">
       <div className="w-full sm:w-fit min-w-[250px] flex flex-col items-center sm:items-start">
         <div className="w-full flex items-center justify-center sm:justify-start">
           <div className="h-[1px] relative w-full bg-orange-1 flex-1">
