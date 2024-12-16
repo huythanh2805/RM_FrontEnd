@@ -126,7 +126,7 @@ const Calculator = ({
   };
   const generateQrCodeUrl = (total) => {
     const bank = "MB";
-    const account = "0979756291";
+    const account = "0982669254";
     const template = "compact";
     const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(bank)}&acc=${encodeURIComponent(
       account
@@ -237,6 +237,7 @@ const Calculator = ({
         variant: "success",
         title: "Thanh Toán thành công",
       });
+      console.log("success", notification.bill_id);
       setBillId(notification.bill_id);
       setIsPaid(true);
     });
@@ -244,7 +245,7 @@ const Calculator = ({
       socket.disconnect();
     };
   }, []);
-  console.log({ discount });
+
   const handleDiscountInput = async (e) => {
     e.preventDefault();
     try {
