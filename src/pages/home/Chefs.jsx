@@ -19,6 +19,7 @@ import "swiper/css/thumbs";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { cn } from "@/lib/utils";
+import { useThemeContext } from "@/contexts/ThemeProvider";
 const chefs = [
   {
     image: "/chefs/chef_1.png",
@@ -43,6 +44,7 @@ const chefs = [
 ];
 function Chefs() {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const { colorCode } = useThemeContext();
   return (
     <section>
       <SectionTitle title={"GẶP GỠ"} desc={"Những người đầu bếp tuyệt vời "} />
@@ -110,7 +112,7 @@ function Chefs() {
                 </div>
 
                 <div className="w-full flex flex-col items-center">
-                  <p className="text-2xl font-bold text-orange-1 pt-3">
+                  <p className="text-2xl font-bold text-orange-1 pt-3" style={{ color: colorCode }}>
                     {item.name}
                   </p>
                   <p className="font-sans font-medium text-gray-1">

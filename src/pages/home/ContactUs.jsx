@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom"; // Import useLocation từ react-router-dom
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
+import { useThemeContext } from "@/contexts/ThemeProvider";
 
 const ContactUs = () => {
   const [opacity, setOpacity] = useState(1);
   const [translateY, setTranslateY] = useState(0);
   const location = useLocation();
   const isContactPage = location.pathname === "/contact";
+  const { colorCode } = useThemeContext();
 
   return (
     <>
@@ -60,17 +62,17 @@ const ContactUs = () => {
         </div>
 
         <div className="w-full md:w-1/2 text-black space-y-8">
-          <h2 className="text-2xl sm:text-[28px] md:text-[40px] dancing mb-4">
+          <h2 className="text-2xl sm:text-[28px] md:text-[40px] dancing mb-4" style={{color: colorCode}}>
             Thông tin liên hệ
           </h2>
-          <div className="w-[80px] md:w-[100px] h-[2px] rounded-full bg-orange-1 mb-8"></div>
+          <div className="w-[80px] md:w-[100px] h-[2px] rounded-full bg-orange-1 mb-8" style={{backgroundColor: colorCode}}></div>
           <ul className="space-y-6 sm:space-y-8">
             <li className="items-center flex">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-blue-600">
                 <FaMapMarkerAlt className="text-lg sm:text-xl" />
               </div>
               <div className="ml-4">
-                <h3 className="text-sm sm:text-lg font-semibold">
+                <h3 className="text-sm sm:text-lg font-semibold" style={{color: colorCode}}>
                   Địa chỉ nhà hàng
                 </h3>
                 <p className="text-gray-600 flex text-xs sm:text-sm">
@@ -85,7 +87,7 @@ const ContactUs = () => {
                 <FaPhoneAlt className="text-lg sm:text-xl" />
               </div>
               <div className="ml-4">
-                <h3 className="text-sm sm:text-lg font-semibold">
+                <h3 className="text-sm sm:text-lg font-semibold" style={{color: colorCode}}>
                   Số điện thoại
                 </h3>
                 <p className="text-gray-600 text-xs sm:text-sm">
@@ -98,7 +100,7 @@ const ContactUs = () => {
                 <FaEnvelope className="text-lg sm:text-xl" />
               </div>
               <div className="ml-4">
-                <h3 className="text-sm sm:text-lg font-semibold">Email</h3>
+                <h3 className="text-sm sm:text-lg font-semibold" style={{color: colorCode}}>Email</h3>
                 <p className="text-gray-600 text-xs sm:text-sm">
                   goldenfork@gmail.com
                 </p>
