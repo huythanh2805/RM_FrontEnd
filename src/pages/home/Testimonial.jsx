@@ -9,6 +9,7 @@ import "swiper/css/navigation";
 import 'swiper/css/free-mode';
 import 'swiper/css/thumbs';
 import SectionTitle from './SectionTitle';
+import { useThemeContext } from '@/contexts/ThemeProvider';
 const testimonials = [
   {
     image: 'https://swiperjs.com/demos/images/nature-1.jpg',
@@ -45,6 +46,7 @@ const testimonials = [
 function Testimonial() {
   const [firstSwiper, setFirstSwiper] = useState(null);
   const [secondSwiper, setSecondSwiper] = useState(null);
+  const { colorCode } = useThemeContext();
   return (
     <div className='container'>
         <SectionTitle title={'ĐÁNH GIÁ'} desc={'Nhận xét của khách'} />
@@ -78,7 +80,7 @@ function Testimonial() {
 
              <div className='absolute w-[30px] h-[30px] z-20 flex items-center justify-center  top-0 left-0'>
              <div className='flex items-center gap-[-4px]'>
-             <SiComma className='text-orange-1 scale-x-[-1]'/>
+             <SiComma className='text-orange-1 scale-x-[-1]'style={{color: colorCode}}/>
              </div>
              </div>
             </SwiperSlide>

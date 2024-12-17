@@ -92,7 +92,7 @@ function MenuItem({ item, onCLick }) {
               : `/dishes/${item._id}`
           }
         >
-          <h3 className="text-lg font-bold cursor-pointer">
+          <h3 className="text-lg font-bold cursor-pointer" style={{ color: colorCode }}>
             {item.name}
             {item?.type === "combo" && (
               <span className="px-2 text-gray-1">(Combo)</span>
