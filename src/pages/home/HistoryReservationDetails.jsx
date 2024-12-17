@@ -11,6 +11,7 @@ export const HistoryReservationDetail = () => {
   const { reservation_id } = useParams();
   const fetchReservationDetails = async () => {
     const response = await axios.get(`http://localhost:1111/api/reservations/history-detail/${reservation_id}`);
+
     return response.data;
   };
   const {
@@ -21,6 +22,7 @@ export const HistoryReservationDetail = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
+  console.log(reservationDetails);
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -138,6 +140,35 @@ export const HistoryReservationDetail = () => {
             </div>
             <div className="w-full max-w-sm md:max-w-3xl max-xl:mx-auto">
               <div className="grid grid-cols-1 gap-6">
+                {/* Hiển thị Combo */}
+                {Array.isArray(reservationDetails.ordered_combos) && reservationDetails.ordered_combos.length > 0 ? (
+                  reservationDetails.ordered_combos.map((orderedCombo, index) => (
+                    <div
+                      key={orderedCombo._id}
+                      className="rounded-3xl p-6 bg-gray-100 border border-gray-100 flex flex-col md:flex-row md:items-center gap-5 transition-all duration-500 hover:border-gray-400"
+                    >
+                      <div className="img-box">
+                        <img
+                          src={orderedCombo.combo_id?.images[0]} 
+                          alt={orderedCombo.combo_id?.name}
+                          className="w-full md:max-w-[122px] rounded-lg object-cover"
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 md:gap-8">
+                        <div>
+                          <h2 className="font-medium text-xl leading-8 text-black mb-3">
+                            {orderedCombo.combo_id?.name}
+                          </h2>
+                        </div>
+                        <div className="flex items-center justify-between gap-8">
+                          <h6 className="font-medium text-xl leading-8 text-600">Số lượng: {orderedCombo.quantity}</h6>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center text-gray-600">Không có combo đặt trước.</div>
+                )}
                 {Array.isArray(reservationDetails.ordered_dishes) && reservationDetails.ordered_dishes.length > 0 ? (
                   reservationDetails.ordered_dishes.map((orderedDish, index) => (
                     <div
@@ -146,20 +177,17 @@ export const HistoryReservationDetail = () => {
                     >
                       <div className="img-box">
                         <img
-                          src={orderedDish.dish_id.images[0]}
-                          alt={orderedDish.dish_id.name}
+                          src={orderedDish.dish_id?.images[0]} // Assuming the dish has an image
+                          alt={orderedDish.dish_id?.name}
                           className="w-full md:max-w-[122px] rounded-lg object-cover"
                         />
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 md:gap-8">
                         <div>
-                          <h2 className="font-medium text-xl leading-8 text-black mb-3">{orderedDish.dish_id.name}</h2>
+                          <h2 className="font-medium text-xl leading-8 text-black mb-3">{orderedDish.dish_id?.name}</h2>
                         </div>
                         <div className="flex items-center justify-between gap-8">
                           <h6 className="font-medium text-xl leading-8 text-600">Số lượng: {orderedDish.quantity}</h6>
-                          <h6 className="font-medium text-xl leading-8 text-600">
-                            {orderedDish.dish_id.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}
-                          </h6>
                         </div>
                       </div>
                     </div>

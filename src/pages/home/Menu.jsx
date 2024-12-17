@@ -1,14 +1,14 @@
-import { useThemeContext } from "@/contexts/ThemeProvider";
-import { useLocation } from "react-router-dom";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useCart } from "@/contexts/CartProvider";
-import MenuItem from "../MenuItem";
-import { toast } from "@/hooks/use-toast";
-import SectionTitle from "./SectionTitle";
-import BASE_URL from "@/configs";
 import Pagination from "@/components/Pagination";
+import BASE_URL from "@/configs";
+import { useCart } from "@/contexts/CartProvider";
+import { useThemeContext } from "@/contexts/ThemeProvider";
+import { toast } from "@/hooks/use-toast";
 import { formatCurrency } from "@/utilities/utils";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import MenuItem from "../MenuItem";
+import SectionTitle from "./SectionTitle";
 
 const Menu = ({ limit, isFilter = true }) => {
   const { colorCode } = useThemeContext();
@@ -57,15 +57,11 @@ const Menu = ({ limit, isFilter = true }) => {
       .get(BASE_URL + "/dishes")
       .then((res) => {
         setDishes(res.data.filter((item) => item.isShow));
-        const allCategoryName = [
-          ...new Set(res.data.map((item) => item.category_id.name)),
-        ];
+        const allCategoryName = [...new Set(res.data.map((item) => item.category_id.name))];
         setCategories(["Tất cả", "Combo món", ...allCategoryName]);
       })
       .catch((error) => {
-        console.error(
-          error.response ? error.response.data.data : error.message
-        );
+        console.error(error.response ? error.response.data.data : error.message);
       });
 
     axios
@@ -83,9 +79,7 @@ const Menu = ({ limit, isFilter = true }) => {
         setCombos(combosWithType);
       })
       .catch((error) => {
-        console.error(
-          error.response ? error.response.data.data : error.message
-        );
+        console.error(error.response ? error.response.data.data : error.message);
       });
   }, []);
 
@@ -98,16 +92,11 @@ const Menu = ({ limit, isFilter = true }) => {
 
   const filterDishes = combinedItems.filter((dish) => {
     const matchesCategory =
-      selectedCategory === "Tất cả" ||
-      selectedCategory === "Combo món" ||
-      dish.category_id.name === selectedCategory;
+      selectedCategory === "Tất cả" || selectedCategory === "Combo món" || dish.category_id.name === selectedCategory;
 
-    const matchesPrice =
-      dish.price >= priceRange.min && dish.price <= priceRange.max;
+    const matchesPrice = dish.price >= priceRange.min && dish.price <= priceRange.max;
 
-    const matchesSearchValue = dish.name
-      .toLowerCase()
-      .includes(searchValue.toLowerCase());
+    const matchesSearchValue = dish.name.toLowerCase().includes(searchValue.toLowerCase());
 
     return matchesCategory && matchesSearchValue && matchesPrice;
   });
@@ -127,19 +116,39 @@ const Menu = ({ limit, isFilter = true }) => {
     setSearchValue(e.target.value);
   };
 
-  const handleAddToCart = (dish) => {
-    toast({
-      variant: "success",
-      title: "Thêm thành công" + " " + dish.name,
-    });
-    addItem({
-      dish_id: dish._id,
-      name: dish.name,
-      price: dish.price,
-      image: dish.images[0],
-      quantity: 1,
-      type: "dish",
-    });
+  const handleAddToCart = (item) => {
+    // Kiểm tra nếu item là combo hoặc món ăn
+    const itemType = item.type || "dish"; // Nếu không có type, mặc định là "dish"
+
+    if (itemType === "combo") {
+      // Xử lý khi item là combo
+      toast({
+        variant: "success",
+        title: `Thêm thành công Combo: ${item.name}`,
+      });
+      addItem({
+        dish_id: item._id,
+        name: item.name,
+        price: item.price,
+        image: item.images[0],
+        quantity: 1,
+        type: "combo", // Đảm bảo type là combo
+      });
+    } else {
+      // Xử lý khi item là món ăn (dish)
+      toast({
+        variant: "success",
+        title: `Thêm thành công Món ăn: ${item.name}`,
+      });
+      addItem({
+        dish_id: item._id,
+        name: item.name,
+        price: item.price,
+        image: item.images[0],
+        quantity: 1,
+        type: "dish", // Đảm bảo type là dish
+      });
+    }
   };
 
   return (
@@ -163,15 +172,11 @@ const Menu = ({ limit, isFilter = true }) => {
               transition: "opacity 0.3s, transform 0.3s",
             }}
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">
-              Thực Đơn
-            </h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">Thực Đơn</h1>
             <p className="text-xs sm:text-sm md:text-base lg:text-lg mt-4 flex items-center justify-center text-center">
               <span className="bg-white p-1 rounded-full mr-2 hidden lg:block"></span>
               <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] hidden lg:block"></span>
-              <span className="ml-2 sm:ml-4">
-                Những món ăn đa dạng đang chờ bạn đến thưởng thức
-              </span>
+              <span className="ml-2 sm:ml-4">Những món ăn đa dạng đang chờ bạn đến thưởng thức</span>
               <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] ml-2 sm:ml-4 hidden lg:block"></span>
               <span className="bg-white p-1 rounded-full ml-2 hidden lg:block"></span>
             </p>
@@ -179,9 +184,7 @@ const Menu = ({ limit, isFilter = true }) => {
         </div>
       )}
 
-      {!isMenuPage && (
-        <SectionTitle title={"THỰC ĐƠN"} desc={"Thực đơn hôm nay"} />
-      )}
+      {!isMenuPage && <SectionTitle title={"THỰC ĐƠN"} desc={"Thực đơn hôm nay"} />}
 
       <div className={`w-full flex ${isFilter ? "p-10" : "p-5"}`}>
         {/* Filter */}
@@ -203,10 +206,7 @@ const Menu = ({ limit, isFilter = true }) => {
               />
 
               <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
-                <button
-                  type="button"
-                  className="text-orange-600 hover:text-orange-800"
-                >
+                <button type="button" className="text-orange-600 hover:text-orange-800">
                   <span className="sr-only">Search</span>
 
                   <svg
@@ -229,26 +229,20 @@ const Menu = ({ limit, isFilter = true }) => {
 
             {/* Lọc theo danh mục */}
             <div class="w-full border border-[#fb6340] text-[#fb6340] p-5 rounded-lg shadow-lg">
-              <div class="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">
-                DANH MỤC
-              </div>
+              <div class="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">DANH MỤC</div>
 
               <div class="space-y-4">
                 {categories.map((category, index) => (
                   <div
                     key={index}
                     className={`flex gap-3 items-center cursor-pointer transition duration-300 ${
-                      selectedCategory === category
-                        ? "text-orange-500 font-bold"
-                        : "text-gray-500"
+                      selectedCategory === category ? "text-orange-500 font-bold" : "text-gray-500"
                     }`}
                     onClick={() => setSelectedCategory(category)}
                   >
                     <div
                       className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition ${
-                        selectedCategory === category
-                          ? "border-orange-500 bg-orange-100"
-                          : "border-gray-300"
+                        selectedCategory === category ? "border-orange-500 bg-orange-100" : "border-gray-300"
                       }`}
                       style={{ borderColor: colorCode }}
                     >
@@ -266,9 +260,7 @@ const Menu = ({ limit, isFilter = true }) => {
 
             {/* Lọc theo khoảng giá */}
             <div class="w-full border border-[#fb6340] text-[#fb6340] p-5 rounded-lg shadow-lg">
-              <div class="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">
-                Khoảng giá
-              </div>
+              <div class="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">Khoảng giá</div>
 
               <div className="space-y-4">
                 <label className="flex items-center cursor-pointer">
@@ -287,25 +279,19 @@ const Menu = ({ limit, isFilter = true }) => {
                   <input
                     type="checkbox"
                     className="mr-2 w-5 h-5"
-                    checked={
-                      priceRange.min === 100000 && priceRange.max === 200000
-                    }
+                    checked={priceRange.min === 100000 && priceRange.max === 200000}
                     onChange={() => {
                       setPriceRange({ min: 100000, max: 200000 });
                     }}
                   />
-                  <span>{`${formatCurrency(100000)} - ${formatCurrency(
-                    200000
-                  )}`}</span>
+                  <span>{`${formatCurrency(100000)} - ${formatCurrency(200000)}`}</span>
                 </label>
 
                 <label className="flex items-center cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2 w-5 h-5"
-                    checked={
-                      priceRange.min === 200000 && priceRange.max === Infinity
-                    }
+                    checked={priceRange.min === 200000 && priceRange.max === Infinity}
                     onChange={() => {
                       setPriceRange({ min: 200000, max: Infinity });
                     }}
@@ -355,13 +341,7 @@ const Menu = ({ limit, isFilter = true }) => {
           {/* Danh sách món ăn */}
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-5 max-w-5xl mx-auto mb-8 px-4 sm:px-40 lg:px-8">
             {currentItems.length > 0 ? (
-              currentItems.map((item) => (
-                <MenuItem
-                  key={item._id}
-                  item={item}
-                  onCLick={handleAddToCart}
-                />
-              ))
+              currentItems.map((item) => <MenuItem key={item._id} item={item} onCLick={handleAddToCart} />)
             ) : (
               <div className="col-span-full flex justify-center items-center">
                 <p className="text-gray-500">Không tìm thấy món ăn !!</p>
@@ -372,10 +352,7 @@ const Menu = ({ limit, isFilter = true }) => {
           {/* Phân trang */}
           {pageCount > 1 && (
             <div className="w-full items-center">
-              <Pagination
-                pageCount={pageCount}
-                onPageChange={handlePageClick}
-              />
+              <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
             </div>
           )}
         </div>
