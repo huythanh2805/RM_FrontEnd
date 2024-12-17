@@ -54,6 +54,7 @@ export const Checkout = () => {
     }
   }, [decodedToken.id, navigate])
   console.log({reservationDetails})
+  console.log({userDiscounts})
   // Tính tổng tiền món ăn
   const computeTotalAmount = useMemo(() => {
     return reservationDetails?.dishs.reduce((total, dish) => total + dish.price * dish.quantity, 0)
@@ -71,7 +72,7 @@ export const Checkout = () => {
       if (discount.discountId.discountType === "PERCENTAGE") {
         // Giảm theo phần trăm
         return (computeTotalAmount * discount.discountId.discountValue) / 100
-      } else if (discount.discountType === "FIXEDAMOUNT") {
+      } else if (discount.discountId.discountType === "FIXEDAMOUNT") { 
         // Giảm theo số tiền cố định
         return discount.discountId.discountValue
       }
@@ -392,7 +393,7 @@ export const Checkout = () => {
               className="bg-green-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-green-600 transition"
               onClick={handlePayment}
             >
-              {Number(prePayment) === 100 ? "Thanh toán hết" : "Cọc"}
+              {Number(prePayment) === 100 ? "Thanh toán hết" : paymentMethod === "CASH" ? "Tạo đơn" : "Cọc"}
             </button>
           )}
         </div>
