@@ -184,7 +184,7 @@ const Menu = ({ limit, isFilter = true }) => {
         </div>
       )}
 
-      {!isMenuPage && <SectionTitle title={"THỰC ĐƠN"} desc={"Thực đơn hôm nay"} />}
+      {!isMenuPage && <SectionTitle title={"THỰC ĐƠN"} desc={"Thực đơn hôm nay"} color={colorCode} />}
 
       <div className={`w-full flex ${isFilter ? "p-10" : "p-5"}`}>
         {/* Filter */}

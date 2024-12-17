@@ -19,7 +19,7 @@ const Footer = () => {
               className="h-[125px] w-16 object-cover rounded-full"
             />
           </Link>
-          <h1 className="text-[35px] dancing mb-4">Golden Fork</h1>
+          <h1 className="text-[35px] dancing mb-4" style={{color: colorCode}}>Golden Fork</h1>
           <hr className="pt-2" />
           <p className="text-white text-sm max-w-xs  ms:justify-start md:mx-0">
             Chúng tôi tự hào mang đến cho quý khách trải nghiệm ẩm thực đa dạng
@@ -64,7 +64,7 @@ const Footer = () => {
 
         {/* Open Hours Section */}
         <div>
-          <h1 className="text-[30px] pb-4 pt-5 md:pt-0 dancing">Giờ Mở Cửa </h1>
+          <h1 className="text-[30px] pb-4 pt-5 md:pt-0 dancing" style={{color: colorCode}}>Giờ Mở Cửa </h1>
           <hr className="pt-2" />
           <ul className="space-y-2 text-white">
             {[
@@ -91,7 +91,7 @@ const Footer = () => {
 
         {/* Links Section */}
         <div>
-          <h1 className="dancing text-[30px] pb-4 pt-5 md:pt-0">Liên Kết</h1>
+          <h1 className="dancing text-[30px] pb-4 pt-5 md:pt-0" style={{color: colorCode}}>Liên Kết</h1>
           <hr className="pt-2" />
           <ul className="space-y-2">
             {[
@@ -112,7 +112,7 @@ const Footer = () => {
 
         {/* Company Section */}
         <div>
-          <h3 className="dancing text-[30px] pb-4 pt-5 md:pt-0">Công Ty</h3>
+          <h3 className="dancing text-[30px] pb-4 pt-5 md:pt-0" style={{color: colorCode}}>Công Ty</h3>
           <hr className="pt-2" />
           <ul className="space-y-2">
             {[
