@@ -83,8 +83,8 @@ const Menu = ({ limit, isFilter = true }) => {
             type: "combo",
           };
         });
-
-        setCombos(combosWithType);
+        const comboWithNewId = combosWithType.map(item=>({...item, _id: item.setComboProducts[0]._id}))
+        setCombos(comboWithNewId);
       })
       .catch((error) => {
         console.error(
@@ -92,7 +92,7 @@ const Menu = ({ limit, isFilter = true }) => {
         );
       });
   }, []);
-
+ console.log({combos})
   const combinedItems =
     selectedCategory === "Tất cả"
       ? [...dishes, ...combos]

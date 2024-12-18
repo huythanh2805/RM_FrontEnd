@@ -1,14 +1,16 @@
-import { formatCurrency } from "@/utilities/utils";
+import { useFetchData } from "@/hooks/useFetchData";
+import { formatCurrency, ServerUrl } from "@/utilities/utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const HistoryReservationDetail = () => {
   const navigate = useNavigate();
   const [opacity] = useState(1);
   const [translateY] = useState(0);
-  const { reservation_id } = useParams();
+  const [products, setProducts] = useState([]);
+  const {reservation_id} = useParams()
   const fetchReservationDetails = async () => {
     const response = await axios.get(`http://localhost:1111/api/reservations/history-detail/${reservation_id}`);
 
@@ -19,6 +21,19 @@ export const HistoryReservationDetail = () => {
     error,
     isLoading,
   } = useQuery(["reservationDetails", reservation_id], fetchReservationDetails);
+
+    useEffect(() => {
+      if(!reservationDetails) return
+       const  newOrderedCombos = reservationDetails.ordered_combos.map(combo=>({
+        ...combo,
+         dish_id: {
+          name: combo.setComboProduct_id.combo_id.name,
+          price: combo.setComboProduct_id.combo_id.price,
+          images: combo.setComboProduct_id.combo_id.images,
+       }}))
+       setProducts(pre=>[...reservationDetails.ordered_dishes, ...newOrderedCombos])
+    }, [reservationDetails]);
+
   const handleGoBack = () => {
     navigate(-1);
   };
@@ -30,13 +45,13 @@ export const HistoryReservationDetail = () => {
     console.error("Error fetching reservation details:", error);
     return <div>Error loading reservation details</div>;
   }
-  console.log(reservationDetails);
   const date = new Date(reservationDetails.startTime);
   const formattedDate = date.toLocaleDateString("vi-VN");
   const formattedTime = date.toLocaleTimeString("vi-VN", {
     hour: "2-digit",
     minute: "2-digit",
   });
+  console.log({products})
   return (
     <div>
       <div className="relative w-full h-[150px] sm:h-[200px] lg:h-[300px] overflow-hidden">
@@ -140,37 +155,8 @@ export const HistoryReservationDetail = () => {
             </div>
             <div className="w-full max-w-sm md:max-w-3xl max-xl:mx-auto">
               <div className="grid grid-cols-1 gap-6">
-                {/* Hiển thị Combo */}
-                {Array.isArray(reservationDetails.ordered_combos) && reservationDetails.ordered_combos.length > 0 ? (
-                  reservationDetails.ordered_combos.map((orderedCombo, index) => (
-                    <div
-                      key={orderedCombo._id}
-                      className="rounded-3xl p-6 bg-gray-100 border border-gray-100 flex flex-col md:flex-row md:items-center gap-5 transition-all duration-500 hover:border-gray-400"
-                    >
-                      <div className="img-box">
-                        <img
-                          src={orderedCombo.combo_id?.images[0]} 
-                          alt={orderedCombo.combo_id?.name}
-                          className="w-full md:max-w-[122px] rounded-lg object-cover"
-                        />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 md:gap-8">
-                        <div>
-                          <h2 className="font-medium text-xl leading-8 text-black mb-3">
-                            {orderedCombo.combo_id?.name}
-                          </h2>
-                        </div>
-                        <div className="flex items-center justify-between gap-8">
-                          <h6 className="font-medium text-xl leading-8 text-600">Số lượng: {orderedCombo.quantity}</h6>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center text-gray-600">Không có combo đặt trước.</div>
-                )}
-                {Array.isArray(reservationDetails.ordered_dishes) && reservationDetails.ordered_dishes.length > 0 ? (
-                  reservationDetails.ordered_dishes.map((orderedDish, index) => (
+                {products.length > 0 ? (
+                  products.map((orderedDish) => (
                     <div
                       key={orderedDish._id}
                       className="rounded-3xl p-6 bg-gray-100 border border-gray-100 flex flex-col md:flex-row md:items-center gap-5 transition-all duration-500 hover:border-gray-400"
