@@ -173,7 +173,10 @@ export const HistoryReservationDetail = () => {
                           <h2 className="font-medium text-xl leading-8 text-black mb-3">{orderedDish.dish_id?.name}</h2>
                         </div>
                         <div className="flex items-center justify-between gap-8">
-                          <h6 className="font-medium text-xl leading-8 text-600">Số lượng: {orderedDish.quantity}</h6>
+                          <h6 className="font-medium text-xl leading-8 text-600">SL: {orderedDish.quantity}</h6>
+                          <h6 className="font-medium text-xl leading-8 text-600">
+                            Giá : {formatCurrency(orderedDish.dish_id?.price)}
+                          </h6>
                         </div>
                       </div>
                     </div>
