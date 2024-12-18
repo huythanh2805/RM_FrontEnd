@@ -1,19 +1,7 @@
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "@/hooks/use-toast";
-import {
-  formatCurrency,
-  formatDateAndTime,
-  ServerUrl,
-} from "@/utilities/utils";
+import { formatCurrency, formatDateAndTime, ServerUrl } from "@/utilities/utils";
 import { ArrowLeft, Home, Mail, MapPin, Printer } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -102,9 +90,7 @@ const CompletedBill = () => {
                     <p>
                       <Printer width={20} height={20} />
                     </p>
-                    <h3 className="font-medium text-[19px] font-serif">
-                      Print
-                    </h3>
+                    <h3 className="font-medium text-[19px] font-serif">Print</h3>
                   </button>
                 </div>
               </div>
@@ -119,9 +105,7 @@ const CompletedBill = () => {
                   </div>
                   <div className="py-3">
                     <div className="w-full flex flex-col items-center justify-center px-5">
-                      <h2 className="dark:text-dark-text text-[36px] font-medium font-serif">
-                        Visit Us
-                      </h2>
+                      <h2 className="dark:text-dark-text text-[36px] font-medium font-serif">Visit Us</h2>
                       <div className="flex items-start py-2">
                         <MapPin className="text-light-text dark:text-dark-text min-w-[18px] shrink-0 px-1" />
                         <p className="text-light-textSoft dark:text-dark-textSoft text-[16px] text-center">
@@ -153,9 +137,7 @@ const CompletedBill = () => {
                       <p className="text-light-textSoft dark:text-dark-textSoft font-thin pb-2 text-xl">
                         Tên:
                         <span className="text-light-text dark:text-dark-text font-medium px-3 text-xl">
-                          {bill.reservation_id.userName
-                            ? bill.reservation_id.userName
-                            : "Un-no"}
+                          {bill.reservation_id.userName ? bill.reservation_id.userName : "Un-no"}
                         </span>
                       </p>
                       <p className="text-light-textSoft dark:text-dark-textSoft font-thin pb-2 text-xl">
@@ -177,28 +159,16 @@ const CompletedBill = () => {
 
                   <div className="flex flex-col min-w-[200px]">
                     <div className="w-full flex items-center justify-between pb-2">
-                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">
-                        Ngày:
-                      </p>
-                      <p className="text-xl">
-                        {formatDateAndTime(bill.reservation_id.startTime).day}
-                      </p>
+                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">Ngày:</p>
+                      <p className="text-xl">{formatDateAndTime(bill.reservation_id.startTime).day}</p>
                     </div>
                     <div className="w-full flex items-center justify-between pb-2">
-                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">
-                        Giờ:
-                      </p>
-                      <p className="text-xl">
-                        {formatDateAndTime(bill.reservation_id.startTime).time}
-                      </p>
+                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">Giờ:</p>
+                      <p className="text-xl">{formatDateAndTime(bill.reservation_id.startTime).time}</p>
                     </div>
                     <div className="w-full flex items-center justify-between pb-2">
-                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">
-                        Bàn:
-                      </p>
-                      <p className="text-xl">
-                        {bill.reservation_id.table_id?.name}
-                      </p>
+                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">Bàn:</p>
+                      <p className="text-xl">{bill.reservation_id.table_id?.name}</p>
                     </div>
                   </div>
                 </div>
@@ -206,18 +176,10 @@ const CompletedBill = () => {
                 <Table className="w-full">
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="min-w-[200px] text-xl">
-                        Tên
-                      </TableHead>
-                      <TableHead className="min-w-[100px] text-xl">
-                        Ảnh
-                      </TableHead>
-                      <TableHead className="max-w-[100px] text-xl text-center">
-                        Số lượng
-                      </TableHead>
-                      <TableHead className="text-right min-w-[135px] text-xl">
-                        Thành tiền
-                      </TableHead>
+                      <TableHead className="min-w-[200px] text-xl">Tên</TableHead>
+                      <TableHead className="min-w-[100px] text-xl">Ảnh</TableHead>
+                      <TableHead className="max-w-[100px] text-xl text-center">Số lượng</TableHead>
+                      <TableHead className="text-right min-w-[135px] text-xl">Thành tiền</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -242,14 +204,10 @@ const CompletedBill = () => {
                             />
                           </TableCell>
                           <TableCell>
-                            <p className="text-center text-2xl">
-                              {orderedCombo.quantity}
-                            </p>
+                            <p className="text-center text-2xl">{orderedCombo.quantity}</p>
                           </TableCell>
                           <TableCell className="text-right text-lg">
-                            {formatCurrency(
-                              orderedCombo.quantity * orderedCombo.price
-                            )}
+                            {formatCurrency(orderedCombo.quantity * orderedCombo.price)}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -274,24 +232,17 @@ const CompletedBill = () => {
                             />
                           </TableCell>
                           <TableCell>
-                            <p className="text-center text-2xl">
-                              {orderedFood.quantity}
-                            </p>
+                            <p className="text-center text-2xl">{orderedFood.quantity}</p>
                           </TableCell>
                           <TableCell className="text-right text-lg">
-                            {formatCurrency(
-                              orderedFood.quantity * orderedFood.price
-                            )}
+                            {formatCurrency(orderedFood.quantity * orderedFood.price)}
                           </TableCell>
                         </TableRow>
                       ))}
                   </TableBody>
                   <TableFooter>
                     <TableRow className="bg-light-bg dark:bg-dark-bg">
-                      <TableCell
-                        colSpan={2}
-                        className="text-[20px] font-medium text-xl"
-                      >
+                      <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
                         Tổng tiền
                       </TableCell>
                       <TableCell colSpan={2} className="text-right text-2xl">
@@ -301,10 +252,7 @@ const CompletedBill = () => {
                       </TableCell>
                     </TableRow>
                     <TableRow className="bg-light-bg dark:bg-dark-bg">
-                      <TableCell
-                        colSpan={2}
-                        className="text-[20px] font-medium text-xl"
-                      >
+                      <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
                         Thuế VAT ({bill.VAT}%)
                       </TableCell>
                       <TableCell colSpan={2} className="text-right text-2xl">
@@ -312,10 +260,7 @@ const CompletedBill = () => {
                       </TableCell>
                     </TableRow>
                     <TableRow className="bg-light-bg dark:bg-dark-bg">
-                      <TableCell
-                        colSpan={2}
-                        className="text-[20px] font-medium text-xl"
-                      >
+                      <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
                         Đã cọc
                       </TableCell>
                       <TableCell colSpan={2} className="text-right text-2xl">
@@ -323,17 +268,11 @@ const CompletedBill = () => {
                       </TableCell>
                     </TableRow>
                     <TableRow className="bg-light-bg dark:bg-dark-bg">
-                      <TableCell
-                        colSpan={2}
-                        className="text-[20px] font-medium text-xl"
-                      >
+                      <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
                         Tổng phải thanh toán
                       </TableCell>
                       <TableCell colSpan={2} className="text-right text-2xl">
-                        {formatCurrency(
-                          bill.original_money +
-                            (bill.original_money * bill.VAT) / 100
-                        )}
+                        {formatCurrency(bill.total_money)}
                       </TableCell>
                     </TableRow>
                   </TableFooter>

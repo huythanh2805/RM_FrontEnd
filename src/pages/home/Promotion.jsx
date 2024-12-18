@@ -60,7 +60,7 @@ const Promotion = () => {
 
   const { colorCode } = useThemeContext();
 
-  const { data: discounts } = useFetchData(`${ServerUrl}/api/discount`);
+  const { data: discounts } = useFetchData(`${ServerUrl}/api/discount-client`);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -138,15 +138,11 @@ const Promotion = () => {
               transition: "opacity 0.3s, transform 0.3s",
             }}
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">
-              Mã Giảm Giá
-            </h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">Mã Giảm Giá</h1>
             <p className="text-xs sm:text-sm md:text-base lg:text-lg mt-4 flex items-center justify-center text-center">
               <span className="bg-white p-1 rounded-full mr-2 hidden lg:block"></span>
               <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] hidden lg:block"></span>
-              <span className="ml-2 sm:ml-4">
-                Hãy ghé thăm nhà hàng của chúng tôi để nhận được nhiều ưu đãi
-              </span>
+              <span className="ml-2 sm:ml-4">Hãy ghé thăm nhà hàng của chúng tôi để nhận được nhiều ưu đãi</span>
               <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] ml-2 sm:ml-4 hidden lg:block"></span>
               <span className="bg-white p-1 rounded-full ml-2 hidden lg:block"></span>
             </p>

@@ -1,12 +1,6 @@
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useThemeContext } from "@/contexts/ThemeProvider";
 import { useProfile } from "@/hooks/home/useProfile";
 import { toast } from "@/hooks/use-toast";
 import { useFetchData } from "@/hooks/useFetchData";
@@ -14,10 +8,9 @@ import { ServerUrl } from "@/utilities/utils";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Discount from "./Discount";
 import SectionTitle from "./SectionTitle";
-import { useNavigate } from "react-router-dom";
-import { useThemeContext } from "@/contexts/ThemeProvider";
 
 export const Profile = () => {
   const { user, handleUpdateProfile } = useProfile();
@@ -40,9 +33,7 @@ export const Profile = () => {
   });
   const navigate = useNavigate();
 
-  const { data: userDiscounts } = useFetchData(
-    `${ServerUrl}/api/userDiscount/${decodedToken?.id}`
-  );
+  const { data: userDiscounts } = useFetchData(`${ServerUrl}/api/userDiscount/${decodedToken?.id}`);
 
   const { colorCode } = useThemeContext();
   const [opacity] = useState(1);
@@ -124,10 +115,9 @@ export const Profile = () => {
         }
       );
       toast({ variant: "success", title: response.data.message });
-      setIsDialogOpen(false); // Đóng dialog khi đổi mật khẩu thành công
+      setIsDialogOpen(false);
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "Đổi mật khẩu thất bại";
+      const errorMessage = error.response?.data?.message || "Đổi mật khẩu thất bại";
       toast({ variant: "destructive", title: errorMessage });
     } finally {
       setIsLoading(false);
@@ -163,30 +153,15 @@ export const Profile = () => {
               transition: "opacity 0.3s, transform 0.3s",
             }}
           >
-            <h1 className="mt-28 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">
-              Thông tin cá nhân
-            </h1>
+            <h1 className="mt-28 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">Thông tin cá nhân</h1>
           </div>
 
           {/* Ảnh đại diện */}
           <div className="relative mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full overflow-hidden top-11 border-4 border-white">
-            <img
-              src={currentImage}
-              alt="Profile"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+            <img src={currentImage} alt="Profile" className="absolute inset-0 w-full h-full object-cover" />
             <div className="bg-white/90 rounded-full w-8 h-8 text-center absolute top-4 right-2 flex items-center justify-center">
-              <input
-                type="file"
-                name="image"
-                id="image"
-                onChange={(value) => handleImageChange(value)}
-                hidden
-              />
-              <label
-                htmlFor="image"
-                className="cursor-pointer flex items-center justify-center"
-              >
+              <input type="file" name="image" id="image" onChange={(value) => handleImageChange(value)} hidden />
+              <label htmlFor="image" className="cursor-pointer flex items-center justify-center">
                 <svg
                   data-slot="icon"
                   className="w-6 h-6 text-blue-700"
@@ -213,16 +188,12 @@ export const Profile = () => {
           </div>
         </div>
 
-        <h2 className="text-center font-semibold dark:text-gray-300 mt-11">
-          Tải lên ảnh hồ sơ
-        </h2>
+        <h2 className="text-center font-semibold dark:text-gray-300 mt-11">Tải lên ảnh hồ sơ</h2>
 
         <div className="lg:w-[66%] md:w-[60%] sm:w-[66% xs:w-400 mx-auto shadow-2xl p-4 rounded-sm ">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
-              <label className="block mb-2 text-sm font-medium dark:text-gray-300">
-                Tên
-              </label>
+              <label className="block mb-2 text-sm font-medium dark:text-gray-300">Tên</label>
               <input
                 type="text"
                 name="userName"
@@ -234,9 +205,7 @@ export const Profile = () => {
               />
             </div>
             <div>
-              <label className="block mb-2 text-sm font-medium dark:text-gray-300">
-                Số điện thoại
-              </label>
+              <label className="block mb-2 text-sm font-medium dark:text-gray-300">Số điện thoại</label>
               <input
                 type="text"
                 name="phoneNumber"
@@ -248,9 +217,7 @@ export const Profile = () => {
               />
             </div>
             <div>
-              <label className="block mb-2 text-sm font-medium dark:text-gray-300">
-                Địa chỉ
-              </label>
+              <label className="block mb-2 text-sm font-medium dark:text-gray-300">Địa chỉ</label>
               <input
                 type="text"
                 name="address"
@@ -262,9 +229,7 @@ export const Profile = () => {
               />
             </div>
             <div>
-              <label className="block mb-2 text-sm font-medium dark:text-gray-300">
-                Email
-              </label>
+              <label className="block mb-2 text-sm font-medium dark:text-gray-300">Email</label>
               <input
                 type="text"
                 name="email"
@@ -277,10 +242,7 @@ export const Profile = () => {
             </div>
           </div>
           <div className="mt-6 flex justify-between">
-            <Dialog
-              open={isDialogOpen}
-              onOpenChange={(open) => setIsDialogOpen(open)}
-            >
+            <Dialog open={isDialogOpen} onOpenChange={(open) => setIsDialogOpen(open)}>
               <DialogTrigger asChild>
                 <Button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
                   Đổi mật khẩu
@@ -288,15 +250,11 @@ export const Profile = () => {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle className="text-xl font-semibold">
-                    Đổi mật khẩu
-                  </DialogTitle>
+                  <DialogTitle className="text-xl font-semibold">Đổi mật khẩu</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <label className="block mb-2 text-sm font-medium dark:text-gray-300">
-                      Nhập mật khẩu cũ
-                    </label>
+                    <label className="block mb-2 text-sm font-medium dark:text-gray-300">Nhập mật khẩu cũ</label>
                     <input
                       type="password"
                       placeholder="Mật khẩu cũ"
@@ -306,9 +264,7 @@ export const Profile = () => {
                     />
                   </div>
                   <div>
-                    <label className="block mb-2 text-sm font-medium dark:text-gray-300">
-                      Nhập mật khẩu mới
-                    </label>
+                    <label className="block mb-2 text-sm font-medium dark:text-gray-300">Nhập mật khẩu mới</label>
                     <input
                       type="password"
                       placeholder="Mật khẩu mới"
@@ -346,10 +302,10 @@ export const Profile = () => {
       </form>
       <div className="mt-12">
         {/* Coupon */}
-        <SectionTitle title={"Coupons"} desc={"Mã giảm giá của bạn"} />
+        <SectionTitle title={"Coupons"} desc={"mã giảm giá của bạn"} />
         <div className="w-full px-5 py-5">
           <div className="flex flex-wrap justify-center gap-5">
-            {userDiscounts &&
+            {userDiscounts && userDiscounts.length > 0 ? (
               userDiscounts.map((userDiscount) => (
                 <Discount
                   key={userDiscount._id}
@@ -363,7 +319,10 @@ export const Profile = () => {
                   minOrderValue={userDiscount.discountId.minOrderValue}
                   handleClick={handleUseCoupon}
                 />
-              ))}
+              ))
+            ) : (
+              <div className="w-full text-center text-gray-500">Không có mã giảm giá nào</div>
+            )}
           </div>
         </div>
       </div>
