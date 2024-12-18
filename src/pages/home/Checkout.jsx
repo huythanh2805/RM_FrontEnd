@@ -51,11 +51,11 @@ export const Checkout = () => {
     });
 
     return () => {
-      socket.disconnect()
-    }
-  }, [decodedToken.id, navigate])
-  console.log({reservationDetails})
-  console.log({userDiscounts})
+      socket.disconnect();
+    };
+  }, [decodedToken.id, navigate]);
+  console.log({ reservationDetails });
+  console.log({ userDiscounts });
   // Tính tổng tiền món ăn
   const computeTotalAmount = useMemo(() => {
     return reservationDetails?.dishs.reduce((total, dish) => total + dish.price * dish.quantity, 0);
@@ -72,8 +72,8 @@ export const Checkout = () => {
       // Tính toán theo loại giảm giá
       if (discount.discountId.discountType === "PERCENTAGE") {
         // Giảm theo phần trăm
-        return (computeTotalAmount * discount.discountId.discountValue) / 100
-      } else if (discount.discountId.discountType === "FIXEDAMOUNT") { 
+        return (computeTotalAmount * discount.discountId.discountValue) / 100;
+      } else if (discount.discountId.discountType === "FIXEDAMOUNT") {
         // Giảm theo số tiền cố định
         return discount.discountId.discountValue;
       }
@@ -321,10 +321,10 @@ export const Checkout = () => {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 md:gap-8">
                         <div>
-                          <h2 className="font-medium text-xl leading-8 text-black mb-3">{orderedDish.dish_id.name}</h2>
+                          <h2 className="font-medium text-xl leading-8 text-black mb-3">{orderedDish.name}</h2>
                         </div>
                         <div className="flex items-center justify-between gap-8">
-                          <h6 className="font-medium text-xl leading-8 text-600">Số lượng: {orderedDish.quantity}</h6>
+                          <h6 className="font-medium text-xl leading-8 text-600">SL: {orderedDish.quantity}</h6>
                           <h6 className="font-medium text-xl leading-8 text-600">
                             Giá : {formatCurrency(orderedDish.price)}
                           </h6>

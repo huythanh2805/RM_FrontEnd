@@ -1,5 +1,4 @@
-import { useFetchData } from "@/hooks/useFetchData";
-import { formatCurrency, ServerUrl } from "@/utilities/utils";
+import { formatCurrency } from "@/utilities/utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -10,7 +9,7 @@ export const HistoryReservationDetail = () => {
   const [opacity] = useState(1);
   const [translateY] = useState(0);
   const [products, setProducts] = useState([]);
-  const {reservation_id} = useParams()
+  const { reservation_id } = useParams();
   const fetchReservationDetails = async () => {
     const response = await axios.get(`http://localhost:1111/api/reservations/history-detail/${reservation_id}`);
 
@@ -22,17 +21,18 @@ export const HistoryReservationDetail = () => {
     isLoading,
   } = useQuery(["reservationDetails", reservation_id], fetchReservationDetails);
 
-    useEffect(() => {
-      if(!reservationDetails) return
-       const  newOrderedCombos = reservationDetails.ordered_combos.map(combo=>({
-        ...combo,
-         dish_id: {
-          name: combo.setComboProduct_id.combo_id.name,
-          price: combo.setComboProduct_id.combo_id.price,
-          images: combo.setComboProduct_id.combo_id.images,
-       }}))
-       setProducts(pre=>[...reservationDetails.ordered_dishes, ...newOrderedCombos])
-    }, [reservationDetails]);
+  useEffect(() => {
+    if (!reservationDetails) return;
+    const newOrderedCombos = reservationDetails.ordered_combos.map((combo) => ({
+      ...combo,
+      dish_id: {
+        name: combo.setComboProduct_id.combo_id.name,
+        price: combo.setComboProduct_id.combo_id.price,
+        images: combo.setComboProduct_id.combo_id.images,
+      },
+    }));
+    setProducts((pre) => [...reservationDetails.ordered_dishes, ...newOrderedCombos]);
+  }, [reservationDetails]);
 
   const handleGoBack = () => {
     navigate(-1);
@@ -51,7 +51,7 @@ export const HistoryReservationDetail = () => {
     hour: "2-digit",
     minute: "2-digit",
   });
-  console.log({products})
+  console.log({ products });
   return (
     <div>
       <div className="relative w-full h-[150px] sm:h-[200px] lg:h-[300px] overflow-hidden">
@@ -173,7 +173,10 @@ export const HistoryReservationDetail = () => {
                           <h2 className="font-medium text-xl leading-8 text-black mb-3">{orderedDish.dish_id?.name}</h2>
                         </div>
                         <div className="flex items-center justify-between gap-8">
-                          <h6 className="font-medium text-xl leading-8 text-600">Số lượng: {orderedDish.quantity}</h6>
+                          <h6 className="font-medium text-xl leading-8 text-600">SL: {orderedDish.quantity}</h6>
+                          <h6 className="font-medium text-xl leading-8 text-600">
+                            Giá : {formatCurrency(orderedDish.dish_id?.price)}
+                          </h6>
                         </div>
                       </div>
                     </div>
