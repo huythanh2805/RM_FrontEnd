@@ -36,7 +36,7 @@ function MenuItem({ item, onCLick }) {
 
     const fetchTotalFeedbackForCombo = () => {
       axios
-        .get(BASE_URL + `/feedbacks/combo/${item._id}`)
+        .get(BASE_URL + `/feedbacks/combo/${item.combo_id}`)
         .then((res) => {
           if (res.data.feedbacks.length > 0) {
             const listFeedback = res.data.feedbacks.filter(
@@ -56,7 +56,7 @@ function MenuItem({ item, onCLick }) {
 
     fetchTotalFeedback();
     fetchTotalFeedbackForCombo();
-  }, [item._id]);
+  }, [item._id, item.combo_id]);
 
   return (
     <div
@@ -87,8 +87,8 @@ function MenuItem({ item, onCLick }) {
       <div className="p-4 relative">
         <Link
           to={
-            item?.type === "combo"
-              ? `/combos/${item._id}`
+            item?.type == "combo"
+              ? `/combos/${item.combo_id}`
               : `/dishes/${item._id}`
           }
         >
