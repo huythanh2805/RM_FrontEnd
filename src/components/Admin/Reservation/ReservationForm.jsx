@@ -1,25 +1,16 @@
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import ClipLoader from "react-spinners/ClipLoader";
+import { z } from "zod";
 
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { useEffect, useState } from "react"
-import ClipLoader from "react-spinners/ClipLoader"
-
-
-import { useNavigate } from "react-router-dom"
-import { ServerUrl } from "@/utilities/utils"
-import { toast } from "@/hooks/use-toast"
+import { toast } from "@/hooks/use-toast";
+import { ServerUrl } from "@/utilities/utils";
+import { useNavigate } from "react-router-dom";
 const formSchemaFunc = (maxSeats) =>
   z.object({
     userName: z.string().optional(),
@@ -31,10 +22,10 @@ const formSchemaFunc = (maxSeats) =>
       .max(maxSeats, {
         message: `Number must be smaller than seats of table: ${maxSeats}`,
       }),
-    payment_method: z.enum(["CASHPAYMENT", "BANKPAYMENT"], {
+    payment_method: z.enum(["CASH"], {
       required_error: "You need to select a notification type",
     }),
-  })
+  });
 
 // Form reusable for update and add reservation
 export default function ReservationForm({
@@ -43,16 +34,15 @@ export default function ReservationForm({
   numberOfSeats,
   orderedFoodOpen,
   setOrderedFoodOpen,
-  orderedFoods
+  orderedFoods,
 }) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
-  const [createdReservation, setCreatedReservation] =
-    useState(null)
-  const router = useNavigate()
+  const [createdReservation, setCreatedReservation] = useState(null);
+  const router = useNavigate();
 
   // 1. Define your form.
-  const formSchema = formSchemaFunc(numberOfSeats)
+  const formSchema = formSchemaFunc(numberOfSeats);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,67 +50,57 @@ export default function ReservationForm({
       phoneNumber: reservation ? reservation?.phoneNumber : "",
       detailAddress: reservation ? reservation.detailAddress : "",
       guests_count: reservation ? reservation.guests_count : 1,
-      payment_method: reservation ? reservation.payment_method : "CASHPAYMENT",
+      payment_method: reservation ? reservation.payment_method : "CASH",
     },
-  })
-
-
+  });
 
   async function onSubmit(values) {
-    const url = reservation
-      ? ServerUrl+"/api/reservations/" + reservation._id
-      : ServerUrl+"/api/reservations"
-    setLoading(true)
+    const url = reservation ? ServerUrl + "/api/reservations/" + reservation._id : ServerUrl + "/api/reservations";
+    setLoading(true);
     try {
       const res = await fetch(url, {
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         method: reservation ? "PUT" : "POST",
-        body: JSON.stringify({ ...values, table_id:tableId, startTime: new Date(), orderedFoods}),
-      })
+        body: JSON.stringify({ ...values, table_id: tableId, startTime: new Date(), orderedFoods }),
+      });
       if (!res.ok) {
         return toast({
           variant: "destructive",
-          title: reservation
-            ? "Can't update reservation"
-            : "Can't add new reservation",
-        })
+          title: reservation ? "Can't update reservation" : "Can't add new reservation",
+        });
       }
-      const data = await res.json()
-      const reser = data.reservation
-      setCreatedReservation(reser)
+      const data = await res.json();
+      const reser = data.reservation;
+      setCreatedReservation(reser);
       toast({
         variant: "success",
-        title: reservation
-          ? data.message
-          : "You added new reservation succesfully",
-      })
-      router("/admin/tables")
-      setLoading(false)
+        title: reservation ? data.message : "You added new reservation succesfully",
+      });
+      router("/admin/tables");
+      setLoading(false);
     } catch (error) {
-      console.log(error)
-      setLoading(false)
+      console.log(error);
+      setLoading(false);
       toast({
         variant: "destructive",
         title: "Something wrong with reservation form!",
-      })
+      });
     } finally {
-     setLoading(false)
+      setLoading(false);
     }
   }
   function handleResetForm(e) {
-    e.preventDefault()
-    form.reset()
+    e.preventDefault();
+    form.reset();
   }
   function handleOrderedMenu() {
-    const reservation_id = createdReservation
-      ? createdReservation._id
-      : reservation?._id
-    router("/admin/reservations/orderedFood/" + reservation_id)
+    const reservation_id = createdReservation ? createdReservation._id : reservation?._id;
+    router("/admin/reservations/orderedFood/" + reservation_id);
   }
   return (
-      <Form {...form}>
+    <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
@@ -130,11 +110,15 @@ export default function ReservationForm({
               <FormItem>
                 <FormLabel>Tên khách hàng</FormLabel>
                 <FormControl className="bg-light-bg_2 dark:bg-dark-bg_2">
-                  <Input placeholder="Customer's name" {...field}  className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"/>
+                  <Input
+                    placeholder="Customer's name"
+                    {...field}
+                    className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
-            )
+            );
           }}
         />
         <FormField
@@ -145,11 +129,15 @@ export default function ReservationForm({
               <FormItem>
                 <FormLabel>Số điện thoại</FormLabel>
                 <FormControl className="bg-light-bg_2 dark:bg-dark-bg_2">
-                  <Input placeholder="Customer's name" {...field} className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"/>
+                  <Input
+                    placeholder="Customer's name"
+                    {...field}
+                    className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
-            )
+            );
           }}
         />
 
@@ -160,7 +148,11 @@ export default function ReservationForm({
             <FormItem>
               <FormLabel>Địa chỉ chi tiết</FormLabel>
               <FormControl className="bg-light-bg_2 dark:bg-dark-bg_2">
-                <Textarea placeholder="Customer's address" {...field} className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"/>
+                <Textarea
+                  placeholder="Customer's address"
+                  {...field}
+                  className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -175,7 +167,7 @@ export default function ReservationForm({
               <FormLabel>Số lượng khách</FormLabel>
               <FormControl className="bg-light-bg_2 dark:bg-dark-bg_2">
                 <Input
-                 className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"
+                  className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"
                   type="number"
                   placeholder="guests_count"
                   {...field}
@@ -221,7 +213,7 @@ export default function ReservationForm({
 
         <div className="flex items-center">
           <Button
-            onClick={()=>router('/admin/tables')}
+            onClick={() => router("/admin/tables")}
             type="button"
             className="mr-4 font-medium text-[16px] bg-red-1 hover:bg-red-1 hover:opacity-80 transition-all duration-300 ease-in-out"
           >
@@ -234,20 +226,16 @@ export default function ReservationForm({
           >
             Làm mới
           </Button>
-          {
-            tableId && <Button
-            onClick={()=>setOrderedFoodOpen(!orderedFoodOpen)}
-            type="button"
-            className="mr-4 font-medium text-[16px] bg-green-1 hover:bg-green-1"
-          >
-            Chọn món
-          </Button>
-          }
-          <Button
-            type="submit"
-            className="mr-4 font-medium text-[16px] bg-blue-1 hover:bg-blue-1"
-            disabled={loading}
-          >
+          {tableId && (
+            <Button
+              onClick={() => setOrderedFoodOpen(!orderedFoodOpen)}
+              type="button"
+              className="mr-4 font-medium text-[16px] bg-green-1 hover:bg-green-1"
+            >
+              Chọn món
+            </Button>
+          )}
+          <Button type="submit" className="mr-4 font-medium text-[16px] bg-blue-1 hover:bg-blue-1" disabled={loading}>
             {loading ? (
               <ClipLoader
                 color={"#11cdef"}
@@ -265,5 +253,5 @@ export default function ReservationForm({
         </div>
       </form>
     </Form>
-  )
+  );
 }

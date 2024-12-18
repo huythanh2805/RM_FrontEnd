@@ -47,6 +47,8 @@ const Calculator = ({
   const [newDiscount, setNewDiscount] = useState("");
   const [VAT_money, setVAT_money] = useState(0);
   const navigate = useNavigate();
+
+  console.log("orderedFoods", orderedFoods);
   const totalPrice = orderedFoods.reduce((sum, item) => {
     if (item.status === "ISCANCELED") return sum + 0;
     return sum + item.quantity * item.price;
@@ -124,7 +126,7 @@ const Calculator = ({
   };
   const generateQrCodeUrl = (total) => {
     const bank = "MB";
-    const account = "0979756291";
+    const account = "0982669254";
     const template = "compact";
     const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(bank)}&acc=${encodeURIComponent(
       account
@@ -235,6 +237,7 @@ const Calculator = ({
         variant: "success",
         title: "Thanh Toán thành công",
       });
+      console.log("success", notification.bill_id);
       setBillId(notification.bill_id);
       setIsPaid(true);
     });
@@ -242,7 +245,7 @@ const Calculator = ({
       socket.disconnect();
     };
   }, []);
-  console.log({ discount });
+
   const handleDiscountInput = async (e) => {
     e.preventDefault();
     try {
@@ -379,7 +382,7 @@ const Calculator = ({
                     />
                   </div>
                   {
-                    (<div className="w-full flex items-center py-2">
+                    <div className="w-full flex items-center py-2">
                       <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
                         Nhập mã
                       </p>
@@ -392,9 +395,9 @@ const Calculator = ({
                           value={newDiscount}
                         />
                       </form>
-                    </div>)
+                    </div>
                   }
-                  
+
                   {discount && (
                     <div className="w-full flex items-center py-2">
                       <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">

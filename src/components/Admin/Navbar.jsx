@@ -100,11 +100,11 @@ const Navbar = () => {
       )}
 
       <div className="flex items-center">
-        <input
+        {/* <input
           type="text"
           placeholder="Tìm kiếm..."
           className="p-3 w-64 rounded-lg bg-gray-100 text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400"
-        />
+        /> */}
       </div>
 
       <div className="relative">
@@ -164,7 +164,7 @@ const Navbar = () => {
           </div>
         </div>
         {isMenuOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10">
+          <div className="absolute right-0 mt-2 w-52 bg-white rounded-lg shadow-lg z-10">
             <div className="px-4 py-2 border-b">
               <p className="text-sm font-semibold text-gray-800">{user?.userName || "Khách"}</p>
               <p className="text-sm text-gray-500">{user?.email || ""}</p>
@@ -173,13 +173,13 @@ const Navbar = () => {
               <Link to="/admin/proAdmin">
                 <li>
                   <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg transition">
-                    My profile
+                    Tài khoản của tôi
                   </a>
                 </li>
               </Link>
               <li>
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg transition">
-                  Account settings
+                Cài đặt tài khoản
                 </a>
               </li>
               <li>
@@ -200,7 +200,7 @@ const Navbar = () => {
                   }}
                   className="block px-4 py-2 text-sm text-red-500 hover:bg-gray-200 rounded-lg transition cursor-pointer"
                 >
-                  Logout
+                  Đăng xuất
                 </h2>
               </li>
             </ul>

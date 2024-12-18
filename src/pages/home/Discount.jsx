@@ -20,7 +20,7 @@ function Discount({
       )}
     >
       {/* Left Section (Logo & Code) */}
-      <div className="flex-1 h-full bg-orange-1 relative p-4">
+      <div className="flex-1 h-full bg-orange-1 relative p-4 flex flex-col items-center justify-center">
         <div className='w-[80px] h-[80px] bg-[url("/imgs/logoGolden.webp")] bg-cover bg-center bg-no-repeat mx-auto'></div>
         <p
           className={cn(

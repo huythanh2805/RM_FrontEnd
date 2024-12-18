@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import Discount from "./Discount";
 import SectionTitle from "./SectionTitle";
 import { useNavigate } from "react-router-dom";
+import { useThemeContext } from "@/contexts/ThemeProvider";
 
 export const Profile = () => {
   const { user, handleUpdateProfile } = useProfile();
@@ -42,6 +43,10 @@ export const Profile = () => {
   const { data: userDiscounts } = useFetchData(
     `${ServerUrl}/api/userDiscount/${decodedToken?.id}`
   );
+
+  const { colorCode } = useThemeContext();
+  const [opacity] = useState(1);
+  const [translateY] = useState(0);
 
   useEffect(() => {
     if (user) {
@@ -141,209 +146,225 @@ export const Profile = () => {
   };
   return (
     <>
-      <section className="py-10 my-auto dark:bg-gray-900">
-        <div className="lg:w-[100%] md:w-[90%] xs:w-[96%] mx-auto flex gap-4">
-          <div className="lg:w-[88%] md:w-[80%] sm:w-[88%] xs:w-full mx-auto shadow-2xl p-4 rounded-xl h-fit self-center dark:bg-gray-800/40">
-            <div>
-              <div className="flex items-center justify-between w-full my-6">
-                <h1 className="lg:text-3xl md:text-2xl sm:text-xl xs:text-xl font-serif font-extrabold dark:text-white">
-                  Thông tin cá nhân
-                </h1>
-                <Dialog
-                  open={isDialogOpen}
-                  onOpenChange={(open) => setIsDialogOpen(open)}
-                >
-                  <DialogTrigger asChild>
-                    <Button
-                      className="bg-blue-500 dark:bg-blue-700 hover:bg-blue-600 dark:hover:bg-blue-800 
-            text-white dark:text-white hover:scale-90 transition-all ease-in"
-                    >
-                      Đổi mật khẩu
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle className="text-2xl">
-                        Đổi mật khẩu
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-4">
-                      <label className="dark:text-gray-300">
-                        Nhập mật khẩu cũ
-                      </label>
-                      <input
-                        type="password"
-                        placeholder="Mật khẩu cũ"
-                        value={oldPassword}
-                        onChange={(e) => setOldPassword(e.target.value)}
-                        className="p-4 w-full border-2 rounded-lg dark:bg-gray-800 dark:text-gray-200"
-                      />
-                      <label className="dark:text-gray-300">
-                        Nhập mật khẩu mới
-                      </label>
-                      <input
-                        type="password"
-                        placeholder="Mật khẩu mới"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        className="p-4 w-full border-2 rounded-lg dark:bg-gray-800 dark:text-gray-200"
-                      />
-                      <div className="flex justify-end gap-2">
-                        <DialogClose asChild>
-                          <Button
-                            className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
-            text-white dark:text-white hover:scale-90 transition-all ease-in"
-                          >
-                            Hủy
-                          </Button>
-                        </DialogClose>
-                        <Button
-                          onClick={handleChangePassword}
-                          className="bg-green-500 dark:bg-green-700 hover:bg-green-600 dark:hover:bg-green-800 
-            text-white dark:text-white hover:scale-90 transition-all ease-in"
-                          disabled={isLoading}
-                        >
-                          {isLoading ? "Đang đổi..." : "Đổi mật khẩu"}
-                        </Button>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
+      <form>
+        <div
+          className="relative w-full rounded-sm bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: "url('/imgs/pagetitle-reservation.jpg')",
+            backgroundAttachment: "fixed",
+          }}
+        >
+          <div className="absolute inset-0 bg-black opacity-50 rounded-sm"></div>
+          <div
+            className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4 sm:px-6 lg:px-8"
+            style={{
+              opacity: opacity,
+              transform: `translateY(-${translateY}px)`,
+              transition: "opacity 0.3s, transform 0.3s",
+            }}
+          >
+            <h1 className="mt-28 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">
+              Thông tin cá nhân
+            </h1>
+          </div>
 
-              <form action="#">
-                <div className="w-full rounded-sm bg-[url('https://cdn.pixabay.com/photo/2023/02/01/21/40/pink-7761356_640.png')] bg-cover bg-center bg-no-repeat items-center">
-                  <div className="mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full relative overflow-hidden top-11">
-                    <img
-                      src={currentImage}
-                      alt="Profile"
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div className="bg-white/90 rounded-full w-8 h-8 text-center absolute top-4 right-2 flex items-center justify-center">
-                      <input
-                        type="file"
-                        name="image"
-                        id="image"
-                        onChange={(value) => handleImageChange(value)}
-                        hidden
-                      />
-                      <label
-                        htmlFor="image"
-                        className="cursor-pointer flex items-center justify-center"
-                      >
-                        <svg
-                          data-slot="icon"
-                          className="w-6 h-6 text-blue-700"
-                          fill="none"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                          aria-hidden="true"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
-                          />
-                        </svg>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <h2 className="text-center font-semibold dark:text-gray-300 mt-11">
-                  Tải lên ảnh hồ sơ
-                </h2>
-                <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
-                  <div className="w-full mb-4 mt-6">
-                    <label className="mb-2 dark:text-gray-300">Tên</label>
-                    <input
-                      type="text"
-                      name="userName"
-                      value={formData.userName}
-                      onChange={(value) => handleChange(value)}
-                      className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
-                      placeholder="Họ và tên"
-                      required
-                    />
-                  </div>
-                  <div className="w-full mb-4 lg:mt-6">
-                    <label className="dark:text-gray-300">Số điện thoại</label>
-                    <input
-                      type="text"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={(value) => handleChange(value)}
-                      className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
-                      placeholder="Số điện thoại"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
-                  <div className="w-full mb-4">
-                    <label className="mb-2 dark:text-gray-300">Địa chỉ</label>
-                    <input
-                      type="text"
-                      name="address"
-                      value={formData.address}
-                      onChange={(value) => handleChange(value)}
-                      className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
-                      placeholder="Địa chỉ"
-                      required
-                    />
-                  </div>
-                  <div className="w-full mb-4">
-                    <label className="dark:text-gray-300">Email</label>
-                    <input
-                      type="text"
-                      name="email"
-                      value={formData.email}
-                      disabled
-                      className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
-                      placeholder="Email"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-center mt-6">
-                  <Button
-                    onClick={handleSubmit}
-                    className="bg-green-500 text-white"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Đang lưu..." : "Lưu thay đổi"}
-                  </Button>
-                </div>
-              </form>
+          {/* Ảnh đại diện */}
+          <div className="relative mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full overflow-hidden top-11 border-4 border-white">
+            <img
+              src={currentImage}
+              alt="Profile"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="bg-white/90 rounded-full w-8 h-8 text-center absolute top-4 right-2 flex items-center justify-center">
+              <input
+                type="file"
+                name="image"
+                id="image"
+                onChange={(value) => handleImageChange(value)}
+                hidden
+              />
+              <label
+                htmlFor="image"
+                className="cursor-pointer flex items-center justify-center"
+              >
+                <svg
+                  data-slot="icon"
+                  className="w-6 h-6 text-blue-700"
+                  fill="none"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                  />
+                </svg>
+              </label>
             </div>
           </div>
         </div>
-      </section>
-      {/* Coupon */}
-      <SectionTitle title={"Coupons"} desc={"Phiếu giảm giá của bạn"} />
-      <div className="w-screen overflow-x-auto px-5 py-5 coupon_container">
-        <div className="flex gap-5">
-          {userDiscounts &&
-            userDiscounts.map((userDiscount) => (
-              <Discount
-                key={userDiscount._id}
-                _id={userDiscount._id}
-                code={userDiscount.code}
-                status={userDiscount.status}
-                buttonTitle={"Dùng"}
-                type={userDiscount.discountId.discountType}
-                expriedDate={userDiscount.discountId.expireDate}
-                discountValue={userDiscount.discountId.discountValue}
-                minOrderValue={userDiscount.discountId.minOrderValue}
-                handleClick={handleUseCoupon}
+
+        <h2 className="text-center font-semibold dark:text-gray-300 mt-11">
+          Tải lên ảnh hồ sơ
+        </h2>
+
+        <div className="lg:w-[66%] md:w-[60%] sm:w-[66% xs:w-400 mx-auto shadow-2xl p-4 rounded-sm ">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2 text-sm font-medium dark:text-gray-300">
+                Tên
+              </label>
+              <input
+                type="text"
+                name="userName"
+                value={formData.userName}
+                onChange={(value) => handleChange(value)}
+                className="w-full p-3 border rounded-md dark:bg-gray-700 dark:text-gray-200"
+                placeholder="Họ và tên"
+                required
               />
-            ))}
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium dark:text-gray-300">
+                Số điện thoại
+              </label>
+              <input
+                type="text"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={(value) => handleChange(value)}
+                className="w-full p-3 border rounded-md dark:bg-gray-700 dark:text-gray-200"
+                placeholder="Số điện thoại"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium dark:text-gray-300">
+                Địa chỉ
+              </label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={(value) => handleChange(value)}
+                className="w-full p-3 border rounded-md dark:bg-gray-700 dark:text-gray-200"
+                placeholder="Địa chỉ"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium dark:text-gray-300">
+                Email
+              </label>
+              <input
+                type="text"
+                name="email"
+                value={formData.email}
+                disabled
+                className="w-full p-3 border rounded-md dark:bg-gray-700 dark:text-gray-400"
+                placeholder="Email"
+                required
+              />
+            </div>
+          </div>
+          <div className="mt-6 flex justify-between">
+            <Dialog
+              open={isDialogOpen}
+              onOpenChange={(open) => setIsDialogOpen(open)}
+            >
+              <DialogTrigger asChild>
+                <Button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
+                  Đổi mật khẩu
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="text-xl font-semibold">
+                    Đổi mật khẩu
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block mb-2 text-sm font-medium dark:text-gray-300">
+                      Nhập mật khẩu cũ
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="Mật khẩu cũ"
+                      value={oldPassword}
+                      onChange={(e) => setOldPassword(e.target.value)}
+                      className="w-full p-3 border rounded-md dark:bg-gray-700 dark:text-gray-200"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 text-sm font-medium dark:text-gray-300">
+                      Nhập mật khẩu mới
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="Mật khẩu mới"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full p-3 border rounded-md dark:bg-gray-700 dark:text-gray-200"
+                    />
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <DialogClose asChild>
+                      <Button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
+                        Hủy
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      onClick={handleChangePassword}
+                      className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Đang đổi..." : "Đổi mật khẩu"}
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <Button
+              onClick={handleSubmit}
+              className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+              disabled={isLoading}
+            >
+              {isLoading ? "Đang lưu..." : "Lưu thay đổi"}
+            </Button>
+          </div>
+        </div>
+      </form>
+      <div className="mt-12">
+        {/* Coupon */}
+        <SectionTitle title={"Coupons"} desc={"Mã giảm giá của bạn"} />
+        <div className="w-full px-5 py-5">
+          <div className="flex flex-wrap justify-center gap-5">
+            {userDiscounts &&
+              userDiscounts.map((userDiscount) => (
+                <Discount
+                  key={userDiscount._id}
+                  _id={userDiscount._id}
+                  code={userDiscount.code}
+                  status={userDiscount.status}
+                  buttonTitle={"Dùng"}
+                  type={userDiscount.discountId.discountType}
+                  expriedDate={userDiscount.discountId.expireDate}
+                  discountValue={userDiscount.discountId.discountValue}
+                  minOrderValue={userDiscount.discountId.minOrderValue}
+                  handleClick={handleUseCoupon}
+                />
+              ))}
+          </div>
         </div>
       </div>
     </>

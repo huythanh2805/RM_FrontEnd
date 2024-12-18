@@ -1,20 +1,26 @@
-import { useThemeContext } from "@/contexts/ThemeProvider";
-import { useLocation } from "react-router-dom";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useCart } from "@/contexts/CartProvider";
-import MenuItem from "../MenuItem";
-import { toast } from "@/hooks/use-toast";
-import SectionTitle from "./SectionTitle";
+import Pagination from "@/components/Pagination";
 import BASE_URL from "@/configs";
+import { useCart } from "@/contexts/CartProvider";
+import { useThemeContext } from "@/contexts/ThemeProvider";
+import { toast } from "@/hooks/use-toast";
+import { formatCurrency } from "@/utilities/utils";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import MenuItem from "../MenuItem";
+import SectionTitle from "./SectionTitle";
 
-const Menu = ({ limit }) => {
+const Menu = ({ limit, isFilter = true }) => {
   const { colorCode } = useThemeContext();
   const { addItem } = useCart();
   const [dishes, setDishes] = useState([]);
   const [combos, setCombos] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 6;
+  const [searchValue, setSearchValue] = useState("");
+  const [priceRange, setPriceRange] = useState({ min: 0, max: Infinity });
   const [opacity, setOpacity] = useState(1);
   const [translateY, setTranslateY] = useState(0);
   const categoryImages = {
@@ -23,6 +29,7 @@ const Menu = ({ limit }) => {
     "Tất cả": "tatca.png",
     "Đồ uống": "douong.png",
     "Tráng miệng": "trangmieng.png",
+    "Combo món": "monchinh.png",
   };
 
   const location = useLocation();
@@ -50,15 +57,11 @@ const Menu = ({ limit }) => {
       .get(BASE_URL + "/dishes")
       .then((res) => {
         setDishes(res.data.filter((item) => item.isShow));
-        const allCategoryName = [
-          ...new Set(res.data.map((item) => item.category_id.name)),
-        ];
+        const allCategoryName = [...new Set(res.data.map((item) => item.category_id.name))];
         setCategories(["Tất cả", "Combo món", ...allCategoryName]);
       })
       .catch((error) => {
-        console.error(
-          error.response ? error.response.data.data : error.message
-        );
+        console.error(error.response ? error.response.data.data : error.message);
       });
 
     axios
@@ -72,16 +75,14 @@ const Menu = ({ limit }) => {
             type: "combo",
           };
         });
-
-        setCombos(combosWithType);
+        const comboWithNewId = combosWithType.map(item=>({...item, _id: item.setComboProducts[0]._id}))
+        setCombos(comboWithNewId);
       })
       .catch((error) => {
-        console.error(
-          error.response ? error.response.data.data : error.message
-        );
+        console.error(error.response ? error.response.data.data : error.message);
       });
   }, []);
-
+ console.log({combos})
   const combinedItems =
     selectedCategory === "Tất cả"
       ? [...dishes, ...combos]
@@ -89,130 +90,272 @@ const Menu = ({ limit }) => {
       ? combos
       : dishes.filter((dish) => dish.category_id.name === selectedCategory);
 
-  const limitDishes = limit ? combinedItems.slice(0, limit) : combinedItems;
+  const filterDishes = combinedItems.filter((dish) => {
+    const matchesCategory =
+      selectedCategory === "Tất cả" || selectedCategory === "Combo món" || dish.category_id.name === selectedCategory;
 
-  const handleAddToCart = (dish) => {
-    toast({
-      variant: "success",
-      title: "Thêm thành công" + " " + dish.name,
-    });
-    addItem({
-      dish_id: dish._id,
-      name: dish.name,
-      price: dish.price,
-      image: dish.images[0],
-      quantity: 1,
-      type: "dish",
-    });
+    const matchesPrice = dish.price >= priceRange.min && dish.price <= priceRange.max;
+
+    const matchesSearchValue = dish.name.toLowerCase().includes(searchValue.toLowerCase());
+
+    return matchesCategory && matchesSearchValue && matchesPrice;
+  });
+
+  const limitDishes = limit ? filterDishes.slice(0, limit) : filterDishes;
+
+  // Phân trang
+  const startIndex = (currentPage - 1) * itemPerPage;
+  const currentItems = limitDishes.slice(startIndex, startIndex + itemPerPage);
+  const pageCount = Math.ceil(limitDishes.length / itemPerPage);
+
+  const handlePageClick = (e) => {
+    setCurrentPage(e.selected + 1);
+  };
+
+  const handleSearchValue = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleAddToCart = (item) => {
+    // Kiểm tra nếu item là combo hoặc món ăn
+    const itemType = item.type || "dish"; // Nếu không có type, mặc định là "dish"
+
+    if (itemType === "combo") {
+      // Xử lý khi item là combo
+      toast({
+        variant: "success",
+        title: `Thêm thành công Combo: ${item.name}`,
+      });
+      addItem({
+        dish_id: item._id,
+        name: item.name,
+        price: item.price,
+        image: item.images[0],
+        quantity: 1,
+        type: "combo", // Đảm bảo type là combo
+      });
+    } else {
+      // Xử lý khi item là món ăn (dish)
+      toast({
+        variant: "success",
+        title: `Thêm thành công Món ăn: ${item.name}`,
+      });
+      addItem({
+        dish_id: item._id,
+        name: item.name,
+        price: item.price,
+        image: item.images[0],
+        quantity: 1,
+        type: "dish", // Đảm bảo type là dish
+      });
+    }
   };
 
   return (
     <div className="w-full relative">
       {isMenuPage && (
-        <div className="relative w-full h-[200px] overflow-hidden">
+        <div className="relative w-full h-[150px] sm:h-[200px] lg:h-[300px] overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: "url('imgs/pagetitle-menu.jpg')",
+              backgroundImage: "url('imgs/pagetitle-about.jpg')",
               backgroundAttachment: "fixed",
               filter: "brightness(0.7)",
             }}
           ></div>
           <div className="absolute inset-0 bg-black opacity-30"></div>
           <div
-            className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white"
+            className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4 sm:px-6 lg:px-8"
             style={{
               opacity: opacity,
               transform: `translateY(-${translateY}px)`,
               transition: "opacity 0.3s, transform 0.3s",
             }}
           >
-            <h1 className="text-4xl md:text-5xl sm:text-3xl dancing">
-              Thực Đơn
-            </h1>
-            <p className="text-3xl md:text-[20px] sm:text-[15px] mt-4 flex items-center justify-center">
-              <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
-              <span className="bg-white h-[2px] w-[100px] hidden lg:block"></span>
-              <span className="ml-4">
-                Những món ăn đa dạng đang chờ bạn đến thưởng thức
-              </span>
-              <span className="bg-white h-[2px] w-[100px] ml-4 hidden lg:block"></span>
-              <span className="bg-white p-1 rounded-full ml-0 mr-0 hidden lg:block"></span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">Thực Đơn</h1>
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg mt-4 flex items-center justify-center text-center">
+              <span className="bg-white p-1 rounded-full mr-2 hidden lg:block"></span>
+              <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] hidden lg:block"></span>
+              <span className="ml-2 sm:ml-4">Những món ăn đa dạng đang chờ bạn đến thưởng thức</span>
+              <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] ml-2 sm:ml-4 hidden lg:block"></span>
+              <span className="bg-white p-1 rounded-full ml-2 hidden lg:block"></span>
             </p>
           </div>
         </div>
       )}
 
-      <img
-        src="imgs/pizza1.png"
-        alt="Vegetable 1"
-        className="absolute left-0 transform translate-x-[-60%] translate-y-[40%] w-[40px] h-[40px] sm:w-auto sm:h-auto hidden lg:block"
-      />
-      <img
-        src="imgs/food1.png"
-        alt="Vegetable 2"
-        className="absolute right-0 transform translate-x-[40%] translate-y-[-2%] w-40 h-40 sm:w-auto sm:h-auto hidden lg:block"
-      />
+      {!isMenuPage && <SectionTitle title={"THỰC ĐƠN"} desc={"Thực đơn hôm nay"} />}
 
-      {/* {!isMenuPage && (
-          <div
-            className="text-xl font-semibold mb-2 mt-8 flex justify-center items-center"
-            style={{ color: colorCode }}
-          >
-            <div
-              className="border-t w-12 mr-2"
-              style={{ borderColor: colorCode }}
-            />
-            THỰC ĐƠN
-            <div
-              className="border-t w-12 ml-2"
-              style={{ borderColor: colorCode }}
-            />
-          </div>
-        )} */}
-      {!isMenuPage && (
-        <SectionTitle title={"THỰC ĐƠN"} desc={"Thực đơn hôm nay"} />
-      )}
+      <div className={`w-full flex ${isFilter ? "p-10" : "p-5"}`}>
+        {/* Filter */}
+        {isFilter && (
+          <div className="w-1/4 mt-5 flex flex-col gap-5 items-center">
+            {/* Input Search */}
+            <div className="w-full max-w-sm min-w-[200px] relative">
+              <label htmlFor="Search" className="sr-only">
+                Search
+              </label>
 
-      {/* Bộ lọc danh mục */}
-      <div className="flex flex-wrap justify-center items-center gap-8 mt-10 sm:flex-row sm:justify-center sm:gap-6 md:gap-8">
-        {categories.map((category, index) => (
-          <div
-            key={index}
-            className={`flex flex-col items-center cursor-pointer transition duration-300 ${
-              selectedCategory === category
-                ? "text-orange-500 font-bold"
-                : "text-gray-500"
-            }`}
-            onClick={() => setSelectedCategory(category)}
-          >
-            <div
-              className={`w-20 h-20 flex items-center justify-center rounded-full border-2 transition ${
-                selectedCategory === category
-                  ? "border-orange-500 bg-orange-100"
-                  : "border-gray-300"
-              }`}
-              style={{ borderColor: colorCode }}
-            >
-              <img
-                src={`imgs/${categoryImages[category]}`}
-                alt={category}
-                className="w-15 h-[50px] text-black"
+              <input
+                type="text"
+                id="Search"
+                placeholder="Tìm kiếm món ăn..."
+                className="bg-white border border-orange-300 text-orange-900 text-sm rounded-xl w-full p-3 shadow-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                onChange={handleSearchValue}
+                value={searchValue}
               />
+
+              <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
+                <button type="button" className="text-orange-600 hover:text-orange-800">
+                  <span className="sr-only">Search</span>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                    />
+                  </svg>
+                </button>
+              </span>
             </div>
 
-            <span className="mt-2" style={{ color: colorCode }}>
-              {category}
-            </span>
-          </div>
-        ))}
-      </div>
+            {/* Lọc theo danh mục */}
+            <div class="w-full border border-[#fb6340] text-[#fb6340] p-5 rounded-lg shadow-lg">
+              <div class="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">DANH MỤC</div>
 
-      {/* Danh sách món ăn */}
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10 max-w-5xl mx-auto mb-8 px-4 sm:px-40 lg:px-8">
-        {limitDishes.map((item) => (
-          <MenuItem key={item._id} item={item} onCLick={handleAddToCart} />
-        ))}
+              <div class="space-y-4">
+                {categories.map((category, index) => (
+                  <div
+                    key={index}
+                    className={`flex gap-3 items-center cursor-pointer transition duration-300 ${
+                      selectedCategory === category ? "text-orange-500 font-bold" : "text-gray-500"
+                    }`}
+                    onClick={() => setSelectedCategory(category)}
+                  >
+                    <div
+                      className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition ${
+                        selectedCategory === category ? "border-orange-500 bg-orange-100" : "border-gray-300"
+                      }`}
+                      style={{ borderColor: colorCode }}
+                    >
+                      <img
+                        src={`imgs/${categoryImages[category]}`}
+                        alt=""
+                        className="w-15 h-15 text-black object-contain"
+                      />
+                    </div>
+                    <span>{category}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Lọc theo khoảng giá */}
+            <div class="w-full border border-[#fb6340] text-[#fb6340] p-5 rounded-lg shadow-lg">
+              <div class="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">Khoảng giá</div>
+
+              <div className="space-y-4">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2 w-5 h-5"
+                    checked={priceRange.min === 0 && priceRange.max === 100000}
+                    onChange={() => {
+                      setPriceRange({ min: 0, max: 100000 });
+                    }}
+                  />
+                  <span>{`< ${formatCurrency(100000)}`}</span>
+                </label>
+
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2 w-5 h-5"
+                    checked={priceRange.min === 100000 && priceRange.max === 200000}
+                    onChange={() => {
+                      setPriceRange({ min: 100000, max: 200000 });
+                    }}
+                  />
+                  <span>{`${formatCurrency(100000)} - ${formatCurrency(200000)}`}</span>
+                </label>
+
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2 w-5 h-5"
+                    checked={priceRange.min === 200000 && priceRange.max === Infinity}
+                    onChange={() => {
+                      setPriceRange({ min: 200000, max: Infinity });
+                    }}
+                  />
+                  <span>{`> ${formatCurrency(200000)}`}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className={isFilter ? "w-3/4" : "w-full"}>
+          {/* Navbar tạm ẩm */}
+          {/* <div className="flex flex-wrap justify-center items-center gap-8 mt-10 sm:flex-row sm:justify-center sm:gap-6 md:gap-8">
+            {categories.map((category, index) => (
+              <div
+                key={index}
+                className={`flex flex-col items-center cursor-pointer transition duration-300 ${
+                  selectedCategory === category
+                    ? "text-orange-500 font-bold"
+                    : "text-gray-500"
+                }`}
+                onClick={() => setSelectedCategory(category)}
+              >
+                <div
+                  className={`w-20 h-20 flex items-center justify-center rounded-full border-2 transition ${
+                    selectedCategory === category
+                      ? "border-orange-500 bg-orange-100"
+                      : "border-gray-300"
+                  }`}
+                  style={{ borderColor: colorCode }}
+                >
+                  <img
+                    src={`imgs/${categoryImages[category]}`}
+                    alt={category}
+                    className="w-15 h-[50px] text-black"
+                  />
+                </div>
+
+                <span className="mt-2" style={{ color: colorCode }}>
+                  {category}
+                </span>
+              </div>
+            ))}
+          </div> */}
+
+          {/* Danh sách món ăn */}
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-5 max-w-5xl mx-auto mb-8 px-4 sm:px-40 lg:px-8">
+            {currentItems.length > 0 ? (
+              currentItems.map((item) => <MenuItem key={item._id} item={item} onCLick={handleAddToCart} />)
+            ) : (
+              <div className="col-span-full flex justify-center items-center">
+                <p className="text-gray-500">Không tìm thấy món ăn !!</p>
+              </div>
+            )}
+          </div>
+
+          {/* Phân trang */}
+          {pageCount > 1 && (
+            <div className="w-full items-center">
+              <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

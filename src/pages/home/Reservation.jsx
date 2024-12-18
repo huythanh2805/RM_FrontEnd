@@ -41,11 +41,11 @@ const Reservation = () => {
   return (
     <>
       {/* Header Section */}
-      <div className="relative w-full h-[250px] sm:h-[300px] lg:h-[400px] overflow-hidden">
+      <div className="relative w-full h-[150px] sm:h-[200px] lg:h-[300px] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('imgs/pagetitle-reservation.jpg')",
+            backgroundImage: "url('imgs/pagetitle-about.jpg')",
             backgroundAttachment: "fixed",
             filter: "brightness(0.7)",
           }}

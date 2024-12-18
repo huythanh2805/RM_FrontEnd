@@ -66,7 +66,7 @@ import _ from "lodash";
              onClick={()=>setActiveLink("all")}
              className={cn(
                 'w-full px-3 py-2 rounded-md cursor-pointer text-center text-[19px]',
-                activedLink === 'all' ? 'w-full transition-all duration-500 hover:translate-y-[-2%] hover:opacity-75 bg-gradient-to-r from-[#11c4ef] to-[#1187ef] text-white dark:text-white overflow-hidden' 
+                activedLink === 'all' ? 'w-full transition-all duration-500 hover:translate-y-[-2%] hover:opacity-75 bg-gradient-to-r from-[#ef5b11] to-[#ef6a11] text-white dark:text-white overflow-hidden' 
                 : ''
              )}
            >
@@ -79,7 +79,7 @@ import _ from "lodash";
              onClick={()=>setActiveLink(item._id)}
              className={cn(
                 'w-full px-3 py-2 rounded-md cursor-pointer text-center text-[19px] ',
-                 activedLink === item._id ? 'w-full transition-all duration-500 hover:translate-y-[-2%] hover:opacity-75 bg-gradient-to-r from-[#11c4ef] to-[#1187ef] text-white dark:text-white overflow-hidden'
+                 activedLink === item._id ? 'w-full transition-all duration-500 hover:translate-y-[-2%] hover:opacity-75 bg-gradient-to-r from-[#ef5b11] to-[#ef6a11] text-white dark:text-white overflow-hidden'
                  : ''
              )}
             >
@@ -91,7 +91,7 @@ import _ from "lodash";
              onClick={()=>setActiveLink("combo")}
              className={cn(
                 'w-full px-3 py-2 rounded-md cursor-pointer text-center text-[19px]',
-                activedLink === 'combo' ? 'w-full transition-all duration-500 hover:translate-y-[-2%] hover:opacity-75 bg-gradient-to-r from-[#11c4ef] to-[#1187ef] text-white dark:text-white overflow-hidden' 
+                activedLink === 'combo' ? 'w-full transition-all duration-500 hover:translate-y-[-2%] hover:opacity-75 bg-gradient-to-r from-[#ef5b11] to-[#ef6a11] text-white dark:text-white overflow-hidden' 
                 : ''
              )}
            >

@@ -23,15 +23,15 @@ const Home = () => {
         {/* <OurStory />
         <ChefChoice/>
         <ReservationForm /> */}
-      
-      <ChefProfile className="w-full" />
-      <Menu limit={6} />
-      <ButtonViewMore />
-      <Chefs/>
-      <Testimonial/>
-      <StatsCounter />
+
+        <ChefProfile className="w-full" />
+        <Menu limit={6} isFilter={false} />
+        <ButtonViewMore />
+        <Chefs />
+        <Testimonial />
+        <StatsCounter />
       </section>
-      <ContactUs/>
+      <ContactUs />
     </>
   );
 };
