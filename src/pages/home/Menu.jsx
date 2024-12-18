@@ -83,7 +83,11 @@ const Menu = ({ limit, isFilter = true }) => {
             type: "combo",
           };
         });
-        const comboWithNewId = combosWithType.map(item=>({...item, _id: item.setComboProducts[0]._id}))
+        const comboWithNewId = combosWithType.map((item) => ({
+          ...item,
+          _id: item.setComboProducts[0]._id,
+          combo_id: item._id,
+        }));
         setCombos(comboWithNewId);
       })
       .catch((error) => {
@@ -92,7 +96,7 @@ const Menu = ({ limit, isFilter = true }) => {
         );
       });
   }, []);
- console.log({combos})
+  console.log({ combos });
   const combinedItems =
     selectedCategory === "Tất cả"
       ? [...dishes, ...combos]
@@ -203,9 +207,17 @@ const Menu = ({ limit, isFilter = true }) => {
         </div>
       )}
 
-      {!isMenuPage && <SectionTitle title={"THỰC ĐƠN"} desc={"Thực đơn hôm nay"} color={colorCode} />}
+      {!isMenuPage && (
+        <SectionTitle
+          title={"THỰC ĐƠN"}
+          desc={"Thực đơn hôm nay"}
+          color={colorCode}
+        />
+      )}
 
-      <div className={`w-full flex ${isFilter ? "p-10" : "p-5"} justify-center`}>
+      <div
+        className={`w-full flex ${isFilter ? "p-10" : "p-5"} justify-center`}
+      >
         {/* Filter */}
         {isFilter && (
           <div className="w-[300px] mt-5 flex flex-col gap-5 items-center">
@@ -324,7 +336,9 @@ const Menu = ({ limit, isFilter = true }) => {
           {isFilter && (
             <div className="w-full px-4 sm:px-40 lg:px-8">
               <div className="w-full flex items-end justify-between border-b-2 border-[#fb6340] pb-4">
-                <p className="text-[#fb6340] text-3xl font-semibold">Danh sách món ăn</p>
+                <p className="text-[#fb6340] text-3xl font-semibold">
+                  Danh sách món ăn
+                </p>
 
                 {/* Input Search */}
                 <div className="w-full max-w-sm min-w-[200px] relative">
