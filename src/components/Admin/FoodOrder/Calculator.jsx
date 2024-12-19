@@ -1,20 +1,5 @@
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -75,9 +60,7 @@ const Calculator = ({
   useEffect(() => {
     if (!discount) return;
     if (discount.discountId.discountType === "PERCENTAGE") {
-      setDiscountValue(
-        totalPrice * (Number(discount.discountId.discountValue) / 100)
-      );
+      setDiscountValue(totalPrice * (Number(discount.discountId.discountValue) / 100));
     } else {
       setDiscountValue(Number(discount.discountId.discountValue));
     }
@@ -101,25 +84,13 @@ const Calculator = ({
     console.log(type);
     if (type === "combo") {
       const { res, data } = await deletedOrderedCombo(orderedFood_id);
-      if (
-        res.status === 201 &&
-        data.message === "Successfully" &&
-        setOrderedFoods
-      )
-        setOrderedFoods((pre) => [
-          ...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id),
-        ]);
+      if (res.status === 201 && data.message === "Successfully" && setOrderedFoods)
+        setOrderedFoods((pre) => [...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id)]);
     }
     if (type === "dish") {
       const { res, data } = await deleteOrderedFood(orderedFood_id);
-      if (
-        res.status === 201 &&
-        data.message === "Successfully" &&
-        setOrderedFoods
-      )
-        setOrderedFoods((pre) => [
-          ...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id),
-        ]);
+      if (res.status === 201 && data.message === "Successfully" && setOrderedFoods)
+        setOrderedFoods((pre) => [...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id)]);
     }
   };
   const handleClose = () => {
@@ -129,29 +100,21 @@ const Calculator = ({
   // Update orderedFood
   const handleMinus = async (orderedFood_id, quantity, type) => {
     if (quantity < 2) {
-      type === "combo"
-        ? await deletedOrderedCombo(orderedFood_id)
-        : await deleteOrderedFood(orderedFood_id);
-      setOrderedFoods((prevOrderedFoods) =>
-        prevOrderedFoods.filter((item) => item._id !== orderedFood_id)
-      );
+      type === "combo" ? await deletedOrderedCombo(orderedFood_id) : await deleteOrderedFood(orderedFood_id);
+      setOrderedFoods((prevOrderedFoods) => prevOrderedFoods.filter((item) => item._id !== orderedFood_id));
     }
 
     await updateOrderedFood(orderedFood_id, quantity - 1, type);
     if (!setOrderedFoods) return;
     setOrderedFoods((prevOrderedFoods) =>
-      prevOrderedFoods.map((item) =>
-        item._id === orderedFood_id ? { ...item, quantity: quantity - 1 } : item
-      )
+      prevOrderedFoods.map((item) => (item._id === orderedFood_id ? { ...item, quantity: quantity - 1 } : item))
     );
   };
   const handlePlus = async (orderedFood_id, quantity, type) => {
     await updateOrderedFood(orderedFood_id, quantity + 1, type);
     if (!setOrderedFoods) return;
     setOrderedFoods((prevOrderedFoods) =>
-      prevOrderedFoods.map((item) =>
-        item._id === orderedFood_id ? { ...item, quantity: quantity + 1 } : item
-      )
+      prevOrderedFoods.map((item) => (item._id === orderedFood_id ? { ...item, quantity: quantity + 1 } : item))
     );
   };
   //  Format currency
@@ -165,11 +128,9 @@ const Calculator = ({
     const bank = "MB";
     const account = "0982669254";
     const template = "compact";
-    const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(
-      bank
-    )}&acc=${encodeURIComponent(account)}&template=${encodeURIComponent(
-      template
-    )}&amount=${encodeURIComponent(
+    const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(bank)}&acc=${encodeURIComponent(
+      account
+    )}&template=${encodeURIComponent(template)}&amount=${encodeURIComponent(
       total
     )}&des=${reservation_id} ${totalPrice} ${discountValue} ${deposit} `;
     return qrUrl;
@@ -269,7 +230,7 @@ const Calculator = ({
   // console.log("reservationDetails:", reservationDetails);
 
   useEffect(() => {
-    const socket = io("http://localhost:1111");
+    const socket = io(import.meta.env.VITE_API_BASE_URL);
     socket.on("bank-payment-success", (notification) => {
       // Hiển thị thông báo thành công
       toast({
@@ -319,10 +280,7 @@ const Calculator = ({
 
         {/* Ordered Foods */}
         {orderedFoods?.map((orderedFood) => (
-          <div
-            key={orderedFood._id}
-            className="grid grid-cols-3 sm:grid-cols-4 gap-4 py-2 border-b items-center"
-          >
+          <div key={orderedFood._id} className="grid grid-cols-3 sm:grid-cols-4 gap-4 py-2 border-b items-center">
             {/* Product Info */}
             <div className="col-span-2 flex items-center gap-4">
               <img
@@ -331,9 +289,7 @@ const Calculator = ({
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover"
               />
               <div className="flex-1">
-                <h3 className="text-sm sm:text-lg font-medium truncate">
-                  {orderedFood.name}
-                </h3>
+                <h3 className="text-sm sm:text-lg font-medium truncate">{orderedFood.name}</h3>
                 <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                   {formatCurrency(orderedFood.price)}
                 </p>
@@ -343,28 +299,14 @@ const Calculator = ({
             {/* Quantity Control */}
             <div className="flex items-center justify-center gap-2">
               <button
-                onClick={() =>
-                  handleMinus(
-                    orderedFood._id,
-                    orderedFood.quantity,
-                    orderedFood.type
-                  )
-                }
+                onClick={() => handleMinus(orderedFood._id, orderedFood.quantity, orderedFood.type)}
                 className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded bg-gray-200 dark:bg-gray-700 hover:scale-95"
               >
                 -
               </button>
-              <span className="text-sm sm:text-base">
-                {orderedFood.quantity}
-              </span>
+              <span className="text-sm sm:text-base">{orderedFood.quantity}</span>
               <button
-                onClick={() =>
-                  handlePlus(
-                    orderedFood._id,
-                    orderedFood.quantity,
-                    orderedFood.type
-                  )
-                }
+                onClick={() => handlePlus(orderedFood._id, orderedFood.quantity, orderedFood.type)}
                 className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded bg-gray-200 dark:bg-gray-700 hover:scale-95"
               >
                 +
@@ -376,9 +318,7 @@ const Calculator = ({
                 {formatCurrency(orderedFood.quantity * orderedFood.price)}
               </p>
               <button
-                onClick={() =>
-                  handleDeleteOrderedFood(orderedFood._id, orderedFood.type)
-                }
+                onClick={() => handleDeleteOrderedFood(orderedFood._id, orderedFood.type)}
                 className="text-red-500 mt-1 text-xs sm:text-sm hover:underline"
               >
                 Xóa
@@ -390,9 +330,7 @@ const Calculator = ({
         {/* Total Summary */}
         <div className="flex justify-between items-center mt-4 sm:mt-6">
           <h3 className="text-lg sm:text-xl font-medium">Tổng cộng:</h3>
-          <p className="text-lg sm:text-xl text-red-500 font-bold">
-            {formatCurrency(totalPrice)}
-          </p>
+          <p className="text-lg sm:text-xl text-red-500 font-bold">{formatCurrency(totalPrice)}</p>
         </div>
       </div>
 
@@ -431,10 +369,7 @@ const Calculator = ({
                       <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
                         Nhập mã
                       </p>
-                      <form
-                        onSubmit={handleDiscountInput}
-                        className="flex-[2] min-w-[244px]"
-                      >
+                      <form onSubmit={handleDiscountInput} className="flex-[2] min-w-[244px]">
                         <Input
                           className=" rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
                        placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px] "
@@ -459,9 +394,7 @@ const Calculator = ({
                         placeholder={
                           discount.discountId?.discountType === "PERCENTAGE"
                             ? `${discount.code}  (${discount.discountId.discountValue}%)`
-                            : `${discount.code} (${shortenNumber(
-                                Number(discount.discountId.discountValue)
-                              )}k)`
+                            : `${discount.code} (${shortenNumber(Number(discount.discountId.discountValue))}k)`
                         }
                       />
                     </div>
@@ -519,9 +452,7 @@ const Calculator = ({
                     <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
                       Phương thức thanh toán
                     </p>
-                    <select
-                      onChange={(e) => handleMethodChange(e.target.value)}
-                    >
+                    <select onChange={(e) => handleMethodChange(e.target.value)}>
                       <option value="cash">Tiền mặt</option>
                       <option value="transfer">Chuyển khoản</option>
                     </select>
@@ -529,11 +460,7 @@ const Calculator = ({
                   {paymentMethod === "transfer" && qrCodeUrl && (
                     <div className="flex flex-col justify-center items-center">
                       <p class="mb-2">Quét mã QR để thanh toán:</p>
-                      <img
-                        src={qrCodeUrl}
-                        alt="QR code for payment"
-                        className="w-64 h-64 object-contain"
-                      />
+                      <img src={qrCodeUrl} alt="QR code for payment" className="w-64 h-64 object-contain" />
                     </div>
                   )}
 
@@ -562,15 +489,9 @@ const Calculator = ({
                 <Table className="">
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="min-w-[200px] text-xl">
-                        Tên
-                      </TableHead>
-                      <TableHead className="text-center text-xl">
-                        Số lượng
-                      </TableHead>
-                      <TableHead className="text-right min-w-[105px] text-xl">
-                        Thành tiền
-                      </TableHead>
+                      <TableHead className="min-w-[200px] text-xl">Tên</TableHead>
+                      <TableHead className="text-center text-xl">Số lượng</TableHead>
+                      <TableHead className="text-right min-w-[105px] text-xl">Thành tiền</TableHead>
                     </TableRow>
                   </TableHeader>
 
@@ -580,28 +501,18 @@ const Calculator = ({
                         <TableCell className="font-medium">
                           <div className="flex items-center gap-4">
                             <div className="w-16 h-16">
-                              <img
-                                src={orderedFood.images[0]}
-                                alt={orderedFood.name}
-                                className="w-full h-full "
-                              />
+                              <img src={orderedFood.images[0]} alt={orderedFood.name} className="w-full h-full " />
                             </div>
-                            <h3 className="text-sm sm:text-lg font-medium truncate">
-                              {orderedFood.name}
-                            </h3>
+                            <h3 className="text-sm sm:text-lg font-medium truncate">{orderedFood.name}</h3>
                           </div>
                         </TableCell>
 
                         <TableCell className="text-center">
-                          <span className="text-sm sm:text-base">
-                            {orderedFood.quantity}
-                          </span>
+                          <span className="text-sm sm:text-base">{orderedFood.quantity}</span>
                         </TableCell>
 
                         <TableCell className="text-right text-sm sm:text-lg font-semibold">
-                          {formatCurrency(
-                            orderedFood.quantity * orderedFood.price
-                          )}
+                          {formatCurrency(orderedFood.quantity * orderedFood.price)}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -609,10 +520,7 @@ const Calculator = ({
 
                   <TableFooter>
                     <TableRow className="bg-light-bg w-full">
-                      <TableCell
-                        colSpan={2}
-                        className="text-[20px] font-medium text-xl"
-                      >
+                      <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
                         Tổng
                       </TableCell>
                       <TableCell className="text-right text-red-500 font-bold text-2xl">
@@ -641,8 +549,7 @@ const Calculator = ({
           </DialogHeader>
           <div className="w-full">
             <h2 className="leading-6 text-center text-light-text dark:text-dark-text">
-              Cảm ơn bạn đã dùng dịch vụ nhà hàng của chúng tôi. Check your
-              bill?
+              Cảm ơn bạn đã dùng dịch vụ nhà hàng của chúng tôi. Check your bill?
             </h2>
           </div>
           <div className="flex items-center justify-end py-2 gap-5">

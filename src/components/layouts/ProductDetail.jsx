@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
-import ButtonCustome from "../ButtonCustome";
-import { useThemeContext } from "@/contexts/ThemeProvider";
-import axios from "axios";
 import { useCart } from "@/contexts/CartProvider";
+import { useThemeContext } from "@/contexts/ThemeProvider";
 import { toast } from "@/hooks/use-toast";
+import { formatCurrency } from "@/utilities/utils";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import ButtonCustome from "../ButtonCustome";
 import Feedback from "../Feedback";
 import RelatedDishes from "../RelatedDish";
-import { formatCurrency } from "@/utilities/utils";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -21,7 +21,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchDish = async () => {
       try {
-        const response = await axios.get(`http://localhost:1111/dishes/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/dishes/${id}`);
         setDish(response.data);
       } catch (error) {
         console.error("Error fetching dish data:", error);
@@ -59,11 +59,7 @@ const ProductDetail = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-4">
             <img
-              src={
-                dish.images && dish.images.length > 0
-                  ? dish.images[0]
-                  : "default-image.jpg"
-              }
+              src={dish.images && dish.images.length > 0 ? dish.images[0] : "default-image.jpg"}
               alt={dish.name}
               className="rounded-sm shadow-lg w-[600px] h-[450px] object-cover"
             />
@@ -79,29 +75,15 @@ const ProductDetail = () => {
             </div>
             <div className="flex items-center mt-4 space-x-2">
               <div className="flex items-center border rounded-md">
-                <button
-                  onClick={decreaseQuantity}
-                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700"
-                >
+                <button onClick={decreaseQuantity} className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700">
                   -
                 </button>
-                <input
-                  type="text"
-                  value={quantity}
-                  readOnly
-                  className="w-12 text-center border-l border-r"
-                />
-                <button
-                  onClick={increaseQuantity}
-                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700"
-                >
+                <input type="text" value={quantity} readOnly className="w-12 text-center border-l border-r" />
+                <button onClick={increaseQuantity} className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700">
                   +
                 </button>
               </div>
-              <ButtonCustome
-                buttonText="Thêm vào giỏ hàng"
-                handleClick={() => handleAddToCart(dish)}
-              />
+              <ButtonCustome buttonText="Thêm vào giỏ hàng" handleClick={() => handleAddToCart(dish)} />
             </div>
             <hr />
             <div className="flex space-x-4 mt-4">
@@ -148,9 +130,7 @@ const ProductDetail = () => {
             <button
               onClick={() => setActiveTab("REVIEWS")}
               className={`px-4 py-2 ${
-                activeTab === "REVIEWS"
-                  ? "text-orange-500 border-b-2 border-orange-500"
-                  : "text-gray-500"
+                activeTab === "REVIEWS" ? "text-orange-500 border-b-2 border-orange-500" : "text-gray-500"
               }`}
             >
               NHẬN XÉT & ĐÁNH GIÁ
@@ -158,9 +138,7 @@ const ProductDetail = () => {
             <button
               onClick={() => setActiveTab("DESCRIPTIONS")}
               className={`px-4 py-2 ${
-                activeTab === "DESCRIPTIONS"
-                  ? "text-orange-500 border-b-2 border-orange-500"
-                  : "text-gray-500"
+                activeTab === "DESCRIPTIONS" ? "text-orange-500 border-b-2 border-orange-500" : "text-gray-500"
               }`}
             >
               MÔ TẢ
@@ -169,11 +147,7 @@ const ProductDetail = () => {
 
           {/* Nội dung tab */}
           <div className="mt-4 text-gray-700">
-            {activeTab === "REVIEWS" ? (
-              <Feedback />
-            ) : (
-              <p className="text-lg">{dish.desc}</p>
-            )}
+            {activeTab === "REVIEWS" ? <Feedback /> : <p className="text-lg">{dish.desc}</p>}
           </div>
         </div>
         <RelatedDishes dishId={id} />

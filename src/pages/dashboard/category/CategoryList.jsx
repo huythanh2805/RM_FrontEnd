@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
-import Swal from "sweetalert2";
-import Pagination from "@/components/Pagination";
 import Navbar from "@/components/Admin/Navbar";
+import Pagination from "@/components/Pagination";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
@@ -13,7 +13,7 @@ const CategoryList = () => {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:1111/categories")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/categories`)
       .then((res) => {
         setCategories(res.data);
         // console.log(res.data);
@@ -29,9 +29,7 @@ const CategoryList = () => {
 
   // phân trang
   const startIndex = (currentPage - 1) * itemPerPage;
-  const currentItems = categories
-    .reverse()
-    .slice(startIndex, startIndex + itemPerPage);
+  const currentItems = categories.reverse().slice(startIndex, startIndex + itemPerPage);
   const pageCount = Math.ceil(categories.reverse().length / itemPerPage);
 
   const handlePageClick = (e) => {
@@ -50,7 +48,7 @@ const CategoryList = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:1111/categories/${id}`)
+          .delete(`${import.meta.env.VITE_API_BASE_URL}/categories/${id}`)
           .then(() => {
             Swal.fire({
               title: "Đã xóa!",
@@ -83,38 +81,19 @@ const CategoryList = () => {
           <table className="min-w-full bg-white">
             <thead className="border-b border-[#d5d5d5] text-left text-sl font-semibold text-[#202224] uppercase tracking-wider">
               <tr>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
-                  STT
-                </th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
-                  Tên
-                </th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
-                  Mô tả
-                </th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
-                  Trạng thái
-                </th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
-                  Hành động
-                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">STT</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Tên</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Mô tả</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Trạng thái</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Hành động</th>
               </tr>
             </thead>
             <tbody>
               {currentItems.map((d, index) => (
-                <tr
-                  key={d._id}
-                  className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
-                >
-                  <td className="py-3 px-6 text-sl font-medium text-gray-800">
-                    {startIndex + index + 1}
-                  </td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">
-                    {d.name}
-                  </td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">
-                    {d.desc}
-                  </td>
+                <tr key={d._id} className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition">
+                  <td className="py-3 px-6 text-sl font-medium text-gray-800">{startIndex + index + 1}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{d.name}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{d.desc}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">
                     {d.isShow ? (
                       <span className="px-2 py-1 text-sl font-semibold rounded-lg bg-green-100 text-green-800">

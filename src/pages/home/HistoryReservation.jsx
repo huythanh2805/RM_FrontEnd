@@ -18,13 +18,13 @@ export const HistoryReservation = () => {
   const navigate = useNavigate();
   // Fetch danh sách đặt bàn
   const { data, error, isLoading } = useQuery(["reservations", userId], async () => {
-    const response = await axios.get(`http://localhost:1111/api/reservations/user/${userId}`);
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/reservations/user/${userId}`);
 
     return response.data;
   });
 
   useEffect(() => {
-    const socket = io("http://localhost:1111"); // URL của server WebSocket
+    const socket = io(import.meta.env.VITE_API_BASE_URL); // URL của server WebSocket
 
     // Lắng nghe sự kiện "reservation-canceled"
     socket.on("new-notification", (data) => {
@@ -45,7 +45,7 @@ export const HistoryReservation = () => {
     async (reservationId) => {
       setIsCanceling(true);
       const response = await axios.put(
-        `http://localhost:1111/api/reservations/cancel/${reservationId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/reservations/cancel/${reservationId}`,
         {},
         {
           headers: {

@@ -18,7 +18,7 @@ const Navbar = () => {
 
   // Socket.IO để nhận thông báo mới
   useEffect(() => {
-    const socket = io("http://localhost:1111");
+    const socket = io(import.meta.env.VITE_API_BASE_URL);
 
     socket.on("new-notification", (notification) => {
       setAlertMessage(notification.message || "Bạn có thông báo mới!");
@@ -179,7 +179,7 @@ const Navbar = () => {
               </Link>
               <li>
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg transition">
-                Cài đặt tài khoản
+                  Cài đặt tài khoản
                 </a>
               </li>
               <li>
