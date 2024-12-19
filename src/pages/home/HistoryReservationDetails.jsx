@@ -28,9 +28,9 @@ export const HistoryReservationDetail = () => {
     const newOrderedCombos = reservationDetails.ordered_combos.map((combo) => ({
       ...combo,
       dish_id: {
-        name: combo.setComboProduct_id.combo_id.name,
-        price: combo.setComboProduct_id.combo_id.price,
-        images: combo.setComboProduct_id.combo_id.images,
+        name: combo.setComboProduct_id?.combo_id.name,
+        price: combo.setComboProduct_id?.combo_id.price,
+        images: combo.setComboProduct_id?.combo_id.images,
       },
     }));
     setProducts((pre) => [...reservationDetails.ordered_dishes, ...newOrderedCombos]);
@@ -53,7 +53,7 @@ export const HistoryReservationDetail = () => {
     hour: "2-digit",
     minute: "2-digit",
   });
-  console.log({ products });
+  console.log({ reservationDetails });
   return (
     <div>
       <div className="relative w-full h-[150px] sm:h-[200px] lg:h-[300px] overflow-hidden">
@@ -139,7 +139,7 @@ export const HistoryReservationDetail = () => {
                     </p>
 
                     <p className="font-medium text-lg leading-8 text-gray-900">
-                      {reservationDetails.isUsedDiscount ? (
+                      {reservationDetails.userDiscountId ? (
                         <span className="px-2 py-1 bg-red-1 text-white rounded-md">Đã sử dụng</span>
                       ) : (
                         <span className="px-2 py-1 bg-blue-1 text-white rounded-md">Chưa sử dụng</span>

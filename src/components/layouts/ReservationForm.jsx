@@ -79,7 +79,7 @@ const ReservationForm = () => {
         type: "CREATE",
         payment_method: "CASH",
         deposit: 0 ,
-        isUsedDiscount: couponValue !== "",
+        isUsedDiscount: couponValue ? true : false,
         isOrderedOnline: true,
       }),
     });
@@ -146,6 +146,7 @@ const ReservationForm = () => {
       phoneNumber,
       userName,
       couponValue,
+      isOrderedOnline: true
     };
      if(cart.length === 0) return createOrderFunction(postData)
     

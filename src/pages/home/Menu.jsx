@@ -97,7 +97,6 @@ const Menu = ({ limit, isFilter = true }) => {
         );
       });
   }, []);
-  console.log({ combos });
   const combinedItems =
     selectedCategory === "Tất cả"
       ? [...dishes, ...combos]
