@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useCart } from "@/contexts/CartProvider";
+import { useThemeContext } from "@/contexts/ThemeProvider";
+import { toast } from "@/hooks/use-toast";
+import { formatCurrency } from "@/utilities/utils";
 import axios from "axios";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { ChevronsDown, ChevronsUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FaShoppingCart } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
 import "swiper/css/navigation";
+import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import ProductDecor from "/imgs/product-decorate.jpg"; // Cập nhật ảnh tùy ý
-import { toast } from "@/hooks/use-toast";
-import { FaShoppingCart } from "react-icons/fa";
-import { useCart } from "@/contexts/CartProvider";
-import { ChevronsDown, ChevronsUp } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useThemeContext } from "@/contexts/ThemeProvider";
-import { formatCurrency } from "@/utilities/utils";
-import SectionTitle from "./SectionTitle";
 
 const ChefChoice = () => {
   const { addItem } = useCart();
@@ -26,26 +25,20 @@ const ChefChoice = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:1111/dishes")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/dishes`)
       .then((res) => {
         setDishes(res.data);
 
-        const uniqueCategories = [
-          ...new Set(res.data.map((item) => item.category_id.name)),
-        ];
+        const uniqueCategories = [...new Set(res.data.map((item) => item.category_id.name))];
         setCategories(["Tất cả", ...uniqueCategories]);
       })
       .catch((error) => {
-        console.error(
-          error.response ? error.response.data.data : error.message
-        );
+        console.error(error.response ? error.response.data.data : error.message);
       });
   }, []);
 
   const filteredDishes =
-    selectedCategory === "Tất cả"
-      ? dishes
-      : dishes.filter((dish) => dish.category_id.name === selectedCategory);
+    selectedCategory === "Tất cả" ? dishes : dishes.filter((dish) => dish.category_id.name === selectedCategory);
 
   const handleAddToCart = (dish) => {
     toast({
@@ -65,11 +58,7 @@ const ChefChoice = () => {
   return (
     <div className="w-full flex py-4 mb-6 md:py-6 lg:10">
       <div className="hidden lg:block flex-1">
-        <img
-          src={ProductDecor}
-          alt={"ProductDecor"}
-          className="w-[850px] object-cover relative"
-        />
+        <img src={ProductDecor} alt={"ProductDecor"} className="w-[850px] object-cover relative" />
       </div>
 
       <div className="flex-1 px-2 lg:px-5">
@@ -77,15 +66,9 @@ const ChefChoice = () => {
           className="text-xl font-semibold mb-2 flex items-center justify-center text-center lg:justify-start lg:text-left"
           style={{ color: colorCode }}
         >
-          <div
-            className="border-t w-12 mr-2"
-            style={{ borderColor: colorCode }}
-          />
+          <div className="border-t w-12 mr-2" style={{ borderColor: colorCode }} />
           NỔI BẬT
-          <div
-            className="border-t w-12 ml-2"
-            style={{ borderColor: colorCode }}
-          />
+          <div className="border-t w-12 ml-2" style={{ borderColor: colorCode }} />
         </div>
 
         {/* <SectionTitle title={'Nổi bật'} /> */}
@@ -134,18 +117,12 @@ const ChefChoice = () => {
                   <div className="text-start flex-1 flex flex-col px-2">
                     <div className="flex">
                       <Link to={`/dishes/${dish._id}`}>
-                        <p className="flex-1 text-nowrap font-semibold text-[19px]">
-                          {dish.name}
-                        </p>
+                        <p className="flex-1 text-nowrap font-semibold text-[19px]">{dish.name}</p>
                       </Link>
                       <p className="w-full border-b border-dashed border-red-1 h-[18px] mx-1"></p>
-                      <div className="text-[20px] font-semibold text-orange-1 px-5">
-                        {formatCurrency(dish.price)}
-                      </div>
+                      <div className="text-[20px] font-semibold text-orange-1 px-5">{formatCurrency(dish.price)}</div>
                     </div>
-                    <div className="max-w-[360px] truncate text-nowrap">
-                      {dish.desc} 
-                    </div>
+                    <div className="max-w-[360px] truncate text-nowrap">{dish.desc}</div>
                   </div>
                 </div>
               </SwiperSlide>

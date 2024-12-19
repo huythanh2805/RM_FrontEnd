@@ -11,7 +11,9 @@ export const HistoryReservationDetail = () => {
   const [products, setProducts] = useState([]);
   const { reservation_id } = useParams();
   const fetchReservationDetails = async () => {
-    const response = await axios.get(`http://localhost:1111/api/reservations/history-detail/${reservation_id}`);
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/api/reservations/history-detail/${reservation_id}`
+    );
 
     return response.data;
   };

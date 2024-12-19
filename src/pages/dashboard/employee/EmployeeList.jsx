@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
-import Swal from "sweetalert2";
 import Pagination from "@/components/Pagination";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
@@ -12,7 +12,7 @@ const EmployeeList = () => {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:1111/employees")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/employees`)
       .then((res) => {
         setEmployees(res.data);
       })
@@ -27,10 +27,7 @@ const EmployeeList = () => {
 
   const pageCount = Math.ceil(employees.length / itemPerPage);
 
-  const currentItems = employees.slice(
-    currentPage * itemPerPage,
-    (currentPage + 1) * itemPerPage
-  );
+  const currentItems = employees.slice(currentPage * itemPerPage, (currentPage + 1) * itemPerPage);
 
   const handlePageChange = (e) => {
     setCurrentPage(e.selected);
@@ -48,13 +45,9 @@ const EmployeeList = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:1111/employees/${id}`)
+          .delete(`${import.meta.env.VITE_API_BASE_URL}/employees/${id}`)
           .then(() => {
-            Swal.fire(
-              "Đã xóa!",
-              "Nhân viên đã được xóa thành công.",
-              "success"
-            );
+            Swal.fire("Đã xóa!", "Nhân viên đã được xóa thành công.", "success");
             fetchData();
           })
           .catch((err) => {
@@ -91,25 +84,12 @@ const EmployeeList = () => {
             </thead>
             <tbody>
               {currentItems.map((d, index) => (
-                <tr
-                  className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
-                  key={d._id}
-                >
-                  <td className="hidden lg:block py-4 px-6 text-sm font-medium text-[#202224]">
-                    {index + 1}
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
-                    {d.name}
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
-                    {d.gender}
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
-                    {d.phoneNumber}
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
-                    {d.workPosition}
-                  </td>
+                <tr className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition" key={d._id}>
+                  <td className="hidden lg:block py-4 px-6 text-sm font-medium text-[#202224]">{index + 1}</td>
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">{d.name}</td>
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">{d.gender}</td>
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">{d.phoneNumber}</td>
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">{d.workPosition}</td>
 
                   <td className="py-4 px-6 text-sm">
                     {d.employStatus === "ACTIVE" ? (
@@ -122,9 +102,7 @@ const EmployeeList = () => {
                       </span>
                     )}
                   </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
-                    Trống
-                  </td>
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">Trống</td>
                   <td className="py-4 px-6 text-sm flex items-center gap-1.5 lg:gap-3">
                     <Link to={`/admin/employees/${d._id}/update`}>
                       <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">

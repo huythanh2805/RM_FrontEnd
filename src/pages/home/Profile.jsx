@@ -106,7 +106,7 @@ export const Profile = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:1111/users/change-password",
+        `${import.meta.env.VITE_API_BASE_URL}/users/change-password`,
         { oldPassword, newPassword },
         {
           headers: {

@@ -1,8 +1,8 @@
-import { useForm } from "react-hook-form";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useEffect } from "react";
-import { toast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const EmployeeUpdate = () => {
   const { id } = useParams();
@@ -18,7 +18,7 @@ const EmployeeUpdate = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1111/employees/${id}`)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/employees/${id}`)
       .then((res) => {
         setValue("name", res.data.name);
         setValue("gender", res.data.gender);
@@ -33,7 +33,7 @@ const EmployeeUpdate = () => {
 
   const onSubmit = (data) => {
     axios
-      .put(`http://localhost:1111/employees/${id}`, data)
+      .put(`${import.meta.env.VITE_API_BASE_URL}/employees/${id}`, data)
       .then(() => {
         navigate("/admin/employees");
         toast({ variant: "success", title: "Cập nhật nhân viên thành công" });
@@ -55,9 +55,7 @@ const EmployeeUpdate = () => {
             <input
               type="text"
               className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-gray-300 focus:border-gray-500"
+                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
               } rounded-md shadow-sm focus:outline-none`}
               {...register("name", {
                 required: "Tên là bắt buộc",
@@ -67,16 +65,11 @@ const EmployeeUpdate = () => {
                 },
               })}
             />
-            {errors.name && (
-              <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>
-            )}
+            {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>}
           </div>
 
           <div>
-            <label
-              htmlFor="gender"
-              className="text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="gender" className="text-sm font-medium text-gray-700">
               Giới tính:
             </label>
             <select
@@ -87,26 +80,17 @@ const EmployeeUpdate = () => {
               <option value="MALE">MALE</option>
               <option value="FEMALE">FEMALE</option>
             </select>
-            {errors.gender && (
-              <p className="mt-2 text-sm text-red-600">
-                {errors.gender.message}
-              </p>
-            )}
+            {errors.gender && <p className="mt-2 text-sm text-red-600">{errors.gender.message}</p>}
           </div>
 
           <div>
-            <label
-              htmlFor="phoneNumber"
-              className="text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="phoneNumber" className="text-sm font-medium text-gray-700">
               Số điện thoại:
             </label>
             <input
               type="text"
               className={`mt-1 block w-full px-4 py-2 border ${
-                errors.phoneNumber
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-gray-300 focus:border-gray-500"
+                errors.phoneNumber ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
               } rounded-md shadow-sm focus:outline-none`}
               {...register("phoneNumber", {
                 required: "Số điện thoại là bắt buộc",
@@ -116,18 +100,11 @@ const EmployeeUpdate = () => {
                 },
               })}
             />
-            {errors.phoneNumber && (
-              <p className="mt-2 text-sm text-red-600">
-                {errors.phoneNumber.message}
-              </p>
-            )}
+            {errors.phoneNumber && <p className="mt-2 text-sm text-red-600">{errors.phoneNumber.message}</p>}
           </div>
 
           <div>
-            <label
-              htmlFor="workPosition"
-              className="text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="workPosition" className="text-sm font-medium text-gray-700">
               Vị trí công việc:
             </label>
             <input
@@ -137,11 +114,7 @@ const EmployeeUpdate = () => {
                 required: "Vị trí công việc là bắt buộc",
               })}
             />
-            {errors.workPosition && (
-              <p className="mt-2 text-sm text-red-600">
-                {errors.workPosition.message}
-              </p>
-            )}
+            {errors.workPosition && <p className="mt-2 text-sm text-red-600">{errors.workPosition.message}</p>}
           </div>
 
           <div className="flex justify-end space-x-2">

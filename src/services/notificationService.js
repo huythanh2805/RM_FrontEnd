@@ -1,15 +1,15 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 // API để fetch danh sách thông báo
 const fetchNotifications = async () => {
-  const response = await axios.get("http://localhost:1111/api/notification");
+  const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/notification`);
   return response.data;
 };
 
 // API để đánh dấu thông báo đã đọc
 const updateNotification = async (notificationId) => {
-  const response = await axios.put(`http://localhost:1111/api/notification/${notificationId}`, {
+  const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/notification/${notificationId}`, {
     isRead: true,
   });
   return response.data;
