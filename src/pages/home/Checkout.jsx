@@ -12,7 +12,7 @@ import { io } from "socket.io-client";
 export const Checkout = () => {
   const [reservationDetails, setReservationDetails] = useState(null);
   const [prePayment, setPrePayment] = useState("25");
-  const [paymentMethod, setPaymentMethod] = useState("CASH");
+  const [paymentMethod, setPaymentMethod] = useState("ZALOPAY");
   const [totalDeposit, setTotalDeposit] = useState(0);
   const [loading, setLoading] = useState(false);
   const [decodedToken, setDecodeToken] = useState(() => {
@@ -26,7 +26,6 @@ export const Checkout = () => {
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
 
-  const { colorCode } = useThemeContext();
   const [opacity] = useState(1);
   const [translateY] = useState(0);
 
@@ -291,9 +290,8 @@ export const Checkout = () => {
                         <SelectValue placeholder="Theme" className="" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="CASH">Tiền mặt</SelectItem>
-                        <SelectItem value="MOMO">MoMo</SelectItem>
                         <SelectItem value="ZALOPAY">ZaloPay</SelectItem>
+                        <SelectItem value="MOMO">MoMo</SelectItem>
                       </SelectContent>
                     </Select>
                   </p>

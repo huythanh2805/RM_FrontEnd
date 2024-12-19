@@ -51,7 +51,7 @@ const chartConfig = {
   },
 } 
 
-export default function FavorFoodChart({top5Dishes, month, year}) {
+export default function FavorFoodChart({top5Dishes, startTime, endTime}) {
   // const totalVisitors = React.useMemo(() => {
   //   return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
   // }, [])
@@ -63,7 +63,9 @@ export default function FavorFoodChart({top5Dishes, month, year}) {
     <Card className="flex flex-col ">
       <CardHeader className="items-center pb-0">
         <CardTitle>5 món ăn bán chạy</CardTitle>
-        <CardDescription>Tháng {month} {year}</CardDescription>
+        <CardDescription>
+           <span className="font-medium text-gray-1">{startTime} - {endTime}</span>
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -122,7 +124,7 @@ export default function FavorFoodChart({top5Dishes, month, year}) {
           {/* Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}
         </div>
         <div className="leading-none text-muted-foreground">
-           5 món ăn được yêu thích nhất tháng {month} {year}
+           5 món ăn được yêu thích nhất 
         </div>
       </CardFooter>
     </Card>
