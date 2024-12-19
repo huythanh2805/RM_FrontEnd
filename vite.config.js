@@ -16,6 +16,13 @@ export default defineConfig({
     },
   },
   server: {
-    historyApiFallback: true,
+    port: 4444,
+    proxy: {
+      "/": {
+        target: "https://golden-fork.onrender.com/",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 });
