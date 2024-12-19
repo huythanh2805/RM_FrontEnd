@@ -10,6 +10,7 @@ import { useLocation } from "react-router-dom";
 import MenuItem from "../MenuItem";
 import SectionTitle from "./SectionTitle";
 import { Range, getTrackBackground } from "react-range";
+import { GrPowerReset } from "react-icons/gr";
 
 const Menu = ({ limit, isFilter = true }) => {
   const { colorCode } = useThemeContext();
@@ -120,6 +121,14 @@ const Menu = ({ limit, isFilter = true }) => {
     return matchesCategory && matchesSearchValue && matchesPrice;
   });
 
+  const handleReset = () => {
+    setSelectedCategory("Tất cả");
+    setSliderValues([0, 500000]);
+    setPriceRange({ min: 0, max: Infinity });
+    setSearchValue("");
+    setCurrentPage(1);
+  };
+
   const limitDishes = limit ? filterDishes.slice(0, limit) : filterDishes;
 
   // Phân trang
@@ -129,10 +138,6 @@ const Menu = ({ limit, isFilter = true }) => {
 
   const handlePageClick = (e) => {
     setCurrentPage(e.selected + 1);
-  };
-
-  const handleSearchValue = (e) => {
-    setSearchValue(e.target.value);
   };
 
   const handleAddToCart = (item) => {
@@ -236,7 +241,10 @@ const Menu = ({ limit, isFilter = true }) => {
                         ? "text-orange-500 font-bold"
                         : "text-gray-500"
                     }`}
-                    onClick={() => setSelectedCategory(category)}
+                    onClick={() => {
+                      setSelectedCategory(category);
+                      setCurrentPage(1);
+                    }}
                   >
                     <div
                       className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition ${
@@ -273,6 +281,7 @@ const Menu = ({ limit, isFilter = true }) => {
                   onChange={(values) => {
                     setSliderValues(values);
                     setPriceRange({ min: values[0], max: values[1] });
+                    setCurrentPage(1);
                   }}
                   renderTrack={({ props, children }) => (
                     <div
@@ -329,6 +338,17 @@ const Menu = ({ limit, isFilter = true }) => {
                 </div>
               </div>
             </div>
+
+            {/* Nút đặt lại */}
+            <div className="w-full">
+              <div
+                className="w-[100px] flex gap-2 items-center justify-center bg-[#fb6340] hover:bg-white hover:text-[#fb6340] hover:border hover:border-[#fb6340] text-white py-1.5 pr-1 cursor-pointer rounded-md transition"
+                onClick={() => handleReset()}
+              >
+                <GrPowerReset />
+                <p>Đặt lại</p>
+              </div>
+            </div>
           </div>
         )}
 
@@ -351,7 +371,10 @@ const Menu = ({ limit, isFilter = true }) => {
                     id="Search"
                     placeholder="Tìm kiếm món ăn..."
                     className="bg-white border border-orange-300 text-orange-900 text-sm rounded-xl w-full p-3 shadow-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
-                    onChange={handleSearchValue}
+                    onChange={(e) => {
+                      setSearchValue(e.target.value);
+                      setCurrentPage(1);
+                    }}
                     value={searchValue}
                   />
 
