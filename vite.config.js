@@ -4,8 +4,8 @@ import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/",
   plugins: [react()],
+  base: "",
   build: {
     outDir: "dist",
     assetsDir: "assets",
@@ -13,16 +13,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-    },
-  },
-  server: {
-    port: 4444,
-    proxy: {
-      "/": {
-        target: "https://golden-fork.onrender.com/",
-        changeOrigin: true,
-        secure: false,
-      },
     },
   },
 });
