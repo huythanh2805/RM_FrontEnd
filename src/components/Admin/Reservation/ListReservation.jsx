@@ -5,6 +5,7 @@ import { updateData } from "@/hooks/useFetchData";
 import { ServerUrl } from "@/utilities/utils";
 import { useNavigate } from "react-router-dom";
 import { FadeLoader } from "react-spinners";
+import Swal from "sweetalert2";
 import Navbar from "../Navbar";
 import { ReservationColumn } from "./dataTable/ReserColumn";
 import { ReserDataTable } from "./dataTable/ReserDataTable";
@@ -121,39 +122,63 @@ export default function ListReservation() {
   };
   // confirm reservation
   const confirmReser = async (reservationId) => {
-    const data = await updateData(`${ServerUrl}/api/reservations/${reservationId}`, { status: "ISCOMFIRMED" });
-    if (data.success) {
-      toast({
-        variant: "success",
-        title: "Confirmed reservation successfully!",
-      });
-      return setReservations((currentData) => [
-        ...currentData.map((item) => (item._id === reservationId ? { ...item, status: "ISCOMFIRMED" } : item)),
-      ]);
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Something wrong!",
-      });
-    }
+    Swal.fire({
+      title: "Bạn có chắc chắn muốn xác nhận đơn đặt bàn này?",
+      icon: "success",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const data = await updateData(`${ServerUrl}/api/reservations/${reservationId}`, { status: "ISCOMFIRMED" });
+        if (data.success) {
+          toast({
+            variant: "success",
+            title: "Xác nhận đơn đặt bàn thành công!",
+          });
+          setReservations((currentData) => [
+            ...currentData.map((item) => (item._id === reservationId ? { ...item, status: "ISCOMFIRMED" } : item)),
+          ]);
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Đã có lỗi xảy ra!",
+          });
+        }
+      }
+    });
   };
   // Cancel reservation
   const cancelReser = async (reservationId) => {
-    const data = await updateData(`${ServerUrl}/api/reservations/${reservationId}`, { status: "CANCELED" });
-    if (data.success) {
-      toast({
-        variant: "success",
-        title: "Cancel reservation successfully!",
-      });
-      return setReservations((currentData) => [
-        ...currentData.map((item) => (item._id === reservationId ? { ...item, status: "CANCELED" } : item)),
-      ]);
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Something wrong!",
-      });
-    }
+    Swal.fire({
+      title: "Bạn có chắc chắn muốn hủy đơn đặt bàn này?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy bỏ",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const data = await updateData(`${ServerUrl}/api/reservations/${reservationId}`, { status: "CANCELED" });
+        if (data.success) {
+          toast({
+            variant: "success",
+            title: "Hủy đơn đặt bàn thành công!",
+          });
+          setReservations((currentData) => [
+            ...currentData.map((item) => (item._id === reservationId ? { ...item, status: "CANCELED" } : item)),
+          ]);
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Đã có lỗi xảy ra!",
+          });
+        }
+      }
+    });
   };
 
   // Tính tiền

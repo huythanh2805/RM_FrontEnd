@@ -1,6 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCart } from "@/contexts/CartProvider";
-import { useThemeContext } from "@/contexts/ThemeProvider";
 import { toast } from "@/hooks/use-toast";
 import { useFetchData } from "@/hooks/useFetchData";
 import { ServerUrl } from "@/utilities/utils";
@@ -251,8 +250,8 @@ export const Checkout = () => {
                   </div>
                   {Number(prePayment) === 100 && (
                     <div className="flex items-center justify-between gap-4 mb-5">
-                      <p className="font-normal text-lg leading-8 text-gray-400">VAT</p>
-                      <p className="font-medium text-lg leading-8 text-gray-900">(5%) {formatCurrency(vat)}</p>
+                      <p className="font-normal text-lg leading-8 text-gray-400">VAT(5%)</p>
+                      <p className="font-medium text-lg leading-8 text-gray-900"> {formatCurrency(vat)}</p>
                     </div>
                   )}
                   <div className="flex items-center justify-between gap-4 mb-5">
