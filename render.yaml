@@ -1,10 +1,9 @@
 services:
   - type: web
     name: golden-fork
-    env: node
-    buildCommand: "npm run build" # Build ứng dụng trước khi deploy
-    startCommand: "npm run start" # Chạy server.js khi start
+    env: static
+    staticPublishPath: dist
     routes:
-      - path: / # Đảm bảo rằng mọi route đều trả về index.html
-        type: static
-        filePath: ./dist/index.html
+      - type: rewrite
+        source: /.*
+        destination: /index.html
