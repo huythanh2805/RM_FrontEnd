@@ -5,13 +5,13 @@ services:
     buildCommand: "npm run build"
     startCommand: "npm run start"
     routes:
+      - path: /
+        type: static
+        filePath: ./dist/index.html # Đảm bảo sử dụng thư mục dist
       - path: /promotion
         type: static
-        filePath: ./dist/index.html
+        filePath: ./dist/index.html # Đảm bảo sử dụng thư mục dist
       - path: /about
         type: static
-        filePath: ./dist/index.html
+        filePath: ./dist/index.html # Đảm bảo sử dụng thư mục dist
       # Thêm các route khác nếu cần
-
-build:
-  baseImage: node:18
