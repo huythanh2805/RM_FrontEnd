@@ -69,7 +69,7 @@ const ContactUs = () => {
           <ul className="space-y-6 sm:space-y-8">
             <li className="items-center flex">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-blue-600">
-                <FaMapMarkerAlt className="text-lg sm:text-xl" />
+                <FaMapMarkerAlt className="text-lg sm:text-xl" style={{color: colorCode}}/>
               </div>
               <div className="ml-4">
                 <h3 className="text-sm sm:text-lg font-semibold" style={{color: colorCode}}>
@@ -84,7 +84,7 @@ const ContactUs = () => {
             </li>
             <li className="flex items-center flex-wrap">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-blue-600">
-                <FaPhoneAlt className="text-lg sm:text-xl" />
+                <FaPhoneAlt className="text-lg sm:text-xl" style={{color: colorCode}}/>
               </div>
               <div className="ml-4">
                 <h3 className="text-sm sm:text-lg font-semibold" style={{color: colorCode}}>
@@ -97,7 +97,7 @@ const ContactUs = () => {
             </li>
             <li className="flex items-center flex-wrap">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-blue-600">
-                <FaEnvelope className="text-lg sm:text-xl" />
+                <FaEnvelope className="text-lg sm:text-xl" style={{color: colorCode}} />
               </div>
               <div className="ml-4">
                 <h3 className="text-sm sm:text-lg font-semibold" style={{color: colorCode}}>Email</h3>

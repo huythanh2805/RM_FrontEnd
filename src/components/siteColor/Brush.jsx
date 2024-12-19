@@ -63,13 +63,13 @@ const Brush = () => {
           exit={{ x: 550, opacity: 0.5}}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
-          <h1 className="py-2 text-[25px] ">Site Color</h1>
+          <h1 className="py-2 text-[25px] ">Màu trang web</h1>
           <hr />
           <div>
-            <span className="font-semibold">Pattern Color Variable:</span>{" "}
+            <span className="font-semibold">Biến màu mẫu:</span>{" "}
             <br />
-            <span className="font-[100]">
-              ( You can change any color as you want in source code. )
+            <span className="font-[100px]">
+              ( Bạn có thể thay đổi bất kỳ màu nào bạn muốn trong mã nguồn. )
             </span>
             <div className="flex flex-col gap-2 mt-3">
               {colors.map((item) => {
@@ -97,13 +97,13 @@ const Brush = () => {
             </div>
             <div>
               <h1 className="py-2 text-[25px] border-b-2 pt-10">
-                Layout Options
+                Tùy chọn bố cục
               </h1>
               <div className="flex flex-row gap-6 items-center justify-center p-5 text-[20px] cursor-pointer">
                 <button className="shadow-xl bg-gray-300 text-black p-2" onClick={()=> setIsBoxed(false)}>
-                  Wide
+                  Rộng
                 </button>
-                <button className="shadow-xl bg-black text-white p-2" onClick={()=> setIsBoxed(true)}>Boxed</button>
+                <button className="shadow-xl bg-black text-white p-2" onClick={()=> setIsBoxed(true)}>Đóng hộp</button>
               </div>
             </div>
           </div>
