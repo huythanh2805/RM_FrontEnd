@@ -76,7 +76,7 @@ const CompletedBill = () => {
                     <p>
                       <ArrowLeft width={20} height={20} />
                     </p>
-                    <h3 className="font-medium text-[19px] font-serif">Back</h3>
+                    <h3 className="font-medium text-[19px]">Trở về</h3>
                   </Button>
                 </div>
                 <div className="relative md:absolute top-0 right-0 md:py-4 md:px-3">
@@ -90,7 +90,7 @@ const CompletedBill = () => {
                     <p>
                       <Printer width={20} height={20} />
                     </p>
-                    <h3 className="font-medium text-[19px] font-serif">Print</h3>
+                    <h3 className="font-medium text-[19px]">Print</h3>
                   </button>
                 </div>
               </div>
@@ -105,25 +105,25 @@ const CompletedBill = () => {
                   </div>
                   <div className="py-3">
                     <div className="w-full flex flex-col items-center justify-center px-5">
-                      <h2 className="dark:text-dark-text text-[36px] font-medium font-serif">Visit Us</h2>
+                      <h2 className="dark:text-dark-text text-[36px] font-medium dancing">Golden Fork</h2>
                       <div className="flex items-start py-2">
                         <MapPin className="text-light-text dark:text-dark-text min-w-[18px] shrink-0 px-1" />
-                        <p className="text-light-textSoft dark:text-dark-textSoft text-[16px] text-center">
-                          Trịnh Văn Bô, Phương Canh, Nam Từ Liêm, Hà Nội
+                        <p className="text-light-text dark:text-dark-textSoft text-[16px] text-center">
+                        Tòa nhà FPT Polytechnic, Cổng số 2 13 P. Trịnh Văn Bô, Xuân Phương Nam Từ Liêm, Hà Nội
                         </p>
                       </div>
 
                       <div className="flex items-start py-2">
                         <Home className="text-light-text dark:text-dark-text min-w-[18px] shrink-0 px-1" />
-                        <p className="text-light-textSoft dark:text-dark-textSoft text-[16px] text-center">
-                          Open 9:30 am - 11h30 pm
+                        <p className="text-light-text dark:text-dark-textSoft text-[16px] text-center">
+                          Mở cửa: 9:30 AM - 11:30 PM
                         </p>
                       </div>
 
                       <div className="flex items-start py-2">
                         <Mail className="text-light-text dark:text-dark-text min-w-[18px] shrink-0 px-1" />
-                        <p className="text-light-textSoft dark:text-dark-textSoft text-[16px] text-center">
-                          goldrenFork@gmail.com
+                        <p className="text-light-text dark:text-dark-textSoft text-[16px] text-center">
+                          goldrenfork@gmail.com
                         </p>
                       </div>
                     </div>
@@ -134,22 +134,22 @@ const CompletedBill = () => {
                 <div className="flex justify-between">
                   <div className="flex gap-8 max-w-[390px]">
                     <div className="flex flex-col">
-                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin pb-2 text-xl">
+                      <p className="text-light-text dark:text-dark-textSoft font-medium pb-2 text-xl">
                         Tên:
-                        <span className="text-light-text dark:text-dark-text font-medium px-3 text-xl">
+                        <span className="text-light-text dark:text-dark-text px-3 text-xl">
                           {bill.reservation_id.userName ? bill.reservation_id.userName : "Un-no"}
                         </span>
                       </p>
-                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin pb-2 text-xl">
+                      <p className="text-light-text dark:text-dark-textSoft font-medium pb-2 text-xl">
                         Số điện thoại:
-                        <span className="text-light-text dark:text-dark-text font-medium px-3 text-xl">
+                        <span className="text-light-text dark:text-dark-text px-3 text-xl">
                           {bill.reservation_id.phoneNumber}
                         </span>
                       </p>
                       {bill.reservation_id.user_id?.email && (
-                        <p className="text-light-textSoft dark:text-dark-textSoft font-thin pb-2 text-xl">
+                        <p className="text-light-text dark:text-dark-textSoft font-medium pb-2 text-xl">
                           Email:
-                          <span className="text-light-text dark:text-dark-text font-medium px-3 text-xl">
+                          <span className="text-light-text dark:text-dark-text px-3 text-xl">
                             {bill.reservation_id.user_id?.email}
                           </span>
                         </p>
@@ -159,15 +159,15 @@ const CompletedBill = () => {
 
                   <div className="flex flex-col min-w-[200px]">
                     <div className="w-full flex items-center justify-between pb-2">
-                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">Ngày:</p>
+                      <p className="text-light-text dark:text-dark-textSoft font-medium text-xl">Ngày:</p>
                       <p className="text-xl">{formatDateAndTime(bill.reservation_id.startTime).day}</p>
                     </div>
                     <div className="w-full flex items-center justify-between pb-2">
-                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">Giờ:</p>
+                      <p className="text-light-text dark:text-dark-textSoft font-medium text-xl">Giờ:</p>
                       <p className="text-xl">{formatDateAndTime(bill.reservation_id.startTime).time}</p>
                     </div>
                     <div className="w-full flex items-center justify-between pb-2">
-                      <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-xl">Bàn:</p>
+                      <p className="text-light-text dark:text-dark-textSoft font-medium text-xl">Bàn:</p>
                       <p className="text-xl">{bill.reservation_id.table_id?.name}</p>
                     </div>
                   </div>
@@ -189,7 +189,7 @@ const CompletedBill = () => {
                           <TableCell className="font-medium text-lg">
                             <div className="flex flex-col leading-7 truncate">
                               <h2>{orderedCombo.name}</h2>
-                              <p className="text-light-textSoft dark:text-dark-textSoft font-thin text-lg">
+                              <p className="text-light-text dark:text-dark-textSoft font-thin text-lg">
                                 {formatCurrency(orderedCombo.price)}
                               </p>
                             </div>
