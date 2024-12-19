@@ -10,6 +10,8 @@ import { Link } from "react-router-dom";
 
 const BillList = () => {
   const [dataBill, setDataBill] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [dateValue, setDateValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemPerPage = 10;
 
@@ -18,6 +20,7 @@ const BillList = () => {
       .get(BASE_URL + "/api/bills")
       .then((res) => {
         setDataBill(res.data.bills);
+        // console.log("data bill:", res.data.bills);
       })
       .catch((err) => {
         console.error(err);
@@ -28,12 +31,37 @@ const BillList = () => {
     fetchData();
   }, []);
 
+  const handleSearchValue = (e) => {
+    setSearchValue(e.target.value);
+    // console.log("search", e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleDateValue = (e) => {
+    setDateValue(e.target.value);
+    // console.log("date", e.target.value);
+    setCurrentPage(1);
+  };
+
+  const filterBills = dataBill.filter((item) => {
+    const matchesSearchValue = item.reservation_id.userName
+      .toLowerCase()
+      .includes(searchValue.toLowerCase());
+
+    const matchesDateValue = dateValue
+      ? new Date(item.reservation_id.startTime).toLocaleDateString("vi-VN") ===
+        new Date(dateValue).toLocaleDateString("vi-VN")
+      : true;
+
+    return matchesSearchValue && matchesDateValue;
+  });
+
   // phân trang
   const startIndex = (currentPage - 1) * itemPerPage;
-  const currentItems = dataBill
+  const currentItems = filterBills
     .reverse()
     .slice(startIndex, startIndex + itemPerPage);
-  const pageCount = Math.ceil(dataBill.reverse().length / itemPerPage);
+  const pageCount = Math.ceil(filterBills.reverse().length / itemPerPage);
 
   const handlePageClick = (e) => {
     setCurrentPage(e.selected + 1);
@@ -46,6 +74,55 @@ const BillList = () => {
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold">Danh sách hóa đơn</p>
+        </div>
+
+        <div className="flex justify-between mb-4">
+          <input
+            type="date"
+            class="p-2.5 w-64 rounded-lg border border-gray-300
+           focus:outline-none focus:ring-2 focus:ring-blue-400 
+           focus:border-blue-400 transition-all"
+            onChange={handleDateValue}
+          />
+
+          {/* Input search */}
+          <div className="relative w-full max-w-sm min-w-[200px]">
+            <label htmlFor="Search" className="sr-only">
+              Search
+            </label>
+
+            <input
+              type="text"
+              id="Search"
+              placeholder="Tìm kiếm..."
+              className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full p-2.5"
+              onChange={handleSearchValue}
+            />
+
+            <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
+              <button
+                type="button"
+                className="text-gray-600 hover:text-gray-700"
+              >
+                <span className="sr-only">Search</span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                  />
+                </svg>
+              </button>
+            </span>
+          </div>
         </div>
 
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">

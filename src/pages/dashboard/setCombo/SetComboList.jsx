@@ -64,6 +64,7 @@ const SetComboList = () => {
   const handleSearchValue = (e) => {
     setSearchValue(e.target.value);
     // console.log(e.target.value);
+    setCurrentPage(1);
   };
 
   // Xử lí lọc
@@ -121,6 +122,7 @@ const SetComboList = () => {
                     } else if (value === "range_end") {
                       setPriceRange({ min: 200000, max: Infinity });
                     }
+                    setCurrentPage(1);
                   }}
                 >
                   <option value="all">Khoảng giá</option>
@@ -279,7 +281,7 @@ const SetComboList = () => {
               ) : (
                 <tr>
                   <td colSpan="7" className="text-center py-4 text-gray-500">
-                    Không tìm thấy món ăn..
+                    Không tìm thấy combo..
                   </td>
                 </tr>
               )}
