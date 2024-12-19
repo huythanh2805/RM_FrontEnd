@@ -24,6 +24,7 @@ function Discount({
         <div className='w-[80px] h-[80px] bg-[url("/imgs/logoGolden.webp")] bg-cover bg-center bg-no-repeat mx-auto'></div>
         <p
           className={cn(
+            "text-white",
             code !== "Điện tử" && "tracking-wider text-center mt-2"
           )}
         >

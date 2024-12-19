@@ -115,9 +115,9 @@ const Header = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger className="h-fit w-fit border-none outline-none ring-0 ring-offset-0">
-                <Avatar>
-                  <AvatarImage src={user?.image || "imgs/avatar.jpg"} />
-                </Avatar>
+                 <div className="w-[50px] h-[50px] rounded-full  flex items-center justify-center overflow-hidden">
+                     <img src={user?.image || "imgs/avatar.jpg"} alt="avatar" className="object-cover" />
+                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuSeparator />

@@ -1,5 +1,6 @@
 import Navbar from "@/components/Admin/Navbar";
 import BASE_URL from "@/configs";
+import { useCart } from "@/contexts/CartProvider";
 import { formatCurrency } from "@/utilities/utils";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -10,7 +11,6 @@ const SetComboDetail = () => {
   const { id } = useParams();
   const [dataCombo, setDataCombo] = useState();
   const [dishInCombo, setDishInCombo] = useState([]);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const SetComboDetail = () => {
       }
     });
   };
-
+  
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
       <Navbar />

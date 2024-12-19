@@ -413,14 +413,14 @@ const Calculator = ({
                   </div>
                   <div className="w-full flex items-center py-2">
                     <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
-                      VAT
+                      VAT {`(${VAT}%)`}
                     </p>
                     <Input
                       className=" flex-[2] rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
                     placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px]"
                       disabled
                       type="number"
-                      placeholder={`${VAT}% ${formatCurrency(VAT_money)}`}
+                      placeholder={`${formatCurrency(VAT_money)}`}
                     />
                   </div>
                   <div className="w-full flex items-center py-2">
@@ -568,7 +568,7 @@ const Calculator = ({
                 className="bg-light-error dark:bg-dark-error hover:bg-light-error dark:hover:bg-dark-error 
               text-white dark:text-white hover:scale-90 transition-all ease-in"
               >
-                Check bill
+                Kiểm tra
               </Button>
             </DialogClose>
           </div>

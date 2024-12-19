@@ -56,6 +56,7 @@ const CompletedBill = () => {
     onAfterPrint: () => console.log("after printing..."),
     removeAfterPrint: true,
   });
+  console.log({bill})
   return (
     <>
       <div className="h-full w-full overflow-scroll flex items-center justify-center bg-[#f9fafb]">
@@ -253,18 +254,18 @@ const CompletedBill = () => {
                     </TableRow>
                     <TableRow className="bg-light-bg dark:bg-dark-bg">
                       <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
-                        Thuế VAT ({bill.VAT}%)
+                        Số tiền giảm
                       </TableCell>
                       <TableCell colSpan={2} className="text-right text-2xl">
-                        {formatCurrency((bill.original_money * bill.VAT) / 100)}
+                        {formatCurrency(bill?.discount_money ? bill?.discount_money : 0)}
                       </TableCell>
                     </TableRow>
                     <TableRow className="bg-light-bg dark:bg-dark-bg">
                       <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
-                        Đã cọc
+                        Thuế VAT ({bill.VAT}%)
                       </TableCell>
                       <TableCell colSpan={2} className="text-right text-2xl">
-                        {formatCurrency(bill?.deposit_money ? bill?.deposit_money : 0)}
+                        {formatCurrency(((bill.original_money - bill.discount_money) * bill.VAT) / 100)}
                       </TableCell>
                     </TableRow>
                     <TableRow className="bg-light-bg dark:bg-dark-bg">

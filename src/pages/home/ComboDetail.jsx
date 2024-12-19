@@ -8,6 +8,7 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import FeedbackCombo from "@/components/FeedbackCombo";
+import { useCart } from "@/contexts/CartProvider";
 
 const ComboDetail = () => {
   const { id } = useParams();
@@ -16,7 +17,7 @@ const ComboDetail = () => {
   const [activeTab, setActiveTab] = useState("REVIEWS");
   const [combo, setCombo] = useState(null);
   const [dishInCombo, setDishInCombo] = useState([]);
-
+  const {addItem, cart} = useCart()
   useEffect(() => {
     axios
       .get(BASE_URL + "/setCombos/" + id)
@@ -33,21 +34,23 @@ const ComboDetail = () => {
   const increaseQuantity = () => setQuantity(quantity + 1);
   const decreaseQuantity = () => quantity > 1 && setQuantity(quantity - 1);
 
-  //   const handleAddToCart = (combo) => {
-  //     toast({
-  //       variant: "success",
-  //       title: "Thêm thành công" + " " + combo.name,
-  //     });
-  //     addItem({
-  //       combo_id: combo._id,
-  //       name: combo.name,
-  //       price: combo.price,
-  //       image: combo.images[0],
-  //       quantity: quantity,
-  //       type: "combo",
-  //     });
-  //     setQuantity(1);
-  //   };
+  const handleAddToCart = (item) => {
+
+      toast({
+        variant: "success",
+        title: `Thêm thành công Combo: ${item.name}`,
+      });
+      console.log({item})
+      addItem({
+        dish_id: item.setComboProducts[0]._id,
+        name: item.name,
+        price: item.price,
+        image: item.images[0],
+        quantity: 1,
+        type: "combo", // Đảm bảo type là combo
+      });
+  };
+  console.log({cart})
 
   return (
     <div className="w-full">
@@ -114,7 +117,7 @@ const ComboDetail = () => {
               </div>
               <ButtonCustome
                 buttonText="Thêm vào giỏ hàng"
-                // handleClick={() => handleAddToCart(combo)}
+                handleClick={() => handleAddToCart(combo)}
               />
             </div>
             <hr />
