@@ -83,7 +83,11 @@ const Menu = ({ limit, isFilter = true }) => {
             type: "combo",
           };
         });
-        const comboWithNewId = combosWithType.map(item=>({...item, _id: item.setComboProducts[0]._id}))
+        const comboWithNewId = combosWithType.map(item=>({
+          ...item,
+           _id: item.setComboProducts[0]._id,
+           combo_id: item._id
+          }))
         setCombos(comboWithNewId);
       })
       .catch((error) => {
