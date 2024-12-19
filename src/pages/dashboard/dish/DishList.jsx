@@ -61,7 +61,7 @@ const DishList = () => {
 
   const handleSearchValue = (e) => {
     setSearchValue(e.target.value);
-    // console.log(e.target.value);
+    setCurrentPage(1);
   };
 
   // Xử lí lọc
@@ -146,6 +146,7 @@ const DishList = () => {
                     } else if (value === "range_end") {
                       setPriceRange({ min: 200000, max: Infinity });
                     }
+                    setCurrentPage(1);
                   }}
                 >
                   <option value="all">Khoảng giá</option>

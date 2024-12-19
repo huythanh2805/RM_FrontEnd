@@ -40,6 +40,7 @@ const CategoryUpdate = () => {
       })
       .catch((err) => {
         console.log(err);
+        toast({ variant: "destructive", title: err.response.data.message });
       });
   };
 

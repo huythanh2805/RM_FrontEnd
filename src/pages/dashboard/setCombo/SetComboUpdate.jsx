@@ -101,7 +101,7 @@ const SetComboUpdate = () => {
   };
 
   const handleOpenMenu = () => setIsMenu(true);
-  
+
   const handleCloseMenu = () => {
     setSelectDish([]);
     setDishImage([]);
@@ -141,6 +141,7 @@ const SetComboUpdate = () => {
       toast({ variant: "success", title: "Cập nhật combo thành công!" });
     } catch (error) {
       console.error(error);
+      toast({ variant: "destructive", title: error.response.data.message });
     }
   };
 

@@ -103,7 +103,6 @@ const SetComboDetail = () => {
                       alt={dish.name}
                       className="w-24 h-24 object-cover rounded-md"
                     />
-                    <p className="mt-2  w-full">{formatCurrency(dish.price)}</p>
                   </div>
                 ))}
               </div>
