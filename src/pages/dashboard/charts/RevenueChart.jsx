@@ -35,13 +35,13 @@ const chartConfig = {
  
 }
 
-export default function RevenueChart({allBillByMonth, month, year}) {
+export default function RevenueChart({allBillByMonth, startTime, endTime}) {
   return (
     <Card >
       <CardHeader>
         <CardTitle>Biểu đồ doanh số</CardTitle>
         <CardDescription>
-          Biểu hiện doanh số của tháng {month}
+          Biểu đồ hiển thị doanh số từ ngày <span className="font-medium text-gray-1">{startTime} - {endTime}</span>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -85,7 +85,7 @@ export default function RevenueChart({allBillByMonth, month, year}) {
               {/* Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Tháng {month} - {year}
+             Doanh số:  <span className="font-medium text-gray-1">{startTime} - {endTime}</span>
             </div>
           </div>
         </div>

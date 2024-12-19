@@ -7,55 +7,26 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import DatePicker from "react-datepicker"
-function DashBoardControl({
-  selectedDate,
-  setSelectedDate,
-  selectedMonth,
-  setSelectedMonth
-}) {
-  const [months, setMonths] = useState(new Date().getMonth() + 1)
-  useEffect(()=>{
-    const currentYear = new Date().getFullYear();
-
-    const selectedYear = new Date(selectedDate).getFullYear()
-
-    if(selectedYear === currentYear){
-        setMonths(new Date().getMonth() + 1)
-    }else if(selectedYear < currentYear){
-        setMonths(12)
-    }else if(selectedYear > currentYear){
-        setMonths(0)
-    }
-
-  },[selectedDate])
+function DashBoardControl({ startDate, setStartDate, endDate, setEndDate }) {
   return (
     <div className="flex items-center gap-5">
-      <div>
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-          showYearPicker
-          dateFormat="yyyy"
-          placeholderText="Chọn năm"
-          className="border px-3 py-2 rounded focus-within:border-none"
+      <div className="max-w-fit">
+      <DatePicker
+          className="w-full bg-light-bg dark:bg-dark-bg focus:outline-none px-3 py-2 border border-gray-200 dark:border-gray-800 rounded-md focus:border-b-blue-1"
+          placeholderText="Chọn ngày"
+          selected={startDate}
+          onChange={(date) => setStartDate(date)}
+          dateFormat={"dd/MM/yyyy"}
         />
       </div>
-      <div>
-        <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-          <SelectTrigger className="w-[120px] focus-within:border-none focus:ring-0">
-            <SelectValue
-              placeholder={`Tháng ${selectedMonth}`}
-              className="focus-within:border-none focus:ring-0"
-            />
-          </SelectTrigger>
-          <SelectContent className="focus-within:border-none">
-           {
-            ([...Array(months).keys()].map(item=>(
-                <SelectItem key={item} value={item + 1}>Tháng {item + 1}</SelectItem>
-            )))
-           }
-          </SelectContent>
-        </Select>
+      <div className="max-w-fit">
+        <DatePicker
+          className="w-full bg-light-bg dark:bg-dark-bg focus:outline-none px-3 py-2 border border-gray-200 dark:border-gray-800 rounded-md  focus:border-b-blue-1"
+          placeholderText="Chọn ngày"
+          selected={endDate}
+          onChange={(date) => setEndDate(date)}
+          dateFormat={"dd/MM/yyyy"}
+        />
       </div>
     </div>
   )

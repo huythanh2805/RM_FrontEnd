@@ -47,7 +47,6 @@ import {
 // ]
 
 const chartConfig = {
-  
   canceled: {
     label: "Hủy",
     color: "hsl(var(--chart-1))",
@@ -58,12 +57,14 @@ const chartConfig = {
   },
 }
 
-export default function ReserVationChart({reservationStatusChart, month, year}) {
+export default function ReserVationChart({reservationStatusChart, startTime, endTime}) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Biểu đồ đơn đặt bàn</CardTitle>
-        <CardDescription>Tháng {month} {year}</CardDescription>
+        <CardDescription>Biểu đồ hiển thị sự chênh lệch đơn thành công và đơn bị hủy số từ ngày {" "}
+          <span className="font-medium text-gray-1">{startTime} - {endTime}</span>
+          </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="max-h-[350px] w-full">

@@ -2,43 +2,42 @@ import BASE_URL from "@/configs";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaMoneyBillAlt, FaSyncAlt, FaCalculator } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { BiSolidDish } from "react-icons/bi";
 import Navbar from "@/components/Admin/Navbar";
 import DashBoardCard from "./DashBoardCard";
 import RevenueChart from "./charts/RevenueChart";
 import ReserVationChart from "./charts/ReservationChart";
 import FavorFoodChart from "./charts/FavorFoodChart";
-import TotalResevationChart from "./charts/TotalResevationChart";
 import DashBoardControl from "./DashBoardControl";
 import { toast } from "@/hooks/use-toast";
-import { formatCurrency, ServerUrl } from "@/utilities/utils";
+import { formatCurrency, formatDateNoTime, ServerUrl } from "@/utilities/utils";
 import { TbTruckDelivery } from "react-icons/tb";
+import Top5UserOrderTable from "./charts/Top5UserOrderTable";
 const Dashboard = () => {
-  const [dataProduct, setDataProduct] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [startDate, setStartDate] = useState()
+  const [endDate, setEndDate] = useState()
   const [allBillByMonth, setAllBillByMonth] = useState([]);
   const [top5Dishes, setTop5Dishes] = useState([]);
-  const [sixMonthRevenue, setSixMonthRevenue] = useState([]);
+  const [top5UserOrder, setTop5UserOrder] = useState([]);
   const [reservationStatusChart, setReservationStatusChart] = useState([]);
 
   const [revenueCard, setRevenueCard] = useState(0);
-  const [totalReserCard, setToltalReserCard] = useState(0);
   const [canceledReserCard, setCanceledReserCard] = useState(0);
   const [successedReserCard, setSuccessedReserCard] = useState(0);
-  console.log({ reservationStatusChart });
-  // Lấy dữ liệu món ăn
+ 
   useEffect(() => {
-    axios
-      .get(BASE_URL + "/dishes")
-      .then((res) => {
-        setDataProduct(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const now = new Date();
+    
+    // Ngày đầu tiên của tháng hiện tại
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1); 
+    
+    // Ngày cuối cùng của tháng hiện tại
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0); 
+  
+    // Gán vào state
+    setStartDate(new Date(firstDay)); // Tạo bản sao của đối tượng
+    setEndDate(new Date(lastDay));    // Tạo bản sao của đối tượng
   }, []);
+
 
   // Lấy dữ liệu người dùng
   const [dataUser, setDataUser] = useState([]);
@@ -57,19 +56,25 @@ const Dashboard = () => {
   ).length;
   // Get revenue
   useEffect(() => {
-    if (!selectedMonth) return;
     const fetData = async () => {
-      const res = await fetch(
-        `${ServerUrl}/api/dashboard/revenue/${selectedMonth}/${selectedDate.getFullYear()}`,
-        {
-          method: "GET",
-        }
-      );
+      if (!startDate || !endDate) return;
+      if (new Date(startDate) > new Date(endDate)) 
+      return toast({
+        variant: "destructive",
+        title: "Thời gian bắt đầu không thể lớn hơn thời gian kết thúc",
+      });;
+      const res = await fetch(`${ServerUrl}/api/dashboard/revenue`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ startDate: new Date(startDate), endDate: new Date(endDate)}),
+      });
       const data = await res.json();
       if (!res.ok) {
-        toast({
+       return toast({
           variant: "destructive",
-          title: "Can't get any data for ordered dishes!",
+          title: data.message,
         });
       }
       setAllBillByMonth(data);
@@ -77,64 +82,91 @@ const Dashboard = () => {
       setRevenueCard(total);
     };
     fetData();
-  }, [selectedDate, selectedMonth]);
+  }, [startDate, endDate]);
   // Get top 5 dishes
   useEffect(() => {
-    if (!selectedMonth) return;
     const fetData = async () => {
+      if (!startDate || !endDate) return;
+      if (new Date(startDate) > new Date(endDate)) 
+      return toast({
+        variant: "destructive",
+        title: "Thời gian bắt đầu không thể lớn hơn thời gian kết thúc",
+      });;
       const res = await fetch(
-        `${ServerUrl}/api/dashboard/top5/${selectedMonth}/${selectedDate.getFullYear()}`,
+        `${ServerUrl}/api/dashboard/top5`,
         {
-          method: "GET",
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ startDate: new Date(startDate), endDate: new Date(endDate)}),
         }
       );
       const data = await res.json();
       if (!res.ok) {
         toast({
           variant: "destructive",
-          title: "Can't get any data for ordered dishes!",
+          title: data.message,
         });
       }
       setTop5Dishes(data);
     };
     fetData();
-  }, [selectedDate, selectedMonth]);
-  // Get top 6 months revenue
+  }, [startDate, endDate]);
+  // Get top 5 user
   useEffect(() => {
-    if (!selectedMonth) return;
     const fetData = async () => {
+      if (!startDate || !endDate) return;
+      if (new Date(startDate) > new Date(endDate)) 
+      return toast({
+        variant: "destructive",
+        title: "Thời gian bắt đầu không thể lớn hơn thời gian kết thúc",
+      });;
       const res = await fetch(
-        `${ServerUrl}/api/dashboard/revenue/6months/${selectedMonth}/${selectedDate.getFullYear()}`,
+        `${ServerUrl}/api/dashboard/top5User`,
         {
-          method: "GET",
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ startDate: new Date(startDate), endDate: new Date(endDate)}),
         }
       );
       const data = await res.json();
       if (!res.ok) {
         toast({
           variant: "destructive",
-          title: "Can't get any data for ordered dishes!",
+          title: data.message,
         });
       }
-      setSixMonthRevenue(data);
+      setTop5UserOrder(data);
     };
     fetData();
-  }, [selectedDate, selectedMonth]);
-  // Get reservation Status chart
+  }, [startDate, endDate]);
+   // Get reservation Status chart
   useEffect(() => {
-    if (!selectedMonth) return;
     const fetData = async () => {
+      if (!startDate || !endDate) return;
+      if (new Date(startDate) > new Date(endDate)) 
+        return toast({
+          variant: "destructive",
+          title: "Thời gian bắt đầu không thể lớn hơn thời gian kết thúc",
+        });;
       const res = await fetch(
-        `${ServerUrl}/api/dashboard/reservationState/${selectedMonth}/${selectedDate.getFullYear()}`,
+        `${ServerUrl}/api/dashboard/reservationState`,
         {
-          method: "GET",
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ startDate: new Date(startDate), endDate: new Date(endDate)}),
         }
       );
       const data = await res.json();
       if (!res.ok) {
         toast({
           variant: "destructive",
-          title: "Can't get any data for ordered dishes!",
+          title: data.message,
         });
       }
       setReservationStatusChart(data);
@@ -146,7 +178,7 @@ const Dashboard = () => {
       );
     };
     fetData();
-  }, [selectedDate, selectedMonth]);
+  }, [startDate, endDate]);
   return (
     <div className="w-full min-h-screen bg-gray-50">
       <Navbar />
@@ -156,10 +188,10 @@ const Dashboard = () => {
           <p className="text-3xl font-semibold text-gray-800">Thống Kê</p>
 
           <DashBoardControl
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            selectedMonth={selectedMonth}
-            setSelectedMonth={setSelectedMonth}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
           />
         </div>
 
@@ -174,7 +206,6 @@ const Dashboard = () => {
             }
             data={allBillByMonth}
             type={"revenue"}
-            month={selectedDate}
           />
           <DashBoardCard
             title={"Đơn đặt bàn"}
@@ -186,7 +217,6 @@ const Dashboard = () => {
             }
             data={reservationStatusChart}
             type={"toalReser"}
-            month={selectedDate}
           />
           <DashBoardCard
             title={"Đơn thành công"}
@@ -198,7 +228,6 @@ const Dashboard = () => {
             }
             data={reservationStatusChart}
             type={"successReser"}
-            month={selectedDate}
           />
           <DashBoardCard
             title={"Đơn hủy"}
@@ -210,7 +239,6 @@ const Dashboard = () => {
             }
             data={reservationStatusChart}
             type={"canceledReser"}
-            month={selectedDate}
           />
         </div>
 
@@ -218,29 +246,25 @@ const Dashboard = () => {
           <div class="col-span-3 ">
             <RevenueChart
               allBillByMonth={allBillByMonth}
-              month={selectedMonth}
-              year={selectedDate.getFullYear()}
+              startTime={formatDateNoTime(startDate)}
+              endTime={formatDateNoTime(endDate)}
             />
           </div>
           <div class="col-span-1">
-            <TotalResevationChart
-              sixMonthRevenue={sixMonthRevenue}
-              month={selectedMonth}
-              year={selectedDate.getFullYear()}
-            />
+           <Top5UserOrderTable top5UserOrder={top5UserOrder} />
           </div>
           <div class="col-span-1 ">
             <FavorFoodChart
               top5Dishes={top5Dishes}
-              month={selectedMonth}
-              year={selectedDate.getFullYear()}
+              startTime={formatDateNoTime(startDate)}
+              endTime={formatDateNoTime(endDate)}
             />
           </div>
           <div class="col-span-3">
             <ReserVationChart
               reservationStatusChart={reservationStatusChart}
-              month={selectedMonth}
-              year={selectedDate.getFullYear()}
+              startTime={formatDateNoTime(startDate)}
+              endTime={formatDateNoTime(endDate)}
             />
           </div>
         </div>
