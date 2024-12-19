@@ -1,7 +1,17 @@
+services:
+  - type: web
+    name: golden-fork
+    env: node
+    buildCommand: "npm run build"
+    startCommand: "npm run start"
+    routes:
+      - path: /promotion
+        type: static
+        filePath: ./dist/index.html
+      - path: /about
+        type: static
+        filePath: ./dist/index.html
+      # Thêm các route khác nếu cần
+
 build:
   baseImage: node:18
-
-routes:
-  - type: rewrite
-    source: /.*
-    destination: /index.html
