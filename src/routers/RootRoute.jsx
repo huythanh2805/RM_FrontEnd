@@ -29,7 +29,7 @@ import EmployeeUpdate from "@/pages/dashboard/employee/EmployeeUpdate";
 import FeedbackList from "@/pages/dashboard/feedback/FeedbackList";
 import LayoutAdmin from "@/pages/dashboard/LayoutAdmin";
 import { ProfileAdmin } from "@/pages/dashboard/Profile";
-import SetComboAdd from "@/pages/dashboard/setCombo/setComboAdd";
+import SetComboAdd from "@/pages/dashboard/setCombo/SetComboAdd";
 import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
 import SetComboList from "@/pages/dashboard/setCombo/SetComboList";
 import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";

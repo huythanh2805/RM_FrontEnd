@@ -128,11 +128,12 @@ const Calculator = ({
     const bank = "MB";
     const account = "0982669254";
     const template = "compact";
+    const validDeposit = deposit == null || isNaN(deposit) ? 0 : deposit;
     const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(bank)}&acc=${encodeURIComponent(
       account
     )}&template=${encodeURIComponent(template)}&amount=${encodeURIComponent(
       total
-    )}&des=${reservation_id} ${totalPrice} ${discountValue} ${deposit} `;
+    )}&des=${reservation_id} ${totalPrice} ${discountValue} ${validDeposit} `;
     return qrUrl;
   };
 

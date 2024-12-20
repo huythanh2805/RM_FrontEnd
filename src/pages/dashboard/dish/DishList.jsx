@@ -311,7 +311,9 @@ const DishList = () => {
           </table>
 
           {/* Phân trang */}
-          <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
+          {pageCount > 1 && (
+            <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
+          )}
         </div>
       </div>
     </div>
