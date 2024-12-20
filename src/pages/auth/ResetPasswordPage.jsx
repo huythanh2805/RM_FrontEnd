@@ -2,8 +2,16 @@ import { useResetPassword } from "@/hooks/auth/useResetPassword";
 import { Link } from "react-router-dom";
 
 export const ResetPasswordPage = () => {
-  const { newPassword, setNewPassword, confirmPassword, setConfirmPassword, message, error, loading, resetPassword } =
-    useResetPassword();
+  const {
+    newPassword,
+    setNewPassword,
+    confirmPassword,
+    setConfirmPassword,
+    message,
+    error,
+    loading,
+    resetPassword,
+  } = useResetPassword();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,11 +31,13 @@ export const ResetPasswordPage = () => {
           Đặt lại mật khẩu
         </h2>
       </div>
-
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="new-password" className="block text-sm font-medium leading-6 text-gray-900">
+            <label
+              htmlFor="new-password"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
               Mật khẩu mới
             </label>
             <div className="mt-2">
@@ -42,7 +52,10 @@ export const ResetPasswordPage = () => {
             </div>
           </div>
           <div>
-            <label htmlFor="confirm-password" className="block text-sm font-medium leading-6 text-gray-900">
+            <label
+              htmlFor="confirm-password"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
               Xác nhận mật khẩu mới
             </label>
             <div className="mt-2">
@@ -73,7 +86,10 @@ export const ResetPasswordPage = () => {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Quay lại trang&nbsp;
-          <Link to="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+          <Link
+            to="/login"
+            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+          >
             Đăng nhập
           </Link>
         </p>
