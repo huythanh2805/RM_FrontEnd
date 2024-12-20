@@ -280,53 +280,58 @@ const Calculator = ({
         </div>
 
         {/* Ordered Foods */}
-        {orderedFoods?.map((orderedFood) => (
-          <div key={orderedFood._id} className="grid grid-cols-3 sm:grid-cols-4 gap-4 py-2 border-b items-center">
-            {/* Product Info */}
-            <div className="col-span-2 flex items-center gap-4">
-              <img
-                src={orderedFood.images[0]}
-                alt={orderedFood.name}
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover"
-              />
-              <div className="flex-1">
-                <h3 className="text-sm sm:text-lg font-medium truncate">{orderedFood.name}</h3>
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                  {formatCurrency(orderedFood.price)}
+        {orderedFoods?.map((orderedFood) => {
+          if(!orderedFood.dish_id && orderedFood.type === 'dish') return <div>Không thể tìm thấy dữ liệu món ăn</div>
+          if(!orderedFood.dish_id  && orderedFood.type === "combo") return <div>Không thể tìm thấy dữ liệu combo</div>
+
+          return (
+            <div key={orderedFood._id} className="grid grid-cols-3 sm:grid-cols-4 gap-4 py-2 border-b items-center">
+              {/* Product Info */}
+              <div className="col-span-2 flex items-center gap-4">
+                <img
+                  src={orderedFood?.images[0]}
+                  alt={orderedFood?.name}
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover"
+                />
+                <div className="flex-1">
+                  <h3 className="text-sm sm:text-lg font-medium truncate">{orderedFood.name}</h3>
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                    {formatCurrency(orderedFood.price)}
+                  </p>
+                </div>
+              </div>
+  
+              {/* Quantity Control */}
+              <div className="flex items-center justify-center gap-2">
+                <button
+                  onClick={() => handleMinus(orderedFood._id, orderedFood.quantity, orderedFood.type)}
+                  className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded bg-gray-200 dark:bg-gray-700 hover:scale-95"
+                >
+                  -
+                </button>
+                <span className="text-sm sm:text-base">{orderedFood.quantity}</span>
+                <button
+                  onClick={() => handlePlus(orderedFood._id, orderedFood.quantity, orderedFood.type)}
+                  className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded bg-gray-200 dark:bg-gray-700 hover:scale-95"
+                >
+                  +
+                </button>
+              </div>
+  
+              <div className="flex flex-col items-end">
+                <p className="text-sm sm:text-lg font-semibold">
+                  {formatCurrency(orderedFood.quantity * orderedFood.price)}
                 </p>
+                <button
+                  onClick={() => handleDeleteOrderedFood(orderedFood._id, orderedFood.type)}
+                  className="text-red-500 mt-1 text-xs sm:text-sm hover:underline"
+                >
+                  Xóa
+                </button>
               </div>
             </div>
-
-            {/* Quantity Control */}
-            <div className="flex items-center justify-center gap-2">
-              <button
-                onClick={() => handleMinus(orderedFood._id, orderedFood.quantity, orderedFood.type)}
-                className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded bg-gray-200 dark:bg-gray-700 hover:scale-95"
-              >
-                -
-              </button>
-              <span className="text-sm sm:text-base">{orderedFood.quantity}</span>
-              <button
-                onClick={() => handlePlus(orderedFood._id, orderedFood.quantity, orderedFood.type)}
-                className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded bg-gray-200 dark:bg-gray-700 hover:scale-95"
-              >
-                +
-              </button>
-            </div>
-
-            <div className="flex flex-col items-end">
-              <p className="text-sm sm:text-lg font-semibold">
-                {formatCurrency(orderedFood.quantity * orderedFood.price)}
-              </p>
-              <button
-                onClick={() => handleDeleteOrderedFood(orderedFood._id, orderedFood.type)}
-                className="text-red-500 mt-1 text-xs sm:text-sm hover:underline"
-              >
-                Xóa
-              </button>
-            </div>
-          </div>
-        ))}
+          )
+        })}
 
         {/* Total Summary */}
         <div className="flex justify-between items-center mt-4 sm:mt-6">
@@ -497,26 +502,30 @@ const Calculator = ({
                   </TableHeader>
 
                   <TableBody className="max-w-[650px]">
-                    {orderedFoods?.map((orderedFood) => (
-                      <TableRow key={orderedFood._id} className="border-b">
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-4">
-                            <div className="w-16 h-16">
-                              <img src={orderedFood.images[0]} alt={orderedFood.name} className="w-full h-full " />
+                    {orderedFoods?.map((orderedFood) => {
+                      if(!orderedFood.dish_id  && orderedFood.type === "dish") return <div>Không thể tìm thấy dữ liệu món ăn</div>
+                      if(!orderedFood.dish_id  && orderedFood.type === "combo") return <div>Không thể tìm thấy dữ liệu combo</div>
+                      return (
+                        <TableRow key={orderedFood._id} className="border-b">
+                          <TableCell className="font-medium">
+                            <div className="flex items-center gap-4">
+                              <div className="w-16 h-16">
+                                <img src={orderedFood.images[0]} alt={orderedFood.name} className="w-full h-full " />
+                              </div>
+                              <h3 className="text-sm sm:text-lg font-medium truncate">{orderedFood.name}</h3>
                             </div>
-                            <h3 className="text-sm sm:text-lg font-medium truncate">{orderedFood.name}</h3>
-                          </div>
-                        </TableCell>
-
-                        <TableCell className="text-center">
-                          <span className="text-sm sm:text-base">{orderedFood.quantity}</span>
-                        </TableCell>
-
-                        <TableCell className="text-right text-sm sm:text-lg font-semibold">
-                          {formatCurrency(orderedFood.quantity * orderedFood.price)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          </TableCell>
+  
+                          <TableCell className="text-center">
+                            <span className="text-sm sm:text-base">{orderedFood.quantity}</span>
+                          </TableCell>
+  
+                          <TableCell className="text-right text-sm sm:text-lg font-semibold">
+                            {formatCurrency(orderedFood.quantity * orderedFood.price)}
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })}
                   </TableBody>
 
                   <TableFooter>

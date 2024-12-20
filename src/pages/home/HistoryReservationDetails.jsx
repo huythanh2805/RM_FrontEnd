@@ -25,15 +25,20 @@ export const HistoryReservationDetail = () => {
 
   useEffect(() => {
     if (!reservationDetails) return;
-    const newOrderedCombos = reservationDetails.ordered_combos.map((combo) => ({
-      ...combo,
-      dish_id: {
-        name: combo.setComboProduct_id?.combo_id.name,
-        price: combo.setComboProduct_id?.combo_id.price,
-        images: combo.setComboProduct_id?.combo_id.images,
-      },
-    }));
-    setProducts((pre) => [...reservationDetails.ordered_dishes, ...newOrderedCombos]);
+    const newOrderedCombos = reservationDetails.ordered_combos?.map((combo) => {
+      return ({
+        ...combo,
+        type: 'combo',
+        dish_id: {
+          name: combo.setComboProduct_id?.combo_id.name,
+          price: combo.setComboProduct_id?.combo_id.price,
+          images: combo.setComboProduct_id?.combo_id.images,
+        },
+      })
+    }
+  );
+   const newOrderDishes = reservationDetails.ordered_dishes?.map(dish=> ({...dish, type: 'dish'}))
+    setProducts((pre) => [...newOrderDishes, ...newOrderedCombos]);
   }, [reservationDetails]);
 
   const handleGoBack = () => {
@@ -53,6 +58,7 @@ export const HistoryReservationDetail = () => {
     hour: "2-digit",
     minute: "2-digit",
   });
+  console.log({ products });
   console.log({ reservationDetails });
   return (
     <div>
@@ -158,31 +164,35 @@ export const HistoryReservationDetail = () => {
             <div className="w-full max-w-sm md:max-w-3xl max-xl:mx-auto">
               <div className="grid grid-cols-1 gap-6">
                 {products.length > 0 ? (
-                  products.map((orderedDish) => (
-                    <div
-                      key={orderedDish._id}
-                      className="rounded-3xl p-6 bg-gray-100 border border-gray-100 flex flex-col md:flex-row md:items-center gap-5 transition-all duration-500 hover:border-gray-400"
-                    >
-                      <div className="img-box">
-                        <img
-                          src={orderedDish.dish_id?.images[0]} // Assuming the dish has an image
-                          alt={orderedDish.dish_id?.name}
-                          className="w-full md:max-w-[122px] rounded-lg object-cover"
-                        />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 md:gap-8">
-                        <div>
-                          <h2 className="font-medium text-xl leading-8 text-black mb-3">{orderedDish.dish_id?.name}</h2>
+                  products.map((orderedDish) => {
+                    if(!orderedDish.setComboProduct_id && orderedDish.type === "combo") return <div>Không thể tìm thấy dữ liệu món ăn</div>
+                    if(!orderedDish.dish_id && orderedDish.type === "dish") return <div>Không thể tìm thấy dữ liệu combo</div>
+                    return (
+                      <div
+                        key={orderedDish._id}
+                        className="rounded-3xl p-6 bg-gray-100 border border-gray-100 flex flex-col md:flex-row md:items-center gap-5 transition-all duration-500 hover:border-gray-400"
+                      >
+                        <div className="img-box">
+                          <img
+                            src={orderedDish.dish_id?.images[0]} // Assuming the dish has an image
+                            alt={orderedDish.dish_id?.name}
+                            className="w-full md:max-w-[122px] rounded-lg object-cover"
+                          />
                         </div>
-                        <div className="flex items-center justify-between gap-8">
-                          <h6 className="font-medium text-xl leading-8 text-600">SL: {orderedDish.quantity}</h6>
-                          <h6 className="font-medium text-xl leading-8 text-600">
-                            Giá : {formatCurrency(orderedDish.dish_id?.price)}
-                          </h6>
+                        <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 md:gap-8">
+                          <div>
+                            <h2 className="font-medium text-xl leading-8 text-black mb-3">{orderedDish.dish_id?.name}</h2>
+                          </div>
+                          <div className="flex items-center justify-between gap-8">
+                            <h6 className="font-medium text-xl leading-8 text-600">SL: {orderedDish.quantity}</h6>
+                            <h6 className="font-medium text-xl leading-8 text-600">
+                              Giá : {formatCurrency(orderedDish.dish_id?.price)}
+                            </h6>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))
+                    )
+                  })
                 ) : (
                   <div className="text-center text-gray-600">Không có món ăn đặt trước.</div>
                 )}
