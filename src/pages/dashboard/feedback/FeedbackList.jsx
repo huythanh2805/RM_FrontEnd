@@ -3,7 +3,7 @@ import Pagination from "@/components/Pagination";
 import BASE_URL from "@/configs";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ReactStars from "react-rating-stars-component";
 import Swal from "sweetalert2";
 
@@ -160,14 +160,25 @@ const FeedbackList = () => {
                   </td>
                   <td className="py-3 px-1 text-sl cursor-pointer">
                     <div className="flex items-center justify-center gap-3">
-                      <div
+                     
+                      {
+                        feedback.isShow ? 
+                        <div
                         className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition"
                         onClick={() =>
                           handleChangeStatus(feedback._id, feedback.isShow)
                         }
                       >
                         <FaEye size={18} />
+                      </div> : <div
+                        className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition"
+                        onClick={() =>
+                          handleChangeStatus(feedback._id, feedback.isShow)
+                        }
+                      >
+                        <FaEyeSlash size={18} />
                       </div>
+                      }
                     </div>
                   </td>
                 </tr>

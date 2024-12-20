@@ -3,6 +3,7 @@ import Pagination from "@/components/Pagination";
 import { useUser } from "@/hooks/dashboard/useAccount";
 import { debounce } from "lodash";
 import { useState } from "react";
+import { FaEye } from "react-icons/fa";
 import { FaPenToSquare } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
@@ -135,7 +136,7 @@ const UserList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
                   Vai trò
                 </th>
-                <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
                   Hành động
                 </th>
               </tr>
@@ -161,10 +162,13 @@ const UserList = () => {
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">
                     {user.role}
                   </td>
-                  <td className="py-3 px-6 text-sl flex items-center justify-center gap-3">
+                  <td className="py-3 px-6 text-sl flex items-center gap-3">
+
                     <Link to={`/admin/users/edit/${user._id}`}>
-                      <div className="bg-blue-200 text-blue-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-blue-300 transition">
-                        <FaPenToSquare size={18} />
+                      <div
+                        className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition"
+                      >
+                        <FaEye size={18} />
                       </div>
                     </Link>
                   </td>
@@ -180,7 +184,7 @@ const UserList = () => {
         )}
       </div>
     </div>
-  );
+  )
 };
 
 export default UserList;

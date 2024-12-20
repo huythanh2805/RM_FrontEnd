@@ -58,6 +58,7 @@ const UserUpdate = () => {
                       Upload photo
                     </span>
                     <input
+                      disabled
                       type="file"
                       className="hidden"
                       onChange={handleImageChange}
@@ -71,6 +72,7 @@ const UserUpdate = () => {
                   Change Photo
                 </span>
                 <input
+                  disabled
                   type="file"
                   className="hidden"
                   onChange={handleImageChange}
@@ -90,6 +92,7 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="userName">Họ tên</label>
                   <input
+                    disabled
                     type="text"
                     id="userName"
                     {...register("userName", {
@@ -106,6 +109,7 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="email">Email</label>
                   <input
+                    disabled
                     type="email"
                     id="email"
                     {...register("email", { required: "Vui lòng nhập email" })}
@@ -123,6 +127,7 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="password">Mật khẩu</label>
                   <input
+                    disabled
                     type="password"
                     id="password"
                     {...register("password")}
@@ -156,6 +161,7 @@ const UserUpdate = () => {
               <div>
                 <label htmlFor="address">Địa chỉ</label>
                 <input
+                  disabled
                   type="text"
                   id="address"
                   {...register("address", {
@@ -172,13 +178,7 @@ const UserUpdate = () => {
 
               {/* Buttons Section */}
               <div className="flex justify-end mt-8">
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="px-6 py-2 bg-blue-200 text-blue-800 rounded-md text-sl font-semibold hover:bg-blue-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? "Đang xử lý..." : "Cập nhật"}
-                </button>
+              
                 <Link
                   to="/admin/users"
                   className="ml-2 px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
