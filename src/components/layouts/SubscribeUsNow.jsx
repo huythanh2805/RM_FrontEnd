@@ -13,11 +13,6 @@ const SubscribeUsNow = () => {
 
     return (
         <div className="flex items-center justify-center p-10 pt-[100px] rounded-lg relative bg-white">
-            <img
-                src="imgs/bg5.png"
-                alt="Background"
-                className="absolute hidden lg:block w-[280px] ml-[500px] object-cover" 
-            />
             <div className="flex flex-col items-center justify-center z-10 max-w-full sm:max-w-md">
                 <h2 className="text-[39px] dancing mb-2 text-center" style={{color: colorCode}}>Đăng ký với chúng tôi ngay</h2>
                 <span className="mb-4 text-gray-700 text-center">Nhận thêm tin tức và món ăn ngon mỗi ngày từ chúng tôi</span>

@@ -4,7 +4,7 @@ import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 

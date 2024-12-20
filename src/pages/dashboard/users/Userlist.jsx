@@ -3,6 +3,7 @@ import Pagination from "@/components/Pagination";
 import { useUser } from "@/hooks/dashboard/useAccount";
 import { debounce } from "lodash";
 import { useState } from "react";
+import { FaEye } from "react-icons/fa";
 import { FaPenToSquare } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
@@ -58,7 +59,9 @@ const UserList = () => {
 
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-3xl font-semibold text-gray-800">Danh sách người dùng</h1>
+          <h1 className="text-3xl font-semibold text-gray-800">
+            Danh sách người dùng
+          </h1>
           <Link to="/admin/users/add">
             <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition">
               Thêm +
@@ -82,7 +85,10 @@ const UserList = () => {
             />
 
             <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
-              <button type="button" className="text-gray-600 hover:text-gray-700">
+              <button
+                type="button"
+                className="text-gray-600 hover:text-gray-700"
+              >
                 <span className="sr-only">Search</span>
 
                 <svg
@@ -109,26 +115,53 @@ const UserList = () => {
           <table className="min-w-full bg-white">
             <thead className="border-b border-[#d5d5d5] text-left text-sl font-semibold text-[#202224] uppercase tracking-wider">
               <tr>
-                <th className="hidden lg:table-cell py-3 px-6 text-left text-sl font-semibold text-gray-700">STT</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Tên</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Email</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Địa chỉ</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Vai trò</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Hành động</th>
+                <th className="hidden lg:table-cell py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  STT
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Tên
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Email
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Địa chỉ
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Vai trò
+                </th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                  Hành động
+                </th>
               </tr>
             </thead>
             <tbody>
               {currentItems.map((user, index) => (
-                <tr key={user._id} className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition">
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words font-medium">{index + 1 + startIndex}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{user.userName}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{user.email}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{user.address}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{user.role}</td>
+                <tr
+                  key={user._id}
+                  className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
+                >
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words font-medium">
+                    {index + 1 + startIndex}
+                  </td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">
+                    {user.userName}
+                  </td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">
+                    {user.email}
+                  </td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">
+                    {user.address}
+                  </td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">
+                    {user.role}
+                  </td>
                   <td className="py-3 px-6 text-sl flex items-center gap-3">
                     <Link to={`/admin/users/edit/${user._id}`}>
-                      <div className="bg-blue-200 text-blue-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-blue-300 transition">
-                        <FaPenToSquare size={18} />
+                      <div
+                        className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition"
+                      >
+                        <FaEye size={18} />
                       </div>
                     </Link>
                   </td>
@@ -142,7 +175,7 @@ const UserList = () => {
         <Pagination pageCount={totalPages} onPageChange={handlePageClick} />
       </div>
     </div>
-  );
+  )
 };
 
 export default UserList;
