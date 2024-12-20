@@ -135,7 +135,7 @@ const BillList = () => {
                 <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
                   Mã hóa đơn
                 </th>
-                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700 w-[210px]">
                   Tên khách hàng
                 </th>
                 <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
@@ -171,7 +171,7 @@ const BillList = () => {
                       {bill._id}
                     </Link>
                   </td>
-                  <td className="py-3 px-4 text-sl text-gray-800">
+                  <td className="py-3 px-4 text-sl text-gray-800 break-words">
                     <Link to={`/admin/bills/${bill._id}/detail`}>
                       {bill.reservation_id?.userName}
                     </Link>
@@ -209,15 +209,15 @@ const BillList = () => {
                     </Link>
                   </td>
                   <td className="py-3 px-4 text-sl text-gray-800 cursor-pointer">
-                    <div className="flex items-center gap-3">
+                    <div className="flex justify-center gap-3">
                       <Link to={`/admin/bills/${bill._id}/detail`}>
                         <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">
                           <FaEye size={18} />
                         </div>
                       </Link>
-                      <div className="bg-red-200 text-red-800 px-2 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-red-300 transition">
+                      {/* <div className="bg-red-200 text-red-800 px-2 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-red-300 transition">
                         <FaRegTrashCan size={18} />
-                      </div>
+                      </div> */}
                     </div>
                   </td>
                 </tr>
