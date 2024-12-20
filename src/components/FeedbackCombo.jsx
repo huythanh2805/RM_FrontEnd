@@ -58,8 +58,10 @@ const FeedbackCombo = () => {
 
   // phân trang
   const startIndex = (currentPage - 1) * itemPerPage;
-  const currentItems = dataComment.slice(startIndex, startIndex + itemPerPage);
-  const pageCount = Math.ceil(dataComment.length / itemPerPage);
+  const currentItems = dataComment
+    .reverse()
+    .slice(startIndex, startIndex + itemPerPage);
+  const pageCount = Math.ceil(dataComment.reverse().length / itemPerPage);
 
   const handlePageClick = (e) => {
     setCurrentPage(e.selected + 1);

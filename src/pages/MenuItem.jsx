@@ -108,25 +108,14 @@ function MenuItem({ item, onCLick }) {
           <span className="text-xl font-bold" style={{ color: colorCode }}>
             {formatCurrency(item.price)}
           </span>
-          {/* <ReactStars
-            count={5}
-            size={24}
-            isHalf={true}
-            emptyIcon={<i className="far fa-star"></i>}
-            halfIcon={<i className="fa fa-star-half-alt"></i>}
-            fullIcon={<i className="fa fa-star"></i>}
-            activeColor="#ffd700"
-            value={4.9}
-            edit={false}
-          /> */}
-          <p className="text-sm font-medium text-gray-700">
+          {/* <p className="text-sm font-medium text-gray-700">
             <span className="text-gray-500">
               {totalFeedback > 0 ? "Lượt đánh giá: " : "Chưa có đánh giá"}
             </span>
             <span className="font-semibold">
               {totalFeedback > 0 ? totalFeedback : ""}
             </span>
-          </p>
+          </p> */}
         </div>
         <div className="absolute inset-x-0 bottom-0 flex justify-center items-center">
           <div
