@@ -1,2 +1,9 @@
-build:
-  baseImage: node:18
+services:
+  - type: web
+    name: golden-fork
+    env: static
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /.*
+        destination: /index.html

@@ -89,28 +89,28 @@ const FeedbackList = () => {
           <table className="min-w-full bg-white">
             <thead className="border-b border-[#d5d5d5] text-left text-sl font-semibold text-[#202224] uppercase tracking-wider">
               <tr>
-                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                <th className="py-3 pl-4 pr-3 text-left text-sl font-semibold text-gray-700">
                   STT
                 </th>
-                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                <th className="py-3 px-3 text-left text-sl font-semibold text-gray-700 w-[180px]">
                   Tên khách hàng
                 </th>
-                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                <th className="py-3 px-3 text-left text-sl font-semibold text-gray-700 w-[220px]">
                   Tên món ăn
                 </th>
-                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                <th className="py-3 px-3 text-left text-sl font-semibold text-gray-700">
                   Số sao
                 </th>
-                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                <th className="py-3 px-3 text-left text-sl font-semibold text-gray-700">
                   Ngày
                 </th>
-                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                <th className="py-3 px-3 text-left text-sl font-semibold text-gray-700 w-[290px]">
                   Đánh giá
                 </th>
-                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                <th className="py-3 px-3 text-left text-sl font-semibold text-gray-700">
                   Trạng thái
                 </th>
-                <th className="py-3 px-4 text-center text-sl font-semibold text-gray-700">
+                <th className="py-3 pl-3 pr-4 text-center text-sl font-semibold text-gray-700">
                   Hành động
                 </th>
               </tr>
@@ -121,18 +121,18 @@ const FeedbackList = () => {
                   key={feedback._id}
                   className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
                 >
-                  <td className="py-3 px-6 text-sl font-medium text-gray-800">
+                  <td className="py-3 pl-4 pr-3 text-sl font-medium text-gray-800">
                     {startIndex + index + 1}
                   </td>
-                  <td className="py-3 px-4 text-sl">
+                  <td className="py-3 px-3 text-sl break-words">
                     {feedback.user_id.userName
                       ? feedback.user_id.userName
                       : feedback.user_id.email}
                   </td>
-                  <td className="py-3 px-4 text-sl">
+                  <td className="py-3 px-3 text-sl break-words">
                     {feedback?.dish_id?.name || feedback?.setcombo_id?.name}
                   </td>
-                  <td className="py-3 px-4 text-sl">
+                  <td className="py-3 px-3 text-sl w-[120px]">
                     <ReactStars
                       count={5}
                       size={20}
@@ -141,13 +141,13 @@ const FeedbackList = () => {
                       activeColor="#ffd700"
                     />
                   </td>
-                  <td className="py-3 px-4 text-sl text-justify">
+                  <td className="py-3 px-3 text-sl">
                     {new Date(feedback.createdAt).toLocaleDateString("vi-VN")}
                   </td>
-                  <td className="py-3 px-4 text-sl w-1/4 text-justify">
+                  <td className="py-3 px-4 text-sl text-justify break-words">
                     {feedback.comment}
                   </td>
-                  <td className="py-3 px-4 text-sl">
+                  <td className="py-3 px-2 text-sl">
                     {feedback.isShow ? (
                       <span className="px-2 py-1 text-sl font-semibold rounded-lg bg-green-100 text-green-800">
                         Hiển thị
@@ -158,7 +158,7 @@ const FeedbackList = () => {
                       </span>
                     )}
                   </td>
-                  <td className="py-3 px-4 text-sl cursor-pointer">
+                  <td className="py-3 px-1 text-sl cursor-pointer">
                     <div className="flex items-center justify-center gap-3">
                      
                       {
@@ -187,7 +187,9 @@ const FeedbackList = () => {
           </table>
 
           {/* Phân trang */}
-          <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
+          {pageCount > 1 && (
+            <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
+          )}
         </div>
       </div>
     </div>

@@ -218,12 +218,10 @@ const Menu = ({ limit, isFilter = true }) => {
         />
       )}
 
-      <div
-        className={`w-full flex ${isFilter ? "p-10" : "p-5"} justify-center`}
-      >
-        {/* Filter */}
+      <div className={`w-full flex ${isFilter ? "p-5" : "p-5"} justify-center`}>
+        {/* Filter ở trang desktop */}
         {isFilter && (
-          <div className="w-[300px] mt-5 flex flex-col gap-5 items-center">
+          <div className="w-[300px] mt-5 flex-col gap-5 items-center lg:flex hidden">
             {/* Lọc theo danh mục */}
             <div class="w-full border border-[#fb6340] text-[#fb6340] p-5 rounded-lg shadow-lg">
               <div style={{backgroundColor: colorCode }} class="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">
@@ -360,7 +358,7 @@ const Menu = ({ limit, isFilter = true }) => {
                 </p>
 
                 {/* Input Search */}
-                <div className="w-full max-w-sm min-w-[200px] relative">
+                <div className="w-full sm:max-w-sm min-w-[200px] relative">
                   <label htmlFor="Search" className="sr-only">
                     Search
                   </label>
@@ -402,58 +400,156 @@ const Menu = ({ limit, isFilter = true }) => {
                   </span>
                 </div>
               </div>
+
+              {/* Filter trên mobile ẩn khi ở trang desktop */}
+              <div className="w-full  mt-5 flex flex-col gap-5 items-center lg:hidden">
+                {/* Lọc theo danh mục */}
+                <div className="w-full  border border-[#fb6340] text-[#fb6340] p-5 rounded-lg shadow-lg">
+                  <div className="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">
+                    DANH MỤC
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap gap-3">
+                      {categories.map((category, index) => (
+                        <div
+                          key={index}
+                          className={`flex gap-3 items-center cursor-pointer transition duration-300 ${
+                            selectedCategory === category
+                              ? "text-orange-500 font-bold"
+                              : "text-gray-500"
+                          }`}
+                          onClick={() => {
+                            setSelectedCategory(category);
+                            setCurrentPage(1);
+                          }}
+                          style={{ width: "calc(50% - 12px)" }} // Điều chỉnh để hiển thị 2 items mỗi hàng
+                        >
+                          <div
+                            className={`w-8 h-8 flex items-center justify-center rounded-full border-2 transition ${
+                              selectedCategory === category
+                                ? "border-orange-500 bg-orange-100"
+                                : "border-gray-300"
+                            }`}
+                            style={{ borderColor: colorCode }}
+                          >
+                            <img
+                              src={`imgs/${categoryImages[category]}`}
+                              alt=""
+                              className="w-8 h-8 object-contain"
+                            />
+                          </div>
+                          <span className="text-sm">{category}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Lọc theo khoảng giá */}
+                <div className="w-full max-w-[320px] border border-[#fb6340] text-[#fb6340] p-5 rounded-lg shadow-lg">
+                  <div className="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">
+                    Khoảng giá
+                  </div>
+
+                  <div className="flex flex-col items-center gap-5">
+                    <Range
+                      step={10000}
+                      min={0}
+                      max={500000}
+                      values={sliderValues}
+                      onChange={(values) => {
+                        setSliderValues(values);
+                        setPriceRange({ min: values[0], max: values[1] });
+                        setCurrentPage(1);
+                      }}
+                      renderTrack={({ props, children }) => (
+                        <div
+                          {...props}
+                          style={{
+                            ...props.style,
+                            height: "6px",
+                            width: "100%",
+                            background: getTrackBackground({
+                              values: sliderValues,
+                              colors: ["#fb6340", "#ccc", "#fb6340"],
+                              min: 0,
+                              max: 500000,
+                            }),
+                            borderRadius: "4px",
+                          }}
+                        >
+                          {children}
+                        </div>
+                      )}
+                      renderThumb={({ props, index }) => (
+                        <div
+                          {...props}
+                          style={{
+                            ...props.style,
+                            height: "20px",
+                            width: "20px",
+                            borderRadius: "50%",
+                            backgroundColor: "#FFF",
+                            border: "2px solid #fb6340",
+                            boxShadow: "0px 2px 6px #AAA",
+                          }}
+                        >
+                          <div
+                            style={{
+                              position: "absolute",
+                              top: "-28px",
+                              color: "#fff",
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              padding: "2px",
+                              borderRadius: "4px",
+                              backgroundColor: "#fb6340",
+                            }}
+                          >
+                            {formatCurrency(sliderValues[index])}
+                          </div>
+                        </div>
+                      )}
+                    />
+                    <div className="flex justify-between w-full text-sm font-semibold">
+                      <span>Từ: {formatCurrency(sliderValues[0])}</span>
+                      <span>Đến: {formatCurrency(sliderValues[1])}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Nút đặt lại */}
+                <div className="w-full max-w-[320px]">
+                  <div
+                    className="w-full flex gap-2 items-center justify-center bg-[#fb6340] hover:bg-white hover:text-[#fb6340] hover:border hover:border-[#fb6340] text-white py-1.5 pr-1 cursor-pointer rounded-md transition"
+                    onClick={() => handleReset()}
+                  >
+                    <GrPowerReset />
+                    <p className="text-sm">Đặt lại</p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
-          {/* Navbar tạm ẩm */}
-          {/* <div className="flex flex-wrap justify-center items-center gap-8 mt-10 sm:flex-row sm:justify-center sm:gap-6 md:gap-8">
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                className={`flex flex-col items-center cursor-pointer transition duration-300 ${
-                  selectedCategory === category
-                    ? "text-orange-500 font-bold"
-                    : "text-gray-500"
-                }`}
-                onClick={() => setSelectedCategory(category)}
-              >
-                <div
-                  className={`w-20 h-20 flex items-center justify-center rounded-full border-2 transition ${
-                    selectedCategory === category
-                      ? "border-orange-500 bg-orange-100"
-                      : "border-gray-300"
-                  }`}
-                  style={{ borderColor: colorCode }}
-                >
-                  <img
-                    src={`imgs/${categoryImages[category]}`}
-                    alt={category}
-                    className="w-15 h-[50px] text-black"
-                  />
-                </div>
-
-                <span className="mt-2" style={{ color: colorCode }}>
-                  {category}
-                </span>
-              </div>
-            ))}
-          </div> */}
-
           {/* Danh sách món ăn */}
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-5 max-w-5xl mx-auto mb-8 px-4 sm:px-40 lg:px-8">
-            {currentItems.length > 0 ? (
-              currentItems.map((item) => (
-                <MenuItem
-                  key={item._id}
-                  item={item}
-                  onCLick={handleAddToCart}
-                />
-              ))
-            ) : (
-              <div className="col-span-full flex justify-center items-center">
-                <p className="text-gray-500">Không tìm thấy món ăn !!</p>
-              </div>
-            )}
+          <div className="flex flex-col items-center justify-center min-h-screen">
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-5 max-w-5xl mx-auto mb-8 px-4 sm:px-40 lg:px-8">
+              {currentItems.length > 0 ? (
+                currentItems.map((item) => (
+                  <MenuItem
+                    key={item._id}
+                    item={item}
+                    onCLick={handleAddToCart}
+                  />
+                ))
+              ) : (
+                <div className="col-span-full flex justify-center items-center">
+                  <p className="text-gray-500">Không tìm thấy món ăn !!</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Phân trang */}

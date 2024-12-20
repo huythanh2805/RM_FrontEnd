@@ -2,10 +2,8 @@ import Footer from "@/components/layouts/Footer";
 import Header from "@/components/layouts/Header";
 import SubscribeUsNow from "@/components/layouts/SubscribeUsNow";
 import Messager from "@/components/Messager";
-import ScrollToTopButton from "@/components/ScrollToTopButton";
-import Brush from "@/components/siteColor/brush";
+import Brush from "@/components/siteColor/Brush";
 import { useThemeContext } from "@/contexts/ThemeProvider";
-import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 const HomeLayout = () => {
@@ -19,7 +17,7 @@ const HomeLayout = () => {
         } transition-all duration-500 ease-in-out mx-auto overflow-hidden relative z-10 bg-white`}
       >
         <Header />
-        <main >
+        <main>
           <Brush />
           {/* <ScrollToTopButton /> */}
           <Messager />

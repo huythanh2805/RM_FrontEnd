@@ -135,7 +135,7 @@ const BillList = () => {
                 <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
                   Mã hóa đơn
                 </th>
-                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
+                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700 w-[210px]">
                   Tên khách hàng
                 </th>
                 <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
@@ -156,77 +156,87 @@ const BillList = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((bill, index) => (
-                <tr
-                  key={bill._id}
-                  className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
-                >
-                  <td className="py-3 px-4 text-sl font-medium text-gray-800">
-                    <Link to={`/admin/bills/${bill._id}/detail`}>
-                      {startIndex + index + 1}
-                    </Link>
-                  </td>
-                  <td className="py-3 px-4 text-sl text-gray-800">
-                    <Link to={`/admin/bills/${bill._id}/detail`}>
-                      {bill._id}
-                    </Link>
-                  </td>
-                  <td className="py-3 px-4 text-sl text-gray-800">
-                    <Link to={`/admin/bills/${bill._id}/detail`}>
-                      {bill.reservation_id?.userName}
-                    </Link>
-                  </td>
-                  <td className="py-3 px-4 text-sl text-gray-800">
-                    <Link to={`/admin/bills/${bill._id}/detail`}>
-                      {bill.reservation_id?.phoneNumber}
-                    </Link>
-                  </td>
-                  <td className="py-3 px-4 text-sl text-gray-800">
-                    <Link to={`/admin/bills/${bill._id}/detail`}>
-                      {new Date(bill.reservation_id?.startTime).toLocaleString(
-                        "vi-VN"
-                      )}
-                    </Link>
-                  </td>
-                  <td className="py-3 px-4 text-sl text-gray-800">
-                    <Link to={`/admin/bills/${bill._id}/detail`}>
-                      {formatCurrency(bill.total_money)}
-                    </Link>
-                  </td>
-                  <td className="py-3 px-4 text-sl text-gray-800">
-                    <Link to={`/admin/bills/${bill._id}/detail`}>
-                      <span
-                        className={`px-2 py-1 text-sl font-semibold rounded-lg ${
-                          bill.status === "ISPAID"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {bill.status === "ISPAID"
-                          ? "Đã thanh toán"
-                          : "Chưa thanh toán"}
-                      </span>
-                    </Link>
-                  </td>
-                  <td className="py-3 px-4 text-sl text-gray-800 cursor-pointer">
-                    <div className="flex items-center gap-3">
+              {currentItems.length > 0 ? (
+                currentItems.map((bill, index) => (
+                  <tr
+                    key={bill._id}
+                    className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
+                  >
+                    <td className="py-3 px-4 text-sl font-medium text-gray-800">
                       <Link to={`/admin/bills/${bill._id}/detail`}>
-                        <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">
-                          <FaEye size={18} />
-                        </div>
+                        {startIndex + index + 1}
                       </Link>
-                      <div className="bg-red-200 text-red-800 px-2 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-red-300 transition">
+                    </td>
+                    <td className="py-3 px-4 text-sl text-gray-800">
+                      <Link to={`/admin/bills/${bill._id}/detail`}>
+                        {bill._id}
+                      </Link>
+                    </td>
+                    <td className="py-3 px-4 text-sl text-gray-800 break-words">
+                      <Link to={`/admin/bills/${bill._id}/detail`}>
+                        {bill.reservation_id?.userName}
+                      </Link>
+                    </td>
+                    <td className="py-3 px-4 text-sl text-gray-800">
+                      <Link to={`/admin/bills/${bill._id}/detail`}>
+                        {bill.reservation_id?.phoneNumber}
+                      </Link>
+                    </td>
+                    <td className="py-3 px-4 text-sl text-gray-800">
+                      <Link to={`/admin/bills/${bill._id}/detail`}>
+                        {new Date(
+                          bill.reservation_id?.startTime
+                        ).toLocaleString("vi-VN")}
+                      </Link>
+                    </td>
+                    <td className="py-3 px-4 text-sl text-gray-800">
+                      <Link to={`/admin/bills/${bill._id}/detail`}>
+                        {formatCurrency(bill.total_money)}
+                      </Link>
+                    </td>
+                    <td className="py-3 px-4 text-sl text-gray-800">
+                      <Link to={`/admin/bills/${bill._id}/detail`}>
+                        <span
+                          className={`px-2 py-1 text-sl font-semibold rounded-lg ${
+                            bill.status === "ISPAID"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {bill.status === "ISPAID"
+                            ? "Đã thanh toán"
+                            : "Chưa thanh toán"}
+                        </span>
+                      </Link>
+                    </td>
+                    <td className="py-3 px-4 text-sl text-gray-800 cursor-pointer">
+                      <div className="flex justify-center gap-3">
+                        <Link to={`/admin/bills/${bill._id}/detail`}>
+                          <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">
+                            <FaEye size={18} />
+                          </div>
+                        </Link>
+                        {/* <div className="bg-red-200 text-red-800 px-2 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-red-300 transition">
                         <FaRegTrashCan size={18} />
+                      </div> */}
                       </div>
-                    </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" className="text-center py-4 text-gray-500">
+                    Không tìm thấy hóa đơn..
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
 
           {/* Phân trang */}
-          <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
+          {pageCount > 1 && (
+            <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
+          )}
         </div>
       </div>
     </div>

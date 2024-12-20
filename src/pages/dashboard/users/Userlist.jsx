@@ -22,7 +22,8 @@ const UserList = () => {
   };
   // Xử lý khi dữ liệu đang tải hoặc gặp lỗi
   if (isLoading) return <p className="text-center text-blue-600">Loading...</p>;
-  if (error) return <p className="text-center text-red-600">Error loading user list.</p>;
+  if (error)
+    return <p className="text-center text-red-600">Error loading user list.</p>;
 
   // Hàm xóa người dùng
   const handleDelete = async (userId) => {
@@ -34,13 +35,18 @@ const UserList = () => {
   // Lọc người dùng theo role
   const filteredUsers = list
     .filter((user) => selectedRole === "Tất cả" || user.role === selectedRole)
-    .filter((user) => user.userName.toLowerCase().includes(searchValue.toLowerCase()));
+    .filter((user) =>
+      user.userName.toLowerCase().includes(searchValue.toLowerCase())
+    );
 
   // Tính toán cho phân trang
   const totalItems = filteredUsers.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+  const currentItems = filteredUsers.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   // Xử lý khi thay đổi trang
   const handlePageClick = ({ selected }) => {
@@ -157,6 +163,7 @@ const UserList = () => {
                     {user.role}
                   </td>
                   <td className="py-3 px-6 text-sl flex items-center gap-3">
+
                     <Link to={`/admin/users/edit/${user._id}`}>
                       <div
                         className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition"
@@ -172,7 +179,9 @@ const UserList = () => {
         </div>
 
         {/* Phân trang */}
-        <Pagination pageCount={totalPages} onPageChange={handlePageClick} />
+        {totalPages > 1 && (
+          <Pagination pageCount={totalPages} onPageChange={handlePageClick} />
+        )}
       </div>
     </div>
   )

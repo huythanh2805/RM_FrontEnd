@@ -196,9 +196,9 @@ const SetComboList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
                   Giá
                 </th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
+                {/* <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
                   Mô tả
-                </th>
+                </th> */}
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">
                   Trạng thái
                 </th>
@@ -241,10 +241,9 @@ const SetComboList = () => {
                     <td className="py-3 px-6 text-sl text-gray-800 break-words">
                       {formatCurrency(d.price)}
                     </td>
-                    <td className="py-3 px-6 text-sl text-gray-800 break-words">
+                    {/* <td className="py-3 px-6 text-sl text-gray-800 break-words">
                       {d.desc}
-                    </td>
-
+                    </td> */}
                     <td className="py-3 px-6 text-sl text-gray-800 break-words">
                       {d.isShow ? (
                         <span className="px-2 py-1 text-sl font-semibold rounded-lg bg-green-100 text-green-800">
@@ -289,7 +288,9 @@ const SetComboList = () => {
           </table>
 
           {/* Phân trang */}
-          <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
+          {pageCount > 1 && (
+            <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
+          )}
         </div>
       </div>
     </div>
