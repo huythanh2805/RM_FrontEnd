@@ -24,7 +24,6 @@ const Menu = ({ limit, isFilter = true }) => {
   const [searchValue, setSearchValue] = useState("");
   const [priceRange, setPriceRange] = useState({ min: 0, max: Infinity });
   const [sliderValues, setSliderValues] = useState([0, 500000]);
-
   const [opacity, setOpacity] = useState(1);
   const [translateY, setTranslateY] = useState(0);
   const categoryImages = {
@@ -35,7 +34,7 @@ const Menu = ({ limit, isFilter = true }) => {
     "Tráng miệng": "trangmieng.png",
     "Combo món": "monchinh.png",
   };
-
+  
   const location = useLocation();
   const isMenuPage = location.pathname === "/menu";
 
@@ -173,7 +172,7 @@ const Menu = ({ limit, isFilter = true }) => {
       });
     }
   };
-
+  console.log({colorCode})
   return (
     <div className="w-full relative">
       {isMenuPage && (
@@ -225,7 +224,7 @@ const Menu = ({ limit, isFilter = true }) => {
           <div className="w-[300px] mt-5 flex-col gap-5 items-center lg:flex hidden">
             {/* Lọc theo danh mục */}
             <div class="w-full border border-[#fb6340] text-[#fb6340] p-5 rounded-lg shadow-lg">
-              <div class="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">
+              <div style={{backgroundColor: colorCode }} class="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">
                 DANH MỤC
               </div>
 
@@ -249,7 +248,7 @@ const Menu = ({ limit, isFilter = true }) => {
                           ? "border-orange-500 bg-orange-100"
                           : "border-gray-300"
                       }`}
-                      style={{ borderColor: colorCode }}
+                      style={{color: colorCode }}
                     >
                       <img
                         src={`imgs/${categoryImages[category]}`}
@@ -265,7 +264,7 @@ const Menu = ({ limit, isFilter = true }) => {
 
             {/* Lọc theo khoảng giá */}
             <div className="w-full border border-[#fb6340] text-[#fb6340] p-5 rounded-lg shadow-lg">
-              <div className="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">
+              <div style={{backgroundColor: colorCode }} className="bg-[#fb6340] text-white font-bold text-lg p-3 mb-5 rounded-lg">
                 Khoảng giá
               </div>
 
@@ -289,7 +288,7 @@ const Menu = ({ limit, isFilter = true }) => {
                         width: "100%",
                         background: getTrackBackground({
                           values: sliderValues,
-                          colors: ["#fb6340", "#ccc", "#fb6340"],
+                          colors: [ colorCode, "#ccc", colorCode],
                           min: 0,
                           max: 500000,
                         }),
@@ -321,7 +320,7 @@ const Menu = ({ limit, isFilter = true }) => {
                           fontWeight: "bold",
                           padding: "2px",
                           borderRadius: "4px",
-                          backgroundColor: "#fb6340",
+                          backgroundColor: colorCode,
                         }}
                       >
                         {formatCurrency(sliderValues[index])}
@@ -330,8 +329,8 @@ const Menu = ({ limit, isFilter = true }) => {
                   )}
                 />
                 <div className="flex justify-between w-full text-sm font-semibold">
-                  <span>Từ: {formatCurrency(sliderValues[0])}</span>
-                  <span>Đến: {formatCurrency(sliderValues[1])}</span>
+                  <span style={{color: colorCode }}>Từ: {formatCurrency(sliderValues[0])}</span>
+                  <span style={{color: colorCode }}>Đến: {formatCurrency(sliderValues[1])}</span>
                 </div>
               </div>
             </div>
@@ -339,6 +338,7 @@ const Menu = ({ limit, isFilter = true }) => {
             {/* Nút đặt lại */}
             <div className="w-full">
               <div
+                style={{backgroundColor: colorCode }}
                 className="w-[100px] flex gap-2 items-center justify-center bg-[#fb6340] hover:bg-white hover:text-[#fb6340] hover:border hover:border-[#fb6340] text-white py-1.5 pr-1 cursor-pointer rounded-md transition"
                 onClick={() => handleReset()}
               >
@@ -351,9 +351,9 @@ const Menu = ({ limit, isFilter = true }) => {
 
         <div className={isFilter ? "w-[1024px]" : "w-full"}>
           {isFilter && (
-            <div className="w-full px-4 sm:px-20 lg:px-8">
-              <div className="w-full flex flex-col sm:flex-row items-start sm:items-end justify-between border-b-2 border-[#fb6340] pb-4">
-                <p className="text-[#fb6340] text-3xl font-semibold mb-4 sm:mb-0">
+            <div className="w-full px-4 sm:px-40 lg:px-8">
+              <div style={{borderColor: colorCode }} className="w-full flex items-end justify-between border-b-2 border-[#fb6340] pb-4">
+                <p style={{color: colorCode }} className="text-[#fb6340] text-3xl font-semibold">
                   Danh sách món ăn
                 </p>
 
