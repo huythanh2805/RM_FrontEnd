@@ -71,3 +71,18 @@ export function formatPhoneNumber(phoneNumber) {
 export function shortenNumber(num) {
   return num / 1000;
 }
+
+export function getStatusMessage(status) {
+  switch (status) {
+      case "ORDERED":
+          return "Đã gọi";
+      case "ISPREPARED":
+          return "Đang chuẩn bị";
+      case "ISCOMPLETED":
+          return "Hoàn thành";
+      case "ISCANCELED":
+          return "Đã hủy";
+      default:
+          return "Trạng thái không xác định";
+  }
+}

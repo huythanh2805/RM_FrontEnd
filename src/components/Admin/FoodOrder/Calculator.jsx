@@ -5,10 +5,11 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
-import { formatCurrency, ServerUrl, shortenNumber } from "@/utilities/utils";
-import { Check } from "lucide-react";
+import { formatCurrency, getStatusMessage, ServerUrl, shortenNumber } from "@/utilities/utils";
+import { Check, ChevronRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import { cn } from "@/lib/utils";
 
 const statusOptions = [
   {
@@ -269,74 +270,91 @@ const Calculator = ({
       });
     }
   };
+  const handleNavigateHistoryOrder = ()=> {
+    navigate(`/admin/order-history/${reservation_id}`)
+  }
   return (
     <div className="px-3 max-h-[800px] min-w-[650px] overflow-scroll">
       <div className="w-full text-xl">
         {/* Table Header */}
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 py-2 border-b font-bold text-gray-800 dark:text-gray-300">
-          <span className="col-span-2">Tên</span>
+          <span className="">Tên</span>
           <span className="text-center">Số lượng</span>
+          <span className="text-center">Trạng thái</span>
           <span className="text-right">Thành tiền</span>
         </div>
 
         {/* Ordered Foods */}
         {orderedFoods?.map((orderedFood) => {
-          if(!orderedFood.dish_id && orderedFood.type === 'dish') return <div>Không thể tìm thấy dữ liệu món ăn</div>
-          if(!orderedFood.dish_id  && orderedFood.type === "combo") return <div>Không thể tìm thấy dữ liệu combo</div>
+          if (!orderedFood.dish_id && orderedFood.type === "dish")
+            return <div>Không thể tìm thấy dữ liệu món ăn</div>
+          if (!orderedFood.dish_id && orderedFood.type === "combo")
+            return <div>Không thể tìm thấy dữ liệu combo</div>
 
           return (
-            <div key={orderedFood._id} className="grid grid-cols-3 sm:grid-cols-4 gap-4 py-2 border-b items-center">
+            <div
+              key={orderedFood._id}
+              className="grid grid-cols-3 sm:grid-cols-4 gap-4 py-2 border-b items-center"
+            >
               {/* Product Info */}
-              <div className="col-span-2 flex items-center gap-4">
+              <div className=" flex items-center gap-4">
                 <img
                   src={orderedFood?.images[0]}
                   alt={orderedFood?.name}
                   className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover"
                 />
                 <div className="flex-1">
-                  <h3 className="text-sm sm:text-lg font-medium truncate">{orderedFood.name}</h3>
+                  <h3 className="text-sm sm:text-lg font-medium truncate max-w-[130px]">
+                    {orderedFood.name}
+                  </h3>
                   <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                     {formatCurrency(orderedFood.price)}
                   </p>
                 </div>
               </div>
-  
+
               {/* Quantity Control */}
               <div className="flex items-center justify-center gap-2">
-                <button
-                  onClick={() => handleMinus(orderedFood._id, orderedFood.quantity, orderedFood.type)}
-                  className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded bg-gray-200 dark:bg-gray-700 hover:scale-95"
-                >
-                  -
-                </button>
-                <span className="text-sm sm:text-base">{orderedFood.quantity}</span>
-                <button
-                  onClick={() => handlePlus(orderedFood._id, orderedFood.quantity, orderedFood.type)}
-                  className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded bg-gray-200 dark:bg-gray-700 hover:scale-95"
-                >
-                  +
-                </button>
+                <span className="text-sm sm:text-base">
+                  {orderedFood.quantity}
+                </span>
               </div>
-  
+
+              {/* Status */}
+              <div className="flex items-center justify-center gap-2">
+                    <div
+                      className={cn(
+                        "w-full px-2 py-1 rounded-lg text-white text-center text-lg",
+                        orderedFood.status === "ISPREPARED" && "bg-light-warning",
+                        orderedFood.status === "ORDERED" && "bg-purple-1",
+                        orderedFood.status === "ISCOMPLETED" && "bg-light-success ",
+                        orderedFood.status === "ISCANCELED" && "bg-red-1"
+                      )}
+                    >
+                      {getStatusMessage(orderedFood.status)}
+                    </div>
+              </div>
+
               <div className="flex flex-col items-end">
                 <p className="text-sm sm:text-lg font-semibold">
                   {formatCurrency(orderedFood.quantity * orderedFood.price)}
                 </p>
-                <button
-                  onClick={() => handleDeleteOrderedFood(orderedFood._id, orderedFood.type)}
-                  className="text-red-500 mt-1 text-xs sm:text-sm hover:underline"
-                >
-                  Xóa
-                </button>
               </div>
             </div>
           )
         })}
-
         {/* Total Summary */}
         <div className="flex justify-between items-center mt-4 sm:mt-6">
           <h3 className="text-lg sm:text-xl font-medium">Tổng cộng:</h3>
-          <p className="text-lg sm:text-xl text-red-500 font-bold">{formatCurrency(totalPrice)}</p>
+          <p className="text-lg sm:text-xl text-red-500 font-bold">
+            {formatCurrency(totalPrice)}
+          </p>
+        </div>
+        {/* order history */}
+        <div className="flex justify-end items-center mt-4 sm:mt-6">
+          <Button variant="link" onClick={()=> handleNavigateHistoryOrder()}>
+            Lịch sử đặt món
+          </Button>
         </div>
       </div>
 
@@ -375,7 +393,10 @@ const Calculator = ({
                       <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
                         Nhập mã
                       </p>
-                      <form onSubmit={handleDiscountInput} className="flex-[2] min-w-[244px]">
+                      <form
+                        onSubmit={handleDiscountInput}
+                        className="flex-[2] min-w-[244px]"
+                      >
                         <Input
                           className=" rounded-none placeholder:text-light-textSoft dark:placeholder:text-dark-textSoft
                        placeholder:font-semibold dark:placeholder:font-semibold placeholder:text-[17px] dark:placeholder:text-[17px] "
@@ -400,7 +421,9 @@ const Calculator = ({
                         placeholder={
                           discount.discountId?.discountType === "PERCENTAGE"
                             ? `${discount.code}  (${discount.discountId.discountValue}%)`
-                            : `${discount.code} (${shortenNumber(Number(discount.discountId.discountValue))}k)`
+                            : `${discount.code} (${shortenNumber(
+                                Number(discount.discountId.discountValue)
+                              )}k)`
                         }
                       />
                     </div>
@@ -458,7 +481,9 @@ const Calculator = ({
                     <p className="flex-1 h-full bg-light-bg dark:bg-dark-bg_2 flex items-center justify-start px-2">
                       Phương thức thanh toán
                     </p>
-                    <select onChange={(e) => handleMethodChange(e.target.value)}>
+                    <select
+                      onChange={(e) => handleMethodChange(e.target.value)}
+                    >
                       <option value="cash">Tiền mặt</option>
                       <option value="transfer">Chuyển khoản</option>
                     </select>
@@ -466,7 +491,11 @@ const Calculator = ({
                   {paymentMethod === "transfer" && qrCodeUrl && (
                     <div className="flex flex-col justify-center items-center">
                       <p class="mb-2">Quét mã QR để thanh toán:</p>
-                      <img src={qrCodeUrl} alt="QR code for payment" className="w-64 h-64 object-contain" />
+                      <img
+                        src={qrCodeUrl}
+                        alt="QR code for payment"
+                        className="w-64 h-64 object-contain"
+                      />
                     </div>
                   )}
 
@@ -495,33 +524,51 @@ const Calculator = ({
                 <Table className="">
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="min-w-[200px] text-xl">Tên</TableHead>
-                      <TableHead className="text-center text-xl">Số lượng</TableHead>
-                      <TableHead className="text-right min-w-[105px] text-xl">Thành tiền</TableHead>
+                      <TableHead className="min-w-[200px] text-xl">
+                        Tên
+                      </TableHead>
+                      <TableHead className="text-center text-xl">
+                        Số lượng
+                      </TableHead>
+                      <TableHead className="text-right min-w-[105px] text-xl">
+                        Thành tiền
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
 
                   <TableBody className="max-w-[650px]">
                     {orderedFoods?.map((orderedFood) => {
-                      if(!orderedFood.dish_id  && orderedFood.type === "dish") return <div>Không thể tìm thấy dữ liệu món ăn</div>
-                      if(!orderedFood.dish_id  && orderedFood.type === "combo") return <div>Không thể tìm thấy dữ liệu combo</div>
+                      if (!orderedFood.dish_id && orderedFood.type === "dish")
+                        return <div>Không thể tìm thấy dữ liệu món ăn</div>
+                      if (!orderedFood.dish_id && orderedFood.type === "combo")
+                        return <div>Không thể tìm thấy dữ liệu combo</div>
                       return (
                         <TableRow key={orderedFood._id} className="border-b">
                           <TableCell className="font-medium">
                             <div className="flex items-center gap-4">
                               <div className="w-16 h-16">
-                                <img src={orderedFood.images[0]} alt={orderedFood.name} className="w-full h-full " />
+                                <img
+                                  src={orderedFood.images[0]}
+                                  alt={orderedFood.name}
+                                  className="w-full h-full "
+                                />
                               </div>
-                              <h3 className="text-sm sm:text-lg font-medium truncate">{orderedFood.name}</h3>
+                              <h3 className="text-sm sm:text-lg font-medium truncate">
+                                {orderedFood.name}
+                              </h3>
                             </div>
                           </TableCell>
-  
+
                           <TableCell className="text-center">
-                            <span className="text-sm sm:text-base">{orderedFood.quantity}</span>
+                            <span className="text-sm sm:text-base">
+                              {orderedFood.quantity}
+                            </span>
                           </TableCell>
-  
+
                           <TableCell className="text-right text-sm sm:text-lg font-semibold">
-                            {formatCurrency(orderedFood.quantity * orderedFood.price)}
+                            {formatCurrency(
+                              orderedFood.quantity * orderedFood.price
+                            )}
                           </TableCell>
                         </TableRow>
                       )
@@ -530,7 +577,10 @@ const Calculator = ({
 
                   <TableFooter>
                     <TableRow className="bg-light-bg w-full">
-                      <TableCell colSpan={2} className="text-[20px] font-medium text-xl">
+                      <TableCell
+                        colSpan={2}
+                        className="text-[20px] font-medium text-xl"
+                      >
                         Tổng
                       </TableCell>
                       <TableCell className="text-right text-red-500 font-bold text-2xl">
@@ -559,7 +609,8 @@ const Calculator = ({
           </DialogHeader>
           <div className="w-full">
             <h2 className="leading-6 text-center text-light-text dark:text-dark-text">
-              Cảm ơn bạn đã dùng dịch vụ nhà hàng của chúng tôi. Check your bill?
+              Cảm ơn bạn đã dùng dịch vụ nhà hàng của chúng tôi. Check your
+              bill?
             </h2>
           </div>
           <div className="flex items-center justify-end py-2 gap-5">
@@ -585,6 +636,6 @@ const Calculator = ({
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 };
 export default Calculator;

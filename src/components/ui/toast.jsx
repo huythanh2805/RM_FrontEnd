@@ -30,7 +30,7 @@ const toastVariants = cva(
           "bg-red-500 py-4 px-4 rounded-md text-white text-center flex gap-4 border-none",
         success:
           "bg-green-500 py-4 px-4 rounded-md text-white text-center flex gap-4 border-none",
-        info: "bg-blue-500 py-4 px-4 rounded-md text-white text-center flex gap-4 border-none",
+        info: "bg-yellow-500 py-4 px-4 rounded-md text-white text-center flex gap-4 border-none",
       },
     },
     defaultVariants: {

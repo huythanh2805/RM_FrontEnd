@@ -14,6 +14,7 @@ import {
   MessageCircle,
   Ticket,
   TicketPlus,
+  ChefHat,
   Contact,
 } from "lucide-react";
 
@@ -49,6 +50,7 @@ export function AppSidebar() {
     { title: "Tài khoản", url: "/admin/users", icon: User },
     { title: "Nhân viên", url: "/admin/employees", icon: Contact },
     { title: "Đánh giá", url: "/admin/feedbacks", icon: MessageCircle },
+    { title: "Nhà bếp", url: "/admin/kitchen", icon: ChefHat  },
     
   ];
 
