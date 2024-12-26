@@ -3,6 +3,8 @@ import CreateDiscount from "@/components/Admin/Discount/CreateDiscount";
 import ListDiscount from "@/components/Admin/Discount/ListDiscount";
 import UpdateDiscount from "@/components/Admin/Discount/UpdateDiscount";
 import FoodOrder from "@/components/Admin/FoodOrder/FoodOrder";
+import OrderHistory from "@/components/Admin/FoodOrder/Order-history";
+import Kitchen from "@/components/Admin/Kitchen/Kitchen";
 import CreateReservation from "@/components/Admin/Reservation/CreateReservation";
 import ListReservation from "@/components/Admin/Reservation/ListReservation";
 import UpdateReservation from "@/components/Admin/Reservation/UpdateReservation";
@@ -262,6 +264,14 @@ const router = createBrowserRouter([
       {
         path: "feedbacks",
         element: <FeedbackList />,
+      },
+      {
+        path: "order-history/:id",
+        element: <OrderHistory />,
+      },
+      {
+        path: "kitchen",
+        element: <Kitchen />,
       },
     ],
   },

@@ -59,7 +59,9 @@ export default function DiscountForm({discount, id}) {
   });
    
   async function onSubmit(values) {
-    console.log({ ...values, userId: decodedToken.id });
+    if(values.discountType  === "PERCENTAGE" && values.discountValue >= 50) return toast({variant: "destructive", title: "Bạn không được tạo phiếu lớn hơn 50%"})
+    console.log(values.discountType);
+    console.log(values.discountValue);
     const url = discount ? ServerUrl + "/api/discount/"+id : ServerUrl + "/api/discount";
     setLoading(true);
     try {
@@ -178,6 +180,7 @@ export default function DiscountForm({discount, id}) {
                   className="focus-visible:ring-0 focus-visible:ring-offset-0 border-b focus-visible:border-b-blue-1"
                   type="date"
                   {...field}
+                  min={new Date().toISOString().split("T")[0]}
                   // Chuyển đổi giá trị thành định dạng YYYY-MM-DD
                   value={
                     field.value
