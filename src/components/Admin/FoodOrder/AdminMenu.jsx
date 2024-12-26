@@ -4,9 +4,14 @@ import { cn } from '@/lib/utils'
 import { ServerUrl } from '@/utilities/utils'
 import MenuItem from '@/pages/MenuItem'
 import _ from "lodash";
+import jwtDecode from 'jwt-decode'
 
  const AdminMenu =({ products ,dishes,combos, categories, reservation_id, orderedFoods, setOrderedFoods, deleteOrderedFood, updateOrderedFood})=>{
     const [activedLink, setActiveLink] = useState('all')
+      const [decodedToken, setDecodeToken] = useState(()=>{
+        const token = localStorage.getItem('token')
+        return jwtDecode(token)
+      })
     // choose dish depend on category id
     const categoryDishes = useMemo(()=>{
 
@@ -27,7 +32,7 @@ import _ from "lodash";
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({dish_id, reservation_id})
+        body: JSON.stringify({dish_id, reservation_id, user_id: decodedToken.id})
       })
       const data = await res.json()
       if(!res.ok) return null
@@ -36,24 +41,24 @@ import _ from "lodash";
     const hanleChooseDish = async (dish)=>{
       const {_id: dish_id} = dish
       try {
-        let existedOrderedFood
-         dish.type === 'combo' ? existedOrderedFood = orderedFoods.find(orderedFood => orderedFood.dish_id._id === dish.dish_id._id):
-         existedOrderedFood = orderedFoods.find(item => item.dish_id._id === dish_id)
-      if(existedOrderedFood){
-        if(reservation_id) await updateOrderedFood(existedOrderedFood._id, existedOrderedFood.quantity + 1, dish.type)
-        setOrderedFoods(pre=> [...pre.map(item=> item._id === existedOrderedFood._id ? {...item, quantity: item.quantity + 1} : item )]) 
-      }else{
+      //   let existedOrderedFood
+      //    dish.type === 'combo' ? existedOrderedFood = orderedFoods.find(orderedFood => orderedFood.dish_id._id === dish.dish_id._id):
+      //    existedOrderedFood = orderedFoods.find(item => item.dish_id._id === dish_id)
+      // if(existedOrderedFood){
+      //   if(reservation_id) await updateOrderedFood(existedOrderedFood._id, existedOrderedFood.quantity + 1, dish.type)
+      //   setOrderedFoods(pre=> [...pre.map(item=> item._id === existedOrderedFood._id ? {...item, quantity: item.quantity + 1} : item )]) 
+      // }else{
 
         if(reservation_id) {
           const newOrderedFood = await addOrderedFood(reservation_id, dish_id, dish.type)
           dish.type === 'combo' ? setOrderedFoods(pre => [...pre, {...newOrderedFood}]):
           setOrderedFoods(pre => [...pre, {...newOrderedFood}])
         }else{
-          dish.type === 'combo' ? setOrderedFoods(pre => [...pre, {...dish, quantity: 1, status: "ISPREPARED"} ]):
-          setOrderedFoods(pre => [...pre, {...dish, quantity: 1, status: "ISPREPARED", dish_id: {_id: dish._id }}])
+          dish.type === 'combo' ? setOrderedFoods(pre => [...pre, {...dish, quantity: 1, status: "ORDERED"} ]):
+          setOrderedFoods(pre => [...pre, {...dish, quantity: 1, status: "ORDERED", dish_id: {_id: dish._id }}])
         }
 
-      }
+      // }
       } catch (error) {
         console.log(error)
       }

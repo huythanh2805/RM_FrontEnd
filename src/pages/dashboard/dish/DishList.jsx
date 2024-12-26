@@ -290,12 +290,12 @@ const DishList = () => {
                             <FaPenToSquare size={18} />
                           </div>
                         </Link>
-                        <div
+                        {/* <div
                           className="bg-red-200 text-red-800 px-2 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-red-300 transition"
                           onClick={() => handleDelete(d._id)}
                         >
                           <FaRegTrashCan size={18} />
-                        </div>
+                        </div> */}
                       </div>
                     </td>
                   </tr>
