@@ -14,6 +14,7 @@ import {
   MessageCircle,
   Ticket,
   TicketPlus,
+  Contact,
 } from "lucide-react";
 
 import {
@@ -46,7 +47,7 @@ export function AppSidebar() {
     { title: "Bàn", url: "/admin/tables", icon: Table },
     { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
     { title: "Tài khoản", url: "/admin/users", icon: User },
-    // { title: "Nhân viên", url: "/admin/employees", icon: Contact },
+    { title: "Nhân viên", url: "/admin/employees", icon: Contact },
     { title: "Đánh giá", url: "/admin/feedbacks", icon: MessageCircle },
     
   ];
