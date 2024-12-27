@@ -28,9 +28,10 @@ export const addUserService = async (formData) => {
 };
 export const updateUserIsDelete = async (userId) => {
   const token = localStorage.getItem("token");
+  console.log(token);
   return await apiClient.put(
     `/users/admin/delete/${userId}`,
-    { isdelete: 1 },
+    {},
     {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -10,14 +10,13 @@ const UserAdd = () => {
   // Định nghĩa schema validation với yup
   const validationSchema = Yup.object({
     userName: Yup.string().required("Vui lòng nhập họ tên"),
-    email: Yup.string()
-      .email("Email không hợp lệ")
-      .required("Vui lòng nhập email"),
+    email: Yup.string().email("Email không hợp lệ").required("Vui lòng nhập email"),
     password: Yup.string().required("Vui lòng nhập mật khẩu"),
     phoneNumber: Yup.string()
       .required("Vui lòng nhập số điện thoại")
       .matches(/^[0-9]+$/, "Số điện thoại chỉ được chứa chữ số"),
     address: Yup.string().required("Vui lòng nhập địa chỉ"),
+    role: Yup.string().required("Vui lòng chọn vai trò"),
   });
 
   // Khởi tạo form với react-hook-form và yupResolver để áp dụng schema validation
@@ -29,6 +28,7 @@ const UserAdd = () => {
       password: "",
       phoneNumber: "",
       address: "",
+      role: "",
     },
   });
   const {
@@ -36,10 +36,7 @@ const UserAdd = () => {
     handleSubmit,
     formState: { errors },
   } = form;
-  const { handleImageChange, handleAdd, selectedImage, isLoading } = useUser(
-    null,
-    form
-  );
+  const { handleImageChange, handleAdd, selectedImage, isLoading } = useUser(null, form);
 
   const onSubmit = (data) => {
     handleAdd(data);
@@ -49,7 +46,7 @@ const UserAdd = () => {
     <div className="w-full min-h-screen bg-[#f9fafb]">
       <Navbar />
 
-      <div className="px-5 py-5">
+      <div className="m-12">
         <form onSubmit={handleSubmit(onSubmit)}>
           <p className="text-2xl font-semibold mb-4">Thêm mới tài khoản</p>
 
@@ -66,14 +63,8 @@ const UserAdd = () => {
                 ) : (
                   <label className="cursor-pointer flex flex-col items-center">
                     <Camera className="w-12 h-12 text-gray-400" />
-                    <span className="text-sm text-gray-500 mt-2">
-                      Upload photo
-                    </span>
-                    <input
-                      type="file"
-                      className="hidden"
-                      onChange={handleImageChange}
-                    />
+                    <span className="text-sm text-gray-500 mt-2">Upload photo</span>
+                    <input type="file" className="hidden" onChange={handleImageChange} />
                   </label>
                 )}
               </div>
@@ -81,12 +72,7 @@ const UserAdd = () => {
                 <span className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                   Change Photo
                 </span>
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={handleImageChange}
-                  accept="image/*"
-                />
+                <input type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
               </label>
               <div className="text-xs text-gray-500 text-center mt-3">
                 Allowed *.jpeg, *.jpg, *.png, *.gif
@@ -106,11 +92,7 @@ const UserAdd = () => {
                     placeholder="Username"
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
-                  {errors.userName && (
-                    <p className="text-red-500 text-sm">
-                      {errors.userName.message}
-                    </p>
-                  )}
+                  {errors.userName && <p className="text-red-500 text-sm">{errors.userName.message}</p>}
                 </div>
                 <div>
                   <label htmlFor="email">Email</label>
@@ -121,11 +103,7 @@ const UserAdd = () => {
                     placeholder="Email address"
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
-                  {errors.email && (
-                    <p className="text-red-500 text-sm">
-                      {errors.email.message}
-                    </p>
-                  )}
+                  {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
                 </div>
               </div>
 
@@ -139,11 +117,7 @@ const UserAdd = () => {
                     placeholder="Password"
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
-                  {errors.password && (
-                    <p className="text-red-500 text-sm">
-                      {errors.password.message}
-                    </p>
-                  )}
+                  {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
                 </div>
                 <div>
                   <label htmlFor="phoneNumber">Số điện thoại</label>
@@ -154,28 +128,40 @@ const UserAdd = () => {
                     placeholder="Enter phone number"
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
-                  {errors.phoneNumber && (
-                    <p className="text-red-500 text-sm">
-                      {errors.phoneNumber.message}
-                    </p>
-                  )}
+                  {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>}
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="address">Địa chỉ</label>
-                <input
-                  type="text"
-                  id="address"
-                  {...register("address")}
-                  placeholder="Address"
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                {errors.address && (
-                  <p className="text-red-500 text-sm">
-                    {errors.address.message}
-                  </p>
-                )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {" "}
+                <div>
+                  <label htmlFor="address">Địa chỉ</label>
+                  <input
+                    type="text"
+                    id="address"
+                    {...register("address")}
+                    placeholder="Address"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
+                </div>
+                <div>
+                  <label htmlFor="role">Vai trò</label>
+                  <select
+                    id="role"
+                    defaultValue=""
+                    {...register("role")}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">-- Vai trò --</option>
+                    <option value="CLIENT">Khách hàng</option>
+                    <option value="ADMIN">Quản lý</option>
+                    <option value="CASHIER">Thu ngân</option>
+                    <option value="WAREHOUSE">Nhân viên kho</option>
+                    <option value="ORDER">Nhân viên order</option>
+                  </select>
+                  {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>}
+                </div>
               </div>
 
               <div className="flex justify-end mt-8">
