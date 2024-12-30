@@ -30,15 +30,27 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "antd"
 import { IoIosNotifications } from "react-icons/io"
-import { confirmCancel, getAllKitchenNotify } from "@/services/notificationService"
+import { confirmCancel, getAllKitchenNotify, kitchenGetAllActiveReser } from "@/services/notificationService"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "@/hooks/use-toast"
+import jwtDecode from "jwt-decode"
 function Kitchen() {
   const navigate = useNavigate()
-  const [activeReservationStatus, setActiveReservationStatus] = useState([])
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
-  const {data: activeReservations, loading} = useFetchData(`${ServerUrl}/api/reservations/v2/get-active-reservation`)
   const queryClient = useQueryClient();
+  const [decodedToken, setDecodeToken] = useState(()=>{
+        const token = localStorage.getItem('token')
+        return jwtDecode(token)
+      })
+
+  const {
+    data: activesReservations,
+    error: activesReservationsError,
+    loading: activesReservationsLoading,
+  } = useQuery({
+    queryKey: "activeReservations",
+    queryFn: kitchenGetAllActiveReser,
+  })
   const {
     data: kitchenNotifications,
     error: kitchenNotificationsError,
@@ -47,7 +59,7 @@ function Kitchen() {
     queryKey: "getAllKitchenNotify",
     queryFn: getAllKitchenNotify,
   })
-  console.log({activeReservationStatus})
+  console.log({activesReservations})
   const mutation = useMutation({
     mutationFn: confirmCancel,
     onSuccess: () => {
@@ -56,6 +68,7 @@ function Kitchen() {
         title: "Bạn đã xác nhận thành công"
       })
     queryClient.invalidateQueries({queryKey: 'getAllKitchenNotify'})
+    queryClient.invalidateQueries({queryKey: 'activeReservations'})
     },
     onError: () => {
       toast({
@@ -65,15 +78,12 @@ function Kitchen() {
     }
   })
   const handleConfirmCancel = (_id) => {
-    mutation.mutate(_id)
+    mutation.mutate({_id, changer_id: decodedToken.id})
   }
-  useEffect(() => {
-     if(activeReservations) setActiveReservationStatus(activeReservations)
-  }, [activeReservations])
   const handleNavigateHistoryOrder = (reservation_id)=> {
     navigate(`/admin/order-history/${reservation_id}`)
   }
-  if(loading) return <div>...Loading</div>
+  if(activesReservationsLoading) return <div>...Loading</div>
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
       <Navbar />
@@ -89,7 +99,7 @@ function Kitchen() {
               onClick={() => setIsNotificationOpen(!isNotificationOpen)}
             />
             <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
-              {kitchenNotifications.filter((notif) => !notif.isConfirmed).length}
+              {kitchenNotifications?.filter((notif) => !notif.isConfirmed).length}
             </span>
             {isNotificationOpen && (
               <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-lg z-10 max-h-96 overflow-y-auto">
@@ -178,7 +188,9 @@ function Kitchen() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {activeReservationStatus.map((item, index) => {
+              { activesReservations &&
+               !activesReservationsError &&
+                activesReservations.map((item, index) => {
                 return (
                   <TableRow key={item._id}>
                     <TableCell colSpan={3} className="p-0">
@@ -201,9 +213,6 @@ function Kitchen() {
                             {/* Chèn bảng các món ăn được order vào */}
                             <OrderFoodTable
                               orderFood={item}
-                              setActiveReservationStatus={
-                                setActiveReservationStatus
-                              }
                             />
                             <div className="w-full flex justify-end">
                               <Button

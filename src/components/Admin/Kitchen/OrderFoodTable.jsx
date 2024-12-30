@@ -21,21 +21,15 @@ import { cn } from "@/lib/utils"
 import { Copy } from "lucide-react"
 import { useState } from "react"
 import jwtDecode from "jwt-decode"
+import { useQueryClient } from "@tanstack/react-query"
 
- function OrderFoodTable({orderFood, setActiveReservationStatus}) {
+ function OrderFoodTable({orderFood}) {
+   const queryClient = useQueryClient()
    const [decodedToken, setDecodeToken] = useState(()=>{
       const token = localStorage.getItem('token')
       return jwtDecode(token)
     })
   const handleChangeStatusDish = async (id,reservation_id, code, newStatus)=>{
-    setActiveReservationStatus(pre=> ([
-       ...pre.map(reservation=>({
-         ...reservation,
-         ordered_dishes: reservation.ordered_dishes.map(orderedDish=>(
-          orderedDish._id === id ? {...orderedDish, status: newStatus} : orderedDish
-         ))
-       }))
-      ]))
     const {success} = await usePatchData(`${ServerUrl}/api/orderedFood`, {
       orderedFoodId: id,
       newStatus,
@@ -43,24 +37,19 @@ import jwtDecode from "jwt-decode"
       changer_id: decodedToken.id,
       code,
     })
-    if(success) return toast({
-      variant: "success",
-      title: `Trạng thái đã đổi -> ${getStatusMessage(newStatus)}`
-    })
+    if(success) {
+      queryClient.invalidateQueries('activeReservations')
+      return toast({
+        variant: "success",
+        title: `Trạng thái đã đổi -> ${getStatusMessage(newStatus)}`
+      })
+    } 
     if(!success) return toast({
       variant: "destructive",
       title: `Cập nhật không thành công`
     })
   }
   const handleChangeStatusCombo = async (id, reservation_id, code, newStatus)=>{
-    setActiveReservationStatus(pre=> ([
-      ...pre.map(reservation=>({
-        ...reservation,
-        ordered_combos: reservation.ordered_combos.map(orderedCombo=>(
-         orderedCombo._id === id ? {...orderedCombo, status: newStatus} : orderedCombo
-        ))
-      }))
-     ]))
      const {success} = await usePatchData(`${ServerUrl}/api/orderedCombo`, {
       orderedFoodId: id,
       newStatus,
@@ -68,10 +57,13 @@ import jwtDecode from "jwt-decode"
       changer_id: decodedToken.id,
       code,
      })
-     if(success) return toast({
-       variant: "success",
-       title: `Trạng thái đã đổi -> ${getStatusMessage(newStatus)}`
-     })
+     if(success){
+      queryClient.invalidateQueries('activeReservations')
+      return toast({
+        variant: "success",
+        title: `Trạng thái đã đổi -> ${getStatusMessage(newStatus)}`
+      })
+     } 
      if(!success) return toast({
        variant: "destructive",
        title: `Cập nhật không thành công`

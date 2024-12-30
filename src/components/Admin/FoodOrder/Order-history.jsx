@@ -306,7 +306,7 @@ function OrderHistory() {
                         )}
                       </td>
                       <td className="py-3 px-6 text-sl text-gray-800 break-words">
-                        {item.changer_id.userName}
+                        {item.changer_id?.userName}
                       </td>
                       <td className="py-3 px-6 text-sl text-gray-800 break-words">
                         {formatDate(item.createdAt)}
