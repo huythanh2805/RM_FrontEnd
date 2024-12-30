@@ -55,7 +55,9 @@ const EmployeeUpdate = () => {
             <input
               type="text"
               className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
+                errors.name
+                  ? "border-red-500 focus:border-red-500"
+                  : "border-gray-300 focus:border-gray-500"
               } rounded-md shadow-sm focus:outline-none`}
               {...register("name", {
                 required: "Tên là bắt buộc",
@@ -65,11 +67,16 @@ const EmployeeUpdate = () => {
                 },
               })}
             />
-            {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>}
+            {errors.name && (
+              <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="gender" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="gender"
+              className="text-sm font-medium text-gray-700"
+            >
               Giới tính:
             </label>
             <select
@@ -80,17 +87,26 @@ const EmployeeUpdate = () => {
               <option value="MALE">MALE</option>
               <option value="FEMALE">FEMALE</option>
             </select>
-            {errors.gender && <p className="mt-2 text-sm text-red-600">{errors.gender.message}</p>}
+            {errors.gender && (
+              <p className="mt-2 text-sm text-red-600">
+                {errors.gender.message}
+              </p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="phoneNumber" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="phoneNumber"
+              className="text-sm font-medium text-gray-700"
+            >
               Số điện thoại:
             </label>
             <input
               type="text"
               className={`mt-1 block w-full px-4 py-2 border ${
-                errors.phoneNumber ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
+                errors.phoneNumber
+                  ? "border-red-500 focus:border-red-500"
+                  : "border-gray-300 focus:border-gray-500"
               } rounded-md shadow-sm focus:outline-none`}
               {...register("phoneNumber", {
                 required: "Số điện thoại là bắt buộc",
@@ -100,21 +116,38 @@ const EmployeeUpdate = () => {
                 },
               })}
             />
-            {errors.phoneNumber && <p className="mt-2 text-sm text-red-600">{errors.phoneNumber.message}</p>}
+            {errors.phoneNumber && (
+              <p className="mt-2 text-sm text-red-600">
+                {errors.phoneNumber.message}
+              </p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="workPosition" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="workPosition"
+              className="text-sm font-medium text-gray-700"
+            >
               Vị trí công việc:
             </label>
-            <input
-              type="text"
+            <select
               className="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none"
               {...register("workPosition", {
                 required: "Vị trí công việc là bắt buộc",
               })}
-            />
-            {errors.workPosition && <p className="mt-2 text-sm text-red-600">{errors.workPosition.message}</p>}
+            >
+              <option>Chọn vị trí</option>
+              <option>Bếp trưởng</option>
+              <option>Phụ bếp</option>
+              <option>Nhân viên phục vụ</option>
+              <option>Quản lý nhà hàng</option>
+              <option>Lễ tân</option>
+            </select>
+            {errors.workPosition && (
+              <p className="mt-2 text-sm text-red-600">
+                {errors.workPosition.message}
+              </p>
+            )}
           </div>
 
           <div className="flex justify-end space-x-2">

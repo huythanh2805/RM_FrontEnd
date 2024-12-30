@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
+import { toast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
 
 const WorkScheduleAdd = () => {
   const [employees, setEmployees] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [isClearable] = useState(true);
 
   const [month, setMonth] = useState("");
-  const [week1, setWeek1] = useState(1);
-  const [week2, setWeek2] = useState(1);
-  const [week3, setWeek3] = useState(1);
-  const [week4, setWeek4] = useState(1);
+  const [week1, setWeek1] = useState();
+  const [week2, setWeek2] = useState();
+  const [week3, setWeek3] = useState();
+  const [week4, setWeek4] = useState();
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -36,9 +39,13 @@ const WorkScheduleAdd = () => {
   }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // ngưng load lại trang khi không nhập đầy đủ thông tin
+    e.preventDefault(); // Ngừng load lại trang khi không nhập đầy đủ thông tin
+
     if (!selectedEmployee || !month) {
-      alert("Vui lòng chọn đầy đủ thông tin!");
+      toast({
+        variant: "destructive",
+        title: "Vui lòng chọn đầy đủ thông tin!",
+      });
       return;
     }
 
@@ -57,19 +64,42 @@ const WorkScheduleAdd = () => {
         newSchedule
       );
 
-      alert("Thêm ca làm thành công!");
+      toast({ variant: "success", title: "Thêm ca làm thành công!" });
       console.log("OK", response.data);
     } catch (error) {
-      console.error("Loi", error);
-      alert("Thêm ca làm thất bại!");
+      console.error("Lỗi:", error);
+
+      if (error.response?.status === 400) {
+        // Thông báo cụ thể nếu nhân viên đã có ca làm
+        const message = error.response.data.message || "";
+        if (message.includes("already has a work schedule")) {
+          toast({
+            variant: "destructive",
+            title: "Thêm ca làm thất bại!",
+            description: `Nhân viên "${selectedEmployee.label}" đã có ca làm trong tháng ${month}. Vui lòng kiểm tra lại.`,
+          });
+        } else {
+          // Trường hợp khác
+          toast({
+            variant: "destructive",
+            title: "Thêm ca làm thất bại!",
+            description: message || "Đã xảy ra lỗi.",
+          });
+        }
+      } else {
+        // Xử lý các lỗi khác
+        toast({
+          variant: "destructive",
+          title: "Thêm ca làm thất bại!",
+          description: "Đã xảy ra lỗi trong quá trình thêm ca làm.",
+        });
+      }
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 mt-20 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">
-        Thêm ca làm
-      </h2>
+    <div className="max- mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-[32px] font-semibold mb-4">Thêm ca làm</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label
@@ -83,6 +113,7 @@ const WorkScheduleAdd = () => {
             name="ten-nhan-vien"
             options={employees}
             value={selectedEmployee}
+            isClearable={isClearable}
             onChange={setSelectedEmployee}
             placeholder="Chọn tên nhân viên"
             className="react-select-container"
@@ -103,7 +134,7 @@ const WorkScheduleAdd = () => {
             name="thang"
             value={month}
             onChange={(e) => setMonth(e.target.value)}
-            className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="block w-60 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
@@ -115,6 +146,7 @@ const WorkScheduleAdd = () => {
             >
               Tuần {index + 1}
             </label>
+
             <select
               id={`tuan-${index + 1}`}
               name={`tuan-${index + 1}`}
@@ -125,21 +157,31 @@ const WorkScheduleAdd = () => {
                 if (index === 2) setWeek3(e.target.value);
                 if (index === 3) setWeek4(e.target.value);
               }}
-              className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="block w-32 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="1">Ca 1</option>
-              <option value="2">Ca 2</option>
-              <option value="3">Ca 3</option>
+              <option>Chọn ca làm</option>
+              <option value="1">Ca Sáng</option>
+              <option value="2">Ca Chiều</option>
+              <option value="3">Ca Tối</option>
             </select>
           </div>
         ))}
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
-          Thêm Nhân Viên
-        </button>
+        <div className="flex justify-end space-x-2">
+          <Link
+            to="/admin/workSchedule"
+            className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-gray-300"
+          >
+            Quay lại
+          </Link>
+
+          <button
+            type="submit"
+            className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition"
+          >
+            Thêm +
+          </button>
+        </div>
       </form>
     </div>
   );

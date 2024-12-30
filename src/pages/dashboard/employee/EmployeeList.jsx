@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { formatCurrency } from "@/utilities/utils";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
@@ -85,9 +84,7 @@ const EmployeeList = () => {
                 <th className="py-3 px-6">Giới tính</th>
                 <th className="py-3 px-6">Số điện thoại</th>
                 <th className="py-3 px-6">Vị trí công việc</th>
-                <th className="py-3 px-6">Lương</th>
                 <th className="py-3 px-6">Trạng thái</th>
-                <th className="py-3 px-6">Lịch làm việc</th>
                 <th className="py-3 px-6"></th>
               </tr>
             </thead>
@@ -112,9 +109,6 @@ const EmployeeList = () => {
                   <td className="py-4 px-6 text-sm font-medium text-[#202224]">
                     {d.workPosition}
                   </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
-                    {formatCurrency(d.salary)}
-                  </td>
 
                   <td className="py-4 px-6 text-sm">
                     {d.employStatus === "ACTIVE" ? (
@@ -127,9 +121,7 @@ const EmployeeList = () => {
                       </span>
                     )}
                   </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
-                    Trống
-                  </td>
+
                   <td className="py-4 px-6 text-sm flex items-center gap-1.5 lg:gap-3">
                     <Link to={`/admin/employees/${d._id}/update`}>
                       <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">

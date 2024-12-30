@@ -6,20 +6,23 @@ const WorkSchedule = () => {
   const [daysInMonth, setDaysInMonth] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [scheduleData, setScheduleData] = useState({});
 
   // Set default month and year to current date on initial render
   useEffect(() => {
     const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1; // getMonth() returns 0-11, so add 1 for the actual month
+    const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
     setMonth(`${currentYear}-${currentMonth < 10 ? "0" : ""}${currentMonth}`);
-
-    // Calculate number of days in the current month
-    const days = new Date(currentMonth, currentYear, 0).getDate();
-    const datesArray = Array.from({ length: days }, (_, i) => i + 1);
-
-    setDaysInMonth(datesArray);
+    fetchDaysInMonth(currentMonth, currentYear);
   }, []);
+
+  // Calculate number of days in the current month
+  const fetchDaysInMonth = (month, year) => {
+    const days = new Date(year, month, 0).getDate();
+    const datesArray = Array.from({ length: days }, (_, i) => i + 1);
+    setDaysInMonth(datesArray);
+  };
 
   const handleOpenModal = (date) => {
     setSelectedDate(date);
@@ -33,18 +36,14 @@ const WorkSchedule = () => {
   };
 
   const handleMonthChange = (e) => {
+    const [year, month] = e.target.value.split("-");
     setMonth(e.target.value);
-    const [month, year] = e.target.value.split("-");
-    const days = new Date(month, year, 0).getDate();
-    const datesArray = Array.from({ length: days }, (_, i) => i + 1);
-    setDaysInMonth(datesArray);
+    fetchDaysInMonth(Number(month), Number(year));
   };
 
   return (
     <div className="w-full mx-auto p-4 md:p-6 lg:p-8">
-      <div className=" align-center">
-        <h1 className="text-3xl font-bold mb-4">Quản lý lịch làm việc</h1>
-      </div>
+      <h1 className="text-3xl font-bold mb-4">Quản lý lịch làm việc</h1>
 
       {/* Select Month */}
       <span className="font-bold">Chọn tháng:</span>
@@ -54,29 +53,33 @@ const WorkSchedule = () => {
             type="month"
             value={month}
             onChange={handleMonthChange}
-            className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </label>
-        <Link to={"/admin/addWorkSchedule"}>
-          <div className="p-3 mt-2 text-green-800 bg-green-200 hover:bg-green-300 rounded-md">
-            Thêm lịch làm việc +
-          </div>
-        </Link>
+        <div className="space-x-2">
+          <Link to="/admin/listWorkSchedule">
+            <button className="px-2 py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition">
+              Danh sách lịch làm việc
+            </button>
+          </Link>
+          <Link to="/admin/addWorkSchedule">
+            <button className="px-2 py-3 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
+              Thêm lịch làm việc +
+            </button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
         {daysInMonth.map((day) => (
           <div
             key={day}
-            className="border border-gray-300 py-2 px-4 rounded-lg cursor-pointer hover:bg-gray-100"
+            className="border border-gray-300 py-4 px-6 rounded-lg cursor-pointer hover:bg-gray-100 transition"
             onClick={() => handleOpenModal(day)}
           >
-            <div className="font-bold text-center border-b border-b-[#ccc] pb-1">
-              <div className="flex justify-between">
-                <div>Tuần:...</div>
-                <div>
-                  {day}/{month}
-                </div>
+            <div className="mb-2">
+              <div className="font-bold">
+                Ngày {day}/{month.split("-")[1]}
               </div>
             </div>
             <div className="mt-1">
@@ -89,7 +92,7 @@ const WorkSchedule = () => {
               <p className="py-2">
                 - Ca chiều:{" "}
                 <span className="bg-green-200 text-green-800 py-1 px-2 rounded-md">
-                  Nhân viên đang làm (2)
+                  Đang phục vụ (2)
                 </span>
               </p>
               <p className="py-2">
@@ -111,7 +114,7 @@ const WorkSchedule = () => {
         >
           <div className="bg-white p-6 rounded-lg w-[400px]">
             <h2 className="text-2xl font-semibold mb-4">
-              Lịch làm việc ngày {selectedDate} 
+              Lịch làm việc ngày {selectedDate}/{month.split("-")[1]}:
             </h2>
 
             <div className="mb-4">
@@ -127,10 +130,12 @@ const WorkSchedule = () => {
               </label>
               <div>
                 <p>
-                  - Tô Xuân Tuyển |{" "}
-                  <span className="text-[#727272] font-semibold">Giám đốc</span>
+                  - Tên nhân viên 1 |{" "}
+                  <span className="text-[#727272] font-bold">
+                    Vị trí làm việc
+                  </span>
                 </p>
-                <p>- Trần Cao Sơn</p>
+                <p>- Tên nhân viên 2</p>
               </div>
             </div>
 
