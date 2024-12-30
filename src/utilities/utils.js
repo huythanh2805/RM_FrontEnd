@@ -86,3 +86,21 @@ export function getStatusMessage(status) {
           return "Trạng thái không xác định";
   }
 }
+// Lấy 1 mảng có phần tử unique code mới nhất
+export function getOrderHistoryUniqueAndLatest(dishes) {
+  const Array = [];
+
+  for (let index = 0; index < dishes.length; index++) {
+    const existedItemIndex = Array.findIndex(item => item.code === dishes[index].code);
+    if (existedItemIndex !== -1) {
+      // Nếu đã tồn tại, kiểm tra và thay thế nếu createdAt mới hơn
+      if (new Date(dishes[index].createdAt) > new Date(Array[existedItemIndex].createdAt)) {
+        Array[existedItemIndex] = dishes[index];
+      }
+    } else {
+      // Nếu chưa tồn tại, thêm vào
+      Array.push(dishes[index]);
+    }
+  }
+  return Array.map(item=> item._id)
+}

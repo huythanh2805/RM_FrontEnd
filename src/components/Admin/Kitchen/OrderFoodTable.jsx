@@ -22,7 +22,7 @@ import { Copy } from "lucide-react"
 import { useState } from "react"
 import jwtDecode from "jwt-decode"
 
-function OrderFoodTable({orderFood, setActiveReservationStatus}) {
+ function OrderFoodTable({orderFood, setActiveReservationStatus}) {
    const [decodedToken, setDecodeToken] = useState(()=>{
       const token = localStorage.getItem('token')
       return jwtDecode(token)
@@ -43,7 +43,6 @@ function OrderFoodTable({orderFood, setActiveReservationStatus}) {
       changer_id: decodedToken.id,
       code,
     })
-    console.log({success})
     if(success) return toast({
       variant: "success",
       title: `Trạng thái đã đổi -> ${getStatusMessage(newStatus)}`
@@ -69,7 +68,6 @@ function OrderFoodTable({orderFood, setActiveReservationStatus}) {
       changer_id: decodedToken.id,
       code,
      })
-     console.log({success})
      if(success) return toast({
        variant: "success",
        title: `Trạng thái đã đổi -> ${getStatusMessage(newStatus)}`

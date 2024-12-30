@@ -32,3 +32,17 @@ export const useUpdateNotification = () => {
     },
   });
 };
+
+// Hàm lấy thông báo trong nhà bếp 
+export const getAllKitchenNotify = async () => {
+   const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/kitchen/notification`)
+   return res.json()
+}
+// Hàm sử lí xác nhận hủy món
+export const confirmCancel = async (_id) => {
+  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/kitchen/notification/${_id}`, {
+    method: "PATCH"
+  })
+  if(!res.ok) throw new Error('Something went wrong on the server')
+  return res.json()
+}
