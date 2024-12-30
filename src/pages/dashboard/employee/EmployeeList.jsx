@@ -27,7 +27,10 @@ const EmployeeList = () => {
 
   const pageCount = Math.ceil(employees.length / itemPerPage);
 
-  const currentItems = employees.slice(currentPage * itemPerPage, (currentPage + 1) * itemPerPage);
+  const currentItems = employees.slice(
+    currentPage * itemPerPage,
+    (currentPage + 1) * itemPerPage
+  );
 
   const handlePageChange = (e) => {
     setCurrentPage(e.selected);
@@ -47,7 +50,11 @@ const EmployeeList = () => {
         axios
           .delete(`${import.meta.env.VITE_API_BASE_URL}/employees/${id}`)
           .then(() => {
-            Swal.fire("Đã xóa!", "Nhân viên đã được xóa thành công.", "success");
+            Swal.fire(
+              "Đã xóa!",
+              "Nhân viên đã được xóa thành công.",
+              "success"
+            );
             fetchData();
           })
           .catch((err) => {
@@ -78,31 +85,43 @@ const EmployeeList = () => {
                 <th className="py-3 px-6">Số điện thoại</th>
                 <th className="py-3 px-6">Vị trí công việc</th>
                 <th className="py-3 px-6">Trạng thái</th>
-                <th className="py-3 px-6">Lịch làm việc</th>
                 <th className="py-3 px-6"></th>
               </tr>
             </thead>
             <tbody>
               {currentItems.map((d, index) => (
-                <tr className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition" key={d._id}>
-                  <td className="hidden lg:block py-4 px-6 text-sm font-medium text-[#202224]">{index + 1}</td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">{d.name}</td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">{d.gender}</td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">{d.phoneNumber}</td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">{d.workPosition}</td>
+                <tr
+                  className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
+                  key={d._id}
+                >
+                  <td className="hidden lg:block py-4 px-6 text-sm font-medium text-[#202224]">
+                    {index + 1}
+                  </td>
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
+                    {d.name}
+                  </td>
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
+                    {d.gender}
+                  </td>
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
+                    {d.phoneNumber}
+                  </td>
+                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
+                    {d.workPosition}
+                  </td>
 
                   <td className="py-4 px-6 text-sm">
                     {d.employStatus === "ACTIVE" ? (
                       <span className="px-2 py-1 text-xs font-semibold rounded-lg bg-green-100 text-green-800">
-                        ACTIVE
+                        Đang làm việc
                       </span>
                     ) : (
                       <span className="px-2 py-1 text-xs font-semibold rounded-lg bg-gray-100 text-gray-700">
-                        LEAVED
+                        Nghỉ
                       </span>
                     )}
                   </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">Trống</td>
+
                   <td className="py-4 px-6 text-sm flex items-center gap-1.5 lg:gap-3">
                     <Link to={`/admin/employees/${d._id}/update`}>
                       <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">

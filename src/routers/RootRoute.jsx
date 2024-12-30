@@ -38,6 +38,10 @@ import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";
 import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
 import UserUpdate from "@/pages/dashboard/users/UserUpdate";
+import WorkSchedule from "@/pages/dashboard/workSchedule/workSchedule";
+import WorkScheduleAdd from "@/pages/dashboard/workSchedule/workScheduleAdd";
+import WorkScheduleList from "@/pages/dashboard/workSchedule/workScheduleList";
+import WorkScheduleUpdate from "@/pages/dashboard/workSchedule/workScheduleUpdate";
 import About from "@/pages/home/About";
 import { Checkout } from "@/pages/home/Checkout";
 import ComboDetail from "@/pages/home/ComboDetail";
@@ -176,6 +180,22 @@ const router = createBrowserRouter([
       {
         path: "employees/:id/update",
         element: <EmployeeUpdate />,
+      },
+      {
+        path: "workSchedule",
+        element: <WorkSchedule />,
+      },
+      {
+        path: "addWorkSchedule",
+        element: <WorkScheduleAdd />,
+      },
+      {
+        path: "listWorkSchedule",
+        element: <WorkScheduleList />,
+      },
+      {
+        path: "workSchedule/:id/update",
+        element: <WorkScheduleUpdate />,
       },
       {
         path: "dishes",

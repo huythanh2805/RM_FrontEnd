@@ -21,8 +21,7 @@ const UserUpdate = () => {
     handleSubmit,
     formState: { errors },
   } = form;
-  const { handleImageChange, handleUpdate, selectedImage, user, isLoading } =
-    useUser(id, form);
+  const { handleImageChange, handleUpdate, selectedImage, user, isLoading } = useUser(id, form);
 
   const onSubmit = (data) => {
     handleUpdate(data);
@@ -40,30 +39,14 @@ const UserUpdate = () => {
             <div className="flex flex-col items-center">
               <div className="w-48 h-48 bg-gray-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
                 {selectedImage ? (
-                  <img
-                    src={selectedImage}
-                    alt="User"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={selectedImage} alt="User" className="w-full h-full object-cover" />
                 ) : user?.image ? (
-                  <img
-                    src={user.image}
-                    alt="User"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={user.image} alt="User" className="w-full h-full object-cover" />
                 ) : (
                   <label className="cursor-pointer flex flex-col items-center">
                     <Camera className="w-12 h-12 text-gray-400" />
-                    <span className="text-sm text-gray-500 mt-2">
-                      Upload photo
-                    </span>
-                    <input
-                      disabled
-                      type="file"
-                      className="hidden"
-                      onChange={handleImageChange}
-                      accept="image/*"
-                    />
+                    <span className="text-sm text-gray-500 mt-2">Upload photo</span>
+                    <input disabled type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
                   </label>
                 )}
               </div>
@@ -71,13 +54,7 @@ const UserUpdate = () => {
                 <span className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                   Change Photo
                 </span>
-                <input
-                  disabled
-                  type="file"
-                  className="hidden"
-                  onChange={handleImageChange}
-                  accept="image/*"
-                />
+                <input disabled type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
               </label>
               <div className="text-xs text-gray-500 text-center mt-3">
                 Allowed *.jpeg, *.jpg, *.png, *.gif
@@ -100,11 +77,7 @@ const UserUpdate = () => {
                     })}
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent border-gray-300"
                   />
-                  {errors.userName && (
-                    <p className="text-red-500 text-sm">
-                      {errors.userName.message}
-                    </p>
-                  )}
+                  {errors.userName && <p className="text-red-500 text-sm">{errors.userName.message}</p>}
                 </div>
                 <div>
                   <label htmlFor="email">Email</label>
@@ -115,34 +88,32 @@ const UserUpdate = () => {
                     {...register("email", { required: "Vui lòng nhập email" })}
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent border-gray-300"
                   />
-                  {errors.email && (
-                    <p className="text-red-500 text-sm">
-                      {errors.email.message}
-                    </p>
-                  )}
+                  {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="password">Mật khẩu</label>
-                  <input
-                    disabled
-                    type="password"
-                    id="password"
-                    {...register("password")}
-                    placeholder="Password (leave blank to keep current)"
+                  <label htmlFor="role">Vai trò</label>
+                  <select
+                    id="role"
+                    defaultValue=""
+                    {...register("role")}
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                  {errors.password && (
-                    <p className="text-red-500 text-sm">
-                      {errors.password.message}
-                    </p>
-                  )}
+                  >
+                    <option value="">-- Vai trò --</option>
+                    <option value="CLIENT">Khách hàng</option>
+                    <option value="ADMIN">Quản lý</option>
+                    <option value="CASHIER">Thu ngân</option>
+                    <option value="WAREHOUSE">Nhân viên kho</option>
+                    <option value="ORDER">Nhân viên order</option>
+                  </select>
+                  {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>}
                 </div>
                 <div>
                   <label htmlFor="phoneNumber">Số điện thoại</label>
                   <input
+                    disabled
                     type="tel"
                     id="phoneNumber"
                     {...register("phoneNumber", {
@@ -150,11 +121,7 @@ const UserUpdate = () => {
                     })}
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent border-gray-300"
                   />
-                  {errors.phoneNumber && (
-                    <p className="text-red-500 text-sm">
-                      {errors.phoneNumber.message}
-                    </p>
-                  )}
+                  {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>}
                 </div>
               </div>
 
@@ -169,16 +136,17 @@ const UserUpdate = () => {
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
-                {errors.address && (
-                  <p className="text-red-500 text-sm">
-                    {errors.address.message}
-                  </p>
-                )}
+                {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
               </div>
 
               {/* Buttons Section */}
               <div className="flex justify-end mt-8">
-              
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  Cập nhật
+                </button>
                 <Link
                   to="/admin/users"
                   className="ml-2 px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"

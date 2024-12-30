@@ -15,6 +15,8 @@ import {
   Ticket,
   TicketPlus,
   ChefHat,
+  Contact,
+  Calendar,
 } from "lucide-react";
 
 import {
@@ -47,10 +49,10 @@ export function AppSidebar() {
     { title: "Bàn", url: "/admin/tables", icon: Table },
     { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
     { title: "Tài khoản", url: "/admin/users", icon: User },
-    // { title: "Nhân viên", url: "/admin/employees", icon: Contact },
+    { title: "Nhân viên", url: "/admin/employees", icon: Contact },
+    { title: "Lịch làm việc", url: "/admin/workSchedule", icon: Calendar },
     { title: "Đánh giá", url: "/admin/feedbacks", icon: MessageCircle },
-    { title: "Nhà bếp", url: "/admin/kitchen", icon: ChefHat  },
-    
+    { title: "Nhà bếp", url: "/admin/kitchen", icon: ChefHat },
   ];
 
   const subItems = [
@@ -73,7 +75,9 @@ export function AppSidebar() {
             alt="Golden Fork Logo"
             className="h-16 w-16 object-cover rounded-full"
           />
-          <span className="dancing text-2xl font-bold text-gray-800">Golden Fork</span>
+          <span className="dancing text-2xl font-bold text-gray-800">
+            Golden Fork
+          </span>
         </div>
       </SidebarHeader>
 

@@ -31,7 +31,7 @@ export const useUser = (id, form) => {
         password: "",
         phoneNumber: "",
         address: "",
-        role: "ADMIN", // Mặc định là ADMIN theo BE
+        role: "", // Mặc định là ADMIN theo BE
       });
       setSelectedImage(null);
       setImageFile(null);
@@ -49,7 +49,7 @@ export const useUser = (id, form) => {
             email: user.email || "",
             phoneNumber: user.phoneNumber || "",
             address: user.address || "",
-            role: user.role || "ADMIN",
+            role: user.role || "",
           });
         }
         if (user.image) {
