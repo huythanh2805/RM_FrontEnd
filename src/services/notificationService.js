@@ -32,3 +32,26 @@ export const useUpdateNotification = () => {
     },
   });
 };
+// Hàm lấy tất cả các đơn đặt hàng hiện tại cùng với món ăn trong nhà bếp 
+export const kitchenGetAllActiveReser = async () => {
+  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/reservations/v2/get-active-reservation`)
+  if(!res.ok) throw new Error('Something went wrong on the server')
+  return res.json()
+}
+// Hàm lấy thông báo trong nhà bếp 
+export const getAllKitchenNotify = async () => {
+   const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/kitchen/notification`)
+   return res.json()
+}
+// Hàm sử lí xác nhận hủy món
+export const confirmCancel = async ({_id, changer_id}) => {
+  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/kitchen/notification`, {
+    method: "PATCH",
+    body: JSON.stringify({_id, changer_id}),
+    headers: {
+      "Content-Type": 'application/json'
+    }
+  })
+  if(!res.ok) throw new Error('Something went wrong on the server')
+  return res.json()
+}
