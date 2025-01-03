@@ -1,10 +1,10 @@
 import { toast } from "@/hooks/use-toast";
-import { getDetailSellerService, updateSellersService } from "@/services/sellers";
+import { getDetailProductsService, updateProductsService } from "@/services/products";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const useUpdateSeller = () => {
+export const useUpdateProducts = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { id } = useParams();
@@ -19,51 +19,51 @@ export const useUpdateSeller = () => {
   const resetForm = () => {
     if (form) {
       form.reset({
-        name: "",
         code: "",
-        email: "",
-        phone: "",
-        description: "",
-        address: "",
+        name: "",
+        category: "",
+        unit: "",
+        price: 0,
+        expiryDate: "",
       });
     }
   };
 
-  const updateSellersMutation = useMutation({
+  const updateProductsMutation = useMutation({
     mutationFn: async (updateData) => {
-      await updateSellersService(id, updateData);
+      await updateProductsService(id, updateData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["fetchSellerService"]);
-      toast({ variant: "success", title: "Thêm nhân viên thành công!" });
+      queryClient.invalidateQueries(["fetchProductsService"]);
+      toast({ variant: "success", title: "Cập nhật sp thành công!" });
       resetForm();
-      navigate("/admin/sellers");
+      navigate("/admin/products");
     },
     onError: (error) => {
       const errorMessage = error.response?.data?.message || error.message || "Vui lòng kiểm tra lại thông tin";
       toast({
         variant: "destructive",
-        title: "Lỗi khi thêm nhà cung cấp",
+        title: "Lỗi khi cập nhật sp!",
         description: errorMessage,
       });
     },
   });
 
   const onSubmit = (updateData) => {
-    updateSellersMutation.mutate(updateData);
+    updateProductsMutation.mutate(updateData);
   };
 
-  useQuery(["getDetailSellerService", id], () => getDetailSellerService(id), {
+  useQuery(["getDetailProductsService", id], () => getDetailProductsService(id), {
     onSuccess: (data) => {
       if (data) {
         if (form) {
           form.reset({
-            name: data.name || "",
-            email: data.email || "",
-            code: data.code || "",
-            description: data.description || "",
-            phone: data.phone || "",
-            address: data.address || "",
+            code: data?.code,
+            name: data?.name,
+            category: data?.category,
+            unit: data?.unit,
+            price: data?.price,
+            expiryDate: data?.expiryDate ? new Date(data.expiryDate).toISOString().split("T")[0] : "",
           });
         }
       }

@@ -31,7 +31,6 @@ export const deleteProductsService = async (userId) => {
 
 export const createProductsService = async (createData) => {
   try {
-    console.log(token?.token?.id);
     const response = await apiClient.post(
       "api/products/create",
       { ...createData, createdBy: jwtDecode(token).id },
@@ -63,11 +62,15 @@ export const getDetailProductsService = async (userId) => {
 
 export const updateProductsService = async (userId, formData) => {
   try {
-    const response = await apiClient.put(`/api/products/${userId}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await apiClient.put(
+      `/api/products/${userId}`,
+      { ...formData, createdBy: jwtDecode(token).id },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(error);
