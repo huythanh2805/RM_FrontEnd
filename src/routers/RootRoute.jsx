@@ -31,6 +31,9 @@ import EmployeeUpdate from "@/pages/dashboard/employee/EmployeeUpdate";
 import FeedbackList from "@/pages/dashboard/feedback/FeedbackList";
 import LayoutAdmin from "@/pages/dashboard/LayoutAdmin";
 import { ProfileAdmin } from "@/pages/dashboard/Profile";
+import { SellerCreate } from "@/pages/dashboard/sellers/SellerCreate";
+import { SellerList } from "@/pages/dashboard/sellers/SellerList";
+import { SellerUpdate } from "@/pages/dashboard/sellers/SellerUpdate";
 import SetComboAdd from "@/pages/dashboard/setCombo/SetComboAdd";
 import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
 import SetComboList from "@/pages/dashboard/setCombo/SetComboList";
@@ -292,6 +295,18 @@ const router = createBrowserRouter([
       {
         path: "kitchen",
         element: <Kitchen />,
+      },
+      {
+        path: "sellers",
+        element: <SellerList />,
+      },
+      {
+        path: "sellers/create",
+        element: <SellerCreate />,
+      },
+      {
+        path: "sellers/update/:id",
+        element: <SellerUpdate />,
       },
     ],
   },
