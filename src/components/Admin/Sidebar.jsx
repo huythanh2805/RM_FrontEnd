@@ -64,7 +64,10 @@ export function AppSidebar() {
 
   const foodMenuItems = [
     { title: "Nhà cung cấp", url: "/admin/sellers", icon: Salad },
-    { title: "Combo", url: "/admin/setCombos", icon: Layers },
+    { title: "Thực phẩm", url: "/admin/products", icon: Salad },
+    { title: "Tồn kho", url: "/admin/stocks", icon: Salad },
+    { title: "Phiếu nhập", url: "/admin/import-notes", icon: Salad },
+    { title: "Phiếu xuất", url: "/admin/export-notes", icon: Salad },
   ];
 
   return (
