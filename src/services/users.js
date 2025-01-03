@@ -12,6 +12,7 @@ export const userListService = async () => {
     throw error;
   }
 };
+
 export const addUserService = async (formData) => {
   try {
     const response = await apiClient.post("users/admin/add", formData, {
@@ -26,6 +27,7 @@ export const addUserService = async (formData) => {
     throw error;
   }
 };
+
 export const updateUserIsDelete = async (userId) => {
   const token = localStorage.getItem("token");
   console.log(token);
