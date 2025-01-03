@@ -1,133 +1,112 @@
-import { useCreateSeller } from "@/hooks/dashboard/sellers/useCreate";
+import { useCreateExportNotes } from "@/hooks/dashboard/export-notes/useCreate";
+import { TYPE_EXPORT_NOTES_OBJECT } from "@/utilities/const";
+import { Button, Form, Input, Modal, Select, Table } from "antd";
 import { Link } from "react-router-dom";
 
 export const ExportNotesCreate = () => {
-  const { register, onSubmit, handleSubmit, errors } = useCreateSeller();
+  const { TextArea } = Input;
+
+  const {
+    productsData,
+    listProduct,
+    form,
+    formItemLayout,
+    initialValues,
+    isModalOpen,
+    rowSelection,
+    showModal,
+    handleOk,
+    handleCancel,
+    handleSelectedProduct,
+  } = useCreateExportNotes();
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
-        <h2 className="text-[32px] font-semibold mb-4">Thêm nhà cung cấp</h2>
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Tên nhà cung cấp:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("name", {
-                required: "Tên là bắt buộc",
-                minLength: {
-                  value: 3,
-                  message: "Tên phải có ít nhất 3 ký tự",
-                },
+        <h2 className="text-[32px] font-semibold mb-4">Thêm mới phiếu xuất</h2>
+        <Form {...formItemLayout} layout="vertical" form={form} initialValues={initialValues}>
+          <Form.Item label="Mã phiếu xuất" name="code" rules={[{ required: true, message: "Please input!" }]}>
+            <Input placeholder="Nhập mã phiếu xuất" />
+          </Form.Item>
+          <Form.Item label="Loại phiếu xuất" name="type" rules={[{ required: true, message: "Please input!" }]}>
+            <Select
+              showSearch
+              placeholder="Select a person"
+              filterOption={(input, option) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase())}
+              options={TYPE_EXPORT_NOTES_OBJECT.map((item) => {
+                return { value: item?.value, label: item?.title };
               })}
             />
-            {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Mã nhà cung cấp:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("code", {
-                required: "Tên là bắt buộc",
-                minLength: {
-                  value: 3,
-                  message: "Tên phải có ít nhất 3 ký tự",
+          </Form.Item>
+          <Form.Item label="Ghi chú" name="notes" rules={[{ required: true, message: "Please input!" }]}>
+            <TextArea rows={4} placeholder="maxLength is 6" maxLength={6} />
+          </Form.Item>
+          <div className="bg-white px-4 py-6 rounded-lg">
+            <Button type="primary" onClick={showModal}>
+              Chọn sản phẩm
+            </Button>
+            <Modal title="Chọn sản phẩm" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width="50%">
+              <Table
+                rowKey="_id"
+                rowSelection={rowSelection}
+                dataSource={productsData}
+                columns={[
+                  {
+                    title: "Mã sản phẩm",
+                    dataIndex: "code",
+                    key: "code",
+                  },
+                  {
+                    title: "Tên sản phẩm",
+                    dataIndex: "name",
+                    key: "name",
+                  },
+                  {
+                    title: "Giá SP",
+                    dataIndex: "price",
+                    key: "address",
+                  },
+                ]}
+              />
+            </Modal>
+            <Table
+              className="mt-5"
+              dataSource={listProduct}
+              columns={[
+                {
+                  title: "Mã sản phẩm",
+                  dataIndex: "code",
+                  key: "code",
                 },
-              })}
-            />
-            {errors.code && <p className="mt-2 text-sm text-red-600">{errors.code.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Email:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("email", {
-                required: "Tên là bắt buộc",
-                minLength: {
-                  value: 3,
-                  message: "Tên phải có ít nhất 3 ký tự",
+                {
+                  title: "Tên sản phẩm",
+                  dataIndex: "name",
+                  key: "name",
                 },
-              })}
-            />
-            {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email.message}</p>}
-          </div>
-
-          <div>
-            <label htmlFor="phoneNumber" className="text-sm font-medium text-gray-700">
-              Số điện thoại:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.phoneNumber ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("phone", {
-                required: "Số điện thoại là bắt buộc",
-                pattern: {
-                  value: /^[0-9]{10}$/,
-                  message: "Số điện thoại không hợp lệ",
+                {
+                  title: "Giá SP",
+                  dataIndex: "price",
+                  key: "address",
                 },
-              })}
-            />
-            {errors.phone && <p className="mt-2 text-sm text-red-600">{errors.phone.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Địa chỉ:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("address", {
-                required: "Tên là bắt buộc",
-                minLength: {
-                  value: 3,
-                  message: "Tên phải có ít nhất 3 ký tự",
+                {
+                  title: "Số lượng",
+                  dataIndex: "price",
+                  key: "address",
+                  render: () => {
+                    return <Input placeholder="Nhập mã phiếu xuất" />;
+                  },
                 },
-              })}
-            />
-            {errors.address && <p className="mt-2 text-sm text-red-600">{errors.address.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Mô tả:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("description", {
-                required: "Tên là bắt buộc",
-                minLength: {
-                  value: 3,
-                  message: "Tên phải có ít nhất 3 ký tự",
+                {
+                  title: "Hành động",
+                  dataIndex: "price",
+                  key: "address",
                 },
-              })}
+              ]}
             />
-            {errors.description && <p className="mt-2 text-sm text-red-600">{errors.description.message}</p>}
           </div>
-
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end space-x-2 mt-5">
             <Link
-              to="/admin/sellers"
+              to="/admin/export-notes"
               className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300"
             >
               Quay lại
@@ -140,7 +119,7 @@ export const ExportNotesCreate = () => {
               Tạo mới +
             </button>
           </div>
-        </form>
+        </Form>
       </div>
     </div>
   );
