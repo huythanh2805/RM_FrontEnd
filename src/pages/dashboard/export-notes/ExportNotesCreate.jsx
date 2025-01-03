@@ -86,7 +86,7 @@ export const ExportNotesCreate = () => {
                 {
                   title: "Giá SP",
                   dataIndex: "price",
-                  key: "address",
+                  key: "price",
                 },
                 {
                   title: "Số lượng",
