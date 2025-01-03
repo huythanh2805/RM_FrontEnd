@@ -16,7 +16,7 @@ export const ImportNotesDetail = () => {
 
       {/* Thông tin đặt bàn */}
       <div className="px-5 py-4">
-        <p className="text-[32px] font-semibold mb-4">Thông tin phiếu xuất</p>
+        <p className="text-[32px] font-semibold mb-4">Thông tin phiếu nhập</p>
         <div className="rounded-xl bg-white border border-[#d5d5d5]">
           <table className="min-w-full table-auto text-left">
             <tbody>
@@ -37,9 +37,39 @@ export const ImportNotesDetail = () => {
         </div>
       </div>
 
+      <div className="px-5 py-4">
+        <p className="text-[32px] font-semibold mb-4">Thông tin nhà cung cấp</p>
+        <div className="rounded-xl bg-white border border-[#d5d5d5]">
+          <table className="min-w-full table-auto text-left">
+            <tbody>
+              <tr className="border-b">
+                <th className="py-4 px-6 text-gray-700 font-semibold">Mã NCC</th>
+                <td className="py-4 px-6 text-gray-600">{importNotesData?.seller?.code}</td>
+              </tr>
+              <tr className="border-b">
+                <th className="py-4 px-6 text-gray-700 font-semibold">Tên NCC</th>
+                <td className="py-4 px-6 text-gray-600">{importNotesData?.seller?.name}</td>
+              </tr>
+              <tr className="border-b">
+                <th className="py-4 px-6 text-gray-700 font-semibold">SĐT</th>
+                <td className="py-4 px-6 text-gray-600">{importNotesData?.seller?.phone}</td>
+              </tr>
+              <tr className="border-b">
+                <th className="py-4 px-6 text-gray-700 font-semibold">Email</th>
+                <td className="py-4 px-6 text-gray-600">{importNotesData?.seller?.email}</td>
+              </tr>
+              <tr>
+                <th className="py-4 px-6 text-gray-700 font-semibold">Địa chỉ</th>
+                <td className="py-4 px-6 text-gray-600">{importNotesData?.seller?.address}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* Thông tin chi tiết hóa đơn */}
       <div className="px-5 py-4">
-        <p className="text-[32px] font-semibold mb-4">Chi tiết phiếu xuất</p>
+        <p className="text-[32px] font-semibold mb-4">Chi tiết phiếu nhập</p>
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
           <table className="min-w-full bg-white table-auto">
             <thead className="border-b border-[#d5d5d5] text-sl font-semibold text-[#202224] uppercase tracking-wider  text-center">

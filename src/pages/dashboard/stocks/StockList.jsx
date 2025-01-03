@@ -34,7 +34,7 @@ export const StockList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Tên SP</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Số lượng tồn</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Thời gian</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Người chỉnh sửa</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Người phụ trách</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Hành động</th>
               </tr>
             </thead>
