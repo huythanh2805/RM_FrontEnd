@@ -29,7 +29,7 @@ export const ProductList = () => {
   // Hàm xóa người dùng
   const handleDeleteProduct = (productID) => {
     Swal.fire({
-      title: "Xác nhận xóa nhà cung cấp?",
+      title: "Xác nhận xóa sản phẩm?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -42,14 +42,14 @@ export const ProductList = () => {
           .then(() => {
             Swal.fire({
               title: "Đã xóa!",
-              text: "Người dùng đã được xóa thành công.",
+              text: "Sản phẩm đã được xóa thành công.",
               icon: "success",
             });
           })
           .catch((err) => {
             Swal.fire({
               title: "Lỗi!",
-              text: "Không thể xóa người dùng. Vui lòng thử lại.",
+              text: "Không thể xóa sản phẩm. Vui lòng thử lại.",
               icon: "error",
             });
             console.error(err);
@@ -129,12 +129,11 @@ export const ProductList = () => {
                 <th className="hidden lg:table-cell py-3 px-6 text-sl font-semibold text-gray-700 text-center">STT</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Mã</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Tên</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Danh mục</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Số lượng tồn</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Đơn vị</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Giá</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Ngày hết hạn</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Hành động</th>
+                <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Danh mục</th>
+                <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Đơn vị</th>
+                <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Giá</th>
+                <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Ngày hết hạn</th>
+                <th className="py-3 px-6 text-sl font-semibold text-gray-700 text-center">Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -143,17 +142,18 @@ export const ProductList = () => {
                   <td className="py-3 px-6 text-sl text-gray-800 break-words font-medium text-center">
                     {index + 1 + startIndex}
                   </td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{product.code}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{product.name}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{product.category}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{product.stockQuantity}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{product.unit}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{formatCurrency(product.basePrice)}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">
-                    {formatDateNoTime(product.expiryDate)}
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{product?.code}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{product?.name}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">{product?.category}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">{product?.unit}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">
+                    {formatCurrency(product?.price)}
                   </td>
-                  <td className="py-3 px-6 text-sl flex items-center gap-3">
-                    <Link to={`/admin/products/update/${product._id}`}>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">
+                    {formatDateNoTime(product?.expiryDate)}
+                  </td>
+                  <td className="py-3 px-6 text-sl flex items-center gap-3 justify-center">
+                    <Link to={`/admin/products/update/${product?._id}`}>
                       <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">
                         <FaPenToSquare size={18} />
                       </div>

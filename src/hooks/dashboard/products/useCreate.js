@@ -10,12 +10,12 @@ export const useCreateProducts = () => {
 
   const form = useForm({
     defaultValues: {
-      name: "",
       code: "",
-      email: "",
-      phone: "",
-      description: "",
-      address: "",
+      name: "",
+      category: "",
+      unit: "",
+      price: 0,
+      expiryDate: "",
     },
   });
 
@@ -28,12 +28,12 @@ export const useCreateProducts = () => {
   const resetForm = () => {
     if (form) {
       form.reset({
-        name: "",
         code: "",
-        email: "",
-        phone: "",
-        description: "",
-        address: "",
+        name: "",
+        category: "",
+        unit: "",
+        price: 0,
+        expiryDate: "",
       });
     }
   };
@@ -44,7 +44,7 @@ export const useCreateProducts = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["fetchProductsService"]);
-      toast({ variant: "success", title: "Thêm nhân viên thành công!" });
+      toast({ variant: "success", title: "Thêm sản phẩm thành công!" });
       resetForm();
       navigate("/admin/products");
     },
@@ -52,7 +52,7 @@ export const useCreateProducts = () => {
       const errorMessage = error.response?.data?.message || error.message || "Vui lòng kiểm tra lại thông tin";
       toast({
         variant: "destructive",
-        title: "Lỗi khi thêm nhà cung cấp",
+        title: "Lỗi khi thêm sản phẩm",
         description: errorMessage,
       });
     },

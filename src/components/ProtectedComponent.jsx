@@ -1,5 +1,5 @@
 import jwtDecode from "jwt-decode";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Navigate } from "react-router-dom";
 
 function ProtectedComponent({ children, requiredRole }) {
@@ -8,7 +8,6 @@ function ProtectedComponent({ children, requiredRole }) {
     const token = localStorage.getItem("token");
     return jwtDecode(token);
   });
-  console.log({ token });
   const isAuthenticated = token; // Có token => đã đăng nhập
   // const hasRequiredRole = !requiredRole || (token?.role === requiredRole);
   const hasRequiredRole = token.role === "ADMIN";

@@ -1,3 +1,4 @@
+import jwtDecode from "jwt-decode";
 import { apiClient } from "./api";
 
 const token = localStorage.getItem("token");
@@ -30,11 +31,16 @@ export const deleteProductsService = async (userId) => {
 
 export const createProductsService = async (createData) => {
   try {
-    const response = await apiClient.post("api/products/create", createData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    console.log(token?.token?.id);
+    const response = await apiClient.post(
+      "api/products/create",
+      { ...createData, createdBy: jwtDecode(token).id },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(error);
