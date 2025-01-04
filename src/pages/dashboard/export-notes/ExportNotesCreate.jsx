@@ -1,6 +1,6 @@
 import { useCreateExportNotes } from "@/hooks/dashboard/export-notes/useCreate";
 import { TYPE_EXPORT_NOTES_OBJECT } from "@/utilities/const";
-import { Button, Form, Input, Modal, Select, Table } from "antd";
+import { Button, Form, Input, InputNumber, Modal, Select, Table } from "antd";
 import { Link } from "react-router-dom";
 
 export const ExportNotesCreate = () => {
@@ -10,21 +10,21 @@ export const ExportNotesCreate = () => {
     productsData,
     listProduct,
     form,
-    formItemLayout,
     initialValues,
     isModalOpen,
     rowSelection,
     showModal,
     handleOk,
     handleCancel,
-    handleSelectedProduct,
+    handleQuantityChange,
+    handleCreateExportNotes,
   } = useCreateExportNotes();
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
         <h2 className="text-[32px] font-semibold mb-4">Thêm mới phiếu xuất</h2>
-        <Form {...formItemLayout} layout="vertical" form={form} initialValues={initialValues}>
+        <Form layout="vertical" form={form} initialValues={initialValues}>
           <Form.Item label="Mã phiếu xuất" name="code" rules={[{ required: true, message: "Please input!" }]}>
             <Input placeholder="Nhập mã phiếu xuất" />
           </Form.Item>
@@ -69,40 +69,50 @@ export const ExportNotesCreate = () => {
                 ]}
               />
             </Modal>
-            <Table
-              className="mt-5"
-              dataSource={listProduct}
-              columns={[
-                {
-                  title: "Mã sản phẩm",
-                  dataIndex: "code",
-                  key: "code",
-                },
-                {
-                  title: "Tên sản phẩm",
-                  dataIndex: "name",
-                  key: "name",
-                },
-                {
-                  title: "Giá SP",
-                  dataIndex: "price",
-                  key: "price",
-                },
-                {
-                  title: "Số lượng",
-                  dataIndex: "price",
-                  key: "address",
-                  render: () => {
-                    return <Input placeholder="Nhập mã phiếu xuất" />;
+            <Form.Item name="items">
+              <Table
+                className="mt-5"
+                dataSource={listProduct}
+                rowKey="_id"
+                columns={[
+                  {
+                    title: "Mã sản phẩm",
+                    dataIndex: "code",
+                    key: "code",
                   },
-                },
-                {
-                  title: "Hành động",
-                  dataIndex: "price",
-                  key: "address",
-                },
-              ]}
-            />
+                  {
+                    title: "Tên sản phẩm",
+                    dataIndex: "name",
+                    key: "name",
+                  },
+                  {
+                    title: "Giá SP",
+                    dataIndex: "price",
+                    key: "price",
+                  },
+                  {
+                    title: "Số lượng",
+                    dataIndex: "quantity",
+                    key: "quantity",
+                    render: (_, record, index) => {
+                      return (
+                        <Form.Item
+                          name={["items", index, "quantity"]}
+                          rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
+                        >
+                          <InputNumber
+                            type="number"
+                            placeholder="Nhập số lượng"
+                            min={1}
+                            onChange={(value) => handleQuantityChange(index, value)}
+                          />
+                        </Form.Item>
+                      );
+                    },
+                  },
+                ]}
+              />
+            </Form.Item>
           </div>
           <div className="flex justify-end space-x-2 mt-5">
             <Link
@@ -115,6 +125,7 @@ export const ExportNotesCreate = () => {
             <button
               type="submit"
               className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-green-300 transition"
+              onClick={() => handleCreateExportNotes()}
             >
               Tạo mới +
             </button>

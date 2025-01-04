@@ -144,9 +144,9 @@ export const ExportNotesList = () => {
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.products?.length}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.total}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.createdAt}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.address}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.address}</td>
-                  <td className="py-3 px-6 text-sl flex items-center gap-3">
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.type}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.createdBy?.userName}</td>
+                  <td className="py-3 px-6 text-sl flex items-center gap-3 justify-center">
                     <div className="flex justify-center gap-3">
                       <Link to={`/admin/export-notes/${exportNotes?._id}`}>
                         <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">

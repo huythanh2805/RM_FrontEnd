@@ -26,7 +26,7 @@ export const ExportNotesDetail = () => {
               </tr>
               <tr className="border-b">
                 <th className="py-4 px-6 text-gray-700 font-semibold">Người tạo</th>
-                <td className="py-4 px-6 text-gray-600">{exportNotesData?.number_of_seats}</td>
+                <td className="py-4 px-6 text-gray-600">{exportNotesData?.createdBy?.userName}</td>
               </tr>
               <tr>
                 <th className="py-4 px-6 text-gray-700 font-semibold">Thời gian tạo</th>
@@ -59,8 +59,8 @@ export const ExportNotesDetail = () => {
                   key={product._id}
                 >
                   <td className="py-4 px-6 text-sl font-medium text-[#202224] w-[100px]">{index + 1}</td>
-                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.code}</td>
-                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.name}</td>
+                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.product?.code}</td>
+                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.product?.name}</td>
                   <td className="py-4 px-6 text-sl text-center">{formatCurrency(product?.price)}</td>
                   <td className="py-4 px-6 text-sl text-center">{product?.quantity}</td>
                   <td className="py-4 px-6 text-sl text-center">
