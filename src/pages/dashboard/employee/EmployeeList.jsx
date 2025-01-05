@@ -7,8 +7,8 @@ import Swal from "sweetalert2";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 10;
 
   const fetchData = () => {
     axios
@@ -25,15 +25,14 @@ const EmployeeList = () => {
     fetchData();
   }, []);
 
-  const pageCount = Math.ceil(employees.length / itemPerPage);
-
-  const currentItems = employees.slice(
-    currentPage * itemPerPage,
-    (currentPage + 1) * itemPerPage
-  );
+  const startIndex = (currentPage - 1) * itemPerPage;
+  const currentItems = employees
+    .reverse()
+    .slice(startIndex, startIndex + itemPerPage);
+  const pageCount = Math.ceil(employees.reverse().length / itemPerPage);
 
   const handlePageChange = (e) => {
-    setCurrentPage(e.selected);
+    setCurrentPage(e.selected + 1);
   };
 
   const handleDelete = (id) => {
@@ -56,6 +55,7 @@ const EmployeeList = () => {
               "success"
             );
             fetchData();
+            setCurrentPage(1);
           })
           .catch((err) => {
             console.log(err);
@@ -70,22 +70,22 @@ const EmployeeList = () => {
         <div className="flex items-center justify-between">
           <p className="text-[32px] font-semibold mb-4">Nhân Viên</p>
           <Link to={"/admin/employees/add"}>
-            <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-xs font-semibold hover:bg-green-300 transition">
+            <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition">
               Thêm +
             </div>
           </Link>
         </div>
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
           <table className="min-w-full bg-white">
-            <thead className="border-b border-[#d5d5d5] text-left text-xs font-semibold text-[#202224] uppercase tracking-wider">
+            <thead className="border-b border-[#d5d5d5] text-left text-sl font-semibold text-[#202224] uppercase tracking-wider">
               <tr>
-                <th className="hidden lg:block py-3 px-6">STT</th>
-                <th className="py-3 px-6">Tên</th>
-                <th className="py-3 px-6">Giới tính</th>
-                <th className="py-3 px-6">Số điện thoại</th>
-                <th className="py-3 px-6">Vị trí công việc</th>
-                <th className="py-3 px-6">Trạng thái</th>
-                <th className="py-3 px-6"></th>
+                <th className="py-3 px-6 font-bold">STT</th>
+                <th className="py-3 px-6 font-bold">Tên</th>
+                <th className="py-3 px-6 font-bold">Giới tính</th>
+                <th className="py-3 px-6 font-bold">Số điện thoại</th>
+                <th className="py-3 px-6 font-bold">Vị trí công việc</th>
+                <th className="py-3 px-6 font-bold">Trạng thái</th>
+                <th className="py-3 px-6 font-bold"></th>
               </tr>
             </thead>
             <tbody>
@@ -94,29 +94,24 @@ const EmployeeList = () => {
                   className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
                   key={d._id}
                 >
-                  <td className="hidden lg:block py-4 px-6 text-sm font-medium text-[#202224]">
-                    {index + 1}
+                  <td className="py-4 px-6 text-[#202224]">
+                    {" "}
+                    {startIndex + index + 1}
                   </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
-                    {d.name}
+                  <td className="py-4 px-6 text-[#202224]">{d.name}</td>
+                  <td className="py-4 px-6 text-[#202224]">
+                    <p>{d.gender === "MALE" ? "Nam" : "Nữ"}</p>
                   </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
-                    {d.gender}
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
-                    {d.phoneNumber}
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-[#202224]">
-                    {d.workPosition}
-                  </td>
+                  <td className="py-4 px-6 text-[#202224]">{d.phoneNumber}</td>
+                  <td className="py-4 px-6 text-[#202224]">{d.workPosition}</td>
 
                   <td className="py-4 px-6 text-sm">
                     {d.employStatus === "ACTIVE" ? (
-                      <span className="px-2 py-1 text-xs font-semibold rounded-lg bg-green-100 text-green-800">
+                      <span className="px-2 py-1 font-semibold rounded-lg bg-green-200 text-green-800">
                         Đang làm việc
                       </span>
                     ) : (
-                      <span className="px-2 py-1 text-xs font-semibold rounded-lg bg-gray-100 text-gray-700">
+                      <span className="px-2 py-1 font-semibold rounded-lg bg-gray-200 text-gray-800">
                         Nghỉ
                       </span>
                     )}
@@ -125,21 +120,24 @@ const EmployeeList = () => {
                   <td className="py-4 px-6 text-sm flex items-center gap-1.5 lg:gap-3">
                     <Link to={`/admin/employees/${d._id}/update`}>
                       <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">
-                        <FaPenToSquare />
+                        <FaPenToSquare size={18} />
                       </div>
                     </Link>
                     <div
                       className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-xs lg:text-base font-semibold hover:bg-red-300 transition"
                       onClick={() => handleDelete(d._id)}
                     >
-                      <FaRegTrashCan />
+                      <FaRegTrashCan size={18} />
                     </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <Pagination pageCount={pageCount} onPageChange={handlePageChange} />
+          {/* Phân trang */}
+          {pageCount > 1 && (
+            <Pagination pageCount={pageCount} onPageChange={handlePageChange} />
+          )}
         </div>
       </div>
     </div>

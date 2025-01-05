@@ -65,8 +65,8 @@ const EmployeeAdd = () => {
               {...register("gender", { required: "Giới tính là bắt buộc" })}
             >
               <option value="">Chọn giới tính</option>
-              <option value="MALE">MALE</option>
-              <option value="FEMALE">FEMALE</option>
+              <option value="MALE">Nam</option>
+              <option value="FEMALE">Nữ</option>
             </select>
             {errors.gender && (
               <p className="mt-2 text-sm text-red-600">

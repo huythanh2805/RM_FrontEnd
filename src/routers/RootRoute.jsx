@@ -196,7 +196,7 @@ const router = createBrowserRouter([
       },
       {
         path: "workSchedule",
-        element: <WorkSchedule />,
+        element: <WorkScheduleList />,
       },
       {
         path: "addWorkSchedule",
