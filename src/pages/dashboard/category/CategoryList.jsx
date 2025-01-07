@@ -1,4 +1,3 @@
-import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -78,8 +77,6 @@ const CategoryList = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold text-gray-800">Danh mục</p>

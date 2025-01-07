@@ -8,7 +8,6 @@ import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
 import { AiTwotoneFileImage } from "react-icons/ai";
 import Pagination from "@/components/Pagination";
-import Navbar from "@/components/Admin/Navbar";
 
 const SetComboList = () => {
   const [combos, setCombos] = useState([]);
@@ -91,8 +90,6 @@ const SetComboList = () => {
   };
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-3">
           <p className="text-[32px] font-semibold">Danh sách combo</p>

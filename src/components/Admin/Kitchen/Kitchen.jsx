@@ -24,7 +24,6 @@ import {
 import UserList from "@/pages/dashboard/users/Userlist"
 import { useFetchData } from "@/hooks/useFetchData"
 import { ServerUrl } from "@/utilities/utils"
-import Navbar from "../Navbar"
 import OrderFoodTable from "./OrderFoodTable"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -86,7 +85,6 @@ function Kitchen() {
   if(activesReservationsLoading) return <div>...Loading</div>
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold text-gray-800">
