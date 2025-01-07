@@ -10,7 +10,7 @@ import ListReservation from "@/components/Admin/Reservation/ListReservation";
 import UpdateReservation from "@/components/Admin/Reservation/UpdateReservation";
 import TableManagement from "@/components/Admin/TableManagement";
 import ProductDetail from "@/components/layouts/ProductDetail";
-import ProtectedComponent from "@/components/ProtectedComponent";
+import { RoleProtectComponentAdmin, RoleProtectComponentClient } from "@/components/ProtectedComponent";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { ForgotPasswordPage } from "@/pages/auth/PasswordPage";
 import { RegisterPage } from "@/pages/auth/Register";
@@ -149,9 +149,11 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      <ProtectedComponent>
+      <RoleProtectComponentClient
+        isRoleRequiredArrays={["ADMIN", "CASHIER", "WAREHOUSE", "ORDER", "CHEF"]}
+      >
         <LayoutAdmin />
-      </ProtectedComponent>
+      </RoleProtectComponentClient>
     ),
     children: [
       {
@@ -160,11 +162,17 @@ const router = createBrowserRouter([
       },
       {
         path: "discounts",
-        element: <CreateDiscount />,
+        element: 
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <CreateDiscount />
+          </RoleProtectComponentAdmin>
       },
       {
         path: "listDiscounts",
-        element: <ListDiscount />,
+        element: 
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <ListDiscount />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "updateDiscount/:id",
@@ -172,7 +180,10 @@ const router = createBrowserRouter([
       },
       {
         path: "categories",
-        element: <CategoryList />,
+        element: 
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <CategoryList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "categories/add",
@@ -184,7 +195,10 @@ const router = createBrowserRouter([
       },
       {
         path: "employees",
-        element: <EmployeeList />,
+        element: 
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <EmployeeList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "employees/add",
@@ -196,7 +210,10 @@ const router = createBrowserRouter([
       },
       {
         path: "workSchedule",
-        element: <WorkScheduleList />,
+        element: 
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <WorkScheduleList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "addWorkSchedule",
@@ -212,7 +229,10 @@ const router = createBrowserRouter([
       },
       {
         path: "dishes",
-        element: <DishList />,
+        element: 
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <DishList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "dishes/add",
@@ -232,7 +252,10 @@ const router = createBrowserRouter([
       },
       {
         path: "tables",
-        element: <TableManagement />,
+        element: 
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "ORDER"]}>
+            <TableManagement />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "tables/:reservationId",
@@ -248,7 +271,10 @@ const router = createBrowserRouter([
       },
       {
         path: "listReser",
-        element: <ListReservation />,
+        element:  
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <ListReservation />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "foodOrder/:reservationId/",
@@ -260,7 +286,10 @@ const router = createBrowserRouter([
       },
       {
         path: "users",
-        element: <UserList />,
+        element: 
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+              <UserList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "users/add",
@@ -272,7 +301,10 @@ const router = createBrowserRouter([
       },
       {
         path: "setCombos",
-        element: <SetComboList />,
+        element:  
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <SetComboList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "setCombos/add",
@@ -296,7 +328,10 @@ const router = createBrowserRouter([
       },
       {
         path: "feedbacks",
-        element: <FeedbackList />,
+        element:  
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <FeedbackList />
+            </RoleProtectComponentAdmin>,
       },
       {
         path: "order-history/:id",
@@ -304,11 +339,17 @@ const router = createBrowserRouter([
       },
       {
         path: "kitchen",
-        element: <Kitchen />,
+        element:  
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "CHEF"]}>
+            <Kitchen />
+            </RoleProtectComponentAdmin>,
       },
       {
         path: "sellers",
-        element: <SellerList />,
+        element: 
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <SellerList />
+            </RoleProtectComponentAdmin>,
       },
       {
         path: "sellers/create",
@@ -320,7 +361,10 @@ const router = createBrowserRouter([
       },
       {
         path: "products",
-        element: <ProductList />,
+        element: 
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <ProductList />
+            </RoleProtectComponentAdmin>,
       },
       {
         path: "products/create",
@@ -332,11 +376,17 @@ const router = createBrowserRouter([
       },
       {
         path: "stocks",
-        element: <StockList />,
+        element: 
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <StockList/>
+            </RoleProtectComponentAdmin>,
       },
       {
         path: "import-notes",
-        element: <ImportNotesList />,
+        element: 
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <ImportNotesList />,
+            </RoleProtectComponentAdmin>,
       },
       {
         path: "import-notes/:id",
@@ -348,7 +398,10 @@ const router = createBrowserRouter([
       },
       {
         path: "export-notes",
-        element: <ExportNotesList />,
+        element:  
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <ExportNotesList />
+            </RoleProtectComponentAdmin>,
       },
       {
         path: "export-notes/:id",
@@ -364,6 +417,6 @@ const router = createBrowserRouter([
     path: "*",
     element: <NotFound />,
   },
-]);
+])
 
 export default router;

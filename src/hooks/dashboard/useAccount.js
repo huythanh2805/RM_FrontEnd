@@ -69,7 +69,7 @@ export const useUser = (id, form) => {
   };
 
   const validateFormData = (data, isUpdate = false) => {
-    if (!data.userName || !data.email || !data.phoneNumber || (!isUpdate && !data.password)) {
+    if (!data.userName || !data.email || (!isUpdate && !data.password)) {
       throw new Error("Vui lòng điền đầy đủ thông tin bắt buộc");
     }
     if (!isUpdate && !imageFile) {

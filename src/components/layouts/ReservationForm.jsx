@@ -44,18 +44,6 @@ const ReservationForm = () => {
    if(discountData) setUserDiscounts(discountData)
   },[discountData])
 
-  // useEffect(() => {
-  //   if(!localStorage.getItem("postData")) return
-  //   const storedDetails = JSON.parse(localStorage.getItem("postData")) || []
-  //   const datPicker = new Date(storedDetails.startTime) < new Date() ? new Date() : new Date(storedDetails.startTime)
-  //   setUserName(storedDetails.userName)
-  //   setCouponValue(storedDetails.couponValue)
-  //   setPhoneNumber(storedDetails.phoneNumber)
-  //   setUserName(storedDetails.userName)
-  //   setDatePicker(datPicker)
-  //   setTimePicker(new Date(storedDetails.startTime))
-  // }, [])
- 
   const combinedDateTime = (date, time) => {
     const fomartedDate = new Date(
       date.getFullYear(),
@@ -66,47 +54,47 @@ const ReservationForm = () => {
     );
     return fomartedDate;
   };
-  const createOrderFunction = async (postData)=> {
-  try {
-    setLoading(true);
-    const res = await fetch(`${ServerUrl}/api/reservations/v2/client`, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        ...postData,
-        type: "CREATE",
-        payment_method: "CASH",
-        deposit: 0 ,
-        isUsedDiscount: couponValue ? true : false,
-        isOrderedOnline: true,
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      return toast({
-        variant: "destructive",
-        title: data.message,
-      });
-    }
-    setLoading(false);
-    toast({
-      variant: "success",
-      title: "Bạn đã đặt thành công",
-    });
-    return navigate(`/history/${decodedToken.id}`);
-  } catch (error) {
-    console.log({ error });
-    setLoading(false);
-    toast({
-      variant: "destructive",
-      title: "Không thể tạo đơn hàng",
-    });
-  } finally {
-    setLoading(false);
-  }
-  }
+  // const createOrderFunction = async (postData)=> {
+  // try {
+  //   setLoading(true);
+  //   const res = await fetch(`${ServerUrl}/api/reservations/v2/client`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       ...postData,
+  //       type: "CREATE",
+  //       payment_method: "CASH",
+  //       deposit: 0 ,
+  //       isUsedDiscount: couponValue ? true : false,
+  //       isOrderedOnline: true,
+  //     }),
+  //   });
+  //   const data = await res.json();
+  //   if (!res.ok) {
+  //     return toast({
+  //       variant: "destructive",
+  //       title: data.message,
+  //     });
+  //   }
+  //   setLoading(false);
+  //   toast({
+  //     variant: "success",
+  //     title: "Bạn đã đặt thành công",
+  //   });
+  //   return navigate(`/history/${decodedToken.id}`);
+  // } catch (error) {
+  //   console.log({ error });
+  //   setLoading(false);
+  //   toast({
+  //     variant: "destructive",
+  //     title: "Không thể tạo đơn hàng",
+  //   });
+  // } finally {
+  //   setLoading(false);
+  // }
+  // }
   const handleClick = async () => {
     if (couponValue || couponValue !== "") {
       const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
@@ -148,7 +136,7 @@ const ReservationForm = () => {
       couponValue,
       isOrderedOnline: true
     };
-     if(cart.length === 0) return createOrderFunction(postData)
+    //  if(cart.length === 0) return createOrderFunction(postData)
     
       if (localStorage.getItem("postData")) {
         // Nếu có, xóa 'postData' cũ
