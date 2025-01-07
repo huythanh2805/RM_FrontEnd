@@ -60,7 +60,6 @@ export const useCreateImportNotes = () => {
   const handleCreateImportNotes = async () => {
     form.validateFields().then(() => {
       const formData = form.getFieldsValue();
-      console.log(formData);
       const mergedArray = listProduct?.map((item, index) => ({ ...item, ...formData.items[index] }));
       const createData = {
         code: formData?.code,

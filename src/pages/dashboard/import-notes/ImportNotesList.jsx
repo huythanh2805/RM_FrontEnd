@@ -163,7 +163,7 @@ export const ImportNotesList = () => {
         </div>
 
         {/* Phân trang */}
-        {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={setCurrentPage(selected + 1)} />}
+        {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={(e) => setCurrentPage(e.selected + 1)} />}
       </div>
     </div>
   );

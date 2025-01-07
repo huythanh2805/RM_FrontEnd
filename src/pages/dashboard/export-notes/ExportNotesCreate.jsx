@@ -1,5 +1,6 @@
 import { useCreateExportNotes } from "@/hooks/dashboard/export-notes/useCreate";
 import { TYPE_EXPORT_NOTES_OBJECT } from "@/utilities/const";
+import { formatCurrency } from "@/utilities/utils";
 import { Button, Form, Input, InputNumber, Modal, Select, Table } from "antd";
 import { Link } from "react-router-dom";
 
@@ -7,7 +8,7 @@ export const ExportNotesCreate = () => {
   const { TextArea } = Input;
 
   const {
-    productsData,
+    stocksData,
     listProduct,
     form,
     initialValues,
@@ -16,7 +17,6 @@ export const ExportNotesCreate = () => {
     showModal,
     handleOk,
     handleCancel,
-    handleQuantityChange,
     handleCreateExportNotes,
   } = useCreateExportNotes();
 
@@ -45,26 +45,50 @@ export const ExportNotesCreate = () => {
             <Button type="primary" onClick={showModal}>
               Chọn sản phẩm
             </Button>
-            <Modal title="Chọn sản phẩm" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width="50%">
+            <Modal title="Chọn sản phẩm" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width="80%">
               <Table
                 rowKey="_id"
                 rowSelection={rowSelection}
-                dataSource={productsData}
+                dataSource={stocksData}
                 columns={[
                   {
                     title: "Mã sản phẩm",
                     dataIndex: "code",
                     key: "code",
+                    render: (_, record, index) => {
+                      return record?.product?.code
+                    }
                   },
                   {
                     title: "Tên sản phẩm",
                     dataIndex: "name",
-                    key: "name",
+                    key: "name", render: (_, record, index) => {
+                      return record?.product?.name
+                    }
                   },
                   {
                     title: "Giá SP",
                     dataIndex: "price",
-                    key: "address",
+                    key: "price",
+                    render: (_, record, index) => {
+                      return formatCurrency(record?.price)
+                    }
+                  },
+                  {
+                    title: "Số lượng",
+                    dataIndex: "quantity",
+                    key: "quantity",
+                    render: (_, record, index) => {
+                      return record?.quantity
+                    }
+                  },
+                  {
+                    title: "Ngày hết hạn",
+                    dataIndex: "expiryDate",
+                    key: "expiryDate",
+                    render: (_, record, index) => {
+                      return record?.expiryDate
+                    }
                   },
                 ]}
               />
@@ -79,11 +103,25 @@ export const ExportNotesCreate = () => {
                     title: "Mã sản phẩm",
                     dataIndex: "code",
                     key: "code",
+                    render: (_, record, index) => {
+                      return record?.product?.code
+                    }
                   },
                   {
                     title: "Tên sản phẩm",
                     dataIndex: "name",
                     key: "name",
+                    render: (_, record, index) => {
+                      return record?.product?.name
+                    }
+                  },
+                  {
+                    title: "Giá sản phẩm",
+                    dataIndex: "price",
+                    key: "price",
+                    render: (_, record, index) => {
+                      return record?.price
+                    }
                   },
                   {
                     title: "Giá SP",
@@ -92,19 +130,19 @@ export const ExportNotesCreate = () => {
                   },
                   {
                     title: "Số lượng",
-                    dataIndex: "quantity",
-                    key: "quantity",
+                    dataIndex: "export_quantity",
+                    key: "export_quantity",
                     render: (_, record, index) => {
                       return (
                         <Form.Item
-                          name={["items", index, "quantity"]}
+                          name={["items", index, "export_quantity"]}
                           rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
                         >
                           <InputNumber
                             type="number"
                             placeholder="Nhập số lượng"
                             min={1}
-                            onChange={(value) => handleQuantityChange(index, value)}
+                            max={record?.quantity}
                           />
                         </Form.Item>
                       );

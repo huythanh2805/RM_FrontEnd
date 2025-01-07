@@ -53,18 +53,18 @@ export const ExportNotesDetail = () => {
               </tr>
             </thead>
             <tbody>
-              {exportNotesData?.products?.map((product, index) => (
+              {exportNotesData?.stocks?.map((stock, index) => (
                 <tr
                   className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition text-center"
-                  key={product._id}
+                  key={stock._id}
                 >
                   <td className="py-4 px-6 text-sl font-medium text-[#202224] w-[100px]">{index + 1}</td>
-                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.product?.code}</td>
-                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.product?.name}</td>
-                  <td className="py-4 px-6 text-sl text-center">{formatCurrency(product?.price)}</td>
-                  <td className="py-4 px-6 text-sl text-center">{product?.quantity}</td>
+                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{stock?.stock?.product?.code}</td>
+                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{stock?.stock?.product?.name}</td>
+                  <td className="py-4 px-6 text-sl text-center">{formatCurrency(stock?.price)}</td>
+                  <td className="py-4 px-6 text-sl text-center">{stock?.quantity}</td>
                   <td className="py-4 px-6 text-sl text-center">
-                    {formatCurrency(product?.price * product?.quantity)}
+                    {formatCurrency(stock?.price * stock?.quantity)}
                   </td>
                 </tr>
               ))}

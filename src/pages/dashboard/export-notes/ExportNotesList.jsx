@@ -141,7 +141,7 @@ export const ExportNotesList = () => {
                     {index + 1 + startIndex}
                   </td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.code}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.products?.length}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.stocks?.length}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.total}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.createdAt}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.type}</td>
@@ -162,7 +162,7 @@ export const ExportNotesList = () => {
         </div>
 
         {/* Phân trang */}
-        {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={setCurrentPage(selected + 1)} />}
+        {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={(e) => setCurrentPage(e.selected + 1)} />}
       </div>
     </div>
   );

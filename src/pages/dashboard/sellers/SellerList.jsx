@@ -171,7 +171,7 @@ export const SellerList = () => {
         </div>
 
         {/* Phân trang */}
-        {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={setCurrentPage(selected + 1)} />}
+        {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={(selected) => setCurrentPage(selected + 1)} />}
       </div>
     </div>
   );
