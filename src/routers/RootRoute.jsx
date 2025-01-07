@@ -28,18 +28,33 @@ import DishUpdate from "@/pages/dashboard/dish/DishUpdate";
 import EmployeeAdd from "@/pages/dashboard/employee/EmployeeAdd";
 import EmployeeList from "@/pages/dashboard/employee/EmployeeList";
 import EmployeeUpdate from "@/pages/dashboard/employee/EmployeeUpdate";
+import { ExportNotesCreate } from "@/pages/dashboard/export-notes/ExportNotesCreate";
+import { ExportNotesDetail } from "@/pages/dashboard/export-notes/ExportNotesDetail";
+import { ExportNotesList } from "@/pages/dashboard/export-notes/ExportNotesList";
 import FeedbackList from "@/pages/dashboard/feedback/FeedbackList";
+import { ImportNotesCreate } from "@/pages/dashboard/import-notes/ImportNotesCreate";
+import { ImportNotesDetail } from "@/pages/dashboard/import-notes/ImportNotesDetail";
+import { ImportNotesList } from "@/pages/dashboard/import-notes/ImportNotesList";
 import LayoutAdmin from "@/pages/dashboard/LayoutAdmin";
+import { ProductCreate } from "@/pages/dashboard/products/ProductCreate";
+import { ProductList } from "@/pages/dashboard/products/ProductList";
+import { ProductUpdate } from "@/pages/dashboard/products/ProductUpdate";
 import { ProfileAdmin } from "@/pages/dashboard/Profile";
+import { SellerCreate } from "@/pages/dashboard/sellers/SellerCreate";
+import { SellerList } from "@/pages/dashboard/sellers/SellerList";
+import { SellerUpdate } from "@/pages/dashboard/sellers/SellerUpdate";
 import SetComboAdd from "@/pages/dashboard/setCombo/SetComboAdd";
 import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
 import SetComboList from "@/pages/dashboard/setCombo/SetComboList";
 import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";
+import { StockList } from "@/pages/dashboard/stocks/StockList";
 import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
 import UserUpdate from "@/pages/dashboard/users/UserUpdate";
 import WorkSchedule from "@/pages/dashboard/workSchedule/workSchedule";
 import WorkScheduleAdd from "@/pages/dashboard/workSchedule/workScheduleAdd";
+import WorkScheduleList from "@/pages/dashboard/workSchedule/workScheduleList";
+import WorkScheduleUpdate from "@/pages/dashboard/workSchedule/workScheduleUpdate";
 import About from "@/pages/home/About";
 import { Checkout } from "@/pages/home/Checkout";
 import ComboDetail from "@/pages/home/ComboDetail";
@@ -176,16 +191,24 @@ const router = createBrowserRouter([
         element: <EmployeeAdd />,
       },
       {
+        path: "employees/:id/update",
+        element: <EmployeeUpdate />,
+      },
+      {
         path: "workSchedule",
-        element: <WorkSchedule />,
+        element: <WorkScheduleList />,
       },
       {
         path: "addWorkSchedule",
         element: <WorkScheduleAdd />,
       },
       {
-        path: "employees/:id/update",
-        element: <EmployeeUpdate />,
+        path: "listWorkSchedule",
+        element: <WorkScheduleList />,
+      },
+      {
+        path: "workSchedule/:id/update",
+        element: <WorkScheduleUpdate />,
       },
       {
         path: "dishes",
@@ -282,6 +305,58 @@ const router = createBrowserRouter([
       {
         path: "kitchen",
         element: <Kitchen />,
+      },
+      {
+        path: "sellers",
+        element: <SellerList />,
+      },
+      {
+        path: "sellers/create",
+        element: <SellerCreate />,
+      },
+      {
+        path: "sellers/update/:id",
+        element: <SellerUpdate />,
+      },
+      {
+        path: "products",
+        element: <ProductList />,
+      },
+      {
+        path: "products/create",
+        element: <ProductCreate />,
+      },
+      {
+        path: "products/update/:id",
+        element: <ProductUpdate />,
+      },
+      {
+        path: "stocks",
+        element: <StockList />,
+      },
+      {
+        path: "import-notes",
+        element: <ImportNotesList />,
+      },
+      {
+        path: "import-notes/:id",
+        element: <ImportNotesDetail />,
+      },
+      {
+        path: "import-notes/create",
+        element: <ImportNotesCreate />,
+      },
+      {
+        path: "export-notes",
+        element: <ExportNotesList />,
+      },
+      {
+        path: "export-notes/:id",
+        element: <ExportNotesDetail />,
+      },
+      {
+        path: "export-notes/create",
+        element: <ExportNotesCreate />,
       },
     ],
   },
