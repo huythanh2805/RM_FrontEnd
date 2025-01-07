@@ -340,7 +340,7 @@ const router = createBrowserRouter([
       {
         path: "kitchen",
         element:  
-            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "CHEF"]}>
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
             <Kitchen />
             </RoleProtectComponentAdmin>,
       },
