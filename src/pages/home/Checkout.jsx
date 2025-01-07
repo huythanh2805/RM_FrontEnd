@@ -14,6 +14,7 @@ export const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("ZALOPAY");
   const [totalDeposit, setTotalDeposit] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [defaultDeposit, setDefaultDeposit] = useState(100000)
   const [decodedToken, setDecodeToken] = useState(() => {
     const token = localStorage.getItem("token");
     if (!token) return null;
@@ -21,7 +22,7 @@ export const Checkout = () => {
   });
 
   const navigate = useNavigate();
-  const { clearCart } = useCart();
+  const { cart, clearCart } = useCart();
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
 
@@ -52,8 +53,6 @@ export const Checkout = () => {
       socket.disconnect();
     };
   }, [decodedToken.id, navigate]);
-  console.log({ reservationDetails });
-  console.log({ userDiscounts });
   // Tính tổng tiền món ăn
   const computeTotalAmount = useMemo(() => {
     return reservationDetails?.dishs.reduce((total, dish) => total + dish.price * dish.quantity, 0);
@@ -96,7 +95,7 @@ export const Checkout = () => {
       setTotalDeposit((pre) => pre + vat);
     }
   }, [prePayment]);
-
+console.log(cart.length)
   const handlePayment = async () => {
     if (!reservationDetails) {
       return toast({
@@ -104,12 +103,12 @@ export const Checkout = () => {
         title: "Không tìm thấy thông tin đặt bàn.",
       });
     }
-    if (Number(totalDeposit) === 0 && paymentMethod !== "CASH") {
-      return toast({
-        variant: "destructive",
-        title: "Số tiền đặt cọc phải tồn tại",
-      });
-    }
+    // if (Number(totalDeposit) === 0 && paymentMethod !== "CASH") {
+    //   return toast({
+    //     variant: "destructive",
+    //     title: "Số tiền đặt cọc phải tồn tại",
+    //   });
+    // }
     if (type === "UPDATE" && paymentMethod === "CASH")
       return toast({
         variant: "destructive",
@@ -133,7 +132,7 @@ export const Checkout = () => {
         body: JSON.stringify({
           ...reservationDetails,
           type,
-          totalPrice: totalDeposit,
+          totalPrice: cart.length === 0 ? defaultDeposit : totalDeposit,
           payment_method: paymentMethod,
           deposit: paymentMethod === "CASH" ? 0 : totalDeposit,
           isUsedDiscount,
@@ -147,6 +146,7 @@ export const Checkout = () => {
           title: data.message,
         });
       }
+      console.log({data})
       setLoading(false);
       clearCart();
       if (paymentMethod === "CASH") return navigate(`/history/${decodedToken.id}`);
