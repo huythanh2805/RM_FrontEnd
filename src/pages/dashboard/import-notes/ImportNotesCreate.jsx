@@ -1,133 +1,207 @@
-import { useCreateSeller } from "@/hooks/dashboard/sellers/useCreate";
+import { useCreateImportNotes } from "@/hooks/dashboard/import-notes/useCreate";
+import { UNITS } from "@/utilities/const";
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, Table } from "antd";
 import { Link } from "react-router-dom";
 
 export const ImportNotesCreate = () => {
-  const { register, onSubmit, handleSubmit, errors } = useCreateSeller();
+  const { TextArea } = Input;
 
+  const {
+    productsData,
+    listProduct,
+    form,
+    initialValues,
+    isModalOpen,
+    rowSelection,
+    sellersData,
+    showModal,
+    handleOk,
+    setCount,
+    setListProduct,
+    count,
+    handleCancel,
+    handleCreateImportNotes,
+  } = useCreateImportNotes();
+
+  const handleAddRowTable = () => {
+    const newData = {
+      key: count,
+      code: (
+        <Form.Item
+          name={["items", listProduct.length, "code"]}
+          rules={[{ required: true, message: "Vui lòng nhập!" }]}
+        >
+          <Input placeholder="Nhập mã sản phẩm" />
+        </Form.Item>
+      ),
+      name: (
+        <Form.Item
+          name={["items", listProduct.length, "name"]}
+          rules={[{ required: true, message: "Vui lòng nhập!" }]}
+        >
+          <Input placeholder="Nhập tên sản phẩm" />
+        </Form.Item>
+      ),
+      category: (
+        <Form.Item
+          name={["items", listProduct.length, "category"]}
+          rules={[{ required: true, message: "Vui lòng nhập!" }]}
+        >
+          <Input placeholder="Nhập loại sản phẩm" />
+        </Form.Item>
+      ),
+      unit: (
+        <Form.Item
+          name={["items", listProduct.length, "unit"]}
+          rules={[{ required: true, message: "Vui lòng nhập!" }]}
+        >
+          <Select
+            showSearch
+            placeholder="Chọn đơn vị"
+            options={UNITS?.map((item) => {
+              return { value: item, label: item };
+            })}
+          />
+        </Form.Item>
+      ),
+    };
+    setListProduct([...listProduct, newData]);
+    setCount(count + 1);
+  };
+  console.log(sellersData);
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
-        <h2 className="text-[32px] font-semibold mb-4">Thêm nhà cung cấp</h2>
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Tên nhà cung cấp:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("name", {
-                required: "Tên là bắt buộc",
-                minLength: {
-                  value: 3,
-                  message: "Tên phải có ít nhất 3 ký tự",
-                },
+        <h2 className="text-[32px] font-semibold mb-4">Thêm mới phiếu nhập</h2>
+        <Form layout="vertical" form={form} initialValues={initialValues}>
+          <Form.Item label="Mã phiếu nhập" name="code" rules={[{ required: true, message: "Vui lòng nhập!" }]}>
+            <Input placeholder="Nhập mã phiếu nhập" />
+          </Form.Item>
+          <Form.Item label="Nhà cung cấp" name="seller" rules={[{ required: true, message: "Vui lòng nhập!" }]}>
+            <Select
+              showSearch
+              placeholder="Chọn nhà cung cấp"
+              filterOption={(input, option) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase())}
+              options={sellersData?.map((item) => {
+                return { value: item?._id, label: item?.name };
               })}
             />
-            {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>}
+          </Form.Item>
+          <Form.Item label="Ghi chú" name="notes">
+            <TextArea rows={4} placeholder="Nhập ghi chú" />
+          </Form.Item>
+          <div className="bg-white px-4 py-6 rounded-lg">
+            <Button type="primary" onClick={showModal}>
+              Chọn sản phẩm có sẵn
+            </Button>
+            <Modal title="Chọn sản phẩm" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width="50%">
+              <Table
+                rowKey="_id"
+                rowSelection={rowSelection}
+                dataSource={productsData}
+                columns={[
+                  {
+                    title: "Mã sản phẩm",
+                    dataIndex: "code",
+                    key: "code",
+                  },
+                  {
+                    title: "Tên sản phẩm",
+                    dataIndex: "name",
+                    key: "name",
+                  },
+                  {
+                    title: "Loại SP",
+                    dataIndex: "category",
+                    key: "category",
+                  },
+                ]}
+              />
+            </Modal>
+            <Form.Item name="items">
+              <Table
+                className="mt-5"
+                dataSource={listProduct}
+                rowKey="_id"
+                columns={[
+                  {
+                    title: "Mã SP",
+                    dataIndex: "code",
+                    key: "code",
+                  },
+                  {
+                    title: "Tên SP",
+                    dataIndex: "name",
+                    key: "name",
+                  },
+                  {
+                    title: "Giá SP",
+                    dataIndex: "price",
+                    key: "price",
+                    render: (_, record, index) => {
+                      return <Form.Item
+                        name={["items", index, "price"]}
+                        rules={[{ required: true, message: "Vui lòng nhập!" }]}
+                      >
+                        <InputNumber placeholder="Nhập giá sản phẩm" min={1} />
+                      </Form.Item>
+                    }
+                  },
+                  {
+                    title: "Đơn vị",
+                    dataIndex: "unit",
+                    key: "unit",
+                  },
+                  {
+                    title: "Loại SP",
+                    dataIndex: "category",
+                    key: "category",
+                  },
+                  {
+                    title: "Số lượng",
+                    dataIndex: "quantity",
+                    key: "quantity",
+                    render: (_, record, index) => {
+                      return (
+                        <Form.Item
+                          name={["items", index, "quantity"]}
+                          rules={[{ required: true, message: "Vui lòng nhập!" }]}
+                        >
+                          <InputNumber type="number" placeholder="Nhập số lượng" min={1} />
+                        </Form.Item>
+                      );
+                    },
+                  },
+                  {
+                    title: "Hạn sử dụng",
+                    dataIndex: "expiryDate",
+                    key: "expiryDate",
+                    render: (_, record, index) => {
+                      return <Form.Item
+                        name={["items", index, "expiryDate"]}
+                        rules={[{ required: true, message: "Vui lòng nhập!" }]}
+                      >
+                        <DatePicker placeholder="Nhập hạn sử dụng" />
+                      </Form.Item>
+                    }
+                  },
+                ]}
+              />
+              <Button
+                onClick={handleAddRowTable}
+                type="primary"
+                style={{
+                  marginBottom: 16,
+                }}
+                className="mt-5"
+              >
+                Thêm sản phẩm mới
+              </Button>
+            </Form.Item>
           </div>
-          <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Mã nhà cung cấp:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("code", {
-                required: "Tên là bắt buộc",
-                minLength: {
-                  value: 3,
-                  message: "Tên phải có ít nhất 3 ký tự",
-                },
-              })}
-            />
-            {errors.code && <p className="mt-2 text-sm text-red-600">{errors.code.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Email:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("email", {
-                required: "Tên là bắt buộc",
-                minLength: {
-                  value: 3,
-                  message: "Tên phải có ít nhất 3 ký tự",
-                },
-              })}
-            />
-            {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email.message}</p>}
-          </div>
-
-          <div>
-            <label htmlFor="phoneNumber" className="text-sm font-medium text-gray-700">
-              Số điện thoại:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.phoneNumber ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("phone", {
-                required: "Số điện thoại là bắt buộc",
-                pattern: {
-                  value: /^[0-9]{10}$/,
-                  message: "Số điện thoại không hợp lệ",
-                },
-              })}
-            />
-            {errors.phone && <p className="mt-2 text-sm text-red-600">{errors.phone.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Địa chỉ:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("address", {
-                required: "Tên là bắt buộc",
-                minLength: {
-                  value: 3,
-                  message: "Tên phải có ít nhất 3 ký tự",
-                },
-              })}
-            />
-            {errors.address && <p className="mt-2 text-sm text-red-600">{errors.address.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Mô tả:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("description", {
-                required: "Tên là bắt buộc",
-                minLength: {
-                  value: 3,
-                  message: "Tên phải có ít nhất 3 ký tự",
-                },
-              })}
-            />
-            {errors.description && <p className="mt-2 text-sm text-red-600">{errors.description.message}</p>}
-          </div>
-
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end space-x-2 mt-5">
             <Link
-              to="/admin/sellers"
+              to="/admin/import-notes"
               className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-gray-300"
             >
               Quay lại
@@ -136,11 +210,12 @@ export const ImportNotesCreate = () => {
             <button
               type="submit"
               className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sm font-semibold hover:bg-green-300 transition"
+              onClick={() => handleCreateImportNotes()}
             >
               Tạo mới +
             </button>
           </div>
-        </form>
+        </Form>
       </div>
     </div>
   );
