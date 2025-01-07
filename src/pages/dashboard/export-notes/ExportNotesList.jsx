@@ -1,4 +1,3 @@
-import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 import { useList } from "@/hooks/dashboard/export-notes/useList";
 import { debounce } from "lodash";
@@ -70,8 +69,6 @@ export const ExportNotesList = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-semibold text-gray-800">Danh sách phiếu xuất</h1>

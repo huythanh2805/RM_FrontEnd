@@ -8,7 +8,6 @@ import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
 import { AiTwotoneFileImage } from "react-icons/ai";
 import Pagination from "@/components/Pagination";
-import Navbar from "@/components/Admin/Navbar";
 
 const DishList = () => {
   const [dishes, setDishes] = useState([]);
@@ -93,8 +92,6 @@ const DishList = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold text-gray-800">

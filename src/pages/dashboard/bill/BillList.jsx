@@ -1,11 +1,9 @@
-import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { FaRegTrashCan } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import { FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const BillList = () => {
@@ -50,7 +48,7 @@ const BillList = () => {
 
     const matchesDateValue = dateValue
       ? new Date(item.reservation_id.startTime).toLocaleDateString("vi-VN") ===
-        new Date(dateValue).toLocaleDateString("vi-VN")
+      new Date(dateValue).toLocaleDateString("vi-VN")
       : true;
 
     return matchesSearchValue && matchesDateValue;
@@ -68,10 +66,8 @@ const BillList = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
-      <div className="px-5 py-5">
+    <div >
+      <div className="px-5 ">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold">Danh sách hóa đơn</p>
         </div>
@@ -197,11 +193,10 @@ const BillList = () => {
                     <td className="py-3 px-4 text-sl text-gray-800">
                       <Link to={`/admin/bills/${bill._id}/detail`}>
                         <span
-                          className={`px-2 py-1 text-sl font-semibold rounded-lg ${
-                            bill.status === "ISPAID"
+                          className={`px-2 py-1 text-sl font-semibold rounded-lg ${bill.status === "ISPAID"
                               ? "bg-green-100 text-green-800"
                               : "bg-red-100 text-red-800"
-                          }`}
+                            }`}
                         >
                           {bill.status === "ISPAID"
                             ? "Đã thanh toán"

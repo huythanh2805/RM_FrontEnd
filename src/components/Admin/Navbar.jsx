@@ -56,7 +56,7 @@ const Navbar = () => {
   };
   const { user } = useProfile();
   return (
-    <nav className="bg-white py-3 px-5 shadow-md flex items-center justify-between">
+    <nav className="bg-white py-6 px-6  shadow-md flex items-center justify-between">
       {alertVisible && (
         <div
           id="alert-border-1"
@@ -108,7 +108,7 @@ const Navbar = () => {
       </div>
 
       <div className="relative">
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-6 items-center">
           {/* Thông báo */}
           <div className="relative cursor-pointer">
             <IoIosNotifications
@@ -128,9 +128,8 @@ const Navbar = () => {
                     {notifications.map((notification) => (
                       <li
                         key={notification._id}
-                        className={`px-4 py-2 text-sm transition cursor-pointer ${
-                          !notification.isRead ? "bg-gray-200" : "bg-white"
-                        }`}
+                        className={`px-4 py-2 text-sm transition cursor-pointer ${!notification.isRead ? "bg-gray-200" : "bg-white"
+                          }`}
                         onClick={() => handleNotificationClick(notification)}
                       >
                         <p className="font-semibold">{notification.title}</p>
@@ -156,7 +155,7 @@ const Navbar = () => {
           {/* Menu người dùng */}
           <div>
             <img
-              className="w-10 h-10 rounded-full cursor-pointer border-2 border-gray-400 hover:border-gray-600 transition object-cover"
+              className="w-12 h-12 rounded-full cursor-pointer border-2 border-gray-400 hover:border-gray-600 transition object-cover"
               alt="User"
               src={user?.image || "/imgs/avatar.jpg"}
               onClick={toggleMenu}

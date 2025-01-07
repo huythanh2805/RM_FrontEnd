@@ -1,4 +1,3 @@
-import Navbar from "@/components/Admin/Navbar";
 import { useDetailImportNotes } from "@/hooks/dashboard/import-notes/useDetail";
 import { formatCurrency } from "@/utilities/utils";
 import { Link } from "react-router-dom";
@@ -12,8 +11,6 @@ export const ImportNotesDetail = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
-      <Navbar />
-
       {/* Thông tin đặt bàn */}
       <div className="px-5 py-4">
         <p className="text-[32px] font-semibold mb-4">Thông tin phiếu nhập</p>

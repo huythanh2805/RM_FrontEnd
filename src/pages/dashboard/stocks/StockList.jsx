@@ -1,4 +1,3 @@
-import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 import { useList } from "@/hooks/dashboard/stocks/useList";
 import { useState } from "react";
@@ -22,8 +21,6 @@ export const StockList = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
           <table className="min-w-full bg-white">

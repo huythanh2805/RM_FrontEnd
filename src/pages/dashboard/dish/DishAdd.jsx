@@ -6,7 +6,6 @@ import { FaRegImage, FaTimes } from "react-icons/fa";
 import BASE_URL from "@/configs";
 import CLOUDINARY_URL from "@/configs/cloudinary_api";
 import { toast } from "@/hooks/use-toast";
-import Navbar from "@/components/Admin/Navbar";
 
 const DishAdd = () => {
   const {
@@ -83,8 +82,6 @@ const DishAdd = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <h2 className="text-3xl font-semibold mb-4">Thêm món ăn</h2>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
