@@ -1,5 +1,6 @@
 import Pagination from "@/components/Pagination";
 import { useList } from "@/hooks/dashboard/import-notes/useList";
+import { formatCurrency, formatDateNoTime } from "@/utilities/utils";
 import { debounce } from "lodash";
 import { useState } from "react";
 import { FaEye } from "react-icons/fa";
@@ -126,7 +127,7 @@ export const ImportNotesList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Số lượng SP</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Nhà cung cấp</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Tổng tiền</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Trạng thái</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Người tạo</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Thời gian</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Hành động</th>
               </tr>
@@ -140,9 +141,9 @@ export const ImportNotesList = () => {
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.code}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.products?.length}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.seller?.name}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.total}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.createdAt}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.createdAt}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{formatCurrency(importNotes?.total)}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.createdBy?.userName}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{formatDateNoTime(importNotes?.createdAt)}</td>
                   <td className="py-3 px-6 text-sl flex items-center gap-3">
                     <div className="flex justify-center gap-3">
                       <Link to={`/admin/import-notes/${importNotes?._id}`}>
@@ -159,7 +160,7 @@ export const ImportNotesList = () => {
         </div>
 
         {/* Phân trang */}
-        {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={setCurrentPage(selected + 1)} />}
+        {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={(e) => setCurrentPage(e.selected + 1)} />}
       </div>
     </div>
   );

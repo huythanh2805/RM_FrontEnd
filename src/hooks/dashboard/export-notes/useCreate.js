@@ -1,7 +1,7 @@
 import { toast } from "@/hooks/use-toast";
-import { fetchProductsService } from "@/services/products";
-import { createSellerService } from "@/services/sellers";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createExportNotesService } from "@/services/export-notes";
+import { fetchStocksService } from "@/services/stocks";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Form } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,6 @@ import { useNavigate } from "react-router-dom";
 export const useCreateExportNotes = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const formItemLayout = {
-    wrapperCol: {
-      sm: { span: 12 },
-    },
-  };
   const queryClient = useQueryClient();
   const [listProduct, setListProduct] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,6 +21,7 @@ export const useCreateExportNotes = () => {
     phone: "",
     description: "",
     address: "",
+    items: listProduct,
   };
 
   const rowSelection = {
@@ -48,52 +44,60 @@ export const useCreateExportNotes = () => {
     setIsModalOpen(false);
   };
 
-  const { data: productsData } = useQuery({
-    queryKey: ["fetchProductsService"],
-    queryFn: fetchProductsService,
+  const { data: stocksData } = useQuery({
+    queryKey: ["fetchStocksService"],
+    queryFn: fetchStocksService,
   });
 
-  const handleSelectedProduct = (id) => {
-    const selectedProduct = productsData.find((item) => item.id === id);
-    console.log(selectedProduct);
-  };
 
-  const addSellersMutation = useMutation({
-    mutationFn: async (createData) => {
-      await createSellerService(createData);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["userListService"]);
-      toast({ variant: "success", title: "Thêm nhân viên thành công!" });
-      resetForm();
-      navigate("/admin/sellers");
-    },
-    onError: (error) => {
-      const errorMessage = error.response?.data?.message || error.message || "Vui lòng kiểm tra lại thông tin";
-      toast({
-        variant: "destructive",
-        title: "Lỗi khi thêm nhà cung cấp",
-        description: errorMessage,
-      });
-    },
-  });
+  const handleCreateExportNotes = async () => {
+    form.validateFields().then(() => {
+      const formData = form.getFieldsValue();
+      const mergedArray = listProduct?.map((item, index) => ({ ...item, ...formData.items[index] })); console.log(mergedArray);
 
-  const onCreateExportNotes = (createData) => {
-    addSellersMutation.mutate(createData);
+      const createData = {
+        code: formData?.code,
+        stocks: mergedArray?.map((item) => {
+          return {
+            stock: item?._id,
+            quantity: item?.export_quantity,
+            price: item?.price,
+            maxQuantity: item?.quantity,
+          };
+        }),
+        notes: formData?.notes,
+        type: formData?.type,
+        total: mergedArray?.reduce((sum, item) => sum + (item?.price || 0) * (item?.quantity || 0), 0),
+      };
+      console.log(mergedArray);
+
+      createExportNotesService(createData)
+        .then(() => {
+          toast({ variant: "success", title: "Thêm phiếu xuất thành công!" });
+          form.resetFields();
+          navigate("/admin/export-notes");
+        })
+        .catch((error) => {
+          const errorMessage = error.response?.data?.message || error.message || "Vui lòng kiểm tra lại thông tin";
+          toast({
+            variant: "destructive",
+            title: "Lỗi khi thêm phiếu xuất",
+            description: errorMessage,
+          });
+        });
+    });
   };
 
   return {
-    productsData,
+    stocksData,
     listProduct,
     form,
     initialValues,
-    formItemLayout,
     isModalOpen,
     rowSelection,
     showModal,
     handleOk,
     handleCancel,
-    handleSelectedProduct,
-    onCreateExportNotes,
+    handleCreateExportNotes,
   };
 };

@@ -1,8 +1,7 @@
 import Pagination from "@/components/Pagination";
 import { useList } from "@/hooks/dashboard/stocks/useList";
+import { formatCurrency, formatDateNoTime } from "@/utilities/utils";
 import { useState } from "react";
-import { FaPenToSquare } from "react-icons/fa6";
-import { Link } from "react-router-dom";
 
 export const StockList = () => {
   const { stocksData, isLoading, error } = useList();
@@ -30,9 +29,9 @@ export const StockList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Mã SP</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Tên SP</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Số lượng tồn</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Giá tiền</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Ngày hết hạn</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Thời gian</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Người phụ trách</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -44,15 +43,13 @@ export const StockList = () => {
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{stock?.product?.code}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{stock?.product?.name}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{stock?.quantity}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{stock?.lastUpdated}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{stock?.address}</td>
-                  <td className="py-3 px-6 text-sl flex items-center gap-3">
-                    <Link to={`/admin/stocks/update/${stock._id}`}>
-                      <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">
-                        <FaPenToSquare size={18} />
-                      </div>
-                    </Link>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">
+                    {formatCurrency(stock?.price)}
                   </td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">
+                    {formatDateNoTime(stock?.expiryDate)}
+                  </td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{formatDateNoTime(stock?.lastUpdated)}</td>
                 </tr>
               ))}
             </tbody>

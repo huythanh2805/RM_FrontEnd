@@ -1,6 +1,5 @@
 import Pagination from "@/components/Pagination";
 import { useList } from "@/hooks/dashboard/products/useList";
-import { formatCurrency, formatDateNoTime } from "@/utilities/utils";
 import { debounce } from "lodash";
 import { useState } from "react";
 import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
@@ -127,8 +126,6 @@ export const ProductList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Thông tin SP</th>
                 <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Danh mục</th>
                 <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Đơn vị</th>
-                <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Giá</th>
-                <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Ngày hết hạn</th>
                 <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">NV phụ trách</th>
                 <th className="py-3 px-6 text-sl font-semibold text-gray-700 text-center">Hành động</th>
               </tr>
@@ -145,12 +142,6 @@ export const ProductList = () => {
                   </td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">{product?.category}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">{product?.unit}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">
-                    {formatCurrency(product?.price)}
-                  </td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">
-                    {formatDateNoTime(product?.expiryDate)}
-                  </td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">
                     {product?.createdBy?.userName}
                   </td>
