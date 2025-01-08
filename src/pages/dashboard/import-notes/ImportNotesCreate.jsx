@@ -177,14 +177,20 @@ export const ImportNotesCreate = () => {
                     dataIndex: "expiryDate",
                     key: "expiryDate",
                     render: (_, record, index) => {
-                      return <Form.Item
-                        name={["items", index, "expiryDate"]}
-                        rules={[{ required: true, message: "Vui lòng nhập!" }]}
-                      >
-                        <DatePicker placeholder="Nhập hạn sử dụng" />
-                      </Form.Item>
-                    }
-                  },
+                      return (
+                        <Form.Item
+                          name={["items", index, "expiryDate"]}
+                          rules={[{ required: true, message: "Vui lòng nhập!" }]}
+                        >
+                          <DatePicker
+                            placeholder="Nhập hạn sử dụng"
+                            disabledDate={(current) => current && current < new Date().setHours(0, 0, 0, 0)}
+                          />
+                        </Form.Item>
+                      );
+                    },
+                  }
+
                 ]}
               />
               <Button

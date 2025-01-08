@@ -1,6 +1,6 @@
 import { toast } from "@/hooks/use-toast";
 import { createExportNotesService } from "@/services/export-notes";
-import { fetchStocksService } from "@/services/stocks";
+import { fetchStocksService, fetchStocksServiceStatus } from "@/services/stocks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Form } from "antd";
 import { useState } from "react";
@@ -48,6 +48,10 @@ export const useCreateExportNotes = () => {
     queryKey: ["fetchStocksService"],
     queryFn: fetchStocksService,
   });
+  const { data: stocksDataStatus } = useQuery({
+    queryKey: ["fetchStocksServiceStatus"],
+    queryFn: fetchStocksServiceStatus,
+  });
 
 
   const handleCreateExportNotes = async () => {
@@ -89,7 +93,7 @@ export const useCreateExportNotes = () => {
   };
 
   return {
-    stocksData,
+    stocksData, stocksDataStatus,
     listProduct,
     form,
     initialValues,

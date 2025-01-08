@@ -1,10 +1,18 @@
 import Pagination from "@/components/Pagination";
 import { useList } from "@/hooks/dashboard/export-notes/useList";
+import { formatCurrency, formatDate } from "@/utilities/utils"; // Giả sử bạn có các hàm này
 import { debounce } from "lodash";
 import { useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+
+const EXPORT_NOTES_TYPE = {
+  INTERNAL: "Nội bộ",
+  RETURN: "Hoàn trả",
+  ADJUSTMENT: "Điều chỉnh số lượng",
+  EXPIRED: "Hết hạn",
+};
 
 export const ExportNotesList = () => {
   const { exportNotesData, isLoading, error, deleteExportNotes } = useList();
@@ -20,11 +28,9 @@ export const ExportNotesList = () => {
     handleSearchValueDebounced(e.target.value);
   };
 
-  // Xử lý khi dữ liệu đang tải hoặc gặp lỗi
   if (isLoading) return <p className="text-center text-blue-600">Loading...</p>;
   if (error) return <p className="text-center text-red-600">Error loading export notes list.</p>;
 
-  // Hàm xóa người dùng
   const handleDeleteExportNotes = (exportNotesID) => {
     Swal.fire({
       title: "Xác nhận xóa phiếu xuất?",
@@ -56,13 +62,11 @@ export const ExportNotesList = () => {
     });
   };
 
-  // Lọc người dùng theo vai trò và tìm kiếm
   const filteredExportNotes = exportNotesData?.filter((exportNotes) =>
     exportNotes?.notes?.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-  // Tính toán cho phân trang
-  const totalItems = filteredExportNotes?.length;
+  const totalItems = filteredExportNotes?.length || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = filteredExportNotes?.slice(startIndex, startIndex + itemsPerPage);
@@ -82,11 +86,7 @@ export const ExportNotesList = () => {
         {/* Bộ lọc và tìm kiếm */}
         <div className="mb-4">
           <div className="flex justify-between items-center">
-            {/* Input Tìm Kiếm */}
             <div className="relative w-full max-w-sm min-w-[200px]">
-              <label htmlFor="Search" className="sr-only">
-                Search
-              </label>
               <input
                 type="text"
                 id="Search"
@@ -126,7 +126,7 @@ export const ExportNotesList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Số lượng SP</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Tổng tiền</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Thời gian</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Trạng thái</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Loại phiếu xuất</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Người tạo</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Hành động</th>
               </tr>
@@ -139,9 +139,11 @@ export const ExportNotesList = () => {
                   </td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.code}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.stocks?.length}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.total}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.createdAt}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.type}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{formatCurrency(exportNotes?.total)}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{formatDate(exportNotes?.createdAt)}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">
+                    {EXPORT_NOTES_TYPE[exportNotes?.type] || "Không xác định"}
+                  </td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{exportNotes?.createdBy?.userName}</td>
                   <td className="py-3 px-6 text-sl flex items-center gap-3 justify-center">
                     <div className="flex justify-center gap-3">
@@ -158,7 +160,6 @@ export const ExportNotesList = () => {
           </table>
         </div>
 
-        {/* Phân trang */}
         {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={(e) => setCurrentPage(e.selected + 1)} />}
       </div>
     </div>
