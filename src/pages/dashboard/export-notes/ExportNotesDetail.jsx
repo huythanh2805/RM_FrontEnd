@@ -65,13 +65,6 @@ export const ExportNotesDetail = () => {
                   </td>
                 </tr>
               ))}
-
-              <tr>
-                <td className="table-cell py-4 px-6 font-semibold text-right" colSpan={5}>
-                  Tổng sản phẩm:
-                </td>
-                <td className="font-semibold">{exportNotesData?.products?.length} sản phẩm</td>
-              </tr>
               <tr>
                 <td className="table-cell py-4 px-6 font-semibold text-right" colSpan={5}>
                   Tổng tiền:

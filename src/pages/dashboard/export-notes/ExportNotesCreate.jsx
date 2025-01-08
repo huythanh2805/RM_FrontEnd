@@ -6,9 +6,33 @@ import { Link } from "react-router-dom";
 
 export const ExportNotesCreate = () => {
   const { TextArea } = Input;
+  const calculateTimeLeft = (expiryDate) => {
+    if (!expiryDate) return { text: "Không xác định", color: "text-gray-500" };
+    const now = new Date();
+    const expiry = new Date(expiryDate);
+    const nowStartOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const expiryStartOfDay = new Date(expiry.getFullYear(), expiry.getMonth(), expiry.getDate());
+    const timeDifference = expiryStartOfDay - nowStartOfDay;
+    if (timeDifference < 0) {
+      return { text: "Đã hết hạn", color: "text-red-600" }; 
+    }
+    const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24)); 
+    if (daysLeft > 2) {
+      return { text: `${daysLeft} ngày nữa hết hạn`, color: "text-green-600" }; 
+    } else if (daysLeft > 0) {
+      return { text: `${daysLeft} ngày nữa hết hạn`, color: "text-yellow-600" }; 
+    } else {
+      const hoursLeft = Math.floor((expiry - now) / (1000 * 60 * 60)); 
+      if (hoursLeft > 0) {
+        return { text: `${hoursLeft} giờ nữa hết hạn`, color: "text-yellow-600" };
+      }
+      const minutesLeft = Math.floor((expiry - now) / (1000 * 60)); 
+      return { text: `${minutesLeft} phút nữa hết hạn`, color: "text-yellow-600" };
+    }
+  };
 
   const {
-    stocksData,
+    stocksDataStatus,
     listProduct,
     form,
     initialValues,
@@ -49,7 +73,7 @@ export const ExportNotesCreate = () => {
               <Table
                 rowKey="_id"
                 rowSelection={rowSelection}
-                dataSource={stocksData}
+                dataSource={stocksDataStatus}
                 columns={[
                   {
                     title: "Mã sản phẩm",
@@ -86,9 +110,10 @@ export const ExportNotesCreate = () => {
                     title: "Ngày hết hạn",
                     dataIndex: "expiryDate",
                     key: "expiryDate",
-                    render: (_, record, index) => {
-                      return record?.expiryDate
-                    }
+                    render: (_, record) => {
+                      const { text, color } = calculateTimeLeft(record?.expiryDate);
+                      return <span className={color}>{text}</span>;
+                    },
                   },
                 ]}
               />

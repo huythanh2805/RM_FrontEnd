@@ -15,6 +15,19 @@ export const fetchStocksService = async () => {
     throw error;
   }
 };
+export const fetchStocksServiceStatus = async () => {
+  try {
+    const response = await apiClient.get("/api/stocks/status", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 export const deleteStocksService = async (userId) => {
   return await apiClient.delete(
