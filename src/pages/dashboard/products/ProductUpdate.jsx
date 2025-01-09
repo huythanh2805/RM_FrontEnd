@@ -16,9 +16,8 @@ export const ProductUpdate = () => {
             </label>
             <input
               type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.code ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
+              className={`mt-1 block w-full px-4 py-2 border ${errors.code ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
+                } rounded-md shadow-sm focus:outline-none`}
               {...register("code", {
                 required: "Mã sp là bắt buộc",
               })}
@@ -31,9 +30,8 @@ export const ProductUpdate = () => {
             </label>
             <input
               type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
+              className={`mt-1 block w-full px-4 py-2 border ${errors.name ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
+                } rounded-md shadow-sm focus:outline-none`}
               {...register("name", {
                 required: "Tên là bắt buộc",
               })}
@@ -46,9 +44,8 @@ export const ProductUpdate = () => {
             </label>
             <input
               type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.category ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
+              className={`mt-1 block w-full px-4 py-2 border ${errors.category ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
+                } rounded-md shadow-sm focus:outline-none`}
               {...register("category", {
                 required: "Loại sản phẩm là bắt buộc",
               })}
@@ -56,24 +53,6 @@ export const ProductUpdate = () => {
             {errors.category && <p className="mt-2 text-sm text-red-600">{errors.category.message}</p>}
           </div>
 
-          <div>
-            <label htmlFor="price" className="text-sm font-medium text-gray-700">
-              Giá:
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.price ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("price", {
-                required: "Giá sp là bắt buộc",
-                pattern: {
-                  value: /^[0-9]{10}$/,
-                },
-              })}
-            />
-            {errors.price && <p className="mt-2 text-sm text-red-600">{errors.price.message}</p>}
-          </div>
           <div>
             <label htmlFor="unit" className="text-sm font-medium text-gray-700">
               Đơn vị tính:
@@ -89,21 +68,6 @@ export const ProductUpdate = () => {
               })}
             </select>
             {errors.unit && <p className="mt-2 text-sm text-red-600">{errors.unit.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="expiryDate" className="text-sm font-medium text-gray-700">
-              Ngày hết hạn:
-            </label>
-            <input
-              type="date"
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.expiryDate ? "border-red-500 focus:border-red-500" : "border-gray-300 focus:border-gray-500"
-              } rounded-md shadow-sm focus:outline-none`}
-              {...register("expiryDate", {
-                required: "Ngày hết hạn là bắt buộc",
-              })}
-            />
-            {errors.expiryDate && <p className="mt-2 text-sm text-red-600">{errors.expiryDate.message}</p>}
           </div>
           <div className="flex justify-end space-x-2">
             <Link
