@@ -1,6 +1,8 @@
 import { useCreateImportNotes } from "@/hooks/dashboard/import-notes/useCreate";
 import { UNITS } from "@/utilities/const";
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, Table } from "antd";
+import { DeleteOutlined } from "@ant-design/icons"; // Icon xóa
+import { Button, Form, Input, InputNumber, Modal, Select, Table } from "antd";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export const ImportNotesCreate = () => {
@@ -23,6 +25,35 @@ export const ImportNotesCreate = () => {
     handleCreateImportNotes,
   } = useCreateImportNotes();
 
+  // State cho tìm kiếm và lọc
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [filterCategory, setFilterCategory] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState(productsData);
+
+  // Xử lý tìm kiếm
+  const handleSearch = (e) => {
+    const keyword = e.target.value.toLowerCase();
+    setSearchKeyword(keyword);
+    filterProducts(keyword, filterCategory);
+  };
+
+  // Xử lý lọc theo loại sản phẩm
+  const handleFilterCategory = (value) => {
+    setFilterCategory(value);
+    filterProducts(searchKeyword, value);
+  };
+
+  // Lọc sản phẩm theo từ khóa và loại
+  const filterProducts = (keyword, category) => {
+    const filtered = productsData.filter((product) => {
+      const matchesKeyword = product.name.toLowerCase().includes(keyword);
+      const matchesCategory = category === "" || product.category === category;
+      return matchesKeyword && matchesCategory;
+    });
+    setFilteredProducts(filtered);
+  };
+
+  // Thêm một dòng mới vào bảng
   const handleAddRowTable = () => {
     const newData = {
       key: count,
@@ -68,12 +99,18 @@ export const ImportNotesCreate = () => {
     setListProduct([...listProduct, newData]);
     setCount(count + 1);
   };
-  console.log(sellersData);
+
+  // Xóa một dòng khỏi bảng
+  const handleDeleteRow = (key) => {
+    setListProduct(listProduct.filter((item) => item.key !== key));
+  };
+
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
         <h2 className="text-[32px] font-semibold mb-4">Thêm mới phiếu nhập</h2>
         <Form layout="vertical" form={form} initialValues={initialValues}>
+          {/* Thông tin phiếu nhập */}
           <Form.Item label="Mã phiếu nhập" name="code" rules={[{ required: true, message: "Vui lòng nhập!" }]}>
             <Input placeholder="Nhập mã phiếu nhập" />
           </Form.Item>
@@ -81,7 +118,9 @@ export const ImportNotesCreate = () => {
             <Select
               showSearch
               placeholder="Chọn nhà cung cấp"
-              filterOption={(input, option) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase())}
+              filterOption={(input, option) =>
+                (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+              }
               options={sellersData?.map((item) => {
                 return { value: item?._id, label: item?.name };
               })}
@@ -90,15 +129,47 @@ export const ImportNotesCreate = () => {
           <Form.Item label="Ghi chú" name="notes">
             <TextArea rows={4} placeholder="Nhập ghi chú" />
           </Form.Item>
+
+          {/* Bảng sản phẩm */}
           <div className="bg-white px-4 py-6 rounded-lg">
             <Button type="primary" onClick={showModal}>
               Chọn sản phẩm có sẵn
             </Button>
-            <Modal title="Chọn sản phẩm" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width="50%">
+            <Modal
+              title="Chọn sản phẩm"
+              open={isModalOpen}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              width="50%"
+            >
+              {/* Bộ lọc trong modal */}
+              <div className="flex gap-4 mb-4">
+                <Input
+                  placeholder="Tìm kiếm tên sản phẩm..."
+                  value={searchKeyword}
+                  onChange={handleSearch}
+                  className="w-1/2"
+                />
+                <Select
+                  placeholder="Lọc theo loại sản phẩm"
+                  value={filterCategory}
+                  onChange={handleFilterCategory}
+                  className="w-1/2"
+                >
+                  <Select.Option value="">Tất cả loại sản phẩm</Select.Option>
+                  {Array.from(new Set(productsData.map((p) => p.category))).map((category) => (
+                    <Select.Option key={category} value={category}>
+                      {category}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </div>
+
+              {/* Bảng danh sách sản phẩm */}
               <Table
                 rowKey="_id"
                 rowSelection={rowSelection}
-                dataSource={productsData}
+                dataSource={filteredProducts}
                 columns={[
                   {
                     title: "Mã sản phẩm",
@@ -122,7 +193,7 @@ export const ImportNotesCreate = () => {
               <Table
                 className="mt-5"
                 dataSource={listProduct}
-                rowKey="_id"
+                rowKey="key"
                 columns={[
                   {
                     title: "Mã SP",
@@ -138,14 +209,14 @@ export const ImportNotesCreate = () => {
                     title: "Giá SP",
                     dataIndex: "price",
                     key: "price",
-                    render: (_, record, index) => {
-                      return <Form.Item
+                    render: (_, record, index) => (
+                      <Form.Item
                         name={["items", index, "price"]}
                         rules={[{ required: true, message: "Vui lòng nhập!" }]}
                       >
                         <InputNumber placeholder="Nhập giá sản phẩm" min={1} />
                       </Form.Item>
-                    }
+                    ),
                   },
                   {
                     title: "Đơn vị",
@@ -161,36 +232,27 @@ export const ImportNotesCreate = () => {
                     title: "Số lượng",
                     dataIndex: "quantity",
                     key: "quantity",
-                    render: (_, record, index) => {
-                      return (
-                        <Form.Item
-                          name={["items", index, "quantity"]}
-                          rules={[{ required: true, message: "Vui lòng nhập!" }]}
-                        >
-                          <InputNumber type="number" placeholder="Nhập số lượng" min={1} />
-                        </Form.Item>
-                      );
-                    },
+                    render: (_, record, index) => (
+                      <Form.Item
+                        name={["items", index, "quantity"]}
+                        rules={[{ required: true, message: "Vui lòng nhập!" }]}
+                      >
+                        <InputNumber type="number" placeholder="Nhập số lượng" min={1} />
+                      </Form.Item>
+                    ),
                   },
                   {
-                    title: "Hạn sử dụng",
-                    dataIndex: "expiryDate",
-                    key: "expiryDate",
-                    render: (_, record, index) => {
-                      return (
-                        <Form.Item
-                          name={["items", index, "expiryDate"]}
-                          rules={[{ required: true, message: "Vui lòng nhập!" }]}
-                        >
-                          <DatePicker
-                            placeholder="Nhập hạn sử dụng"
-                            disabledDate={(current) => current && current < new Date().setHours(0, 0, 0, 0)}
-                          />
-                        </Form.Item>
-                      );
-                    },
-                  }
-
+                    title: "Hành động",
+                    dataIndex: "actions",
+                    key: "actions",
+                    render: (_, record) => (
+                      <Button
+                        type="danger"
+                        icon={<DeleteOutlined />}
+                        onClick={() => handleDeleteRow(record.key)}
+                      />
+                    ),
+                  },
                 ]}
               />
               <Button
@@ -205,6 +267,8 @@ export const ImportNotesCreate = () => {
               </Button>
             </Form.Item>
           </div>
+
+          {/* Nút hành động */}
           <div className="flex justify-end space-x-2 mt-5">
             <Link
               to="/admin/import-notes"
