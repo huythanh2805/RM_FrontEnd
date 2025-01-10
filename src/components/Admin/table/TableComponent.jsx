@@ -69,7 +69,6 @@ export default function TableComponent({ table, updateTable }) {
       }
       const data = await res.json();
       const reservationDetail = data.reservationDetail;
-      console.log({ reservationDetail });
       setReservationDetail(reservationDetail);
       setGetTimeLoading(false);
     } catch (error) {
@@ -86,9 +85,6 @@ export default function TableComponent({ table, updateTable }) {
       getReservationDetailByTableId();
     }
   }, []);
-  console.log({
-    getTimeLoading,
-  });
   // update information
   const handleUpdateTable = (e) => {
     e.preventDefault();

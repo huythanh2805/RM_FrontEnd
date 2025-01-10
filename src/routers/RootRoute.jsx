@@ -272,7 +272,7 @@ const router = createBrowserRouter([
       {
         path: "listReser",
         element:  
-            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "CASHIER"]}>
             <ListReservation />
           </RoleProtectComponentAdmin>,
       },

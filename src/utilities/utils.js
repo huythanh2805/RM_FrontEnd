@@ -119,6 +119,7 @@ export function groupFoodItems(food) {
         OrderedQuantity: 0,
         CompletedQuantity: 0,
         PreparedQuantity: 0,
+        CanceledQuantity: 0,
         totalPrice: 0,  // Thêm trường totalPrice
       });
     }
@@ -128,10 +129,12 @@ export function groupFoodItems(food) {
     groupedItem.quantity += quantity;
     if (status === "ORDERED") {
       groupedItem.OrderedQuantity += quantity;
-    } else if (status === "COMPLETED") {
+    } else if (status === "ISCOMPLETED") {
       groupedItem.CompletedQuantity += quantity;
-    } else if (status === "PREPARED") {
+    } else if (status === "ISPREPARED") {
       groupedItem.PreparedQuantity += quantity;
+    } else if (status === "ISCANCELED") {
+      groupedItem.CanceledQuantity += quantity;
     }
 
     // Giữ lại giá trị price từ món ăn đầu tiên
@@ -145,7 +148,13 @@ export function groupFoodItems(food) {
     }
 
     // Tính tổng price
-    groupedItem.totalPrice = groupedItem.quantity * groupedItem.price;
+    if (status !== "ISCANCELED") {
+      groupedItem.totalPrice += quantity * price;
+    }
+    // Tính abilityToPay
+    groupedItem.abilityToPay =
+      groupedItem.CompletedQuantity + groupedItem.CanceledQuantity == groupedItem.quantity
+
   });
 
   return Array.from(groupedMap.values());

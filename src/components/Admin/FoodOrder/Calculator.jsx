@@ -1,15 +1,36 @@
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { useEffect, useState } from "react"
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { toast } from "@/hooks/use-toast";
-import { formatCurrency, getStatusMessage, groupFoodItems, ServerUrl, shortenNumber } from "@/utilities/utils";
-import { Check, ChevronRight } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { toast } from "@/hooks/use-toast"
+import {
+  formatCurrency,
+  getStatusMessage,
+  groupFoodItems,
+  ServerUrl,
+  shortenNumber,
+} from "@/utilities/utils"
+import { Check, ChevronRight } from "lucide-react"
+import { useLocation, useNavigate } from "react-router-dom"
+import { io } from "socket.io-client"
+import { cn } from "@/lib/utils"
 
 const statusOptions = [
   {
@@ -24,7 +45,7 @@ const statusOptions = [
     option: "ISCANCELED",
     label: "Đã hủy",
   },
-];
+]
 
 const Calculator = ({
   reservation_id,
@@ -35,56 +56,62 @@ const Calculator = ({
   updateOrderedFood,
   userDiscount,
 }) => {
-  const [isPaid, setIsPaid] = useState(false);
-  const [neededPaid, setNeededPaid] = useState(0);
-  const [paidMoney, setPaidMoney] = useState(0);
-  const [change, setChange] = useState(0);
-  const [VAT, setVAT] = useState(5);
-  const [qrCodeUrl, setQrCodeUrl] = useState(null);
-  const [billId, setBillId] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("cash");
-  const [discountValue, setDiscountValue] = useState(0);
-  const [discount, setDiscount] = useState(null);
-  const [newDiscount, setNewDiscount] = useState("");
-  const [VAT_money, setVAT_money] = useState(0);
-  const navigate = useNavigate();
-
-  console.log("orderedFoods", orderedFoods);
+  const [isPaid, setIsPaid] = useState(false)
+  const [neededPaid, setNeededPaid] = useState(0)
+  const [paidMoney, setPaidMoney] = useState(0)
+  const [change, setChange] = useState(0)
+  const [VAT, setVAT] = useState(5)
+  const [qrCodeUrl, setQrCodeUrl] = useState(null)
+  const [billId, setBillId] = useState("")
+  const [paymentMethod, setPaymentMethod] = useState("cash")
+  const [discountValue, setDiscountValue] = useState(0)
+  const [discount, setDiscount] = useState(null)
+  const [newDiscount, setNewDiscount] = useState("")
+  const [VAT_money, setVAT_money] = useState(0)
+  const [groupFoods, setGroupFoods] = useState([])
+  const [isNotForPayment, setIsNotForPayment] = useState(false)
+  const navigate = useNavigate()
 
   const totalPrice = orderedFoods.reduce((sum, item) => {
-    if (item.status === "ISCANCELED") return sum + 0;
-    return sum + item.quantity * item.price;
-  }, 0);
-  const router = useNavigate();
+    if (item.status === "ISCANCELED") return sum + 0
+    return sum + item.quantity * item.price
+  }, 0)
+  const router = useNavigate()
   useEffect(() => {
-    if (userDiscount) setDiscount(userDiscount);
-  }, [userDiscount]);
+    if (userDiscount) setDiscount(userDiscount)
+  }, [userDiscount])
   useEffect(() => {
-    if (!discount) return;
+    if (!discount) return
     if (discount.discountId.discountType === "PERCENTAGE") {
-      setDiscountValue(totalPrice * (Number(discount.discountId.discountValue) / 100));
+      setDiscountValue(
+        totalPrice * (Number(discount.discountId.discountValue) / 100)
+      )
     } else {
-      setDiscountValue(Number(discount.discountId.discountValue));
+      setDiscountValue(Number(discount.discountId.discountValue))
     }
-  }, [totalPrice, discount]);
+  }, [totalPrice, discount])
   // Format food
-   useEffect(()=>{
-    console.log(groupFoodItems(orderedFoods))
-   },[orderedFoods])
-
   useEffect(() => {
-    const discountedMoney = totalPrice - discountValue;
-    const vat = (5 / 100) * discountedMoney;
-    setVAT_money(vat);
-    setNeededPaid(discountedMoney + vat - deposit);
+    if (orderedFoods) setGroupFoods(groupFoodItems(orderedFoods))
+  }, [orderedFoods])
+  // Tính toán xem có thể thanh toán được hay không
+  useEffect(() => {
+    if (groupFoods)
+      setIsNotForPayment(groupFoods.find((item) => item.abilityToPay === false))
+  }, [groupFoods])
+  useEffect(() => {
+    const discountedMoney = totalPrice - discountValue
+    const vat = (5 / 100) * discountedMoney
+    setVAT_money(vat)
+    setNeededPaid(discountedMoney + vat - deposit)
 
-    setChange(paidMoney - neededPaid);
-  }, [paidMoney, totalPrice, discountValue]);
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const deposit = queryParams.get("deposit");
-  const vt = (5 / 100) * totalPrice;
-  const total = totalPrice - discountValue + vt - deposit;
+    setChange(paidMoney - neededPaid)
+  }, [paidMoney, totalPrice, discountValue])
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+  const deposit = queryParams.get("deposit")
+  const vt = (5 / 100) * totalPrice
+  const total = totalPrice - discountValue + vt - deposit
   // delete orderedFood
   // const handleDeleteOrderedFood = async (orderedFood_id, type) => {
   //   console.log(type);
@@ -100,9 +127,9 @@ const Calculator = ({
   //   }
   // };
   const handleClose = () => {
-    setPaymentMethod("cash");
-    setQrCodeUrl(null);
-  };
+    setPaymentMethod("cash")
+    setQrCodeUrl(null)
+  }
   // Update orderedFood
   // const handleMinus = async (orderedFood_id, quantity, type) => {
   //   if (quantity < 2) {
@@ -131,31 +158,32 @@ const Calculator = ({
   //   router.back();
   // };
   const generateQrCodeUrl = (total) => {
-    const bank = "MB";
-    const account = "0982669254";
-    const template = "compact";
-    const validDeposit = deposit == null || isNaN(deposit) ? 0 : deposit;
-    const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(bank)}&acc=${encodeURIComponent(
-      account
-    )}&template=${encodeURIComponent(template)}&amount=${encodeURIComponent(
+    const bank = "MB"
+    const account = "0982669254"
+    const template = "compact"
+    const validDeposit = deposit == null || isNaN(deposit) ? 0 : deposit
+    const qrUrl = `https://qr.sepay.vn/img?bank=${encodeURIComponent(
+      bank
+    )}&acc=${encodeURIComponent(account)}&template=${encodeURIComponent(
+      template
+    )}&amount=${encodeURIComponent(
       total
-    )}&des=${reservation_id} ${totalPrice} ${discountValue} ${validDeposit} `;
-    return qrUrl;
-  };
+    )}&des=${reservation_id} ${totalPrice} ${discountValue} ${validDeposit} `
+    return qrUrl
+  }
 
   const handlePaymentMethodChange = (value) => {
     if (value === "transfer") {
-      const qrUrl = generateQrCodeUrl(total);
-      setQrCodeUrl(qrUrl);
+      const qrUrl = generateQrCodeUrl(total)
+      setQrCodeUrl(qrUrl)
     } else {
-      setQrCodeUrl("");
+      setQrCodeUrl("")
     }
-  };
+  }
   const handleMethodChange = (value) => {
-    setPaymentMethod(value);
-    handlePaymentMethodChange(value);
-  };
-
+    setPaymentMethod(value)
+    handlePaymentMethodChange(value)
+  }
   const handlePayment = async () => {
     if (paymentMethod === "cash") {
       try {
@@ -172,24 +200,24 @@ const Calculator = ({
             deposit_money: deposit,
             userDiscountId: discount?._id,
           }),
-        });
-        const data = await res.json();
+        })
+        const data = await res.json()
         if (!res.ok) {
           return toast({
             variant: "destructive",
             title: "Something went wrong while creating the bill.",
-          });
+          })
         }
 
-        setBillId(data.bill_id);
-        setIsPaid(true);
+        setBillId(data.bill_id)
+        setIsPaid(true)
       } catch (error) {}
     } else {
       if (change < 0) {
         return toast({
           variant: "destructive",
           title: "Please pay all for bill",
-        });
+        })
       }
       try {
         const res = await fetch(`${ServerUrl}/api/bills`, {
@@ -204,28 +232,28 @@ const Calculator = ({
             discount_money: discountValue,
             deposit_money: deposit,
           }),
-        });
+        })
 
-        const data = await res.json();
+        const data = await res.json()
         if (!res.ok) {
           return toast({
             variant: "destructive",
             title: "Something went wrong while creating the bill.",
-          });
+          })
         }
 
-        setBillId(data.bill_id);
-        setIsPaid(true);
+        setBillId(data.bill_id)
+        setIsPaid(true)
       } catch (error) {
-        console.error(error);
+        console.error(error)
         toast({
           variant: "destructive",
           title: "Something went wrong while creating the bill.",
-        });
+        })
       }
     }
-  };
-
+  }
+  console.log(groupFoods)
   //   const response = await axios.get(`http://localhost:1111/api/reservations/history-detail/${reservation_id}`);
   //   return response.data;
   // };
@@ -237,83 +265,81 @@ const Calculator = ({
   // console.log("reservationDetails:", reservationDetails);
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_API_BASE_URL);
+    const socket = io(import.meta.env.VITE_API_BASE_URL)
     socket.on("bank-payment-success", (notification) => {
       // Hiển thị thông báo thành công
       toast({
         variant: "success",
         title: "Thanh Toán thành công",
-      });
-      console.log("success", notification.bill_id);
-      setBillId(notification.bill_id);
-      setIsPaid(true);
-    });
+      })
+      console.log("success", notification.bill_id)
+      setBillId(notification.bill_id)
+      setIsPaid(true)
+    })
     return () => {
-      socket.disconnect();
-    };
-  }, []);
+      socket.disconnect()
+    }
+  }, [])
 
   const handleDiscountInput = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      const url = `${ServerUrl}/api/userDiscount/reservation/admin/${newDiscount}/${totalPrice}/${reservation_id}`;
+      const url = `${ServerUrl}/api/userDiscount/reservation/admin/${newDiscount}/${totalPrice}/${reservation_id}`
       const res = await fetch(url, {
         method: "GET",
-      });
-      const data = await res.json();
+      })
+      const data = await res.json()
       if (!res.ok)
         return toast({
           variant: "destructive",
           title: data.message,
-        });
-      setDiscount(data.newUserDiscount);
-      setNewDiscount("");
+        })
+      setDiscount(data.newUserDiscount)
+      setNewDiscount("")
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Something went wrong with search discount",
-      });
+      })
     }
-  };
-  const handleNavigateHistoryOrder = ()=> {
+  }
+  const handleNavigateHistoryOrder = () => {
     navigate(`/admin/order-history/${reservation_id}`)
   }
   return (
     <div className="px-3 max-h-[800px] min-w-[650px] overflow-scroll">
       <div className="w-full text-xl">
         {/* Table Header */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 py-2 border-b font-bold text-gray-800 dark:text-gray-300">
-          <span className="">Tên</span>
-          <span className="text-center">Số lượng</span>
-          <span className="text-center">Trạng thái</span>
+        <div className="grid grid-cols-3 sm:grid-cols-8 gap-4 py-2 border-b font-bold text-gray-800 dark:text-gray-300">
+          <span className="col-span-3">Tên</span>
+          <span className="text-center">Đã gọi</span>
+          <span className="text-center">Đang làm</span>
+          <span className="text-center">Hoàn thành</span>
+          <span className="text-center">Đã hủy</span>
           <span className="text-right">Thành tiền</span>
         </div>
 
         {/* Ordered Foods */}
-        {orderedFoods?.map((orderedFood) => {
-          if (!orderedFood.dish_id && orderedFood.type === "dish")
-            return <div>Không thể tìm thấy dữ liệu món ăn</div>
-          if (!orderedFood.dish_id && orderedFood.type === "combo")
-            return <div>Không thể tìm thấy dữ liệu combo</div>
 
+        {groupFoods?.map((groupItem) => {
           return (
             <div
-              key={orderedFood._id}
-              className="grid grid-cols-3 sm:grid-cols-4 gap-4 py-2 border-b items-center"
+              key={groupItem._id}
+              className="grid grid-cols-3 sm:grid-cols-8 gap-4 py-2 border-b items-center"
             >
               {/* Product Info */}
-              <div className=" flex items-center gap-4">
+              <div className="col-span-3 flex items-center gap-4 ">
                 <img
-                  src={orderedFood?.images[0]}
-                  alt={orderedFood?.name}
+                  src={groupItem?.images[0]}
+                  alt={groupItem?.name}
                   className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover"
                 />
                 <div className="flex-1">
                   <h3 className="text-sm sm:text-lg font-medium truncate max-w-[130px]">
-                    {orderedFood.name}
+                    {groupItem.name}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                    {formatCurrency(orderedFood.price)}
+                    {formatCurrency(groupItem.price)}
                   </p>
                 </div>
               </div>
@@ -321,28 +347,31 @@ const Calculator = ({
               {/* Quantity Control */}
               <div className="flex items-center justify-center gap-2">
                 <span className="text-sm sm:text-base">
-                  {orderedFood.quantity}
+                  {groupItem.quantity}
                 </span>
               </div>
-
-              {/* Status */}
+              {/* PreparedQuantity Control */}
               <div className="flex items-center justify-center gap-2">
-                    <div
-                      className={cn(
-                        "w-full px-2 py-1 rounded-lg text-white text-center text-lg",
-                        orderedFood.status === "ISPREPARED" && "bg-light-warning",
-                        orderedFood.status === "ORDERED" && "bg-purple-1",
-                        orderedFood.status === "ISCOMPLETED" && "bg-light-success ",
-                        orderedFood.status === "ISCANCELED" && "bg-red-1"
-                      )}
-                    >
-                      {getStatusMessage(orderedFood.status)}
-                    </div>
+                <span className="text-sm sm:text-base">
+                  {groupItem.PreparedQuantity}
+                </span>
+              </div>
+              {/* CompletedQuantity Control */}
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-sm sm:text-base">
+                  {groupItem.CompletedQuantity}
+                </span>
+              </div>
+              {/* CanceledQuantity Control */}
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-sm sm:text-base">
+                  {groupItem.CanceledQuantity}
+                </span>
               </div>
 
               <div className="flex flex-col items-end">
                 <p className="text-sm sm:text-lg font-semibold">
-                  {formatCurrency(orderedFood.quantity * orderedFood.price)}
+                  {formatCurrency(groupItem.totalPrice)}
                 </p>
               </div>
             </div>
@@ -357,7 +386,7 @@ const Calculator = ({
         </div>
         {/* order history */}
         <div className="flex justify-end items-center mt-4 sm:mt-6">
-          <Button variant="link" onClick={()=> handleNavigateHistoryOrder()}>
+          <Button variant="link" onClick={() => handleNavigateHistoryOrder()}>
             Lịch sử đặt món
           </Button>
         </div>
@@ -373,8 +402,11 @@ const Calculator = ({
           </Button>
 
           <Dialog>
-            <DialogTrigger className="flex-1">
-              <Button className="w-full py-6 text-[17px] text-white dark:text-white bg-green-1 dark:bg-green-1 hover:scale-95 transition-transform duration-150 ease-linear">
+            <DialogTrigger disabled={isNotForPayment} className="flex-1">
+              <Button
+                disabled={isNotForPayment}
+                className="w-full py-6 text-[17px] text-white dark:text-white bg-green-1 dark:bg-green-1 hover:scale-95 transition-transform duration-150 ease-linear"
+              >
                 Thanh toán
               </Button>
             </DialogTrigger>
@@ -526,74 +558,93 @@ const Calculator = ({
                   </div>
                 </div>
                 <div></div>
-                <Table className="">
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="min-w-[200px] text-xl">
-                        Tên
-                      </TableHead>
-                      <TableHead className="text-center text-xl">
-                        Số lượng
-                      </TableHead>
-                      <TableHead className="text-right min-w-[105px] text-xl">
-                        Thành tiền
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
+                <div className="w-full text-xl px-4">
+                  {/* Table Header */}
+                  <div className="grid grid-cols-3 sm:grid-cols-8 gap-4 py-2 border-b font-bold text-gray-800 dark:text-gray-300">
+                    <span className="col-span-3">Tên</span>
+                    <span className="text-center">Đã gọi</span>
+                    <span className="text-center">Đang làm</span>
+                    <span className="text-center">Hoàn thành</span>
+                    <span className="text-center">Đã hủy</span>
+                    <span className="text-right">Thành tiền</span>
+                  </div>
 
-                  <TableBody className="max-w-[650px]">
-                    {orderedFoods?.map((orderedFood) => {
-                      if (!orderedFood.dish_id && orderedFood.type === "dish")
-                        return <div>Không thể tìm thấy dữ liệu món ăn</div>
-                      if (!orderedFood.dish_id && orderedFood.type === "combo")
-                        return <div>Không thể tìm thấy dữ liệu combo</div>
-                      return (
-                        <TableRow key={orderedFood._id} className="border-b">
-                          <TableCell className="font-medium">
-                            <div className="flex items-center gap-4">
-                              <div className="w-16 h-16">
-                                <img
-                                  src={orderedFood.images[0]}
-                                  alt={orderedFood.name}
-                                  className="w-full h-full "
-                                />
-                              </div>
-                              <h3 className="text-sm sm:text-lg font-medium truncate">
-                                {orderedFood.name}
-                              </h3>
-                            </div>
-                          </TableCell>
-
-                          <TableCell className="text-center">
-                            <span className="text-sm sm:text-base">
-                              {orderedFood.quantity}
-                            </span>
-                          </TableCell>
-
-                          <TableCell className="text-right text-sm sm:text-lg font-semibold">
-                            {formatCurrency(
-                              orderedFood.quantity * orderedFood.price
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      )
-                    })}
-                  </TableBody>
-
-                  <TableFooter>
-                    <TableRow className="bg-light-bg w-full">
-                      <TableCell
-                        colSpan={2}
-                        className="text-[20px] font-medium text-xl"
+                  {/* Ordered Foods */}
+                  {groupFoods?.map((groupItem) => {
+                    return (
+                      <div
+                        key={groupItem._id}
+                        className="grid grid-cols-3 sm:grid-cols-8 gap-4 py-2 border-b items-center"
                       >
-                        Tổng
-                      </TableCell>
-                      <TableCell className="text-right text-red-500 font-bold text-2xl">
-                        {formatCurrency(totalPrice)}
-                      </TableCell>
-                    </TableRow>
-                  </TableFooter>
-                </Table>
+                        {/* Product Info */}
+                        <div className="col-span-3 flex items-center gap-4 ">
+                          <img
+                            src={groupItem?.images[0]}
+                            alt={groupItem?.name}
+                            className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover"
+                          />
+                          <div className="flex-1">
+                            <h3 className="text-sm sm:text-lg font-medium truncate max-w-[130px]">
+                              {groupItem.name}
+                            </h3>
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                              {formatCurrency(groupItem.price)}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Quantity Control */}
+                        <div className="flex items-center justify-center gap-2">
+                          <span className="text-sm sm:text-base">
+                            {groupItem.quantity}
+                          </span>
+                        </div>
+                        {/* PreparedQuantity Control */}
+                        <div className="flex items-center justify-center gap-2">
+                          <span className="text-sm sm:text-base">
+                            {groupItem.PreparedQuantity}
+                          </span>
+                        </div>
+                        {/* CompletedQuantity Control */}
+                        <div className="flex items-center justify-center gap-2">
+                          <span className="text-sm sm:text-base">
+                            {groupItem.CompletedQuantity}
+                          </span>
+                        </div>
+                        {/* CanceledQuantity Control */}
+                        <div className="flex items-center justify-center gap-2">
+                          <span className="text-sm sm:text-base">
+                            {groupItem.CanceledQuantity}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-col items-end">
+                          <p className="text-sm sm:text-lg font-semibold">
+                            {formatCurrency(groupItem.totalPrice)}
+                          </p>
+                        </div>
+                      </div>
+                    )
+                  })}
+                  {/* Total Summary */}
+                  <div className="flex justify-between items-center mt-4 sm:mt-6">
+                    <h3 className="text-lg sm:text-xl font-medium">
+                      Tổng cộng:
+                    </h3>
+                    <p className="text-lg sm:text-xl text-red-500 font-bold">
+                      {formatCurrency(totalPrice)}
+                    </p>
+                  </div>
+                  {/* order history */}
+                  <div className="flex justify-end items-center mt-4 sm:mt-6">
+                    <Button
+                      variant="link"
+                      onClick={() => handleNavigateHistoryOrder()}
+                    >
+                      Lịch sử đặt món
+                    </Button>
+                  </div>
+                </div>
 
                 <p className=" ver_separate_line min-h-full hidden xl:block"></p>
               </div>
@@ -642,5 +693,5 @@ const Calculator = ({
       </Dialog>
     </div>
   )
-};
-export default Calculator;
+}
+export default Calculator

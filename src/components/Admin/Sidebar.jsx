@@ -33,12 +33,17 @@ import {
 } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { CiViewList } from "react-icons/ci";
+import jwtDecode from "jwt-decode";
 
 export function AppSidebar() {
   const [isDishesOpen, setIsDishesOpen] = useState(false);
   const [isSubOpen, setIsSubOpen] = useState(false);
   const [activeMenuFood, setActiveMenuFood] = useState(false);
 
+   const [decodedToken, setDecodeToken] = useState(()=>{
+          const token = localStorage.getItem('token')
+          return jwtDecode(token)
+   })
   const menuItems = [
     { title: "Trang chủ", url: "/admin", icon: Home },
     { title: "Danh sách đặt bàn", url: "/admin/listReser", icon: List },
@@ -50,7 +55,32 @@ export function AppSidebar() {
     { title: "Đánh giá", url: "/admin/feedbacks", icon: MessageCircle },
     { title: "Nhà bếp", url: "/admin/kitchen", icon: ChefHat },
   ];
-
+  const orderItems = [
+    { title: "Trang chủ", url: "/admin", icon: Home },
+    { title: "Bàn", url: "/admin/tables", icon: Table },
+  ]
+  const wareHouseItems = [
+    { title: "Trang chủ", url: "/admin", icon: Home },
+    { title: "Nhà bếp", url: "/admin/kitchen", icon: ChefHat },
+  ]
+  const CashierItems = [
+    { title: "Trang chủ", url: "/admin", icon: Home },
+    { title: "Danh sách đặt bàn", url: "/admin/listReser", icon: List },
+  ]
+  function getItemsByRole(role) {
+    switch (role) {
+      case "ADMIN":
+        return menuItems;
+      case "ORDER":
+        return orderItems;
+      case "WAREHOUSE":
+        return wareHouseItems;
+      case "CASHIER":
+        return CashierItems;
+      default:
+        return menuItems;
+    }
+  }
   const subItems = [
     { title: "Danh mục", url: "/admin/categories", icon: Grid },
     { title: "Món ăn", url: "/admin/dishes", icon: Salad },
@@ -83,7 +113,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-4">
-              {menuItems.map((item) => (
+              {getItemsByRole(decodedToken.role).map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <Link to={item.url} className="flex items-center gap-3 text-xl font-medium">
                     <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
@@ -96,72 +126,79 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
 
-              <Collapsible open={isDishesOpen} onOpenChange={setIsDishesOpen}>
-                <SidebarMenuItem>
-                  <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
-                    <CollapsibleTrigger className="flex items-center justify-between w-full">
-                      <div className="flex items-center gap-3">
-                        <Soup className="w-5 h-5 text-gray-800" />
-                        <span className="text-xl text-black">Món ăn</span>
-                      </div>
-
-                      <ChevronDown
-                        className={`w-5 h-5 text-gray-800 transition-transform ${isDishesOpen ? "rotate-180" : ""}`}
-                      />
-                    </CollapsibleTrigger>
-                  </SidebarMenuButton>
-
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {subItems.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <Link
-                            to={subItem.url}
-                            className="flex items-center text-base text-gray-800 hover:bg-gray-400 rounded-lg transition p-2"
-                          >
-                            {subItem.icon && <subItem.icon className="w-4 h-4 text-gray-800 mr-2" />}
-                            {subItem.title}
-                          </Link>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
-
-              <Collapsible open={activeMenuFood} onOpenChange={setActiveMenuFood}>
-                <SidebarMenuItem>
-                  <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
-                    <CollapsibleTrigger className="flex items-center justify-between w-full">
-                      <div className="flex items-center gap-3">
-                        <Ticket className="w-5 h-5 text-gray-800" />
-                        <span className="text-xl text-black">Phiếu giảm giá</span>
-                      </div>
-
-                      <ChevronDown
-                        className={`w-5 h-5 text-gray-800 transition-transform ${activeMenuFood ? "rotate-180" : ""}`}
-                      />
-                    </CollapsibleTrigger>
-                  </SidebarMenuButton>
-
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {discountItems?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <Link
-                            to={subItem.url}
-                            className="flex items-center text-base text-gray-800 hover:bg-gray-400 rounded-lg transition p-2"
-                          >
-                            {subItem.icon && <subItem.icon className="w-4 h-4 text-gray-800 mr-2" />}
-                            {subItem.title}
-                          </Link>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
-              <Collapsible open={isSubOpen} onOpenChange={setIsSubOpen}>
+              {
+                decodedToken.role === "ADMIN" && (<Collapsible open={isDishesOpen} onOpenChange={setIsDishesOpen}>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full">
+                        <div className="flex items-center gap-3">
+                          <Soup className="w-5 h-5 text-gray-800" />
+                          <span className="text-xl text-black">Món ăn</span>
+                        </div>
+  
+                        <ChevronDown
+                          className={`w-5 h-5 text-gray-800 transition-transform ${isDishesOpen ? "rotate-180" : ""}`}
+                        />
+                      </CollapsibleTrigger>
+                    </SidebarMenuButton>
+  
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {subItems.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <Link
+                              to={subItem.url}
+                              className="flex items-center text-base text-gray-800 hover:bg-gray-400 rounded-lg transition p-2"
+                            >
+                              {subItem.icon && <subItem.icon className="w-4 h-4 text-gray-800 mr-2" />}
+                              {subItem.title}
+                            </Link>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </SidebarMenuItem>
+                </Collapsible>)
+              }
+              {/* Phiếu giảm giá */}
+              {
+                decodedToken.role === "ADMIN" && (<Collapsible open={activeMenuFood} onOpenChange={setActiveMenuFood}>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full">
+                        <div className="flex items-center gap-3">
+                          <Ticket className="w-5 h-5 text-gray-800" />
+                          <span className="text-xl text-black">Phiếu giảm giá</span>
+                        </div>
+  
+                        <ChevronDown
+                          className={`w-5 h-5 text-gray-800 transition-transform ${activeMenuFood ? "rotate-180" : ""}`}
+                        />
+                      </CollapsibleTrigger>
+                    </SidebarMenuButton>
+  
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {discountItems?.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <Link
+                              to={subItem.url}
+                              className="flex items-center text-base text-gray-800 hover:bg-gray-400 rounded-lg transition p-2"
+                            >
+                              {subItem.icon && <subItem.icon className="w-4 h-4 text-gray-800 mr-2" />}
+                              {subItem.title}
+                            </Link>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </SidebarMenuItem>
+                </Collapsible>)
+              }
+              {/* Quản lí kho */}
+              {
+                decodedToken.role === "ADMIN" || decodedToken.role === "WAREHOUSE" && (
+                  <Collapsible open={isSubOpen} onOpenChange={setIsSubOpen}>
                 <SidebarMenuItem>
                   <SidebarMenuButton className="w-full hover:bg-gray-400 rounded-lg transition p-2">
                     <CollapsibleTrigger className="flex items-center justify-between w-full">
@@ -191,8 +228,12 @@ export function AppSidebar() {
                       ))}
                     </SidebarMenuSub>
                   </CollapsibleContent>
+
                 </SidebarMenuItem>
               </Collapsible>
+                )
+              }
+
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
