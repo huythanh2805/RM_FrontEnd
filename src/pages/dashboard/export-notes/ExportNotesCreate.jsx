@@ -37,7 +37,7 @@ export const ExportNotesCreate = () => {
   };
 
   const {
-    stocksDataStatus,
+    stocksDataStatus = [], // Đảm bảo giá trị mặc định là mảng
     listProduct,
     form,
     initialValues,
@@ -50,41 +50,53 @@ export const ExportNotesCreate = () => {
   } = useCreateExportNotes();
 
   // Lọc danh sách sản phẩm theo từ khóa tìm kiếm
-  const filteredStocksData = stocksDataStatus.filter((item) => {
-    const productName = item.product?.name?.toLowerCase() || "";
-    const productCode = item.product?.code?.toLowerCase() || "";
-    const keyword = searchKeyword.toLowerCase();
+  const filteredStocksData = Array.isArray(stocksDataStatus)
+    ? stocksDataStatus.filter((item) => {
+      const productName = item.product?.name?.toLowerCase() || "";
+      const productCode = item.product?.code?.toLowerCase() || "";
+      const keyword = searchKeyword.toLowerCase();
 
-    return productName.includes(keyword) || productCode.includes(keyword);
-  });
+      return productName.includes(keyword) || productCode.includes(keyword);
+    })
+    : [];
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
       <div className="px-5 py-2">
         <h2 className="text-[32px] font-semibold mb-4">Thêm mới phiếu xuất</h2>
         <Form layout="vertical" form={form} initialValues={initialValues}>
+          {/* Form Nhập thông tin */}
           <Form.Item label="Mã phiếu xuất" name="code" rules={[{ required: true, message: "Please input!" }]}>
             <Input placeholder="Nhập mã phiếu xuất" />
           </Form.Item>
           <Form.Item label="Loại phiếu xuất" name="type" rules={[{ required: true, message: "Please input!" }]}>
             <Select
               showSearch
-              placeholder="Select a person"
+              placeholder="Chọn loại phiếu xuất"
               filterOption={(input, option) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase())}
-              options={TYPE_EXPORT_NOTES_OBJECT.map((item) => {
-                return { value: item?.value, label: item?.title };
-              })}
+              options={TYPE_EXPORT_NOTES_OBJECT.map((item) => ({
+                value: item?.value,
+                label: item?.title,
+              }))}
             />
           </Form.Item>
-          <Form.Item label="Ghi chú" name="notes" rules={[{ required: true, message: "Please input!" }]}>
-            <TextArea rows={4} placeholder="maxLength is 6" maxLength={6} />
+          <Form.Item label="Ghi chú" name="notes">
+            <TextArea rows={4} placeholder="Nhập ghi chú" />
           </Form.Item>
+
+          {/* Bảng danh sách sản phẩm */}
           <div className="bg-white px-4 py-6 rounded-lg">
             <Button type="primary" onClick={showModal}>
               Chọn sản phẩm
             </Button>
-            <Modal title="Chọn sản phẩm" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width="80%">
-              {/* Thêm ô tìm kiếm */}
+            <Modal
+              title="Chọn sản phẩm"
+              open={isModalOpen}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              width="80%"
+            >
+              {/* Bộ lọc sản phẩm */}
               <div className="mb-4">
                 <Input
                   placeholder="Tìm kiếm sản phẩm theo tên hoặc mã sản phẩm..."
@@ -96,7 +108,7 @@ export const ExportNotesCreate = () => {
               <Table
                 rowKey="_id"
                 rowSelection={rowSelection}
-                dataSource={filteredStocksData} // Dữ liệu đã được lọc
+                dataSource={filteredStocksData}
                 columns={[
                   {
                     title: "Mã sản phẩm",
@@ -180,6 +192,8 @@ export const ExportNotesCreate = () => {
               />
             </Form.Item>
           </div>
+
+          {/* Nút hành động */}
           <div className="flex justify-end space-x-2 mt-5">
             <Link
               to="/admin/export-notes"
