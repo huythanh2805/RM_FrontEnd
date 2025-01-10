@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Navbar from "../Navbar";
+
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
@@ -72,8 +72,6 @@ const deleteDiscountById = async (id) =>{
   }
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <div className="w-full py-5">
           <Table>

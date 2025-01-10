@@ -89,43 +89,43 @@ const EmployeeList = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((d, index) => (
+              {currentItems.map((employee, index) => (
                 <tr
                   className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
-                  key={d._id}
+                  key={employee._id}
                 >
                   <td className="py-4 px-6 text-[#202224]">
                     {" "}
                     {startIndex + index + 1}
                   </td>
-                  <td className="py-4 px-6 text-[#202224]">{d.name}</td>
+                  <td className="py-4 px-6 text-[#202224]">{employee.name}</td>
                   <td className="py-4 px-6 text-[#202224]">
-                    <p>{d.gender === "MALE" ? "Nam" : "Nữ"}</p>
+                    <p>{employee.gender === "MALE" ? "Nam" : "Nữ"}</p>
                   </td>
-                  <td className="py-4 px-6 text-[#202224]">{d.phoneNumber}</td>
-                  <td className="py-4 px-6 text-[#202224]">{d.workPosition}</td>
+                  <td className="py-4 px-6 text-[#202224]">{employee.phoneNumber}</td>
+                  <td className="py-4 px-6 text-[#202224]">{employee.workPosition}</td>
 
                   <td className="py-4 px-6 text-sm">
-                    {d.employStatus === "ACTIVE" ? (
+                    {employee.employStatus === "ACTIVE" ? (
                       <span className="px-2 py-1 font-semibold rounded-lg bg-green-200 text-green-800">
                         Đang làm việc
                       </span>
                     ) : (
-                      <span className="px-2 py-1 font-semibold rounded-lg bg-gray-200 text-gray-800">
-                        Nghỉ
+                      <span className="px-2 py-1 font-semibold rounded-lg bg-red-200 text-red-800">
+                        Đã nghỉ việc
                       </span>
                     )}
                   </td>
 
                   <td className="py-4 px-6 text-sm flex items-center gap-1.5 lg:gap-3">
-                    <Link to={`/admin/employees/${d._id}/update`}>
+                    <Link to={`/admin/employees/${employee._id}/update`}>
                       <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">
                         <FaPenToSquare size={18} />
                       </div>
                     </Link>
                     <div
                       className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-xs lg:text-base font-semibold hover:bg-red-300 transition"
-                      onClick={() => handleDelete(d._id)}
+                      onClick={() => handleDelete(employee._id)}
                     >
                       <FaRegTrashCan size={18} />
                     </div>

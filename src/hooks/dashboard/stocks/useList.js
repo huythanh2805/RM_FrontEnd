@@ -1,4 +1,4 @@
-import { fetchStocksService } from "@/services/stocks";
+import { fetchStocksService, fetchStocksServiceStatus } from "@/services/stocks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useList = (id, form) => {
@@ -12,9 +12,15 @@ export const useList = (id, form) => {
     queryKey: ["fetchStocksService"],
     queryFn: fetchStocksService,
   });
-
+  const {
+    data: stocksDataStatus,
+  } = useQuery({
+    queryKey: ["fetchStocksServiceStatus"],
+    queryFn: () => fetchStocksServiceStatus,
+  });
+  
   return {
     stocksData,
-    isLoading,
+    isLoading, stocksDataStatus
   };
 };

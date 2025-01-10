@@ -1,17 +1,22 @@
-import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 import { useList } from "@/hooks/dashboard/import-notes/useList";
+import { formatCurrency, formatDateNoTime } from "@/utilities/utils";
 import { debounce } from "lodash";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
+import * as XLSX from "xlsx";
 
 export const ImportNotesList = () => {
-  const { importNotesData, isLoading, error, deleteImportNotes } = useList();
+  const { importNotesData, isLoading, error } = useList();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
   const [searchValue, setSearchValue] = useState("");
+  const [filterSupplier, setFilterSupplier] = useState("");
+  const [filterCreator, setFilterCreator] = useState("");
+  const [startDate, setStartDate] = useState(""); // Ngày bắt đầu
+  const [endDate, setEndDate] = useState(""); // Ngày kết thúc
 
   const handleSearchValueDebounced = debounce((value) => {
     setSearchValue(value);
@@ -21,103 +26,126 @@ export const ImportNotesList = () => {
     handleSearchValueDebounced(e.target.value);
   };
 
-  // Xử lý khi dữ liệu đang tải hoặc gặp lỗi
-  if (isLoading) return <p className="text-center text-blue-600">Loading...</p>;
-  if (error) return <p className="text-center text-red-600">Error loading import notes list.</p>;
+  const handleFilterSupplier = (e) => setFilterSupplier(e.target.value);
+  const handleFilterCreator = (e) => setFilterCreator(e.target.value);
 
-  // Hàm xóa người dùng
-  const handleDeleteImportNotes = (importNotesID) => {
-    Swal.fire({
-      title: "Xác nhận xóa phiếu nhập?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Xác nhận",
-      cancelButtonText: "Hủy",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteImportNotes(importNotesID)
-          .then(() => {
-            Swal.fire({
-              title: "Đã xóa!",
-              text: "Phiếu nhập đã được xóa thành công.",
-              icon: "success",
-            });
-          })
-          .catch((err) => {
-            Swal.fire({
-              title: "Lỗi!",
-              text: "Không thể xóa phiếu nhập. Vui lòng thử lại.",
-              icon: "error",
-            });
-            console.error(err);
-          });
-      }
+  // Lọc dữ liệu dựa trên tìm kiếm, nhà cung cấp, người tạo và khoảng thời gian
+  const filteredImportNotes = useMemo(() => {
+    return importNotesData?.filter((note) => {
+      const matchesCode = note?.code?.toLowerCase().includes(searchValue.toLowerCase());
+      const matchesSupplier = !filterSupplier || note?.seller?.name === filterSupplier;
+      const matchesCreator = !filterCreator || note?.createdBy?.userName === filterCreator;
+      const matchesDate =
+        (!startDate || new Date(note.createdAt).setHours(0, 0, 0, 0) >= new Date(startDate).setHours(0, 0, 0, 0)) &&
+        (!endDate || new Date(note.createdAt).setHours(23, 59, 59, 999) <= new Date(endDate).setHours(23, 59, 59, 999));
+
+      return matchesCode && matchesSupplier && matchesCreator && matchesDate;
     });
-  };
+  }, [importNotesData, searchValue, filterSupplier, filterCreator, startDate, endDate]);
 
-  // Lọc người dùng theo vai trò và tìm kiếm
-  const filteredImportNotes = importNotesData?.filter(
-    (importNotes) => importNotes?.code && importNotes?.code?.toLowerCase().includes(searchValue?.toLowerCase())
-  );
+  // Tính tổng số tiền của các phiếu nhập sau khi lọc
+  const totalAmount = useMemo(() => {
+    return filteredImportNotes?.reduce((sum, note) => sum + (note?.total || 0), 0);
+  }, [filteredImportNotes]);
 
-  // Tính toán cho phân trang
-  const totalItems = filteredImportNotes?.length;
+  // Phân trang
+  const totalItems = filteredImportNotes?.length || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = filteredImportNotes?.slice(startIndex, startIndex + itemsPerPage);
 
+  // Lấy danh sách nhà cung cấp và người tạo duy nhất
+  const uniqueSuppliers = useMemo(() => {
+    const suppliers = importNotesData?.map((note) => note?.seller?.name).filter(Boolean);
+    return [...new Set(suppliers)];
+  }, [importNotesData]);
+
+  const uniqueCreators = useMemo(() => {
+    const creators = importNotesData?.map((note) => note?.createdBy?.userName).filter(Boolean);
+    return [...new Set(creators)];
+  }, [importNotesData]);
+
+  const exportToExcel = () => {
+    const excelData = currentItems.map((note) => ({
+      "Mã phiếu nhập": note.code,
+      "Số lượng sản phẩm": note.products?.length,
+      "Nhà cung cấp": note?.seller?.name,
+      "Tổng tiền": formatCurrency(note?.total),
+      "Người tạo": note?.createdBy?.userName,
+      "Thời gian tạo": formatDateNoTime(note.createdAt),
+      "Sản phẩm chi tiết": note.products
+        ?.map((product) => `Tên SP: ${product?.product?.name}, SL: ${product?.quantity}`)
+        .join("; "),
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Danh sách phiếu nhập");
+    XLSX.writeFile(wb, "DanhSachPhieuNhap.xlsx");
+  };
+
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-semibold text-gray-800">Danh sách phiếu nhập</h1>
-          <Link to="/admin/import-notes/create">
-            <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition">
-              Thêm mới +
-            </div>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/admin/import-notes/create">
+              <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition">
+                Thêm mới +
+              </div>
+            </Link>
+            <button
+              onClick={exportToExcel}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              Xuất Excel
+            </button>
+          </div>
         </div>
 
-        {/* Bộ lọc và tìm kiếm */}
-        <div className="mb-4">
-          <div className="flex justify-between items-center">
-            {/* Input Tìm Kiếm */}
-            <div className="relative w-full max-w-sm min-w-[200px]">
-              <label htmlFor="Search" className="sr-only">
-                Search
-              </label>
-              <input
-                type="text"
-                id="Search"
-                placeholder="Tìm kiếm..."
-                className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full p-2.5"
-                onChange={handleSearchValue}
-              />
-              <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
-                <button type="button" className="text-gray-600 hover:text-gray-700">
-                  <span className="sr-only">Search</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="size-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
-                </button>
-              </span>
-            </div>
-          </div>
+        {/* Bộ lọc */}
+        <div className="mb-4 grid grid-cols-1 md:grid-cols-5 gap-4">
+          <input
+            type="text"
+            placeholder="Tìm kiếm mã phiếu..."
+            className="border border-gray-300 p-2 rounded-md"
+            onChange={handleSearchValue}
+          />
+          <select
+            className="border border-gray-300 p-2 rounded-md"
+            onChange={handleFilterSupplier}
+          >
+            <option value="">Lọc theo nhà cung cấp</option>
+            {uniqueSuppliers.map((supplier, index) => (
+              <option key={index} value={supplier}>
+                {supplier}
+              </option>
+            ))}
+          </select>
+          <select
+            className="border border-gray-300 p-2 rounded-md"
+            onChange={handleFilterCreator}
+          >
+            <option value="">Lọc theo người tạo</option>
+            {uniqueCreators.map((creator, index) => (
+              <option key={index} value={creator}>
+                {creator}
+              </option>
+            ))}
+          </select>
+          <input
+            type="date"
+            className="border border-gray-300 p-2 rounded-md"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <input
+            type="date"
+            className="border border-gray-300 p-2 rounded-md"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
         </div>
 
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
@@ -129,7 +157,7 @@ export const ImportNotesList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Số lượng SP</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Nhà cung cấp</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Tổng tiền</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Trạng thái</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Người tạo</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Thời gian</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Hành động</th>
               </tr>
@@ -143,9 +171,9 @@ export const ImportNotesList = () => {
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.code}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.products?.length}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.seller?.name}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.total}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.createdAt}</td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.createdAt}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{formatCurrency(importNotes?.total)}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{importNotes?.createdBy?.userName}</td>
+                  <td className="py-3 px-6 text-sl text-gray-800 break-words">{formatDateNoTime(importNotes?.createdAt)}</td>
                   <td className="py-3 px-6 text-sl flex items-center gap-3">
                     <div className="flex justify-center gap-3">
                       <Link to={`/admin/import-notes/${importNotes?._id}`}>
@@ -161,8 +189,13 @@ export const ImportNotesList = () => {
           </table>
         </div>
 
+        <div className="mb-4 m-4">
+          <h3 className="text-xl font-bold">
+            Tổng số tiền nhập : <span className="text-red-600">{formatCurrency(totalAmount)}</span>
+          </h3>
+        </div>
         {/* Phân trang */}
-        {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={setCurrentPage(selected + 1)} />}
+        {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={(e) => setCurrentPage(e.selected + 1)} />}
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-import Navbar from "@/components/Admin/Navbar";
 import { useDetailImportNotes } from "@/hooks/dashboard/import-notes/useDetail";
 import { formatCurrency } from "@/utilities/utils";
 import { Link } from "react-router-dom";
@@ -12,8 +11,6 @@ export const ImportNotesDetail = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
-      <Navbar />
-
       {/* Thông tin đặt bàn */}
       <div className="px-5 py-4">
         <p className="text-[32px] font-semibold mb-4">Thông tin phiếu nhập</p>
@@ -26,11 +23,15 @@ export const ImportNotesDetail = () => {
               </tr>
               <tr className="border-b">
                 <th className="py-4 px-6 text-gray-700 font-semibold">Người tạo</th>
-                <td className="py-4 px-6 text-gray-600">{importNotesData?.number_of_seats}</td>
+                <td className="py-4 px-6 text-gray-600">{importNotesData?.createdBy?.userName}</td>
               </tr>
               <tr>
                 <th className="py-4 px-6 text-gray-700 font-semibold">Thời gian tạo</th>
                 <td className="py-4 px-6 text-gray-600">{importNotesData.createdAt}</td>
+              </tr>
+              <tr>
+                <th className="py-4 px-6 text-gray-700 font-semibold">Ghi chú</th>
+                <td className="py-4 px-6 text-gray-600">{importNotesData.notes}</td>
               </tr>
             </tbody>
           </table>
@@ -89,8 +90,8 @@ export const ImportNotesDetail = () => {
                   key={product._id}
                 >
                   <td className="py-4 px-6 text-sl font-medium text-[#202224] w-[100px]">{index + 1}</td>
-                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.code}</td>
-                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.name}</td>
+                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.product?.code}</td>
+                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.product.name}</td>
                   <td className="py-4 px-6 text-sl text-center">{formatCurrency(product?.price)}</td>
                   <td className="py-4 px-6 text-sl text-center">{product?.quantity}</td>
                   <td className="py-4 px-6 text-sl text-center">
@@ -118,7 +119,7 @@ export const ImportNotesDetail = () => {
 
       {/* Footer */}
       <div className="px-5 py-4 flex justify-between items-center">
-        <Link to={`/admin/export-notes`}>
+        <Link to={`/admin/import-notes`}>
           <div className="bg-gray-200 flex text-sl gap-2 items-center text-gray-800 px-6 py-2 rounded-md hover:bg-gray-300">
             Quay lại
           </div>

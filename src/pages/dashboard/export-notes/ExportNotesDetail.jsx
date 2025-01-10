@@ -1,4 +1,3 @@
-import Navbar from "@/components/Admin/Navbar";
 import { useDetailExportNotes } from "@/hooks/dashboard/export-notes/useDetail";
 import { formatCurrency } from "@/utilities/utils";
 import { Link } from "react-router-dom";
@@ -12,8 +11,6 @@ export const ExportNotesDetail = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
-      <Navbar />
-
       {/* Thông tin đặt bàn */}
       <div className="px-5 py-4">
         <p className="text-[32px] font-semibold mb-4">Thông tin phiếu xuất</p>
@@ -26,7 +23,7 @@ export const ExportNotesDetail = () => {
               </tr>
               <tr className="border-b">
                 <th className="py-4 px-6 text-gray-700 font-semibold">Người tạo</th>
-                <td className="py-4 px-6 text-gray-600">{exportNotesData?.number_of_seats}</td>
+                <td className="py-4 px-6 text-gray-600">{exportNotesData?.createdBy?.userName}</td>
               </tr>
               <tr>
                 <th className="py-4 px-6 text-gray-700 font-semibold">Thời gian tạo</th>
@@ -53,28 +50,21 @@ export const ExportNotesDetail = () => {
               </tr>
             </thead>
             <tbody>
-              {exportNotesData?.products?.map((product, index) => (
+              {exportNotesData?.stocks?.map((stock, index) => (
                 <tr
                   className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition text-center"
-                  key={product._id}
+                  key={stock._id}
                 >
                   <td className="py-4 px-6 text-sl font-medium text-[#202224] w-[100px]">{index + 1}</td>
-                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.code}</td>
-                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.name}</td>
-                  <td className="py-4 px-6 text-sl text-center">{formatCurrency(product?.price)}</td>
-                  <td className="py-4 px-6 text-sl text-center">{product?.quantity}</td>
+                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{stock?.stock?.product?.code}</td>
+                  <td className="py-4 px-6 text-sl font-medium text-[#202224]">{stock?.stock?.product?.name}</td>
+                  <td className="py-4 px-6 text-sl text-center">{formatCurrency(stock?.price)}</td>
+                  <td className="py-4 px-6 text-sl text-center">{stock?.quantity}</td>
                   <td className="py-4 px-6 text-sl text-center">
-                    {formatCurrency(product?.price * product?.quantity)}
+                    {formatCurrency(stock?.price * stock?.quantity)}
                   </td>
                 </tr>
               ))}
-
-              <tr>
-                <td className="table-cell py-4 px-6 font-semibold text-right" colSpan={5}>
-                  Tổng sản phẩm:
-                </td>
-                <td className="font-semibold">{exportNotesData?.products?.length} sản phẩm</td>
-              </tr>
               <tr>
                 <td className="table-cell py-4 px-6 font-semibold text-right" colSpan={5}>
                   Tổng tiền:

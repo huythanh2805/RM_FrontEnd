@@ -14,8 +14,6 @@ export const useCreateProducts = () => {
       name: "",
       category: "",
       unit: "",
-      price: 0,
-      expiryDate: "",
     },
   });
 

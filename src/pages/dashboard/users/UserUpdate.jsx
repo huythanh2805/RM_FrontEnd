@@ -1,4 +1,3 @@
-import Navbar from "@/components/Admin/Navbar";
 import { useUser } from "@/hooks/dashboard/useAccount";
 import { Camera } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -29,8 +28,6 @@ const UserUpdate = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="text-2xl font-semibold mb-4">Cập nhật tài khoản</div>

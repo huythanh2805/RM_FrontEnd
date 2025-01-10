@@ -1,4 +1,3 @@
-import Navbar from "@/components/Admin/Navbar";
 import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
 import axios from "axios";
@@ -54,8 +53,6 @@ const DishDetail = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <h2 className="text-3xl font-semibold mb-4">Chi tiết món ăn</h2>
         {dataDish ? (
