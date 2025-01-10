@@ -222,7 +222,8 @@ function OrderHistory() {
           </thead>
           <tbody>
             {currentItems.map((item, index) => (
-              <tr
+              getOrderHistoryUniqueAndLatest(products).includes(item._id) && (
+                <tr
                 key={item._id}
                 className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
               >
@@ -333,7 +334,7 @@ function OrderHistory() {
                 </td>
                 <td className="h-full py-3 px-6 text-sl  gap-3">
                   {
-                    getOrderHistoryUniqueAndLatest(products).includes(item._id) && item.currentStatus !== "ISCANCELED" && !item.isRequiredToCancel
+                    item.currentStatus !== "ISCANCELED" && !item.isRequiredToCancel
                     && (<Button
                       onClick={() => {
                         item.ordered_dish ?
@@ -348,6 +349,7 @@ function OrderHistory() {
                   }
                 </td>
               </tr>
+              )
             ))}
           </tbody>
         </table>

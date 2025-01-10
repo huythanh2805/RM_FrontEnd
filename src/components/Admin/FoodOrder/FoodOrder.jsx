@@ -11,7 +11,6 @@ export default function FoodOrder() {
   const [orderedFoods, setOrderedFoods] = useState([]);
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
-
   // Get all dishes and categories
   const { data: combos, loading: comboloading } = useFetchData(ServerUrl + "/api/orderedCombo");
   const { data: dishes, loading: dishLoading } = useFetchData(ServerUrl + "/dishes");
