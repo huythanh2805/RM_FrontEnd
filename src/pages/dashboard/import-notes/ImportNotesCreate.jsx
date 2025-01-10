@@ -1,21 +1,22 @@
 import { useCreateImportNotes } from "@/hooks/dashboard/import-notes/useCreate";
 import { UNITS } from "@/utilities/const";
-import { DeleteOutlined } from "@ant-design/icons"; // Icon xóa
-import { Button, Form, Input, InputNumber, Modal, Select, Table } from "antd";
-import { useState } from "react";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, Table } from "antd";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 export const ImportNotesCreate = () => {
   const { TextArea } = Input;
 
+  // Lấy dữ liệu từ hook
   const {
-    productsData,
-    listProduct,
+    productsData = [], // Giá trị mặc định là mảng rỗng
+    listProduct = [], // Giá trị mặc định là mảng rỗng
     form,
     initialValues,
     isModalOpen,
     rowSelection,
-    sellersData,
+    sellersData = [], // Giá trị mặc định là mảng rỗng
     showModal,
     handleOk,
     setCount,
@@ -28,29 +29,25 @@ export const ImportNotesCreate = () => {
   // State cho tìm kiếm và lọc
   const [searchKeyword, setSearchKeyword] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState(productsData);
+
+  // Lọc sản phẩm theo từ khóa và loại
+  const filteredProducts = useMemo(() => {
+    if (!productsData) return [];
+    return productsData.filter((product) => {
+      const matchesKeyword = product.name?.toLowerCase().includes(searchKeyword.toLowerCase());
+      const matchesCategory = filterCategory === "" || product.category === filterCategory;
+      return matchesKeyword && matchesCategory;
+    });
+  }, [productsData, searchKeyword, filterCategory]);
 
   // Xử lý tìm kiếm
   const handleSearch = (e) => {
-    const keyword = e.target.value.toLowerCase();
-    setSearchKeyword(keyword);
-    filterProducts(keyword, filterCategory);
+    setSearchKeyword(e.target.value);
   };
 
   // Xử lý lọc theo loại sản phẩm
   const handleFilterCategory = (value) => {
     setFilterCategory(value);
-    filterProducts(searchKeyword, value);
-  };
-
-  // Lọc sản phẩm theo từ khóa và loại
-  const filterProducts = (keyword, category) => {
-    const filtered = productsData.filter((product) => {
-      const matchesKeyword = product.name.toLowerCase().includes(keyword);
-      const matchesCategory = category === "" || product.category === category;
-      return matchesKeyword && matchesCategory;
-    });
-    setFilteredProducts(filtered);
   };
 
   // Thêm một dòng mới vào bảng
@@ -121,9 +118,10 @@ export const ImportNotesCreate = () => {
               filterOption={(input, option) =>
                 (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
               }
-              options={sellersData?.map((item) => {
-                return { value: item?._id, label: item?.name };
-              })}
+              options={sellersData.map((item) => ({
+                value: item._id,
+                label: item.name,
+              }))}
             />
           </Form.Item>
           <Form.Item label="Ghi chú" name="notes">
@@ -242,6 +240,24 @@ export const ImportNotesCreate = () => {
                     ),
                   },
                   {
+                    title: "Hạn sử dụng",
+                    dataIndex: "expiryDate",
+                    key: "expiryDate",
+                    render: (_, record, index) => {
+                      return (
+                        <Form.Item
+                          name={["items", index, "expiryDate"]}
+                          rules={[{ required: true, message: "Vui lòng nhập!" }]}
+                        >
+                          <DatePicker
+                            placeholder="Nhập hạn sử dụng"
+                            disabledDate={(current) => current && current < new Date().setHours(0, 0, 0, 0)}
+                          />
+                        </Form.Item>
+                      );
+                    },
+                  },
+                  {
                     title: "Hành động",
                     dataIndex: "actions",
                     key: "actions",
@@ -258,9 +274,7 @@ export const ImportNotesCreate = () => {
               <Button
                 onClick={handleAddRowTable}
                 type="primary"
-                style={{
-                  marginBottom: 16,
-                }}
+                style={{ marginBottom: 16 }}
                 className="mt-5"
               >
                 Thêm sản phẩm mới

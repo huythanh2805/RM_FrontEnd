@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import * as XLSX from "xlsx";
+
 export const ImportNotesList = () => {
   const { importNotesData, isLoading, error } = useList();
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,6 +15,8 @@ export const ImportNotesList = () => {
   const [searchValue, setSearchValue] = useState("");
   const [filterSupplier, setFilterSupplier] = useState("");
   const [filterCreator, setFilterCreator] = useState("");
+  const [startDate, setStartDate] = useState(""); // Ngày bắt đầu
+  const [endDate, setEndDate] = useState(""); // Ngày kết thúc
 
   const handleSearchValueDebounced = debounce((value) => {
     setSearchValue(value);
@@ -26,17 +29,27 @@ export const ImportNotesList = () => {
   const handleFilterSupplier = (e) => setFilterSupplier(e.target.value);
   const handleFilterCreator = (e) => setFilterCreator(e.target.value);
 
-  const filteredImportNotes = importNotesData?.filter((importNotes) => {
-    const matchesCode = importNotes?.code?.toLowerCase().includes(searchValue.toLowerCase());
-    const matchesSupplier =
-      filterSupplier === "" || importNotes?.seller?.name === filterSupplier;
-    const matchesCreator =
-      filterCreator === "" || importNotes?.createdBy?.userName === filterCreator;
+  // Lọc dữ liệu dựa trên tìm kiếm, nhà cung cấp, người tạo và khoảng thời gian
+  const filteredImportNotes = useMemo(() => {
+    return importNotesData?.filter((note) => {
+      const matchesCode = note?.code?.toLowerCase().includes(searchValue.toLowerCase());
+      const matchesSupplier = !filterSupplier || note?.seller?.name === filterSupplier;
+      const matchesCreator = !filterCreator || note?.createdBy?.userName === filterCreator;
+      const matchesDate =
+        (!startDate || new Date(note.createdAt).setHours(0, 0, 0, 0) >= new Date(startDate).setHours(0, 0, 0, 0)) &&
+        (!endDate || new Date(note.createdAt).setHours(23, 59, 59, 999) <= new Date(endDate).setHours(23, 59, 59, 999));
 
-    return matchesCode && matchesSupplier && matchesCreator;
-  });
+      return matchesCode && matchesSupplier && matchesCreator && matchesDate;
+    });
+  }, [importNotesData, searchValue, filterSupplier, filterCreator, startDate, endDate]);
 
-  const totalItems = filteredImportNotes?.length;
+  // Tính tổng số tiền của các phiếu nhập sau khi lọc
+  const totalAmount = useMemo(() => {
+    return filteredImportNotes?.reduce((sum, note) => sum + (note?.total || 0), 0);
+  }, [filteredImportNotes]);
+
+  // Phân trang
+  const totalItems = filteredImportNotes?.length || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = filteredImportNotes?.slice(startIndex, startIndex + itemsPerPage);
@@ -65,7 +78,6 @@ export const ImportNotesList = () => {
         .join("; "),
     }));
 
-    // Sử dụng thư viện XLSX để xuất Excel
     const ws = XLSX.utils.json_to_sheet(excelData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Danh sách phiếu nhập");
@@ -93,7 +105,7 @@ export const ImportNotesList = () => {
         </div>
 
         {/* Bộ lọc */}
-        <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="mb-4 grid grid-cols-1 md:grid-cols-5 gap-4">
           <input
             type="text"
             placeholder="Tìm kiếm mã phiếu..."
@@ -122,8 +134,19 @@ export const ImportNotesList = () => {
               </option>
             ))}
           </select>
+          <input
+            type="date"
+            className="border border-gray-300 p-2 rounded-md"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <input
+            type="date"
+            className="border border-gray-300 p-2 rounded-md"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
         </div>
-
 
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
           <table className="min-w-full bg-white">
@@ -166,6 +189,11 @@ export const ImportNotesList = () => {
           </table>
         </div>
 
+        <div className="mb-4 m-4">
+          <h3 className="text-xl font-bold">
+            Tổng số tiền nhập : <span className="text-red-600">{formatCurrency(totalAmount)}</span>
+          </h3>
+        </div>
         {/* Phân trang */}
         {totalPages > 1 && <Pagination pageCount={totalPages} onPageChange={(e) => setCurrentPage(e.selected + 1)} />}
       </div>
