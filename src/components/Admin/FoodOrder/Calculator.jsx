@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
-import { formatCurrency, getStatusMessage, ServerUrl, shortenNumber } from "@/utilities/utils";
+import { formatCurrency, getStatusMessage, groupFoodItems, ServerUrl, shortenNumber } from "@/utilities/utils";
 import { Check, ChevronRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
@@ -50,6 +50,7 @@ const Calculator = ({
   const navigate = useNavigate();
 
   console.log("orderedFoods", orderedFoods);
+
   const totalPrice = orderedFoods.reduce((sum, item) => {
     if (item.status === "ISCANCELED") return sum + 0;
     return sum + item.quantity * item.price;
@@ -66,6 +67,10 @@ const Calculator = ({
       setDiscountValue(Number(discount.discountId.discountValue));
     }
   }, [totalPrice, discount]);
+  // Format food
+   useEffect(()=>{
+    console.log(groupFoodItems(orderedFoods))
+   },[orderedFoods])
 
   useEffect(() => {
     const discountedMoney = totalPrice - discountValue;
@@ -81,50 +86,50 @@ const Calculator = ({
   const vt = (5 / 100) * totalPrice;
   const total = totalPrice - discountValue + vt - deposit;
   // delete orderedFood
-  const handleDeleteOrderedFood = async (orderedFood_id, type) => {
-    console.log(type);
-    if (type === "combo") {
-      const { res, data } = await deletedOrderedCombo(orderedFood_id);
-      if (res.status === 201 && data.message === "Successfully" && setOrderedFoods)
-        setOrderedFoods((pre) => [...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id)]);
-    }
-    if (type === "dish") {
-      const { res, data } = await deleteOrderedFood(orderedFood_id);
-      if (res.status === 201 && data.message === "Successfully" && setOrderedFoods)
-        setOrderedFoods((pre) => [...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id)]);
-    }
-  };
+  // const handleDeleteOrderedFood = async (orderedFood_id, type) => {
+  //   console.log(type);
+  //   if (type === "combo") {
+  //     const { res, data } = await deletedOrderedCombo(orderedFood_id);
+  //     if (res.status === 201 && data.message === "Successfully" && setOrderedFoods)
+  //       setOrderedFoods((pre) => [...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id)]);
+  //   }
+  //   if (type === "dish") {
+  //     const { res, data } = await deleteOrderedFood(orderedFood_id);
+  //     if (res.status === 201 && data.message === "Successfully" && setOrderedFoods)
+  //       setOrderedFoods((pre) => [...pre.filter((orderedFood) => orderedFood._id !== orderedFood_id)]);
+  //   }
+  // };
   const handleClose = () => {
     setPaymentMethod("cash");
     setQrCodeUrl(null);
   };
   // Update orderedFood
-  const handleMinus = async (orderedFood_id, quantity, type) => {
-    if (quantity < 2) {
-      type === "combo" ? await deletedOrderedCombo(orderedFood_id) : await deleteOrderedFood(orderedFood_id);
-      setOrderedFoods((prevOrderedFoods) => prevOrderedFoods.filter((item) => item._id !== orderedFood_id));
-    }
+  // const handleMinus = async (orderedFood_id, quantity, type) => {
+  //   if (quantity < 2) {
+  //     type === "combo" ? await deletedOrderedCombo(orderedFood_id) : await deleteOrderedFood(orderedFood_id);
+  //     setOrderedFoods((prevOrderedFoods) => prevOrderedFoods.filter((item) => item._id !== orderedFood_id));
+  //   }
 
-    await updateOrderedFood(orderedFood_id, quantity - 1, type);
-    if (!setOrderedFoods) return;
-    setOrderedFoods((prevOrderedFoods) =>
-      prevOrderedFoods.map((item) => (item._id === orderedFood_id ? { ...item, quantity: quantity - 1 } : item))
-    );
-  };
-  const handlePlus = async (orderedFood_id, quantity, type) => {
-    await updateOrderedFood(orderedFood_id, quantity + 1, type);
-    if (!setOrderedFoods) return;
-    setOrderedFoods((prevOrderedFoods) =>
-      prevOrderedFoods.map((item) => (item._id === orderedFood_id ? { ...item, quantity: quantity + 1 } : item))
-    );
-  };
-  //  Format currency
-  const handlePaidMoney = (value, name, values) => {
-    setPaidMoney(value);
-  };
-  const handleGoBack = () => {
-    router.back();
-  };
+  //   await updateOrderedFood(orderedFood_id, quantity - 1, type);
+  //   if (!setOrderedFoods) return;
+  //   setOrderedFoods((prevOrderedFoods) =>
+  //     prevOrderedFoods.map((item) => (item._id === orderedFood_id ? { ...item, quantity: quantity - 1 } : item))
+  //   );
+  // };
+  // const handlePlus = async (orderedFood_id, quantity, type) => {
+  //   await updateOrderedFood(orderedFood_id, quantity + 1, type);
+  //   if (!setOrderedFoods) return;
+  //   setOrderedFoods((prevOrderedFoods) =>
+  //     prevOrderedFoods.map((item) => (item._id === orderedFood_id ? { ...item, quantity: quantity + 1 } : item))
+  //   );
+  // };
+  // //  Format currency
+  // const handlePaidMoney = (value, name, values) => {
+  //   setPaidMoney(value);
+  // };
+  // const handleGoBack = () => {
+  //   router.back();
+  // };
   const generateQrCodeUrl = (total) => {
     const bank = "MB";
     const account = "0982669254";

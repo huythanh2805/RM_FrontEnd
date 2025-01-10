@@ -134,7 +134,7 @@ console.log(cart.length)
           type,
           totalPrice: cart.length === 0 ? defaultDeposit : totalDeposit,
           payment_method: paymentMethod,
-          deposit: paymentMethod === "CASH" ? 0 : totalDeposit,
+          deposit: cart.length === 0 ? defaultDeposit : totalDeposit,
           isUsedDiscount,
           isOrderedOnline: true,
         }),
@@ -198,11 +198,15 @@ console.log(cart.length)
             transition: "opacity 0.3s, transform 0.3s",
           }}
         >
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">Thanh Toán</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold dancing">
+            Thanh Toán
+          </h1>
           <p className="text-xs sm:text-sm md:text-base lg:text-lg mt-4 flex items-center justify-center text-center">
             <span className="bg-white p-1 rounded-full mr-2 hidden lg:block"></span>
             <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] hidden lg:block"></span>
-            <span className="ml-2 sm:ml-4">Vui lòng thanh toán trước 25% hóa đơn</span>
+            <span className="ml-2 sm:ml-4">
+              Vui lòng thanh toán trước 25% hóa đơn
+            </span>
             <span className="bg-white h-[2px] w-[60px] sm:w-[80px] md:w-[100px] lg:w-[120px] ml-2 sm:ml-4 hidden lg:block"></span>
             <span className="bg-white p-1 rounded-full ml-2 hidden lg:block"></span>
           </p>
@@ -219,53 +223,101 @@ console.log(cart.length)
                 </h2>
                 <div className="data pt-6 pb-3 border-b border-gray-200">
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Họ tên</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{reservationDetails.userName}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Họ tên
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {reservationDetails.userName}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Số điện thoại</p>
-                    <p className="font-medium text-lg leading-8 text-gray-600">{reservationDetails.phoneNumber}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Số điện thoại
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-600">
+                      {reservationDetails.phoneNumber}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Ngày đặt</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{formattedDate}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Ngày đặt
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {formattedDate}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Giờ đặt</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{formattedTime}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Giờ đặt
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {formattedTime}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Số người</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Số người
+                    </p>
                     <p className="font-medium text-lg leading-8 text-gray-900">
                       {reservationDetails.guests_count} người
                     </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Tổng tiền</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{formatCurrency(computeTotalAmount)} </p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Tổng tiền
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {formatCurrency(computeTotalAmount)}{" "}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">Giảm giá</p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{formatCurrency(discountAmount)}</p>
+                    <p className="font-normal text-lg leading-8 text-gray-400">
+                      Giảm giá
+                    </p>
+                    <p className="font-medium text-lg leading-8 text-gray-900">
+                      {formatCurrency(discountAmount)}
+                    </p>
                   </div>
                   {Number(prePayment) === 100 && (
                     <div className="flex items-center justify-between gap-4 mb-5">
-                      <p className="font-normal text-lg leading-8 text-gray-400">VAT(5%)</p>
-                      <p className="font-medium text-lg leading-8 text-gray-900"> {formatCurrency(vat)}</p>
+                      <p className="font-normal text-lg leading-8 text-gray-400">
+                        VAT(5%)
+                      </p>
+                      <p className="font-medium text-lg leading-8 text-gray-900">
+                        {" "}
+                        {formatCurrency(vat)}
+                      </p>
                     </div>
                   )}
-                  <div className="flex items-center justify-between gap-4 mb-5">
-                    <p className="font-normal text-lg leading-8 text-gray-400">
-                      {`Thanh toán trước ( ${prePayment}% )`}
-                    </p>
-                    <p className="font-medium text-lg leading-8 text-gray-900">{formatCurrency(totalDeposit)}</p>
-                  </div>
+                  {cart.length > 0 ? (
+                    <div className="flex items-center justify-between gap-4 mb-5">
+                      <p className="font-normal text-lg leading-8 text-gray-400">
+                        {`Thanh toán trước ( ${prePayment}% )`}
+                      </p>
+                      <p className="font-medium text-lg leading-8 text-gray-900">
+                        {formatCurrency(totalDeposit)}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between gap-4 mb-5">
+                      <p className="font-normal text-lg leading-8 text-gray-400">
+                        {`Thanh toán trước `}
+                      </p>
+                      <p className="font-medium text-lg leading-8 text-gray-900">
+                        {formatCurrency(defaultDeposit)}
+                      </p>
+                    </div>
+                  )}
                   {Number(prePayment) !== 100}{" "}
-                  <div className="text-sm text-red-1">Thanh toán 100% sẽ áp mã giảm giá và tính thuế</div>
+                  <div className="text-sm text-red-1">
+                    Thanh toán 100% sẽ áp mã giảm giá và tính thuế
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between gap-4 mb-5 pt-3">
-                  <p className="font-normal text-lg leading-8 text-gray-400">Thanh toán trước</p>
+                  <p className="font-normal text-lg leading-8 text-gray-400">
+                    Thanh toán trước
+                  </p>
                   <p className="font-medium text-lg leading-8 text-gray-900">
                     <Select value={prePayment} onValueChange={setPrePayment}>
                       <SelectTrigger className="w-[180px] focus-visible::border-none focus-visible:outline-none focus:ring-0 focus:ring-offset-0 focus:border-b-blue-1">
@@ -282,9 +334,14 @@ console.log(cart.length)
                 </div>
 
                 <div className="flex items-center justify-between gap-4 mb-5 ">
-                  <p className="font-normal text-lg leading-8 text-gray-400">PTTT</p>
+                  <p className="font-normal text-lg leading-8 text-gray-400">
+                    PTTT
+                  </p>
                   <p className="font-medium text-lg leading-8 text-gray-900">
-                    <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                    <Select
+                      value={paymentMethod}
+                      onValueChange={setPaymentMethod}
+                    >
                       <SelectTrigger className="w-[180px] focus-visible::border-none focus-visible:outline-none focus:ring-0 focus:ring-offset-0 focus:border-b-blue-1">
                         <SelectValue placeholder="Theme" className="" />
                       </SelectTrigger>
@@ -299,7 +356,8 @@ console.log(cart.length)
             </div>
             <div className="w-full order-1 xl:order-2 2xl:min-w-[824px] max-w-sm md:max-w-3xl max-xl:mx-auto  ">
               <div className="grid grid-cols-1 gap-6">
-                {Array.isArray(reservationDetails.dishs) && reservationDetails.dishs.length > 0 ? (
+                {Array.isArray(reservationDetails.dishs) &&
+                reservationDetails.dishs.length > 0 ? (
                   reservationDetails.dishs.map((orderedDish, index) => (
                     <div
                       key={orderedDish._id}
@@ -318,10 +376,14 @@ console.log(cart.length)
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 md:gap-8">
                         <div>
-                          <h2 className="font-medium text-xl leading-8 text-black mb-3">{orderedDish.name}</h2>
+                          <h2 className="font-medium text-xl leading-8 text-black mb-3">
+                            {orderedDish.name}
+                          </h2>
                         </div>
                         <div className="flex items-center justify-between gap-8">
-                          <h6 className="font-medium text-xl leading-8 text-600">SL: {orderedDish.quantity}</h6>
+                          <h6 className="font-medium text-xl leading-8 text-600">
+                            SL: {orderedDish.quantity}
+                          </h6>
                           <h6 className="font-medium text-xl leading-8 text-600">
                             Giá : {formatCurrency(orderedDish.price)}
                           </h6>
@@ -341,8 +403,16 @@ console.log(cart.length)
             onClick={handleBack}
             className="rounded-full py-4 w-full max-w-[280px] flex items-center bg-[#ffe6dc] justify-center transition-all duration-500 hover:bg-[#ffcbb3]"
           >
-            <span className="px-2 font-semibold text-lg leading-8 text-[#fb6340]">Quay lại</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <span className="px-2 font-semibold text-lg leading-8 text-[#fb6340]">
+              Quay lại
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              viewBox="0 0 22 22"
+              fill="none"
+            >
               <path
                 d="M8.25324 5.49609L13.7535 10.9963L8.25 16.4998"
                 stroke="#fb6340"
@@ -363,11 +433,15 @@ console.log(cart.length)
                   : "bg-[#e6f8e6] text-[#28a745] hover:bg-[#b0ebb0]"
               }`}
             >
-              {Number(prePayment) === 100 ? "Thanh toán hết" : paymentMethod === "CASH" ? "Tạo đơn" : "Cọc"}
+              {Number(prePayment) === 100
+                ? "Thanh toán hết"
+                : paymentMethod === "CASH"
+                ? "Tạo đơn"
+                : "Cọc"}
             </button>
           )}
         </div>
       </section>
     </div>
-  );
+  )
 };

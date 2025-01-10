@@ -31,7 +31,8 @@ const formSchemaFunc = () =>
     discountType: z.enum(["FIXEDAMOUNT", "PERCENTAGE"], {
       required_error: "Bạn cần phải chọn kiểu cho phiếu giảm giá",
     }),
-  });
+  })
+  
 
 // Form reusable for update and add reservation
 export default function DiscountForm({discount, id}) {
@@ -59,7 +60,8 @@ export default function DiscountForm({discount, id}) {
   });
    
   async function onSubmit(values) {
-    if(values.discountType  === "PERCENTAGE" && values.discountValue >= 50) return toast({variant: "destructive", title: "Bạn không được tạo phiếu lớn hơn 50%"})
+    console.log('ok')
+    if(values.discountType  === "PERCENTAGE" && Number(values.discountValue) >= 100) return toast({variant: "destructive", title: "Bạn không được tạo phiếu lớn hơn 100%"})
     console.log(values.discountType);
     console.log(values.discountValue);
     const url = discount ? ServerUrl + "/api/discount/"+id : ServerUrl + "/api/discount";

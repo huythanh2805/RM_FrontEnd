@@ -104,3 +104,49 @@ export function getOrderHistoryUniqueAndLatest(dishes) {
   }
   return Array.map((item) => item._id);
 }
+// Format mảng đồ ăn có trạng thái khác nhau, đầu ra là 1 mảng có số lượng dựa trên trạng thái của những món ăn cùng tên 
+export function groupFoodItems(food) {
+  const groupedMap = new Map();
+
+  food.forEach(({ _id, name, images, quantity, status, price }) => {
+    if (!groupedMap.has(name)) {
+      groupedMap.set(name, {
+        _id,
+        name,
+        images,
+        price,
+        quantity: 0,
+        OrderedQuantity: 0,
+        CompletedQuantity: 0,
+        PreparedQuantity: 0,
+        totalPrice: 0,  // Thêm trường totalPrice
+      });
+    }
+
+    const groupedItem = groupedMap.get(name);
+
+    groupedItem.quantity += quantity;
+    if (status === "ORDERED") {
+      groupedItem.OrderedQuantity += quantity;
+    } else if (status === "COMPLETED") {
+      groupedItem.CompletedQuantity += quantity;
+    } else if (status === "PREPARED") {
+      groupedItem.PreparedQuantity += quantity;
+    }
+
+    // Giữ lại giá trị price từ món ăn đầu tiên
+    if (!groupedItem.price) {
+      groupedItem.price = price;
+    }
+
+    // Giữ lại _id của món ăn đầu tiên
+    if (!groupedItem._id) {
+      groupedItem._id = _id;
+    }
+
+    // Tính tổng price
+    groupedItem.totalPrice = groupedItem.quantity * groupedItem.price;
+  });
+
+  return Array.from(groupedMap.values());
+}
