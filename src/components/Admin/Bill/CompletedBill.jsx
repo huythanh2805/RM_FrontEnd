@@ -56,11 +56,11 @@ const CompletedBill = () => {
     onAfterPrint: () => console.log("after printing..."),
     removeAfterPrint: true,
   });
-  console.log({bill})
+  console.log({ bill })
   return (
     <>
-      <div className="h-full w-full overflow-scroll flex items-center justify-center bg-[#f9fafb]">
-        <div className="w-full h-full bg-light-bg_2 dark:bg-dark-bg_2 rounded-md px-3 py-4">
+      <div className="h-full w-full overflow-scroll flex items-center justify-center ">
+        <div className="w-full h-full dark:bg-dark-bg_2 rounded-md px-3 py-4">
           {loading && (
             <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
               <FadeLoader color={"#11cdef"} loading={loading} />
@@ -110,7 +110,7 @@ const CompletedBill = () => {
                       <div className="flex items-start py-2">
                         <MapPin className="text-light-text dark:text-dark-text min-w-[18px] shrink-0 px-1" />
                         <p className="text-light-text dark:text-dark-textSoft text-[16px] text-center">
-                        Tòa nhà FPT Polytechnic, Cổng số 2 13 P. Trịnh Văn Bô, Xuân Phương Nam Từ Liêm, Hà Nội
+                          Tòa nhà FPT Polytechnic, Cổng số 2 13 P. Trịnh Văn Bô, Xuân Phương Nam Từ Liêm, Hà Nội
                         </p>
                       </div>
 
