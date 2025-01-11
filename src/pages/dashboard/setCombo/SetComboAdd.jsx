@@ -31,7 +31,7 @@ const SetComboAdd = () => {
       .get(BASE_URL + `/dishes`)
       .then((res) => {
         setDishes(res.data.filter((item) => item.isShow == true));
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);

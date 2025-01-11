@@ -56,8 +56,8 @@ const SetComboUpdate = () => {
     axios
       .get(BASE_URL + `/dishes`)
       .then((res) => {
-        setDishes(res.data);
-        console.log(res.data);
+        setDishes(res.data.filter((item) => item.isShow == true));
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -406,7 +406,7 @@ const SetComboUpdate = () => {
 
             <button
               type="submit"
-              className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition"
+              className="bg-blue-200 text-blue-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-blue-300 transition"
             >
               Cập nhật
             </button>
