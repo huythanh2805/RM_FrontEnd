@@ -30,7 +30,7 @@ const SetComboAdd = () => {
     axios
       .get(BASE_URL + `/dishes`)
       .then((res) => {
-        setDishes(res.data);
+        setDishes(res.data.filter((item) => item.isShow == true));
         console.log(res.data);
       })
       .catch((err) => {
@@ -376,6 +376,7 @@ const SetComboAdd = () => {
                 type="checkbox"
                 className="ml-2 w-4 h-4"
                 {...register("isShow")}
+                defaultChecked={true}
               />
             </div>
           </div>

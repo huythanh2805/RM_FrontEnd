@@ -20,7 +20,7 @@ const SetComboList = () => {
     axios
       .get(BASE_URL + "/setCombos")
       .then((res) => {
-        setCombos(res.data);
+        setCombos(res.data.filter((item) => item.isDelete == false));
         console.log(res.data);
       })
       .catch((err) => {
@@ -44,8 +44,12 @@ const SetComboList = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(BASE_URL + `/setCombos/${id}`)
-          .then(() => {
+          .put(`${import.meta.env.VITE_API_BASE_URL}/setCombos/${id}`, {
+            isDelete: true,
+            isShow: false,
+          })
+          .then((res) => {
+            console.log(res);
             Swal.fire({
               title: "Đã xóa!",
               text: "Combo đã được xóa thành công.",
@@ -264,12 +268,12 @@ const SetComboList = () => {
                             <FaPenToSquare size={18} />
                           </div>
                         </Link>
-                        {/* <div
+                        <div
                           className="bg-red-200 text-red-800 px-2 py-1 rounded-lg cursor-pointer text-sl lg:text-sl font-semibold hover:bg-red-300 transition"
                           onClick={() => handleDelete(d._id)}
                         >
                           <FaRegTrashCan size={18} />
-                        </div> */}
+                        </div>
                       </div>
                     </td>
                   </tr>

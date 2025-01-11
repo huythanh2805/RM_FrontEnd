@@ -26,7 +26,7 @@ const DishUpdate = () => {
     axios
       .get(BASE_URL + `/categories`)
       .then((res) => {
-        setCategories(res.data);
+        setCategories(res.data.filter((item) => item.isDelete == false));
       })
       .catch((err) => {
         console.error(err);

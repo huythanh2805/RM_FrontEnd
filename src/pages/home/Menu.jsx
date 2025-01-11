@@ -59,7 +59,7 @@ const Menu = ({ limit, isFilter = true }) => {
     axios
       .get(BASE_URL + "/dishes")
       .then((res) => {
-        setDishes(res.data.filter((item) => item.isShow));
+        setDishes(res.data.filter((item) => item.isShow == true));
         const allCategoryName = [
           ...new Set(res.data.map((item) => item.category_id.name)),
         ];
@@ -74,7 +74,7 @@ const Menu = ({ limit, isFilter = true }) => {
     axios
       .get(BASE_URL + "/setCombos")
       .then((res) => {
-        const filteredCombos = res.data.filter((item) => item.isShow);
+        const filteredCombos = res.data.filter((item) => item.isShow == true);
         console.log("here", filteredCombos);
 
         const combosWithType = filteredCombos.map((item) => {
