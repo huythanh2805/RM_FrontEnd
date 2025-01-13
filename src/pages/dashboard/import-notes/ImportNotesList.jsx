@@ -129,7 +129,7 @@ export const ImportNotesList = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#f9fafb]">
+    <div className="w-full min-h-screen">
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-semibold text-gray-800">Danh sách phiếu nhập</h1>
