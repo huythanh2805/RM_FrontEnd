@@ -16,7 +16,7 @@ const EmployeeList = () => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/employees`)
       .then((res) => {
-        setEmployees(res.data);
+        setEmployees(res.data.filter((item) => item.isDelete == false));
         console.log(res.d);
       })
       .catch((err) => {
@@ -39,7 +39,7 @@ const EmployeeList = () => {
       .toLowerCase()
       .includes(searchValue.toLowerCase());
 
-      const matchesStatus =
+    const matchesStatus =
       filterStatus === "Tất cả" || employee.employStatus === filterStatus;
 
     return matchesSearchValue && matchesStatus;
@@ -54,10 +54,9 @@ const EmployeeList = () => {
   const handlePageChange = (e) => {
     setCurrentPage(e.selected + 1);
   };
-
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Xác nhận xóa ?",
+      title: "Xác nhận xóa?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -67,18 +66,24 @@ const EmployeeList = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`${import.meta.env.VITE_API_BASE_URL}/employees/${id}`)
+          .put(`${import.meta.env.VITE_API_BASE_URL}/employees/${id}`, {
+            isDelete: true,
+          })
           .then(() => {
-            Swal.fire(
-              "Đã xóa!",
-              "Nhân viên đã được xóa thành công.",
-              "success"
-            );
+            Swal.fire({
+              title: "Đã xóa!",
+              text: "Nhân viên đã được xóa thành công!",
+              icon: "success",
+            });
             fetchData();
-            setCurrentPage(1);
           })
           .catch((err) => {
-            console.log(err);
+            console.error(err);
+            Swal.fire({
+              title: "Lỗi!",
+              text: "Không thể xóa nhân viên!",
+              icon: "error",
+            });
           });
       }
     });
@@ -158,7 +163,8 @@ const EmployeeList = () => {
             <thead className="border-b border-[#d5d5d5] text-left text-sl font-semibold text-[#202224] uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-6 font-bold">STT</th>
-                <th className="py-3 px-6 font-bold">Tên</th>
+                <th className="py-3 px-6 font-bold">Mã nhân viên</th>
+                <th className="py-3 px-6 font-bold">Tên nhân viên</th>
                 <th className="py-3 px-6 font-bold">Giới tính</th>
                 <th className="py-3 px-6 font-bold">Số điện thoại</th>
                 <th className="py-3 px-6 font-bold">Vị trí công việc</th>
@@ -176,6 +182,7 @@ const EmployeeList = () => {
                     {" "}
                     {startIndex + index + 1}
                   </td>
+                  <td className="py-4 px-6 text-[#202224]">{employee._id}</td>
                   <td className="py-4 px-6 text-[#202224]">{employee.name}</td>
                   <td className="py-4 px-6 text-[#202224]">
                     <p>{employee.gender === "MALE" ? "Nam" : "Nữ"}</p>

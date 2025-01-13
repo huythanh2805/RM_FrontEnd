@@ -1,33 +1,60 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Select from "react-select";
 import { toast } from "@/hooks/use-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const WorkScheduleUpdate = () => {
   const { id } = useParams();
-  const [selectedEmployee, setSelectedEmployee] = useState();
-  const [month, setMonth] = useState("");
-  const [weeks, setWeeks] = useState([]);
   const navigate = useNavigate();
+  const [employees, setEmployees] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [month, setMonth] = useState("");
+  const [week1, setWeek1] = useState("");
+  const [week2, setWeek2] = useState("");
+  const [week3, setWeek3] = useState("");
+  const [week4, setWeek4] = useState("");
 
   useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/employees`
+        );
+
+        if (Array.isArray(response.data)) {
+          const activeEmployees = response.data.filter(
+            (item) => !item.isDelete
+          );
+
+          setEmployees(
+            activeEmployees.map((employee) => ({
+              value: employee._id,
+              label: employee.name,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
+    };
+
     const fetchWorkSchedule = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/workSchedules/${id}`
         );
         const schedule = response.data;
+
         setSelectedEmployee({
           value: schedule.employee_id._id,
           label: schedule.employee_id.name,
         });
         setMonth(schedule.month);
-        setWeeks([
-          schedule.week_1,
-          schedule.week_2,
-          schedule.week_3,
-          schedule.week_4,
-        ]);
+        setWeek1(schedule.week_1);
+        setWeek2(schedule.week_2);
+        setWeek3(schedule.week_3);
+        setWeek4(schedule.week_4);
       } catch (error) {
         console.error("Error fetching work schedule:", error);
         toast({
@@ -38,13 +65,14 @@ const WorkScheduleUpdate = () => {
       }
     };
 
+    fetchEmployees();
     fetchWorkSchedule();
   }, [id]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // không load lại trang khi submit chưa đủ thông tin
+    e.preventDefault();
 
-    if (!month) {
+    if (!selectedEmployee || !month) {
       toast({
         variant: "destructive",
         title: "Vui lòng chọn đầy đủ thông tin!",
@@ -54,26 +82,24 @@ const WorkScheduleUpdate = () => {
 
     try {
       const updatedSchedule = {
+        employee_id: selectedEmployee.value,
         month,
-        week_1: weeks[0],
-        week_2: weeks[1],
-        week_3: weeks[2],
-        week_4: weeks[3],
+        week_1: week1,
+        week_2: week2,
+        week_3: week3,
+        week_4: week4,
       };
 
       const response = await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/workSchedules/${id}`,
         updatedSchedule
       );
+
       toast({ variant: "success", title: "Cập nhật ca làm thành công!" });
-      console.log("OK", response.data);
       navigate("/admin/listworkSchedule");
     } catch (error) {
       console.error("Lỗi:", error);
-      toast({
-        variant: "destructive",
-        title: "Cập nhật ca làm thất bại!",
-      });
+
       if (error.response?.status === 400) {
         const message = error.response.data.message || "";
         if (message.includes("already has a work schedule")) {
@@ -101,12 +127,31 @@ const WorkScheduleUpdate = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h1 className="gap-2 text-2xl md:text-3xl font-bold mb-6 text-gray-800">
-        Cập nhật ca làm cho nhân viên -
-        <span className="ml-2 text-blue-600">{selectedEmployee?.label}</span>
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
+        Cập nhật ca làm
       </h1>
-      {/* <h1 className="text-[32px] font-semibold mb-4">Cập nhật ca làm cho nhân viên - Tên nhân viên ở chỗ này </h1> */}
+
       <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label
+            htmlFor="ten-nhan-vien"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Tên nhân viên
+          </label>
+          <Select
+            id="ten-nhan-vien"
+            name="ten-nhan-vien"
+            options={employees}
+            value={selectedEmployee}
+            onChange={setSelectedEmployee}
+            isClearable={true}
+            placeholder="Chọn tên nhân viên"
+            className="react-select-container"
+            classNamePrefix="react-select"
+          />
+        </div>
+
         <div className="mb-4">
           <label
             htmlFor="thang"
@@ -124,7 +169,7 @@ const WorkScheduleUpdate = () => {
           />
         </div>
 
-        {weeks.map((week, index) => (
+        {[week1, week2, week3, week4].map((week, index) => (
           <div className="mb-4" key={index}>
             <label
               htmlFor={`tuan-${index + 1}`}
@@ -137,16 +182,15 @@ const WorkScheduleUpdate = () => {
               id={`tuan-${index + 1}`}
               name={`tuan-${index + 1}`}
               value={week}
-              onChange={(e) =>
-                setWeeks((prevWeeks) => {
-                  const newWeeks = [...prevWeeks];
-                  newWeeks[index] = e.target.value;
-                  return newWeeks;
-                })
-              }
+              onChange={(e) => {
+                if (index === 0) setWeek1(e.target.value);
+                if (index === 1) setWeek2(e.target.value);
+                if (index === 2) setWeek3(e.target.value);
+                if (index === 3) setWeek4(e.target.value);
+              }}
               className="block w-32 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="">Chọn ca làm</option>
+              <option>Chọn ca làm</option>
               <option value="1">Ca Sáng</option>
               <option value="2">Ca Chiều</option>
               <option value="3">Ca Tối</option>
