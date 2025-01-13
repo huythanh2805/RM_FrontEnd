@@ -9,12 +9,15 @@ const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemPerPage = 10;
+  const [searchValue, setSearchValue] = useState("");
+  const [filterStatus, setFilterStatus] = useState("Tất cả");
 
   const fetchData = () => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/employees`)
       .then((res) => {
         setEmployees(res.data);
+        console.log(res.d);
       })
       .catch((err) => {
         console.log(err);
@@ -25,11 +28,28 @@ const EmployeeList = () => {
     fetchData();
   }, []);
 
+  const handleSearchValue = (e) => {
+    setSearchValue(e.target.value);
+    setCurrentPage(1);
+  };
+
+  // Xử lí lọc
+  const filterEmployees = employees.filter((employee) => {
+    const matchesSearchValue = employee.name
+      .toLowerCase()
+      .includes(searchValue.toLowerCase());
+
+      const matchesStatus =
+      filterStatus === "Tất cả" || employee.employStatus === filterStatus;
+
+    return matchesSearchValue && matchesStatus;
+  });
+
   const startIndex = (currentPage - 1) * itemPerPage;
-  const currentItems = employees
+  const currentItems = filterEmployees
     .reverse()
     .slice(startIndex, startIndex + itemPerPage);
-  const pageCount = Math.ceil(employees.reverse().length / itemPerPage);
+  const pageCount = Math.ceil(filterEmployees.reverse().length / itemPerPage);
 
   const handlePageChange = (e) => {
     setCurrentPage(e.selected + 1);
@@ -75,6 +95,64 @@ const EmployeeList = () => {
             </div>
           </Link>
         </div>
+
+        {/* Bộ lọc */}
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex gap-5 items-center">
+            <select
+              className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full p-2.5"
+              value={filterStatus}
+              onChange={(e) => {
+                setFilterStatus(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="Tất cả">Tất cả</option>
+              <option value="ACTIVE">Đang làm việc</option>
+              <option value="LEAVED">Đã nghỉ việc</option>
+            </select>
+          </div>
+
+          {/* Search */}
+          <div className="relative w-full max-w-sm min-w-[200px]">
+            <label htmlFor="Search" className="sr-only">
+              Search
+            </label>
+
+            <input
+              type="text"
+              id="Search"
+              placeholder="Tìm kiếm..."
+              className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full p-2.5"
+              onChange={handleSearchValue}
+            />
+
+            <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
+              <button
+                type="button"
+                className="text-gray-600 hover:text-gray-700"
+              >
+                <span className="sr-only">Search</span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                  />
+                </svg>
+              </button>
+            </span>
+          </div>
+        </div>
+
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
           <table className="min-w-full bg-white">
             <thead className="border-b border-[#d5d5d5] text-left text-sl font-semibold text-[#202224] uppercase tracking-wider">
@@ -102,8 +180,12 @@ const EmployeeList = () => {
                   <td className="py-4 px-6 text-[#202224]">
                     <p>{employee.gender === "MALE" ? "Nam" : "Nữ"}</p>
                   </td>
-                  <td className="py-4 px-6 text-[#202224]">{employee.phoneNumber}</td>
-                  <td className="py-4 px-6 text-[#202224]">{employee.workPosition}</td>
+                  <td className="py-4 px-6 text-[#202224]">
+                    {employee.phoneNumber}
+                  </td>
+                  <td className="py-4 px-6 text-[#202224]">
+                    {employee.workPosition}
+                  </td>
 
                   <td className="py-4 px-6 text-sm">
                     {employee.employStatus === "ACTIVE" ? (

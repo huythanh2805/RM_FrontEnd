@@ -48,7 +48,7 @@ const BillList = () => {
 
     const matchesDateValue = dateValue
       ? new Date(item.reservation_id.startTime).toLocaleDateString("vi-VN") ===
-      new Date(dateValue).toLocaleDateString("vi-VN")
+        new Date(dateValue).toLocaleDateString("vi-VN")
       : true;
 
     return matchesSearchValue && matchesDateValue;
@@ -66,7 +66,7 @@ const BillList = () => {
   };
 
   return (
-    <div >
+    <div>
       <div className="px-5 ">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold">Danh sách hóa đơn</p>
@@ -128,9 +128,7 @@ const BillList = () => {
                 <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
                   STT
                 </th>
-                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
-                  Mã hóa đơn
-                </th>
+
                 <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700 w-[210px]">
                   Tên khách hàng
                 </th>
@@ -163,11 +161,6 @@ const BillList = () => {
                         {startIndex + index + 1}
                       </Link>
                     </td>
-                    <td className="py-3 px-4 text-sl text-gray-800">
-                      <Link to={`/admin/bills/${bill._id}/detail`}>
-                        {bill._id}
-                      </Link>
-                    </td>
                     <td className="py-3 px-4 text-sl text-gray-800 break-words">
                       <Link to={`/admin/bills/${bill._id}/detail`}>
                         {bill.reservation_id?.userName}
@@ -193,10 +186,11 @@ const BillList = () => {
                     <td className="py-3 px-4 text-sl text-gray-800">
                       <Link to={`/admin/bills/${bill._id}/detail`}>
                         <span
-                          className={`px-2 py-1 text-sl font-semibold rounded-lg ${bill.status === "ISPAID"
+                          className={`px-2 py-1 text-sl font-semibold rounded-lg ${
+                            bill.status === "ISPAID"
                               ? "bg-green-100 text-green-800"
                               : "bg-red-100 text-red-800"
-                            }`}
+                          }`}
                         >
                           {bill.status === "ISPAID"
                             ? "Đã thanh toán"

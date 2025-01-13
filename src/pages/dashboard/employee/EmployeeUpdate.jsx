@@ -137,11 +137,10 @@ const EmployeeUpdate = () => {
               })}
             >
               <option value="">Chọn vị trí</option>
-              <option value="Bếp trưởng">Bếp trưởng</option>
-              <option value="Phụ bếp">Phụ bếp</option>
-              <option value="Nhân viên phục vụ">Nhân viên phục vụ</option>
-              <option value="Quản lý nhà hàng">Quản lý nhà hàng</option>
-              <option value="Lễ tân">Lễ tân</option>
+              <option value="Quản lí">Quản lí</option>
+              <option value="Thu ngân">Thu ngân</option>
+              <option value="Nhân viên kho">Nhân viên kho</option>
+              <option value="Nhân viên order">Nhân viên order</option>
             </select>
             {errors.workPosition && (
               <p className="mt-2 text-sm text-red-600">
