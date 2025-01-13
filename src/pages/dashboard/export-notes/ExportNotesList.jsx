@@ -1,11 +1,11 @@
 import Pagination from "@/components/Pagination";
 import { useList } from "@/hooks/dashboard/export-notes/useList";
 import { formatCurrency, formatDate } from "@/utilities/utils"; // Giả sử bạn có các hàm này
+import ExcelJS from "exceljs";
 import { debounce } from "lodash";
 import { useMemo, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import * as XLSX from "xlsx";
 const EXPORT_NOTES_TYPE = {
   INTERNAL: "Nội bộ",
   RETURN: "Hoàn trả",
@@ -52,23 +52,82 @@ export const ExportNotesList = () => {
   }, [exportNotesData]);
 
   // Export to Excel
-  const exportToExcel = () => {
-    const excelData = filteredExportNotes.map((note) => ({
-      "Mã phiếu xuất": note.code,
-      "Số lượng sản phẩm": note.stocks?.length,
-      "Tổng tiền": formatCurrency(note?.total),
-      "Thời gian": formatDate(note.createdAt),
-      "Loại phiếu xuất": EXPORT_NOTES_TYPE[note?.type] || "Không xác định",
-      "Người tạo": note?.createdBy?.userName,
-      "Sản phẩm chi tiết": note.stocks
-        ?.map((stock) => `Tên SP: ${stock?.stock?.product?.name || "N/A"}, SL: ${stock?.quantity}`)
-        .join("; "),
-    }));
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Phiếu Xuất");
 
-    const ws = XLSX.utils.json_to_sheet(excelData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Phiếu Xuất");
-    XLSX.writeFile(wb, "DanhSachPhieuXuat.xlsx");
+    // Định nghĩa tiêu đề
+    worksheet.columns = [
+      { header: "Mã phiếu xuất", key: "code", width: 15 },
+      { header: "Số lượng SP", key: "productCount", width: 12 },
+      { header: "Tổng tiền", key: "total", width: 15 },
+      { header: "Thời gian tạo", key: "createdAt", width: 20 },
+      { header: "Loại phiếu xuất", key: "type", width: 20 },
+      { header: "Người tạo", key: "createdBy", width: 15 },
+      { header: "Tên Sản phẩm", key: "productName", width: 25 },
+      { header: "Số lượng", key: "quantity", width: 10 },
+    ];
+
+    // Định dạng tiêu đề
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).alignment = { vertical: "middle", horizontal: "center" };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+
+    let currentRowIndex = 2; // Bắt đầu từ dòng 2
+    filteredExportNotes.forEach((note) => {
+      const startRow = currentRowIndex; // Dòng đầu tiên của nhóm sản phẩm
+
+      // Lặp qua từng sản phẩm
+      note.stocks?.forEach((stock) => {
+        worksheet.addRow({
+          code: note.code,
+          productCount: note.stocks.length,
+          total: formatCurrency(note?.total),
+          createdAt: formatDate(note.createdAt),
+          type: EXPORT_NOTES_TYPE[note?.type] || "Không xác định",
+          createdBy: note?.createdBy?.userName,
+          productName: stock?.stock?.product?.name || "N/A",
+          quantity: stock?.quantity,
+        });
+        currentRowIndex++;
+      });
+
+      // Hợp nhất các ô cho nhóm sản phẩm
+      worksheet.mergeCells(`A${startRow}:A${currentRowIndex - 1}`); // Mã phiếu xuất
+      worksheet.mergeCells(`B${startRow}:B${currentRowIndex - 1}`); // Số lượng SP
+      worksheet.mergeCells(`C${startRow}:C${currentRowIndex - 1}`); // Tổng tiền
+      worksheet.mergeCells(`D${startRow}:D${currentRowIndex - 1}`); // Thời gian tạo
+      worksheet.mergeCells(`E${startRow}:E${currentRowIndex - 1}`); // Loại phiếu xuất
+      worksheet.mergeCells(`F${startRow}:F${currentRowIndex - 1}`); // Người tạo
+    });
+
+    // Thêm đường viền cho toàn bộ các ô
+    worksheet.eachRow((row) => {
+      row.eachCell((cell) => {
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+        cell.alignment = { vertical: "middle", horizontal: "center" };
+      });
+    });
+
+    // Xuất file
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "DanhSachPhieuXuat.xlsx";
+    link.click();
   };
 
   if (isLoading) return <p className="text-center text-blue-600">Loading...</p>;
@@ -128,7 +187,7 @@ export const ExportNotesList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Mã phiếu</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Số lượng SP</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Tổng tiền</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Thời gian</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Thời gian tạo</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Loại phiếu xuất</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Người tạo</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Hành động</th>
