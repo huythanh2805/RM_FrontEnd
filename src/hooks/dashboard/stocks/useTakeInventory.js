@@ -74,6 +74,7 @@ export const useTakeInventory = () => {
                 items: mergedArray?.map((item) => {
                     return {
                         stockID: item?._id,
+                        price: item?.price,
                         newQuantity: item?.newQuantity,
                         newExpiryDate: item?.newExpiryDate,
                         lastQuantity: item?.quantity,
