@@ -37,9 +37,10 @@ function OrderHistory() {
   const handleSearchValue = (e) => {
     handleSearchValueDebounced(e.target.value);
   };
+  const productPagination = products.filter(item => getOrderHistoryUniqueAndLatest(products).includes(item._id))
   // Lọc lịch sử đặt món theo code
-  const filteredUsers = products
-    .filter((item) =>
+  const filteredUsers = productPagination
+    .filter((item) => 
       item.code.toLowerCase().includes(searchValue.toLowerCase())
     );
 
@@ -56,7 +57,7 @@ function OrderHistory() {
     setCurrentPage(selected + 1);
   };
   // Xử lý xóa order
-  const handleChangeStatusDish = async (orderedFoodId, reservation_id, code, newStatus, order_history_id) => {
+  const handleChangeStatusDish = async (orderedFoodId, reservation_id, code, newStatus, order_history_id, quantity) => {
     const orderHistory = products.find(orderHistory => orderHistory._id === order_history_id)
     if (orderHistory.currentStatus !== "ORDERED") {
       usePostData(`${ServerUrl}/api/notification`,
@@ -72,6 +73,7 @@ function OrderHistory() {
     const { success } = await usePatchData(`${ServerUrl}/api/orderedFood`, {
       orderedFoodId,
       newStatus,
+      quantity,
       reservation_id,
       changer_id: decodedToken.id,
       code,
@@ -86,6 +88,7 @@ function OrderHistory() {
       const orderHistory = products.find(orderHistory => orderHistory._id === order_history_id)
       setProducts(pre => [...pre, {
         code,
+        quantity,
         reservation_id,
         currentStatus: newStatus,
         previousStatus: orderHistory.currentStatus,
@@ -99,7 +102,7 @@ function OrderHistory() {
       title: `Cập nhật không thành công`
     })
   }
-  const handleChangeStatusCombo = async (orderedFoodId, reservation_id, code, newStatus, order_history_id) => {
+  const handleChangeStatusCombo = async (orderedFoodId, reservation_id, code, newStatus, order_history_id, quantity) => {
     const orderHistory = products.find(orderHistory => orderHistory._id === order_history_id)
     if (orderHistory.currentStatus !== "ORDERED") {
       usePostData(`${ServerUrl}/api/notification`,
@@ -115,6 +118,7 @@ function OrderHistory() {
     const { success } = await usePatchData(`${ServerUrl}/api/orderedCombo`, {
       orderedFoodId,
       newStatus,
+      quantity,
       reservation_id,
       changer_id: decodedToken.id,
       code,
@@ -127,6 +131,7 @@ function OrderHistory() {
       // Thành công thì tạo thêm 1 order history ở client
       setProducts(pre => [...pre, {
         code,
+        quantity,
         reservation_id,
         currentStatus: newStatus,
         previousStatus: orderHistory.currentStatus,
@@ -140,7 +145,6 @@ function OrderHistory() {
       title: `Cập nhật không thành công`
     })
   }
-  console.log({ products })
   if (OrderDishHistoryLoading) return <p className="text-center text-blue-600">Loading...</p>;
   return (
 
@@ -203,6 +207,9 @@ function OrderHistory() {
               <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">
                 Món ăn
               </th>
+              <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">
+                Số lượng
+              </th>
               <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700 w-[200px]">
                 Người thao tác
               </th>
@@ -227,10 +234,10 @@ function OrderHistory() {
                 key={item._id}
                 className="bg-white border-b border-[#d5d5d5] hover:bg-gray-50 transition"
               >
-                <td className="py-3 px-6 text-sl text-gray-800 break-words font-medium">
+                <td className="py-3 px-6 text-sl text-gray-800 break-words font-medium max-w-[50px]">
                   {index + 1 + startIndex}
                 </td>
-                <td className="py-3 px-6 text-sl text-gray-800 break-words">
+                <td className="py-3 px-6 text-sl text-gray-800 break-words ">
                   <div
                     onClick={() => {
                       toast({
@@ -300,6 +307,9 @@ function OrderHistory() {
                     </div>
                   )}
                 </td>
+                <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">
+                  {item.quantity}
+                </td>
                 <td className="py-3 px-6 text-sl text-gray-800 break-words">
                   {item.changer_id?.userName}
                 </td>
@@ -325,7 +335,7 @@ function OrderHistory() {
                 </td>
                 <td className="py-3 px-6 text-sl text-gray-800 break-words">
                   {item.currentStatus && item.previousStatus && (
-                    <div className="w-full items-center justify-between">
+                    <div className="w-full items-center justify-between text-nowrap">
                       <span>{getStatusMessage(item.previousStatus)}</span>
                       <span className="px-10">{"->"}</span>
                       <span>{getStatusMessage(item.currentStatus)}</span>
@@ -338,8 +348,8 @@ function OrderHistory() {
                     && (<Button
                       onClick={() => {
                         item.ordered_dish ?
-                          handleChangeStatusDish(item.ordered_dish._id, item.reservation_id, item.code, "ISCANCELED", item._id) :
-                          handleChangeStatusCombo(item.ordered_combo._id, item.reservation_id, item.code, "ISCANCELED", item._id)
+                          handleChangeStatusDish(item.ordered_dish._id, item.reservation_id, item.code, "ISCANCELED", item._id, item.quantity) :
+                          handleChangeStatusCombo(item.ordered_combo._id, item.reservation_id, item.code, "ISCANCELED", item._id, item.quantity)
                       }}
                       type="button"
                       className="mr-4 font-medium text-[16px] bg-red-1 text-white hover:opacity-80 transition-all duration-300 ease-in-out"

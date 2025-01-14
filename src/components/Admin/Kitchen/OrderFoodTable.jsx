@@ -22,6 +22,7 @@ import { Copy } from "lucide-react"
 import { useState } from "react"
 import jwtDecode from "jwt-decode"
 import { useQueryClient } from "@tanstack/react-query"
+import { MdError } from "react-icons/md"
 
  function OrderFoodTable({orderFood}) {
    const queryClient = useQueryClient()
@@ -29,9 +30,10 @@ import { useQueryClient } from "@tanstack/react-query"
       const token = localStorage.getItem('token')
       return jwtDecode(token)
     })
-  const handleChangeStatusDish = async (id,reservation_id, code, newStatus)=>{
+  const handleChangeStatusDish = async (id,reservation_id, code, newStatus, quantity)=>{
     const {success} = await usePatchData(`${ServerUrl}/api/orderedFood`, {
       orderedFoodId: id,
+      quantity,
       newStatus,
       reservation_id,
       changer_id: decodedToken.id,
@@ -49,10 +51,11 @@ import { useQueryClient } from "@tanstack/react-query"
       title: `Cập nhật không thành công`
     })
   }
-  const handleChangeStatusCombo = async (id, reservation_id, code, newStatus)=>{
+  const handleChangeStatusCombo = async (id, reservation_id, code, newStatus, quantity)=>{
      const {success} = await usePatchData(`${ServerUrl}/api/orderedCombo`, {
       orderedFoodId: id,
       newStatus,
+      quantity,
       reservation_id,
       changer_id: decodedToken.id,
       code,
@@ -92,13 +95,21 @@ import { useQueryClient } from "@tanstack/react-query"
               </TableCell>
               <TableCell className="text-center w-[50px]">
                 <div
-                 onClick={()=> {
-                  toast({variant: 'info', title: `Copy thành công ${item.code}`})
-                  navigator.clipboard.writeText(item.code)
-                 }}
-                 className="cursor-pointer group flex items-center gap-1">
-                <p>{item.code}</p>
-                <Copy width={15} height={15} className="opacity-0 group-hover:opacity-100" /> 
+                  onClick={() => {
+                    toast({
+                      variant: "info",
+                      title: `Copy thành công ${item.code}`,
+                    })
+                    navigator.clipboard.writeText(item.code)
+                  }}
+                  className="cursor-pointer group flex items-center gap-1"
+                >
+                  <p>{item.code}</p>
+                  <Copy
+                    width={15}
+                    height={15}
+                    className="opacity-0 group-hover:opacity-100"
+                  />
                 </div>
               </TableCell>
               <TableCell className="overflow-hidden">
@@ -141,7 +152,13 @@ import { useQueryClient } from "@tanstack/react-query"
                 <Select
                   value={item.status}
                   onValueChange={(value) =>
-                    handleChangeStatusDish(item._id, orderFood._id, item.code, value)
+                    handleChangeStatusDish(
+                      item._id,
+                      orderFood._id,
+                      item.code,
+                      value,
+                      item.quantity
+                    )
                   }
                 >
                   <SelectTrigger className="w-[180px] focus-visible::border-none focus-visible:outline-none focus:ring-0 focus:ring-offset-0 focus:border-b-blue-1">
@@ -155,6 +172,14 @@ import { useQueryClient } from "@tanstack/react-query"
                   </SelectContent>
                 </Select>
               </TableCell>
+              <TableCell>
+                {item.isRequiredToCancel && (
+                  <span class="relative flex h-5 w-5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-1 opacity-75 duration-2000"></span>
+                  <MdError  className="relative inline-flex rounded-full h-5 w-5 text-red-1 " />
+                </span>
+                )}
+              </TableCell>
             </TableRow>
           ))}
         {/* Hiển thị combo */}
@@ -166,13 +191,21 @@ import { useQueryClient } from "@tanstack/react-query"
               </TableCell>
               <TableCell className="text-center w-[50px]">
                 <div
-                onClick={()=> {
-                  toast({variant: 'info', title: `Copy thành công ${item.code}`})
-                  navigator.clipboard.writeText(item.code)
+                  onClick={() => {
+                    toast({
+                      variant: "info",
+                      title: `Copy thành công ${item.code}`,
+                    })
+                    navigator.clipboard.writeText(item.code)
                   }}
-                 className="cursor-pointer group flex items-center gap-1">
-                <p>{item.code}</p>
-                <Copy width={15} height={15} className="opacity-0 group-hover:opacity-100" /> 
+                  className="cursor-pointer group flex items-center gap-1"
+                >
+                  <p>{item.code}</p>
+                  <Copy
+                    width={15}
+                    height={15}
+                    className="opacity-0 group-hover:opacity-100"
+                  />
                 </div>
               </TableCell>
               <TableCell className="overflow-hidden">
@@ -215,7 +248,13 @@ import { useQueryClient } from "@tanstack/react-query"
                 <Select
                   value={item.status}
                   onValueChange={(value) =>
-                    handleChangeStatusCombo(item._id, orderFood._id, item.code,value)
+                    handleChangeStatusCombo(
+                      item._id,
+                      orderFood._id,
+                      item.code,
+                      value,
+                      item.quantity
+                    )
                   }
                 >
                   <SelectTrigger className="w-[180px] focus-visible::border-none focus-visible:outline-none focus:ring-0 focus:ring-offset-0 focus:border-b-blue-1">
@@ -228,6 +267,14 @@ import { useQueryClient } from "@tanstack/react-query"
                     <SelectItem value="ISCANCELED">Đã hủy</SelectItem>
                   </SelectContent>
                 </Select>
+              </TableCell>
+              <TableCell>
+                {item.isRequiredToCancel && (
+                  <span class="relative flex h-5 w-5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-1 opacity-75 duration-2000"></span>
+                  <MdError  className="relative inline-flex rounded-full h-5 w-5 text-red-1 " />
+                </span>
+                )}
               </TableCell>
             </TableRow>
           ))}
