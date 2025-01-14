@@ -91,7 +91,7 @@ const UserListRole = () => {
         <div className="w-full min-h-screen bg-[#f9fafb]">
             <div className="px-5 py-5">
                 <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-3xl font-semibold text-gray-800">Danh sách người dùng</h1>
+                    <h1 className="text-3xl font-semibold text-gray-800">Danh sách nhân viên</h1>
                     <Link to="/admin/users/add">
                         <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition">
                             Thêm +

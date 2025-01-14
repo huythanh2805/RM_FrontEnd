@@ -51,7 +51,7 @@ const SetComboDetail = () => {
       }
     });
   };
-  
+
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
       <div className="px-5 py-5">
@@ -100,6 +100,7 @@ const SetComboDetail = () => {
                       alt={dish.name}
                       className="w-24 h-24 object-cover rounded-md"
                     />
+                    <div className="mt-2">{formatCurrency(dish.price)}</div>
                   </div>
                 ))}
               </div>

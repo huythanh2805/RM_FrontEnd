@@ -2,8 +2,8 @@ import Pagination from "@/components/Pagination";
 import { useUser } from "@/hooks/dashboard/useAccount";
 import { debounce } from "lodash";
 import { useState } from "react";
-import { FaEllipsisV } from "react-icons/fa";
-import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
+import { FaEllipsisV, FaEye } from "react-icons/fa";
+import { FaRegTrashCan } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -174,7 +174,7 @@ const UserList = () => {
                   <td className="py-3 px-6 text-sl flex items-center gap-3">
                     <Link to={`/admin/users/edit/${user._id}`}>
                       <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">
-                        <FaPenToSquare size={18} />
+                        <FaEye size={18} />
                       </div>
                     </Link>
                     <div
