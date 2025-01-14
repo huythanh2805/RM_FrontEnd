@@ -238,10 +238,12 @@ export const StockList = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[100px] text-center">STT</TableHead>
+                  <TableHead>Mã phiếu nhập</TableHead>
                   <TableHead>Mã SP</TableHead>
                   <TableHead>Tên SP</TableHead>
                   <TableHead>Số lượng tồn</TableHead>
                   <TableHead>Hạn sử dụng</TableHead>
+                  <TableHead>Thời gian nhập</TableHead>
                   <TableHead>Hành động</TableHead>
 
                 </TableRow>
@@ -250,6 +252,12 @@ export const StockList = () => {
                 {currentItems?.map((stock, index) => (
                   <TableRow key={stock._id}>
                     <TableCell className="text-center">{index + 1 + startIndex}</TableCell>
+                    <TableCell> <Link to={`/admin/import-notes/${stock?.codeImport}`}>
+                      <div style={{ color: "blue", textDecoration: "underline" }}>
+                        {stock?.codeImport}
+                      </div>
+
+                    </Link></TableCell>
                     <TableCell>{stock?.product?.code}</TableCell>
                     <TableCell>{stock?.product?.name}</TableCell>
                     <TableCell>{stock?.quantity}</TableCell>
@@ -259,6 +267,7 @@ export const StockList = () => {
                         {calculateTimeLeft(stock?.expiryDate).text}
                       </span>
                     </TableCell>
+                    <TableCell>{formatDateNoTime(stock?.createdAt)}</TableCell>
                     <TableCell>
                       <Link to={`/admin/history-take-inventory/${stock._id}`}>
                         <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">

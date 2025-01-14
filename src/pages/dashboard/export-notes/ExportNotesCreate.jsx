@@ -170,6 +170,12 @@ export const ExportNotesCreate = () => {
                     render: (_, record) => record?.price,
                   },
                   {
+                    title: "Số lượng hiện có",
+                    dataIndex: "export_quantity",
+                    key: "export_quantity",
+                    render: (_, record) => record?.quantity,
+                  },
+                  {
                     title: "Số lượng",
                     dataIndex: "export_quantity",
                     key: "export_quantity",

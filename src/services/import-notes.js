@@ -31,6 +31,7 @@ export const deleteImportNotesService = async (userId) => {
 
 export const createImportNotesService = async (createData) => {
   try {
+    console.log(createData);
     const response = await apiClient.post(
       "api/import-notes/create",
       { ...createData, createdBy: jwtDecode(token).id },
