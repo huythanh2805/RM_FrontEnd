@@ -1,6 +1,42 @@
+
 import Pagination from "@/components/Pagination";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useList } from "@/hooks/dashboard/stocks/useList";
 import { formatCurrency, formatDateNoTime } from "@/utilities/utils";
+import {
+  CalendarRange,
+  Clock,
+  FileDown,
+  Search
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import * as XLSX from "xlsx";
 
@@ -45,15 +81,13 @@ export const StockList = () => {
   const [searchName, setSearchName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [expiryFilter, setExpiryFilter] = useState(""); // Bộ lọc HSD
-
+  const [expiryFilter, setExpiryFilter] = useState("");
   const itemsPerPage = 10;
 
   useEffect(() => {
     setStocksData(initialStocksData || []);
-  }, [initialStocksData]);
+  }, [initialStocksData, stocksData]);
 
-  // Bộ lọc sản phẩm
   const filteredStocks = useMemo(() => {
     return stocksData?.filter((stock) => {
       const matchesFilterCode = !filterCode || stock?.product?.code === filterCode;
@@ -86,7 +120,6 @@ export const StockList = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = filteredStocks?.slice(startIndex, startIndex + itemsPerPage);
 
-
   const exportToExcel = () => {
     const excelData = filteredStocks?.map((stock) => ({
       "Mã sản phẩm": stock?.product?.code,
@@ -103,120 +136,143 @@ export const StockList = () => {
     XLSX.writeFile(wb, "DanhSachTonKho.xlsx");
   };
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading stocks list.</p>;
+  if (isLoading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  if (error) return <div className="flex items-center justify-center min-h-screen text-red-600">Error loading stocks list.</div>;
 
   return (
-    <div className="w-full min-h-screen">
-      <div className="px-5">
-        <h1 className="text-3xl font-semibold text-gray-800 pb-5">Tồn kho</h1>
+    <div className="mx-auto">
+      <h1 className="text-3xl font-semibold text-gray-800 pb-5">Quản lý tồn kho</h1>
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardDescription>
+                Quản lý và theo dõi tình trạng hàng hóa trong kho
+              </CardDescription>
+            </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={exportToExcel}
+                    className="bg-green-500 hover:bg-green-600"
+                  >
+                    <FileDown className="h-4 w-4 mr-2" />
+                    Xuất Excel
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Tải xuống danh sách tồn kho</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </CardHeader>
 
-        {/* Filters */}
-        <div className="mb-5 flex justify-between flex-wrap gap-4">
-          <div>
-            <select
-              id="filterCode"
-              className="border border-gray-300 p-2 rounded-md"
-              value={filterCode}
-              onChange={(e) => setFilterCode(e.target.value)}
-            >
-              <option value="">Tất cả</option>
-              {filteredStocks &&
-                [...new Set(filteredStocks.map((stock) => stock?.product?.code))].map((code) => (
-                  <option key={code} value={code}>
-                    {code}
-                  </option>
+        <CardContent>
+          {/* Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
+            <Select value={filterCode} onValueChange={setFilterCode}>
+              <SelectTrigger>
+                <SelectValue placeholder="Chọn mã SP" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả</SelectItem> {/* Thay đổi từ "" thành "all" */}
+                {filteredStocks &&
+                  [...new Set(filteredStocks.map((stock) => stock?.product?.code))]
+                    .filter(code => code) // Lọc bỏ các giá trị null/undefined/empty
+                    .map((code) => (
+                      <SelectItem key={code} value={code}>
+                        {code}
+                      </SelectItem>
+                    ))}
+              </SelectContent>
+            </Select>
+            {/* Và tương tự cho Select của expiryFilter */}
+            <Select value={expiryFilter} onValueChange={setExpiryFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Lọc theo HSD" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả</SelectItem> {/* Thay đổi từ "" thành "all" */}
+                <SelectItem value="expired">Đã hết hạn</SelectItem>
+                <SelectItem value="nearlyExpired">Sắp hết hạn</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+              <Input
+                placeholder="Tìm kiếm tên sản phẩm"
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+
+            <div className="relative">
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="pl-10"
+              />
+              <CalendarRange className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+            </div>
+
+            <div className="relative">
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="pl-10"
+              />
+              <CalendarRange className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+            </div>
+          </div>
+
+          {/* Table */}
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px] text-center">STT</TableHead>
+                  <TableHead>Mã SP</TableHead>
+                  <TableHead>Tên SP</TableHead>
+                  <TableHead>Số lượng tồn</TableHead>
+                  <TableHead>Hạn sử dụng</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentItems?.map((stock, index) => (
+                  <TableRow key={stock._id}>
+                    <TableCell className="text-center">{index + 1 + startIndex}</TableCell>
+                    <TableCell>{stock?.product?.code}</TableCell>
+                    <TableCell>{stock?.product?.name}</TableCell>
+                    <TableCell>{stock?.quantity}</TableCell>
+                    <TableCell>
+                      <span className={`flex items-center gap-2 ${calculateTimeLeft(stock?.expiryDate).color}`}>
+                        <Clock className="h-4 w-4" />
+                        {calculateTimeLeft(stock?.expiryDate).text}
+                      </span>
+                    </TableCell>
+                  </TableRow>
                 ))}
-            </select>
+              </TableBody>
+            </Table>
           </div>
-          <div>
-            <input
-              type="text"
-              id="searchName"
-              placeholder="Nhập tên sản phẩm"
-              className="border border-gray-300 p-2 rounded-md"
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="startDate" className="mr-2 font-semibold">Từ ngày:</label>
-            <input
-              type="date"
-              id="startDate"
-              className="border border-gray-300 p-2 rounded-md"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="endDate" className="mr-2 font-semibold">Đến ngày:</label>
-            <input
-              type="date"
-              id="endDate"
-              className="border border-gray-300 p-2 rounded-md"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="expiryFilter" className="mr-2 font-semibold">Lọc theo HSD:</label>
-            <select
-              id="expiryFilter"
-              className="border border-gray-300 p-2 rounded-md"
-              value={expiryFilter}
-              onChange={(e) => setExpiryFilter(e.target.value)}
-            >
-              <option value="">Tất cả</option>
-              <option value="expired">Đã hết hạn</option>
-              <option value="nearlyExpired">Sắp hết hạn</option>
-            </select>
-          </div>
-          <div>
-            <button
-              onClick={exportToExcel}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-              Xuất Excel
-            </button>
-          </div>
-        </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
-          <table className="min-w-full bg-white">
-            <thead className="border-b border-[#d5d5d5] text-left text-sm font-semibold text-[#202224] uppercase tracking-wider">
-              <tr>
-                <th className="hidden lg:table-cell py-3 px-6 text-center">STT</th>
-                <th className="py-3 px-6">Mã SP</th>
-                <th className="py-3 px-6">Tên SP</th>
-                <th className="py-3 px-6">Số lượng tồn</th>
-                <th className="py-3 px-6">Ngày hết hạn</th>
-
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems?.map((stock, index) => (
-                <tr key={stock._id} className="bg-white border-b hover:bg-gray-50 transition">
-                  <td className="py-3 px-6 text-center">{index + 1 + startIndex}</td>
-                  <td className="py-3 px-6">{stock?.product?.code}</td>
-                  <td className="py-3 px-6">{stock?.product?.name}</td>
-                  <td className="py-3 px-6">{stock?.quantity}</td>
-                  <td className={`py-3 px-6 ${calculateTimeLeft(stock?.expiryDate).color}`}>
-                    {calculateTimeLeft(stock?.expiryDate).text}
-                  </td>
-
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <Pagination pageCount={totalPages} onPageChange={(e) => setCurrentPage(e.selected + 1)} />
-        )}
-      </div>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-4">
+              <Pagination
+                pageCount={totalPages}
+                onPageChange={(e) => setCurrentPage(e.selected + 1)}
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

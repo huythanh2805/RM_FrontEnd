@@ -3,7 +3,7 @@ import { useList } from "@/hooks/dashboard/sellers/useList";
 import { statusMapping } from "@/utilities/const";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
-import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
+import { FaPenToSquare } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -165,12 +165,7 @@ export const SellerList = () => {
                           <FaPenToSquare size={18} />
                         </div>
                       </Link>
-                      <div
-                        className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer hover:bg-red-300"
-                        onClick={() => handleDeleteSeller(seller._id)}
-                      >
-                        <FaRegTrashCan size={18} />
-                      </div>
+
                     </td>
                   </tr>
                 ))
