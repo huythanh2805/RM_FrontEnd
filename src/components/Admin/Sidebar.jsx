@@ -89,6 +89,7 @@ export function AppSidebar() {
     { title: "Nhà cung cấp", url: "/admin/sellers", icon: Salad },
     { title: "Thực phẩm", url: "/admin/products", icon: Salad },
     { title: "Tồn kho", url: "/admin/stocks", icon: Salad },
+    { title: "Kiểm kê số lượng", url: "/admin/take-inventory", icon: Salad },
     { title: "Phiếu nhập", url: "/admin/import-notes", icon: Salad },
     { title: "Phiếu xuất", url: "/admin/export-notes", icon: Salad },
   ];

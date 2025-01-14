@@ -49,6 +49,7 @@ import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
 import SetComboList from "@/pages/dashboard/setCombo/SetComboList";
 import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";
 import { StockList } from "@/pages/dashboard/stocks/StockList";
+import { TakeInventory } from "@/pages/dashboard/stocks/TakeInventory";
 import { UserReservations } from "@/pages/dashboard/users/HistoryReservationUser";
 import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
@@ -424,6 +425,13 @@ const router = createBrowserRouter([
       {
         path: "export-notes/create",
         element: <ExportNotesCreate />,
+      },
+      {
+        path: "take-inventory",
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <TakeInventory />
+          </RoleProtectComponentAdmin>,
       },
     ],
   },

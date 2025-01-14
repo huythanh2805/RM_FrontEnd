@@ -81,3 +81,17 @@ export const updateStocksService = async (userId, formData) => {
     throw error;
   }
 };
+
+export const updateStockTakeInventory = async (data) => {
+  try {
+    const response = await apiClient.put("/api/stocks/update-take-inventory", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
