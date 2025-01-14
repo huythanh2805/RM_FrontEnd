@@ -6,7 +6,7 @@ export const useHistoryTakeInventory = () => {
     const { id } = useParams();
 
     const {
-        data: listTakeInventoryData,
+        data: listTakeInventoryData ,
         isLoading, error
     } = useQuery(["getListTakeInventoryByStockID", id], () => getListTakeInventoryByStockID(id));
 
