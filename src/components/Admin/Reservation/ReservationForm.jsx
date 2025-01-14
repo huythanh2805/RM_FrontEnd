@@ -11,6 +11,7 @@ import { z } from "zod";
 import { toast } from "@/hooks/use-toast";
 import { ServerUrl } from "@/utilities/utils";
 import { useNavigate } from "react-router-dom";
+import useGetCurrentUser from "@/hooks/auth/useGetCurrentUser";
 const formSchemaFunc = (maxSeats) =>
   z.object({
     userName: z.string().optional(),
@@ -37,9 +38,9 @@ export default function ReservationForm({
   orderedFoods,
 }) {
   const [loading, setLoading] = useState(false);
-
   const [createdReservation, setCreatedReservation] = useState(null);
   const router = useNavigate();
+  const currentUser = useGetCurrentUser()
 
   // 1. Define your form.
   const formSchema = formSchemaFunc(numberOfSeats);
@@ -63,7 +64,7 @@ export default function ReservationForm({
           "Content-Type": "application/json",
         },
         method: reservation ? "PUT" : "POST",
-        body: JSON.stringify({ ...values, table_id: tableId, startTime: new Date(), orderedFoods }),
+        body: JSON.stringify({ ...values, table_id: tableId, startTime: new Date(), orderedFoods, user_id: currentUser.id }),
       });
       if (!res.ok) {
         return toast({

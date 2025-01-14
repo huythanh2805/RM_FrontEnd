@@ -253,16 +253,6 @@ const Calculator = ({
       }
     }
   }
-  console.log(groupFoods)
-  //   const response = await axios.get(`http://localhost:1111/api/reservations/history-detail/${reservation_id}`);
-  //   return response.data;
-  // };
-  // const {
-  //   data: reservationDetails,
-  //   error,
-  //   isLoading,
-  // } = useQuery(["reservationDetails", reservation_id], fetchReservationDetails);
-  // console.log("reservationDetails:", reservationDetails);
 
   useEffect(() => {
     const socket = io(import.meta.env.VITE_API_BASE_URL)
@@ -310,12 +300,12 @@ const Calculator = ({
     <div className="px-3 max-h-[800px] min-w-[650px] overflow-scroll">
       <div className="w-full text-xl">
         {/* Table Header */}
-        <div className="grid grid-cols-3 sm:grid-cols-8 gap-4 py-2 border-b font-bold text-gray-800 dark:text-gray-300">
-          <span className="col-span-3">Tên</span>
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 py-2 border-b font-bold text-gray-800 dark:text-gray-300">
+          <span className="col-span-2">Tên</span>
           <span className="text-center">Đã gọi</span>
-          <span className="text-center">Đang làm</span>
-          <span className="text-center">Hoàn thành</span>
-          <span className="text-center">Đã hủy</span>
+          {/* <span className="text-center">Đang làm</span> */}
+          <span className="text-center ">Hoàn thành</span>
+          {/* <span className="text-center">Đã hủy</span> */}
           <span className="text-right">Thành tiền</span>
         </div>
 
@@ -325,10 +315,10 @@ const Calculator = ({
           return (
             <div
               key={groupItem._id}
-              className="grid grid-cols-3 sm:grid-cols-8 gap-4 py-2 border-b items-center"
+              className="grid grid-cols-3 sm:grid-cols-5 gap-4 py-2 border-b items-center"
             >
               {/* Product Info */}
-              <div className="col-span-3 flex items-center gap-4 ">
+              <div className="col-span-2 flex items-center gap-4 ">
                 <img
                   src={groupItem?.images[0]}
                   alt={groupItem?.name}
@@ -345,15 +335,15 @@ const Calculator = ({
               </div>
 
               {/* Quantity Control */}
-              <div className="flex items-center justify-center gap-2">
+              {/* <div className="flex items-center justify-center gap-2">
                 <span className="text-sm sm:text-base">
                   {groupItem.quantity}
                 </span>
-              </div>
+              </div> */}
               {/* PreparedQuantity Control */}
               <div className="flex items-center justify-center gap-2">
                 <span className="text-sm sm:text-base">
-                  {groupItem.PreparedQuantity}
+                  {groupItem.quantity}
                 </span>
               </div>
               {/* CompletedQuantity Control */}
@@ -363,11 +353,11 @@ const Calculator = ({
                 </span>
               </div>
               {/* CanceledQuantity Control */}
-              <div className="flex items-center justify-center gap-2">
+              {/* <div className="flex items-center justify-center gap-2">
                 <span className="text-sm sm:text-base">
                   {groupItem.CanceledQuantity}
                 </span>
-              </div>
+              </div> */}
 
               <div className="flex flex-col items-end">
                 <p className="text-sm sm:text-lg font-semibold">
@@ -385,11 +375,13 @@ const Calculator = ({
           </p>
         </div>
         {/* order history */}
-        <div className="flex justify-end items-center mt-4 sm:mt-6">
-          <Button variant="link" onClick={() => handleNavigateHistoryOrder()}>
-            Lịch sử đặt món
-          </Button>
-        </div>
+        {reservation_id && (
+          <div className="flex justify-end items-center mt-4 sm:mt-6">
+            <Button variant="link" onClick={() => handleNavigateHistoryOrder()}>
+              Lịch sử đặt món
+            </Button>
+          </div>
+        )}
       </div>
 
       {reservation_id && (
@@ -560,24 +552,25 @@ const Calculator = ({
                 <div></div>
                 <div className="w-full text-xl px-4">
                   {/* Table Header */}
-                  <div className="grid grid-cols-3 sm:grid-cols-8 gap-4 py-2 border-b font-bold text-gray-800 dark:text-gray-300">
-                    <span className="col-span-3">Tên</span>
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 py-2 border-b font-bold text-gray-800 dark:text-gray-300">
+                    <span className="col-span-2">Tên</span>
                     <span className="text-center">Đã gọi</span>
-                    <span className="text-center">Đang làm</span>
-                    <span className="text-center">Hoàn thành</span>
-                    <span className="text-center">Đã hủy</span>
+                    {/* <span className="text-center">Đang làm</span> */}
+                    <span className="text-center ">Hoàn thành</span>
+                    {/* <span className="text-center">Đã hủy</span> */}
                     <span className="text-right">Thành tiền</span>
                   </div>
 
                   {/* Ordered Foods */}
+
                   {groupFoods?.map((groupItem) => {
                     return (
                       <div
                         key={groupItem._id}
-                        className="grid grid-cols-3 sm:grid-cols-8 gap-4 py-2 border-b items-center"
+                        className="grid grid-cols-3 sm:grid-cols-6 gap-4 py-2 border-b items-center"
                       >
                         {/* Product Info */}
-                        <div className="col-span-3 flex items-center gap-4 ">
+                        <div className="col-span-2 flex items-center gap-4 ">
                           <img
                             src={groupItem?.images[0]}
                             alt={groupItem?.name}
@@ -594,15 +587,15 @@ const Calculator = ({
                         </div>
 
                         {/* Quantity Control */}
-                        <div className="flex items-center justify-center gap-2">
-                          <span className="text-sm sm:text-base">
-                            {groupItem.quantity}
-                          </span>
-                        </div>
+                        {/* <div className="flex items-center justify-center gap-2">
+                <span className="text-sm sm:text-base">
+                  {groupItem.quantity}
+                </span>
+              </div> */}
                         {/* PreparedQuantity Control */}
                         <div className="flex items-center justify-center gap-2">
                           <span className="text-sm sm:text-base">
-                            {groupItem.PreparedQuantity}
+                            {groupItem.quantity}
                           </span>
                         </div>
                         {/* CompletedQuantity Control */}
@@ -612,11 +605,11 @@ const Calculator = ({
                           </span>
                         </div>
                         {/* CanceledQuantity Control */}
-                        <div className="flex items-center justify-center gap-2">
+                        {/* <div className="flex items-center justify-center gap-2">
                           <span className="text-sm sm:text-base">
                             {groupItem.CanceledQuantity}
                           </span>
-                        </div>
+                        </div> */}
 
                         <div className="flex flex-col items-end">
                           <p className="text-sm sm:text-lg font-semibold">

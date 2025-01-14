@@ -115,17 +115,18 @@ export function groupFoodItems(food) {
         name,
         images,
         price,
-        quantity: 0,
+        quantity: 0, // Tạm thời giữ nguyên
         OrderedQuantity: 0,
         CompletedQuantity: 0,
         PreparedQuantity: 0,
         CanceledQuantity: 0,
-        totalPrice: 0,  // Thêm trường totalPrice
+        totalPrice: 0, // Thêm trường totalPrice
       });
     }
 
     const groupedItem = groupedMap.get(name);
 
+    // Cộng dồn các giá trị
     groupedItem.quantity += quantity;
     if (status === "ORDERED") {
       groupedItem.OrderedQuantity += quantity;
@@ -137,12 +138,10 @@ export function groupFoodItems(food) {
       groupedItem.CanceledQuantity += quantity;
     }
 
-    // Giữ lại giá trị price từ món ăn đầu tiên
+    // Giữ lại giá trị price và _id từ món ăn đầu tiên
     if (!groupedItem.price) {
       groupedItem.price = price;
     }
-
-    // Giữ lại _id của món ăn đầu tiên
     if (!groupedItem._id) {
       groupedItem._id = _id;
     }
@@ -151,11 +150,34 @@ export function groupFoodItems(food) {
     if (status !== "ISCANCELED") {
       groupedItem.totalPrice += quantity * price;
     }
-    // Tính abilityToPay
-    groupedItem.abilityToPay =
-      groupedItem.CompletedQuantity + groupedItem.CanceledQuantity == groupedItem.quantity
-
   });
 
-  return Array.from(groupedMap.values());
+  // Cập nhật lại quantity = tổng quantity - CanceledQuantity
+  groupedMap.forEach((groupedItem) => {
+    groupedItem.quantity -= groupedItem.CanceledQuantity;
+
+    // Xác định abilityToPay
+    groupedItem.abilityToPay =
+      groupedItem.CompletedQuantity + groupedItem.CanceledQuantity ===
+      groupedItem.quantity + groupedItem.CanceledQuantity;
+  });
+
+  // Lọc bỏ các item có quantity === 0
+  return Array.from(groupedMap.values()).filter((item) => item.quantity !== 0);
+}
+
+// Hàm trả ra true nếu 1 trong 2 mảng món ăn có trường isRequiredToCancel == true
+export function checkIsRequiredToCancel(reservation) {
+  // Kiểm tra ordered_combos
+  const hasRequiredCancelInCombos = reservation.ordered_combos.some(
+    (combo) => combo.isRequiredToCancel === true
+  );
+
+  // Kiểm tra ordered_dishes
+  const hasRequiredCancelInDishes = reservation.ordered_dishes.some(
+    (dish) => dish.isRequiredToCancel === true
+  );
+
+  // Return true nếu một trong hai mảng có isRequiredToCancel === true
+  return hasRequiredCancelInCombos || hasRequiredCancelInDishes;
 }
