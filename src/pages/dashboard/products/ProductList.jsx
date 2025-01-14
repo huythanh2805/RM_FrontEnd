@@ -161,12 +161,6 @@ export const ProductList = () => {
                         <FaPenToSquare size={18} />
                       </div>
                     </Link>
-                    {/* <div
-                      className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-red-300 transition"
-                      onClick={() => handleDeleteProduct(product._id)}
-                    >
-                      <FaRegTrashCan size={18} />
-                    </div> */}
                     <Link to={`/admin/products/${product._id}/history`}>
                       <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
                         Xem lịch sử
