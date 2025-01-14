@@ -1,7 +1,7 @@
 import { toast } from "@/hooks/use-toast";
 import { createExportNotesService } from "@/services/export-notes";
 import { fetchStocksService, fetchStocksServiceStatus } from "@/services/stocks";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Form } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 export const useCreateExportNotes = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const queryClient = useQueryClient();
   const [listProduct, setListProduct] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -71,9 +70,8 @@ export const useCreateExportNotes = () => {
         }),
         notes: formData?.notes,
         type: formData?.type,
-        total: mergedArray?.reduce((sum, item) => sum + (item?.price || 0) * (item?.quantity || 0), 0),
+        total: mergedArray?.reduce((sum, item) => sum + (item?.price || 0) * (item?.export_quantity || 0), 0),
       };
-      console.log(mergedArray);
 
       createExportNotesService(createData)
         .then(() => {

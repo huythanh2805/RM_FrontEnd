@@ -90,6 +90,10 @@ export const StockList = () => {
   }, [initialStocksData, stocksData]);
 
   const filteredStocks = useMemo(() => {
+    if (expiryFilter === "all") {
+      return stocksData
+    }
+
     return stocksData?.filter((stock) => {
       const matchesFilterCode = !filterCode || stock?.product?.code === filterCode;
       const matchesSearchName = !searchName || stock?.product?.name?.toLowerCase().includes(searchName.toLowerCase());
@@ -173,22 +177,6 @@ export const StockList = () => {
         <CardContent>
           {/* Filters */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
-            <Select value={filterCode} onValueChange={setFilterCode}>
-              <SelectTrigger>
-                <SelectValue placeholder="Chọn mã SP" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tất cả</SelectItem> {/* Thay đổi từ "" thành "all" */}
-                {filteredStocks &&
-                  [...new Set(filteredStocks.map((stock) => stock?.product?.code))]
-                    .filter(code => code) // Lọc bỏ các giá trị null/undefined/empty
-                    .map((code) => (
-                      <SelectItem key={code} value={code}>
-                        {code}
-                      </SelectItem>
-                    ))}
-              </SelectContent>
-            </Select>
             {/* Và tương tự cho Select của expiryFilter */}
             <Select value={expiryFilter} onValueChange={setExpiryFilter}>
               <SelectTrigger>
