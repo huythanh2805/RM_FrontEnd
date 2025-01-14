@@ -49,8 +49,10 @@ import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
 import SetComboList from "@/pages/dashboard/setCombo/SetComboList";
 import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";
 import { StockList } from "@/pages/dashboard/stocks/StockList";
+import { UserReservations } from "@/pages/dashboard/users/HistoryReservationUser";
 import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
+import UserListRole from "@/pages/dashboard/users/UserListRole";
 import UserUpdate from "@/pages/dashboard/users/UserUpdate";
 import WorkScheduleAdd from "@/pages/dashboard/workSchedule/workScheduleAdd";
 import WorkScheduleList from "@/pages/dashboard/workSchedule/workScheduleList";
@@ -271,8 +273,8 @@ const router = createBrowserRouter([
       },
       {
         path: "listReser",
-        element:  
-            <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "CASHIER"]}>
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "CASHIER"]}>
             <ListReservation />
           </RoleProtectComponentAdmin>,
       },
@@ -294,6 +296,14 @@ const router = createBrowserRouter([
       {
         path: "users/add",
         element: <UserAdd />,
+      },
+      {
+        path: "users/staff-accounts",
+        element: <UserListRole />,
+      },
+      {
+        path: "users/reservations/:userId",
+        element: <UserReservations />,
       },
       {
         path: "users/edit/:id",

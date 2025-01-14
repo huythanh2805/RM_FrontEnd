@@ -1,12 +1,11 @@
 import Pagination from "@/components/Pagination";
 import { useList } from "@/hooks/dashboard/import-notes/useList";
 import { formatCurrency, formatDateNoTime } from "@/utilities/utils";
+import ExcelJS from "exceljs";
 import { debounce } from "lodash";
 import { useMemo, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import * as XLSX from "xlsx";
-
 export const ImportNotesList = () => {
   const { importNotesData, isLoading, error } = useList();
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,27 +64,72 @@ export const ImportNotesList = () => {
     return [...new Set(creators)];
   }, [importNotesData]);
 
-  const exportToExcel = () => {
-    const excelData = currentItems.map((note) => ({
-      "Mã phiếu nhập": note.code,
-      "Số lượng sản phẩm": note.products?.length,
-      "Nhà cung cấp": note?.seller?.name,
-      "Tổng tiền": formatCurrency(note?.total),
-      "Người tạo": note?.createdBy?.userName,
-      "Thời gian tạo": formatDateNoTime(note.createdAt),
-      "Sản phẩm chi tiết": note.products
-        ?.map((product) => `Tên SP: ${product?.product?.name}, SL: ${product?.quantity}`)
-        .join("; "),
-    }));
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Danh sách phiếu nhập");
 
-    const ws = XLSX.utils.json_to_sheet(excelData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Danh sách phiếu nhập");
-    XLSX.writeFile(wb, "DanhSachPhieuNhap.xlsx");
+    // Định nghĩa tiêu đề
+    const columns = [
+      { header: "Mã phiếu nhập", key: "code", width: 15 },
+      { header: "Số lượng SP", key: "productCount", width: 12 },
+      { header: "Nhà cung cấp", key: "seller", width: 20 },
+      { header: "Tổng tiền", key: "total", width: 15 },
+      { header: "Người tạo", key: "createdBy", width: 15 },
+      { header: "Thời gian tạo", key: "createdAt", width: 20 },
+      { header: "Tên Sản phẩm", key: "productName", width: 25 },
+      { header: "Số lượng", key: "quantity", width: 10 },
+      { header: "Thành tiền", key: "amount", width: 15 },
+    ];
+    worksheet.columns = columns;
+
+    let currentRowIndex = 2;
+    currentItems.forEach((note) => {
+      const startRow = currentRowIndex;
+      note.products?.forEach((product) => {
+        worksheet.addRow({
+          code: note.code,
+          productCount: note.products.length,
+          seller: note?.seller?.name,
+          total: formatCurrency(note?.total),
+          createdBy: note?.createdBy?.userName,
+          createdAt: formatDateNoTime(note.createdAt),
+          productName: product?.product?.name,
+          quantity: product?.quantity,
+          amount: formatCurrency(product?.quantity * product?.price) || "",
+        });
+        currentRowIndex++;
+      });
+
+      // Hợp nhất các ô cho nhóm sản phẩm
+      worksheet.mergeCells(`A${startRow}:A${currentRowIndex - 1}`);
+      worksheet.mergeCells(`B${startRow}:B${currentRowIndex - 1}`);
+      worksheet.mergeCells(`C${startRow}:C${currentRowIndex - 1}`);
+      worksheet.mergeCells(`D${startRow}:D${currentRowIndex - 1}`);
+      worksheet.mergeCells(`E${startRow}:E${currentRowIndex - 1}`);
+      worksheet.mergeCells(`F${startRow}:F${currentRowIndex - 1}`);
+    });
+    worksheet.eachRow((row) => {
+      row.eachCell((cell) => {
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+      });
+    });
+
+    // Xuất file
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "DanhSachPhieuNhap.xlsx";
+    link.click();
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#f9fafb]">
+    <div className="w-full min-h-screen">
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-semibold text-gray-800">Danh sách phiếu nhập</h1>
@@ -158,7 +202,7 @@ export const ImportNotesList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Nhà cung cấp</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Tổng tiền</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Người tạo</th>
-                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Thời gian</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Thời gian tạo</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Hành động</th>
               </tr>
             </thead>

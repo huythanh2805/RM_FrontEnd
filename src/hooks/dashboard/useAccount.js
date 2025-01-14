@@ -2,6 +2,7 @@ import { toast } from "@/hooks/use-toast";
 import {
   addUserService,
   getUserByIdService,
+  getUserByRoleService,
   updateUserIsDelete,
   updateUserService,
   userListService,
@@ -23,6 +24,12 @@ export const useUser = (id, form) => {
 
   const list = data?.users || [];
 
+  const { data: data1 = [], isLoading: isQueryLoading1, error } = useQuery({
+    queryKey: ["userListRoleService"],
+    queryFn: () => getUserByRoleService(),
+  });
+
+  const listRole = data1?.users || [];
   const resetForm = () => {
     if (form) {
       form.reset({
@@ -31,7 +38,7 @@ export const useUser = (id, form) => {
         password: "",
         phoneNumber: "",
         address: "",
-        role: "", // Mặc định là ADMIN theo BE
+        role: "", // 
       });
       setSelectedImage(null);
       setImageFile(null);
@@ -176,13 +183,13 @@ export const useUser = (id, form) => {
     user: userData?.user,
     list,
     isUserLoading,
-    isLoading: isQueryLoading || addUserMutation.isLoading || updateUserMutation.isLoading,
+    isLoading: isQueryLoading || addUserMutation.isLoading || updateUserMutation.isLoading || isQueryLoading1,
     handleImageChange,
     selectedImage,
     imageFile,
     deleteUser: deleteUserMutation.mutateAsync,
     handleAdd,
     handleUpdate,
-    resetForm,
+    resetForm, listRole
   };
 };

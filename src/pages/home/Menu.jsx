@@ -59,7 +59,7 @@ const Menu = ({ limit, isFilter = true }) => {
     axios
       .get(BASE_URL + "/dishes")
       .then((res) => {
-        setDishes(res.data.filter((item) => item.isShow));
+        setDishes(res.data.filter((item) => item.isShow == true));
         const allCategoryName = [
           ...new Set(res.data.map((item) => item.category_id.name)),
         ];
@@ -74,7 +74,7 @@ const Menu = ({ limit, isFilter = true }) => {
     axios
       .get(BASE_URL + "/setCombos")
       .then((res) => {
-        const filteredCombos = res.data.filter((item) => item.isShow);
+        const filteredCombos = res.data.filter((item) => item.isShow == true);
         console.log("here", filteredCombos);
 
         const combosWithType = filteredCombos.map((item) => {
@@ -534,7 +534,7 @@ const Menu = ({ limit, isFilter = true }) => {
           )}
 
           {/* Danh sách món ăn */}
-          <div className="flex flex-col items-center justify-center min-h-screen">
+          <div className="flex flex-col items-center justify-start min-h-screen">
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-5 max-w-5xl mx-auto mb-8 px-4 sm:px-40 lg:px-8">
               {currentItems.length > 0 ? (
                 currentItems.map((item) => (

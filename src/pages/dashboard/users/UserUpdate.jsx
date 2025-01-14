@@ -66,7 +66,6 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="userName">Họ tên</label>
                   <input
-                    disabled
                     type="text"
                     id="userName"
                     {...register("userName", {
@@ -79,7 +78,6 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="email">Email</label>
                   <input
-                    disabled
                     type="email"
                     id="email"
                     {...register("email", { required: "Vui lòng nhập email" })}
@@ -110,7 +108,6 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="phoneNumber">Số điện thoại</label>
                   <input
-                    disabled
                     type="tel"
                     id="phoneNumber"
                     {...register("phoneNumber", {
@@ -125,7 +122,6 @@ const UserUpdate = () => {
               <div>
                 <label htmlFor="address">Địa chỉ</label>
                 <input
-                  disabled
                   type="text"
                   id="address"
                   {...register("address", {

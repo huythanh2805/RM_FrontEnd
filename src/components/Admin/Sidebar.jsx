@@ -50,7 +50,6 @@ export function AppSidebar() {
       { title: "Danh sách đặt bàn", url: "/admin/listReser", icon: List },
       { title: "Bàn", url: "/admin/tables", icon: Table },
       { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
-      { title: "Tài khoản", url: "/admin/users", icon: User },
       { title: "Nhân viên", url: "/admin/employees", icon: Contact },
       { title: "Lịch làm việc", url: "/admin/workSchedule", icon: Calendar },
       { title: "Đánh giá", url: "/admin/feedbacks", icon: MessageCircle },
@@ -74,6 +73,11 @@ export function AppSidebar() {
     { title: "Danh mục", url: "/admin/categories", icon: Grid },
     { title: "Món ăn", url: "/admin/dishes", icon: Salad },
     { title: "Combo", url: "/admin/setCombos", icon: Layers },
+  ];
+
+  const accountItems = [
+    { title: "Tài khoản người dùng", url: "/admin/users", icon: User },
+    { title: "Tài khoản nhân viên", url: "/admin/users/staff-accounts", icon: Contact },
   ];
 
   const discountItems = [
@@ -141,6 +145,22 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                   <CollapsibleContent>
                     <SidebarMenuSub className="ml-6 space-y-1">{renderMenuItems(subItems)}</SidebarMenuSub>
+                  </CollapsibleContent>
+                </Collapsible>
+              )}
+              {decodedToken.role === "ADMIN" && (
+                <Collapsible open={isDiscountOpen} onOpenChange={setIsDiscountOpen}>
+                  <SidebarMenuItem>
+                    <CollapsibleTrigger className="w-full px-4 py-3 flex items-center justify-between rounded-lg hover:bg-gray-200 transition">
+                      <div className="flex items-center gap-4">
+                        <User className="w-5 h-5" />
+                        <span className="text-base font-medium">Tài khoản</span>
+                      </div>
+                      <ChevronDown className={`w-5 h-5 transition-transform ${isDiscountOpen ? "rotate-180" : ""}`} />
+                    </CollapsibleTrigger>
+                  </SidebarMenuItem>
+                  <CollapsibleContent>
+                    <SidebarMenuSub className="ml-6 space-y-1">{renderMenuItems(accountItems)}</SidebarMenuSub>
                   </CollapsibleContent>
                 </Collapsible>
               )}

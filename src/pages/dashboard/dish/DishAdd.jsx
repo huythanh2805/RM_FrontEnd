@@ -24,7 +24,7 @@ const DishAdd = () => {
     axios
       .get(BASE_URL + `/categories`)
       .then((res) => {
-        setCategories(res.data);
+        setCategories(res.data.filter((item) => item.isDelete == false));
       })
       .catch((err) => {
         console.error(err);
@@ -260,6 +260,7 @@ const DishAdd = () => {
                 type="checkbox"
                 className="ml-2 w-4 h-4"
                 {...register("isShow")}
+                defaultChecked={true}
               />
             </div>
           </div>
