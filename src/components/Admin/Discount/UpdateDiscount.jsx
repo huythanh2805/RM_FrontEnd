@@ -1,6 +1,5 @@
 import React from "react";
 import DiscountForm from "./DiscountForm";
-import Navbar from "../Navbar";
 import { useParams } from "react-router-dom";
 import { useFetchData } from "@/hooks/useFetchData";
 import { ServerUrl } from "@/utilities/utils";
@@ -11,8 +10,6 @@ function UpdateDiscount() {
     console.log(discount)
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <p className="text-3xl font-semibold text-gray-800">
           Tạo phiếu giảm giá

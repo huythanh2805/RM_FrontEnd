@@ -8,7 +8,6 @@ import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
 import { AiTwotoneFileImage } from "react-icons/ai";
 import Pagination from "@/components/Pagination";
-import Navbar from "@/components/Admin/Navbar";
 
 const DishList = () => {
   const [dishes, setDishes] = useState([]);
@@ -23,10 +22,19 @@ const DishList = () => {
     axios
       .get(BASE_URL + "/dishes")
       .then((res) => {
-        setDishes(res.data);
+        setDishes(res.data.filter((item) => item.isDelete == false));
+        // console.log(res.data);
+
         const categoryList = [
-          ...new Set(res.data.map((item) => item.category_id.name)),
+          ...new Set(
+            res.data
+              .filter(
+                (item) => item.category_id && item.category_id.isDelete == false
+              )
+              .map((item) => item.category_id.name)
+          ),
         ];
+
         setCategories(["Tất cả", ...categoryList]);
       })
       .catch((err) => console.log(err));
@@ -49,7 +57,10 @@ const DishList = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(BASE_URL + `/dishes/${id}`)
+          .put(`${import.meta.env.VITE_API_BASE_URL}/dishes/${id}`, {
+            isDelete: true,
+            isShow: false,
+          })
           .then(() => {
             Swal.fire("Đã xóa!", "Món ăn đã được xóa.", "success");
             fetchData();
@@ -93,8 +104,6 @@ const DishList = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold text-gray-800">
@@ -290,12 +299,12 @@ const DishList = () => {
                             <FaPenToSquare size={18} />
                           </div>
                         </Link>
-                        {/* <div
+                        <div
                           className="bg-red-200 text-red-800 px-2 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-red-300 transition"
                           onClick={() => handleDelete(d._id)}
                         >
                           <FaRegTrashCan size={18} />
-                        </div> */}
+                        </div>
                       </div>
                     </td>
                   </tr>

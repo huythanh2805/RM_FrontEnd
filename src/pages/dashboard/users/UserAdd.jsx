@@ -1,4 +1,3 @@
-import Navbar from "@/components/Admin/Navbar";
 import { useUser } from "@/hooks/dashboard/useAccount";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Camera } from "lucide-react";
@@ -44,8 +43,6 @@ const UserAdd = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="m-12">
         <form onSubmit={handleSubmit(onSubmit)}>
           <p className="text-2xl font-semibold mb-4">Thêm mới tài khoản</p>

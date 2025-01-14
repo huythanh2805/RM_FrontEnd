@@ -6,7 +6,6 @@ import { FaPlus, FaRegImage, FaTimes } from "react-icons/fa";
 import BASE_URL from "@/configs";
 import CLOUDINARY_URL from "@/configs/cloudinary_api";
 import { toast } from "@/hooks/use-toast";
-import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 
 const SetComboAdd = () => {
@@ -31,8 +30,8 @@ const SetComboAdd = () => {
     axios
       .get(BASE_URL + `/dishes`)
       .then((res) => {
-        setDishes(res.data);
-        console.log(res.data);
+        setDishes(res.data.filter((item) => item.isShow == true));
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -131,8 +130,6 @@ const SetComboAdd = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <h2 className="text-3xl font-semibold mb-4">Thêm combo</h2>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -379,6 +376,7 @@ const SetComboAdd = () => {
                 type="checkbox"
                 className="ml-2 w-4 h-4"
                 {...register("isShow")}
+                defaultChecked={true}
               />
             </div>
           </div>

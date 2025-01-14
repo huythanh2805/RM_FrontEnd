@@ -69,7 +69,6 @@ export default function TableComponent({ table, updateTable }) {
       }
       const data = await res.json();
       const reservationDetail = data.reservationDetail;
-      console.log({ reservationDetail });
       setReservationDetail(reservationDetail);
       setGetTimeLoading(false);
     } catch (error) {
@@ -86,9 +85,6 @@ export default function TableComponent({ table, updateTable }) {
       getReservationDetailByTableId();
     }
   }, []);
-  console.log({
-    getTimeLoading,
-  });
   // update information
   const handleUpdateTable = (e) => {
     e.preventDefault();
@@ -212,7 +208,7 @@ export default function TableComponent({ table, updateTable }) {
           </h4>
         )}
         <p className="separate_line my-2"></p>
-        <div className="w-full flex flex-col justify-between gap-3 mt-1">
+        <div className="w-full flex flex-col justify-between gap-1">
           <div className="flex items-center gap-2">
             <div className="min-h-[20px] min-w-[20px]">
               <UsersRound width={20} height={20} />
@@ -241,13 +237,13 @@ export default function TableComponent({ table, updateTable }) {
           </div>
           <div className="flex items-center gap-2">
             {/* <Annoyed width={20} height={20}/> */}
-            <span className="text-[17px]">TT :</span>
+            <span className="text-[17px]">TT:</span>
             <p
               className={cn(
                 "font-semibold",
                 table.status === "AVAILABLE"
                   ? "text-gray-800 bg-gray-200 hover:bg-gray-300 px-4 py-0.5 rounded-md"
-                  : "text-yellow-800 bg-yellow-200 hover:bg-yellow-300 px-4 py-0.5 rounded-md"
+                  : "text-yellow-800 bg-yellow-200 hover:bg-yellow-300 px-3 py-0.5 rounded-md"
               )}
             >
               {table.status === "AVAILABLE" ? "Có Sẵn" : "Đang phục vụ"}
@@ -318,8 +314,8 @@ export default function TableComponent({ table, updateTable }) {
                   {type === "RESELECT"
                     ? "Đổi bàn"
                     : type === "SELECT"
-                    ? "Chọn bàn"
-                    : " Tạo đơn"}
+                      ? "Chọn bàn"
+                      : " Tạo đơn"}
                 </Button>
               </DialogClose>
             )}

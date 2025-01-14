@@ -1,4 +1,3 @@
-import Navbar from "@/components/Admin/Navbar";
 import { useUser } from "@/hooks/dashboard/useAccount";
 import { Camera } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -29,8 +28,6 @@ const UserUpdate = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="text-2xl font-semibold mb-4">Cập nhật tài khoản</div>
@@ -69,7 +66,6 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="userName">Họ tên</label>
                   <input
-                    disabled
                     type="text"
                     id="userName"
                     {...register("userName", {
@@ -82,7 +78,6 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="email">Email</label>
                   <input
-                    disabled
                     type="email"
                     id="email"
                     {...register("email", { required: "Vui lòng nhập email" })}
@@ -113,11 +108,10 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="phoneNumber">Số điện thoại</label>
                   <input
-                    disabled
                     type="tel"
                     id="phoneNumber"
                     {...register("phoneNumber", {
-                      required: "Vui lòng nhập số điện thoại",
+                      // required: "Vui lòng nhập số điện thoại",
                     })}
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent border-gray-300"
                   />
@@ -128,11 +122,10 @@ const UserUpdate = () => {
               <div>
                 <label htmlFor="address">Địa chỉ</label>
                 <input
-                  disabled
                   type="text"
                   id="address"
                   {...register("address", {
-                    required: "Vui lòng nhập địa chỉ",
+                    // required: "Vui lòng nhập địa chỉ",
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />

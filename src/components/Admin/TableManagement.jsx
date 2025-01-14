@@ -1,13 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { toast } from "@/hooks/use-toast";
+import { ServerUrl } from "@/utilities/utils";
 import {
   DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  MouseSensor,
   DragOverlay,
+  MouseSensor,
+  useSensor,
+  useSensors
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -15,13 +13,11 @@ import {
   SortableContext,
 } from "@dnd-kit/sortable";
 import { Plus } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { FadeLoader } from "react-spinners";
 import LocationComponent from "./Location/LocationComponent";
 import TableComponent from "./table/TableComponent";
-import { toast } from "@/hooks/use-toast";
-import { ServerUrl } from "@/utilities/utils";
-import Navbar from "./Navbar";
 
 export default function TableManagement() {
   const [activedLocation, setActivedLocation] = useState(null);
@@ -328,11 +324,11 @@ export default function TableManagement() {
     })
   );
   return (
-    <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
-      <div className="px-5 py-5">
-        <p className="text-3xl font-semibold text-gray-800">Danh sách bàn</p>
+    <div >
+      <div className="px-5 ">
+        <p className="text-3xl font-extrabold bg-gradient-to-r from-black text-transparent bg-clip-text drop-shadow-md">
+          Danh sách bàn
+        </p>
       </div>
 
       {loadingFirstOne ? (

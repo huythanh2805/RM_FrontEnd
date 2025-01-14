@@ -10,7 +10,7 @@ import ListReservation from "@/components/Admin/Reservation/ListReservation";
 import UpdateReservation from "@/components/Admin/Reservation/UpdateReservation";
 import TableManagement from "@/components/Admin/TableManagement";
 import ProductDetail from "@/components/layouts/ProductDetail";
-import ProtectedComponent from "@/components/ProtectedComponent";
+import { RoleProtectComponentAdmin, RoleProtectComponentClient } from "@/components/ProtectedComponent";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { ForgotPasswordPage } from "@/pages/auth/PasswordPage";
 import { RegisterPage } from "@/pages/auth/Register";
@@ -37,6 +37,7 @@ import { ImportNotesDetail } from "@/pages/dashboard/import-notes/ImportNotesDet
 import { ImportNotesList } from "@/pages/dashboard/import-notes/ImportNotesList";
 import LayoutAdmin from "@/pages/dashboard/LayoutAdmin";
 import { ProductCreate } from "@/pages/dashboard/products/ProductCreate";
+import ProductHistory from "@/pages/dashboard/products/ProductHistory";
 import { ProductList } from "@/pages/dashboard/products/ProductList";
 import { ProductUpdate } from "@/pages/dashboard/products/ProductUpdate";
 import { ProfileAdmin } from "@/pages/dashboard/Profile";
@@ -47,11 +48,14 @@ import SetComboAdd from "@/pages/dashboard/setCombo/SetComboAdd";
 import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
 import SetComboList from "@/pages/dashboard/setCombo/SetComboList";
 import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";
+import { HistoryTakeInventory } from "@/pages/dashboard/stocks/HistoryTakeInventory";
 import { StockList } from "@/pages/dashboard/stocks/StockList";
+import { TakeInventory } from "@/pages/dashboard/stocks/TakeInventory";
+import { UserReservations } from "@/pages/dashboard/users/HistoryReservationUser";
 import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
+import UserListRole from "@/pages/dashboard/users/UserListRole";
 import UserUpdate from "@/pages/dashboard/users/UserUpdate";
-import WorkSchedule from "@/pages/dashboard/workSchedule/workSchedule";
 import WorkScheduleAdd from "@/pages/dashboard/workSchedule/workScheduleAdd";
 import WorkScheduleList from "@/pages/dashboard/workSchedule/workScheduleList";
 import WorkScheduleUpdate from "@/pages/dashboard/workSchedule/workScheduleUpdate";
@@ -149,9 +153,11 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      <ProtectedComponent>
+      <RoleProtectComponentClient
+        isRoleRequiredArrays={["ADMIN", "CASHIER", "WAREHOUSE", "ORDER", "CHEF"]}
+      >
         <LayoutAdmin />
-      </ProtectedComponent>
+      </RoleProtectComponentClient>
     ),
     children: [
       {
@@ -160,11 +166,17 @@ const router = createBrowserRouter([
       },
       {
         path: "discounts",
-        element: <CreateDiscount />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <CreateDiscount />
+          </RoleProtectComponentAdmin>
       },
       {
         path: "listDiscounts",
-        element: <ListDiscount />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <ListDiscount />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "updateDiscount/:id",
@@ -172,7 +184,10 @@ const router = createBrowserRouter([
       },
       {
         path: "categories",
-        element: <CategoryList />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <CategoryList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "categories/add",
@@ -184,7 +199,10 @@ const router = createBrowserRouter([
       },
       {
         path: "employees",
-        element: <EmployeeList />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <EmployeeList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "employees/add",
@@ -196,7 +214,10 @@ const router = createBrowserRouter([
       },
       {
         path: "workSchedule",
-        element: <WorkSchedule />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <WorkScheduleList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "addWorkSchedule",
@@ -212,7 +233,10 @@ const router = createBrowserRouter([
       },
       {
         path: "dishes",
-        element: <DishList />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <DishList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "dishes/add",
@@ -232,7 +256,10 @@ const router = createBrowserRouter([
       },
       {
         path: "tables",
-        element: <TableManagement />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "ORDER"]}>
+            <TableManagement />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "tables/:reservationId",
@@ -248,7 +275,10 @@ const router = createBrowserRouter([
       },
       {
         path: "listReser",
-        element: <ListReservation />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "CASHIER"]}>
+            <ListReservation />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "foodOrder/:reservationId/",
@@ -260,11 +290,22 @@ const router = createBrowserRouter([
       },
       {
         path: "users",
-        element: <UserList />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <UserList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "users/add",
         element: <UserAdd />,
+      },
+      {
+        path: "users/staff-accounts",
+        element: <UserListRole />,
+      },
+      {
+        path: "users/reservations/:userId",
+        element: <UserReservations />,
       },
       {
         path: "users/edit/:id",
@@ -272,7 +313,10 @@ const router = createBrowserRouter([
       },
       {
         path: "setCombos",
-        element: <SetComboList />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <SetComboList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "setCombos/add",
@@ -296,7 +340,10 @@ const router = createBrowserRouter([
       },
       {
         path: "feedbacks",
-        element: <FeedbackList />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+            <FeedbackList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "order-history/:id",
@@ -304,11 +351,17 @@ const router = createBrowserRouter([
       },
       {
         path: "kitchen",
-        element: <Kitchen />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <Kitchen />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "sellers",
-        element: <SellerList />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <SellerList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "sellers/create",
@@ -320,11 +373,18 @@ const router = createBrowserRouter([
       },
       {
         path: "products",
-        element: <ProductList />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <ProductList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "products/create",
         element: <ProductCreate />,
+      },
+      {
+        path: "products/:productId/history",
+        element: <ProductHistory />,
       },
       {
         path: "products/update/:id",
@@ -332,11 +392,17 @@ const router = createBrowserRouter([
       },
       {
         path: "stocks",
-        element: <StockList />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <StockList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "import-notes",
-        element: <ImportNotesList />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <ImportNotesList />,
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "import-notes/:id",
@@ -348,7 +414,10 @@ const router = createBrowserRouter([
       },
       {
         path: "export-notes",
-        element: <ExportNotesList />,
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <ExportNotesList />
+          </RoleProtectComponentAdmin>,
       },
       {
         path: "export-notes/:id",
@@ -358,12 +427,26 @@ const router = createBrowserRouter([
         path: "export-notes/create",
         element: <ExportNotesCreate />,
       },
+      {
+        path: "take-inventory",
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <TakeInventory />
+          </RoleProtectComponentAdmin>,
+      },
+      {
+        path: "history-take-inventory/:id",
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <HistoryTakeInventory />
+          </RoleProtectComponentAdmin>,
+      },
     ],
   },
   {
     path: "*",
     element: <NotFound />,
   },
-]);
+])
 
 export default router;

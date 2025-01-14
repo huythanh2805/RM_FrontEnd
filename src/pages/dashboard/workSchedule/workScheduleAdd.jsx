@@ -21,17 +21,24 @@ const WorkScheduleAdd = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/employees`
         );
-        console.log("Employees data:", response.data);
+
         if (Array.isArray(response.data)) {
+          // Lọc nhân viên chưa bị xóa (isDelete == false)
+          const activeEmployees = response.data.filter(
+            (item) => !item.isDelete
+          );
+
           setEmployees(
-            response.data.map((employee) => ({
+            activeEmployees.map((employee) => ({
               value: employee._id,
               label: employee.name,
             }))
           );
+
+          console.log("Active employees:", activeEmployees);
         }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching employees:", error);
       }
     };
 

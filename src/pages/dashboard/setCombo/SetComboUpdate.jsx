@@ -6,7 +6,6 @@ import { FaPlus, FaRegImage, FaTimes } from "react-icons/fa";
 import BASE_URL from "@/configs";
 import CLOUDINARY_URL from "@/configs/cloudinary_api";
 import { toast } from "@/hooks/use-toast";
-import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 
 const SetComboUpdate = () => {
@@ -57,8 +56,8 @@ const SetComboUpdate = () => {
     axios
       .get(BASE_URL + `/dishes`)
       .then((res) => {
-        setDishes(res.data);
-        console.log(res.data);
+        setDishes(res.data.filter((item) => item.isShow == true));
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -147,8 +146,6 @@ const SetComboUpdate = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <h2 className="text-3xl font-semibold mb-4">Cập nhật combo</h2>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -409,7 +406,7 @@ const SetComboUpdate = () => {
 
             <button
               type="submit"
-              className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition"
+              className="bg-blue-200 text-blue-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-blue-300 transition"
             >
               Cập nhật
             </button>

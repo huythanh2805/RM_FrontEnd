@@ -11,7 +11,7 @@ export default function FoodOrder() {
   const [orderedFoods, setOrderedFoods] = useState([]);
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
-
+  const [newCategories, setNewCategories] = useState([])
   // Get all dishes and categories
   const { data: combos, loading: comboloading } = useFetchData(ServerUrl + "/api/orderedCombo");
   const { data: dishes, loading: dishLoading } = useFetchData(ServerUrl + "/dishes");
@@ -30,7 +30,12 @@ export default function FoodOrder() {
   useEffect(() => {
     if (dishes) setProducts((pre) => [...pre, ...dishes.map((dish) => ({ ...dish, type: "dish" }))]);
   }, [dishes]);
-
+  useEffect(() => {
+    if (products) setProducts(pre => ([...pre.filter(item => item.isShow === true)]))
+  }, [combos, dishes]);
+  useEffect(() => {
+    if (categories) setNewCategories(pre => ([...categories.filter(item => item.isShow === true)]))
+  }, [categories]);
   //  Get ordered food for reservation
   useEffect(() => {
     if (!reservationId) return;
@@ -91,7 +96,7 @@ export default function FoodOrder() {
             products={products}
             dishes={dishes}
             combos={combos}
-            categories={categories}
+            categories={newCategories}
             reservation_id={reservationId}
             orderedFoods={orderedFoods}
             setOrderedFoods={setOrderedFoods}
@@ -104,7 +109,7 @@ export default function FoodOrder() {
         {categories && dishes && (
           <Calculator
             dishes={dishes}
-            categories={categories}
+            categories={newCategories}
             reservation_id={reservationId}
             orderedFoods={orderedFoods}
             setOrderedFoods={setOrderedFoods}

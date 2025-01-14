@@ -23,17 +23,17 @@ import {
 } from "@/components/ui/accordion"
 import UserList from "@/pages/dashboard/users/Userlist"
 import { useFetchData } from "@/hooks/useFetchData"
-import { ServerUrl } from "@/utilities/utils"
-import Navbar from "../Navbar"
+import { checkIsRequiredToCancel, ServerUrl } from "@/utilities/utils"
 import OrderFoodTable from "./OrderFoodTable"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Button } from "antd"
+import { Button, notification } from "antd"
 import { IoIosNotifications } from "react-icons/io"
 import { confirmCancel, getAllKitchenNotify, kitchenGetAllActiveReser } from "@/services/notificationService"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "@/hooks/use-toast"
 import jwtDecode from "jwt-decode"
+import { MdError } from "react-icons/md"
 function Kitchen() {
   const navigate = useNavigate()
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
@@ -59,7 +59,6 @@ function Kitchen() {
     queryKey: "getAllKitchenNotify",
     queryFn: getAllKitchenNotify,
   })
-  console.log({activesReservations})
   const mutation = useMutation({
     mutationFn: confirmCancel,
     onSuccess: () => {
@@ -77,6 +76,7 @@ function Kitchen() {
       })
     }
   })
+  console.log(activesReservations)
   const handleConfirmCancel = (_id) => {
     mutation.mutate({_id, changer_id: decodedToken.id})
   }
@@ -86,7 +86,6 @@ function Kitchen() {
   if(activesReservationsLoading) return <div>...Loading</div>
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold text-gray-800">
@@ -206,6 +205,15 @@ function Kitchen() {
                               </div>
                               <div className="font-medium text-start px-4 flex-1">
                                 {item.table_id.name}
+                              </div>
+                              <div className="font-medium text-start px-4 ">
+                                {
+                                checkIsRequiredToCancel(item) &&
+                                  <span class="relative flex h-5 w-5">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-1 opacity-75 duration-2000"></span>
+                                  <MdError  className="relative inline-flex rounded-full h-5 w-5 text-red-1 " />
+                                 </span>
+                                }
                               </div>
                             </div>
                           </AccordionTrigger>

@@ -1,10 +1,8 @@
-import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 import { useList } from "@/hooks/dashboard/products/useList";
-import { formatCurrency, formatDateNoTime } from "@/utilities/utils";
 import { debounce } from "lodash";
 import { useState } from "react";
-import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
+import { FaPenToSquare } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -13,6 +11,7 @@ export const ProductList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [searchValue, setSearchValue] = useState("");
+  const [filterCategory, setFilterCategory] = useState("");
 
   const handleSearchValueDebounced = debounce((value) => {
     setSearchValue(value);
@@ -22,11 +21,18 @@ export const ProductList = () => {
     handleSearchValueDebounced(e.target.value);
   };
 
+  const handleCategoryChange = (e) => {
+    setFilterCategory(e.target.value);
+  };
+
   // Xử lý khi dữ liệu đang tải hoặc gặp lỗi
   if (isLoading) return <p className="text-center text-blue-600">Loading...</p>;
   if (error) return <p className="text-center text-red-600">Error loading product list.</p>;
 
-  // Hàm xóa người dùng
+  // Lấy danh mục duy nhất từ dữ liệu sản phẩm
+  const categories = Array.from(new Set(productsData?.map((product) => product.category)));
+
+  // Hàm xóa sản phẩm
   const handleDeleteProduct = (productID) => {
     Swal.fire({
       title: "Xác nhận xóa sản phẩm?",
@@ -58,10 +64,12 @@ export const ProductList = () => {
     });
   };
 
-  // Lọc người dùng theo vai trò và tìm kiếm
-  const filteredProducts = productsData?.filter((product) =>
-    product.name.toLowerCase().includes(searchValue.toLowerCase())
-  );
+  // Lọc sản phẩm theo tìm kiếm và danh mục
+  const filteredProducts = productsData?.filter((product) => {
+    const matchesSearch = product.name.toLowerCase().includes(searchValue.toLowerCase());
+    const matchesCategory = filterCategory ? product.category === filterCategory : true;
+    return matchesSearch && matchesCategory;
+  });
 
   // Tính toán cho phân trang
   const totalItems = filteredProducts?.length;
@@ -70,10 +78,8 @@ export const ProductList = () => {
   const currentItems = filteredProducts?.slice(startIndex, startIndex + itemsPerPage);
 
   return (
-    <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
-      <div className="px-5 py-5">
+    <div className="w-full min-h-screen">
+      <div className="px-5 ">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-semibold text-gray-800">Danh sách thực phẩm</h1>
           <Link to="/admin/products/create">
@@ -85,9 +91,9 @@ export const ProductList = () => {
 
         {/* Bộ lọc và tìm kiếm */}
         <div className="mb-4">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col md:flex-row gap-4">
             {/* Input Tìm Kiếm */}
-            <div className="relative w-full max-w-sm min-w-[200px]">
+            <div className="relative w-full max-w-sm">
               <label htmlFor="Search" className="sr-only">
                 Search
               </label>
@@ -98,30 +104,29 @@ export const ProductList = () => {
                 className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full p-2.5"
                 onChange={handleSearchValue}
               />
-              <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
-                <button type="button" className="text-gray-600 hover:text-gray-700">
-                  <span className="sr-only">Search</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="size-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
-                </button>
-              </span>
+            </div>
+
+            {/* Lọc theo danh mục */}
+            <div className="relative w-full max-w-sm">
+              <label htmlFor="Category" className="sr-only">Category</label>
+              <select
+                id="Category"
+                className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full p-2.5"
+                value={filterCategory}
+                onChange={handleCategoryChange}
+              >
+                <option value="">Tất cả danh mục</option>
+                {categories.map((category, index) => (
+                  <option key={index} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
 
-        {/* Bảng danh sách người dùng */}
+        {/* Bảng danh sách sản phẩm */}
         <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
           <table className="min-w-full bg-white">
             <thead className="border-b border-[#d5d5d5] text-left text-sl font-semibold text-[#202224] uppercase tracking-wider">
@@ -130,8 +135,6 @@ export const ProductList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Thông tin SP</th>
                 <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Danh mục</th>
                 <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Đơn vị</th>
-                <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Giá</th>
-                <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">Ngày hết hạn</th>
                 <th className="py-3 px-6 text-center text-sl font-semibold text-gray-700">NV phụ trách</th>
                 <th className="py-3 px-6 text-sl font-semibold text-gray-700 text-center">Hành động</th>
               </tr>
@@ -149,12 +152,6 @@ export const ProductList = () => {
                   <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">{product?.category}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">{product?.unit}</td>
                   <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">
-                    {formatCurrency(product?.price)}
-                  </td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">
-                    {formatDateNoTime(product?.expiryDate)}
-                  </td>
-                  <td className="py-3 px-6 text-sl text-gray-800 break-words text-center">
                     {product?.createdBy?.userName}
                   </td>
 
@@ -164,12 +161,11 @@ export const ProductList = () => {
                         <FaPenToSquare size={18} />
                       </div>
                     </Link>
-                    <div
-                      className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-red-300 transition"
-                      onClick={() => handleDeleteProduct(product._id)}
-                    >
-                      <FaRegTrashCan size={18} />
-                    </div>
+                    <Link to={`/admin/products/${product._id}/history`}>
+                      <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                        Xem lịch sử
+                      </button>
+                    </Link>
                   </td>
                 </tr>
               ))}

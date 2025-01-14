@@ -1,4 +1,3 @@
-import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -16,8 +15,8 @@ const CategoryList = () => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/categories`)
       .then((res) => {
-        setCategories(res.data);
-        // console.log(res.data);
+        setCategories(res.data.filter((item) => item.isDelete == false));
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -60,17 +59,40 @@ const CategoryList = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`${import.meta.env.VITE_API_BASE_URL}/categories/${id}`)
+          .put(`${import.meta.env.VITE_API_BASE_URL}/categories/${id}`, {
+            isDelete: true,
+            isShow: false,
+          })
           .then(() => {
-            Swal.fire({
-              title: "Đã xóa!",
-              text: "Danh mục đã được xóa thành công.",
-              icon: "success",
-            });
-            fetchData();
+            axios
+              .put(`${import.meta.env.VITE_API_BASE_URL}/dishes`, {
+                category_id: id, 
+                isShow: false,
+              })
+              .then(() => {
+                Swal.fire({
+                  title: "Đã xóa!",
+                  text: "Danh mục đã được xóa.",
+                  icon: "success",
+                });
+                fetchData();
+              })
+              .catch((err) => {
+                console.log(err);
+                Swal.fire({
+                  title: "Lỗi!",
+                  text: "Cập nhật sản phẩm thất bại.",
+                  icon: "error",
+                });
+              });
           })
           .catch((err) => {
             console.log(err);
+            Swal.fire({
+              title: "Lỗi!",
+              text: "Xóa danh mục thất bại.",
+              icon: "error",
+            });
           });
       }
     });
@@ -78,8 +100,6 @@ const CategoryList = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold text-gray-800">Danh mục</p>

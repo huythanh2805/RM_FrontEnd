@@ -6,7 +6,6 @@ import { ServerUrl } from "@/utilities/utils";
 import { useNavigate } from "react-router-dom";
 import { FadeLoader } from "react-spinners";
 import Swal from "sweetalert2";
-import Navbar from "../Navbar";
 import { ReservationColumn } from "./dataTable/ReserColumn";
 import { ReserDataTable } from "./dataTable/ReserDataTable";
 
@@ -192,9 +191,13 @@ export default function ListReservation() {
   // }
 
   return (
-    <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-      <div className="px-5 py-5">
+    <div  >
+      <div className="px-5 ">
+
+        <p className="text-3xl font-extrabold bg-gradient-to-r from-black text-transparent bg-clip-text drop-shadow-md pb-5">
+          Danh sách đơn đặt bàn
+        </p>
+
         <div className="w-full h-full flex justify-center">
           {loading && (
             <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center">

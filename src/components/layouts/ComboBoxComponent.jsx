@@ -1,7 +1,6 @@
+import { ChevronsUpDown } from "lucide-react";
 import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -27,10 +26,11 @@ export function ComboBoxComponent({
   const [searchTerm, setSearchTerm] = React.useState("");
 
   const [commanItems, setCommanItems] = React.useState([]);
-
+  console.log(commanItems);
   React.useEffect(() => {
     if (userDiscounts == null) return;
     if (userDiscounts) setCommanItems(userDiscounts);
+
   }, [userDiscounts]);
   React.useEffect(() => {
     if (userDiscounts == null) return;
@@ -52,7 +52,7 @@ export function ComboBoxComponent({
         >
           {couponValue && userDiscounts
             ? userDiscounts.find((discount) => discount._id === couponValue)
-                ?.code
+              ?.code
             : "Chọn mã giảm giá"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -90,10 +90,10 @@ export function ComboBoxComponent({
                         code={userDiscount.code}
                         status={userDiscount.status}
                         buttonTitle="Dùng"
-                        type={userDiscount.discountId.discountType}
-                        expriedDate={userDiscount.discountId.expireDate}
-                        discountValue={userDiscount.discountId.discountValue}
-                        minOrderValue={userDiscount.discountId.minOrderValue}
+                        type={userDiscount.discountId?.discountType}
+                        expriedDate={userDiscount.discountId?.expireDate}
+                        discountValue={userDiscount.discountId?.discountValue}
+                        minOrderValue={userDiscount.discountId?.minOrderValue}
                         className="w-full bg-white rounded-md shadow-md p-2"
                       />
                     </div>

@@ -65,8 +65,8 @@ const EmployeeAdd = () => {
               {...register("gender", { required: "Giới tính là bắt buộc" })}
             >
               <option value="">Chọn giới tính</option>
-              <option value="MALE">MALE</option>
-              <option value="FEMALE">FEMALE</option>
+              <option value="MALE">Nam</option>
+              <option value="FEMALE">Nữ</option>
             </select>
             {errors.gender && (
               <p className="mt-2 text-sm text-red-600">
@@ -75,7 +75,6 @@ const EmployeeAdd = () => {
             )}
           </div>
 
-         
           <div>
             <label
               htmlFor="phoneNumber"
@@ -118,12 +117,11 @@ const EmployeeAdd = () => {
                 required: "Vị trí công việc là bắt buộc",
               })}
             >
-              <option >Chọn vị trí</option>
-              <option >Bếp trưởng</option>
-              <option >Phụ bếp</option>
-              <option >Nhân viên phục vụ</option>
-              <option >Quản lý nhà hàng</option>
-              <option >Lễ tân</option>
+              <option value="">Chọn vị trí</option>
+              <option value="Quản lí">Quản lí</option>
+              <option value="Thu ngân">Thu ngân</option>
+              <option value="Nhân viên kho">Nhân viên kho</option>
+              <option value="Nhân viên order">Nhân viên order</option>
             </select>
             {errors.workPosition && (
               <p className="mt-2 text-sm text-red-600">

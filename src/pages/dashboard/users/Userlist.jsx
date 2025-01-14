@@ -1,10 +1,10 @@
-import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 import { useUser } from "@/hooks/dashboard/useAccount";
 import { debounce } from "lodash";
 import { useState } from "react";
+import { FaEllipsisV } from "react-icons/fa";
 import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const UserList = () => {
@@ -13,7 +13,7 @@ const UserList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [searchValue, setSearchValue] = useState("");
-
+  const navigate = useNavigate();
   const handleSearchValueDebounced = debounce((value) => {
     setSearchValue(value);
   }, 300);
@@ -87,10 +87,12 @@ const UserList = () => {
     setCurrentPage(selected + 1);
   };
 
+
+  const goToUserReservations = (userId) => {
+    navigate(`reservations/${userId}`); // Điều hướng đến trang lịch sử đặt bàn
+  };
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-semibold text-gray-800">Danh sách người dùng</h1>
@@ -104,23 +106,6 @@ const UserList = () => {
         {/* Bộ lọc và tìm kiếm */}
         <div className="mb-4">
           <div className="flex justify-between items-center">
-            {/* Dropdown Lọc Vai Trò */}
-            <div className="max-w-sm">
-              <select
-                id="roleFilter"
-                className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full p-2.5"
-                value={selectedRole}
-                onChange={(e) => handleRoleChange(e)}
-              >
-                <option value="Tất cả">Tất cả</option>
-                <option value="CLIENT">Khách hàng</option>
-                <option value="ADMIN">Quản lý</option>
-                <option value="CASHIER">Thu ngân</option>
-                <option value="WAREHOUSE">Nhân viên kho</option>
-                <option value="ORDER">Nhân viên order</option>
-              </select>
-            </div>
-
             {/* Input Tìm Kiếm */}
             <div className="relative w-full max-w-sm min-w-[200px]">
               <label htmlFor="Search" className="sr-only">
@@ -166,6 +151,7 @@ const UserList = () => {
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Email</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Địa chỉ</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Vai trò</th>
+                <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Trạng thái</th>
                 <th className="py-3 px-6 text-left text-sl font-semibold text-gray-700">Hành động</th>
               </tr>
             </thead>
@@ -179,6 +165,12 @@ const UserList = () => {
                   <td className="py-3 px-6 text-sl text-gray-800 break-words">
                     {roleMapping[user.role] || "Không xác định"}
                   </td>
+                  <td
+                    className={`py-3 px-6 text-sl break-words ${user.isdelete === 0 ? "text-green-600" : "text-red-600"
+                      }`}
+                  >
+                    {user.isdelete === 0 ? "Hoạt động" : "Ngừng hoạt động"}
+                  </td>
                   <td className="py-3 px-6 text-sl flex items-center gap-3">
                     <Link to={`/admin/users/edit/${user._id}`}>
                       <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">
@@ -190,6 +182,12 @@ const UserList = () => {
                       onClick={() => handleDelete(user._id)}
                     >
                       <FaRegTrashCan size={18} />
+                    </div>
+                    <div
+                      className="bg-gray-200 text-gray-800 px-3 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-gray-300 transition"
+                      onClick={() => goToUserReservations(user._id)}
+                    >
+                      <FaEllipsisV size={18} />
                     </div>
                   </td>
                 </tr>

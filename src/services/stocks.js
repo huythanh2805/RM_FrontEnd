@@ -1,3 +1,4 @@
+import jwtDecode from "jwt-decode";
 import { apiClient } from "./api";
 
 const token = localStorage.getItem("token");
@@ -5,6 +6,19 @@ const token = localStorage.getItem("token");
 export const fetchStocksService = async () => {
   try {
     const response = await apiClient.get("/api/stocks", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const fetchStocksServiceStatus = async () => {
+  try {
+    const response = await apiClient.get("/api/stocks/status", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -65,6 +79,34 @@ export const updateStocksService = async (userId, formData) => {
     return response.data;
   } catch (error) {
     console.error(error);
+    throw error;
+  }
+};
+
+export const updateStockTakeInventory = async (data) => {
+  try {
+    const response = await apiClient.patch("/api/stocks/update-take-inventory", { ...data, createdBy: jwtDecode(token).id }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+
+export const getListTakeInventoryByStockID = async (id) => {
+  try {
+    const response = await apiClient.get(`/api/stocks/history-take-inventory/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data || [];
+  } catch (error) {
     throw error;
   }
 };

@@ -1,11 +1,9 @@
-import Navbar from "@/components/Admin/Navbar";
 import Pagination from "@/components/Pagination";
 import BASE_URL from "@/configs";
 import { formatCurrency } from "@/utilities/utils";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { FaRegTrashCan } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import { FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const BillList = () => {
@@ -68,10 +66,8 @@ const BillList = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#f9fafb]">
-      <Navbar />
-
-      <div className="px-5 py-5">
+    <div>
+      <div className="px-5 ">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold">Danh sách hóa đơn</p>
         </div>
@@ -132,9 +128,7 @@ const BillList = () => {
                 <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
                   STT
                 </th>
-                <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700">
-                  Mã hóa đơn
-                </th>
+
                 <th className="py-3 px-4 text-left text-sl font-semibold text-gray-700 w-[210px]">
                   Tên khách hàng
                 </th>
@@ -165,11 +159,6 @@ const BillList = () => {
                     <td className="py-3 px-4 text-sl font-medium text-gray-800">
                       <Link to={`/admin/bills/${bill._id}/detail`}>
                         {startIndex + index + 1}
-                      </Link>
-                    </td>
-                    <td className="py-3 px-4 text-sl text-gray-800">
-                      <Link to={`/admin/bills/${bill._id}/detail`}>
-                        {bill._id}
                       </Link>
                     </td>
                     <td className="py-3 px-4 text-sl text-gray-800 break-words">

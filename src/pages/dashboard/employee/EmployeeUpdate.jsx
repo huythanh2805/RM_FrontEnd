@@ -84,8 +84,8 @@ const EmployeeUpdate = () => {
               {...register("gender", { required: "Giới tính là bắt buộc" })}
             >
               <option value="">Chọn giới tính</option>
-              <option value="MALE">MALE</option>
-              <option value="FEMALE">FEMALE</option>
+              <option value="MALE">Nam</option>
+              <option value="FEMALE">Nữ</option>
             </select>
             {errors.gender && (
               <p className="mt-2 text-sm text-red-600">
@@ -136,16 +136,39 @@ const EmployeeUpdate = () => {
                 required: "Vị trí công việc là bắt buộc",
               })}
             >
-              <option>Chọn vị trí</option>
-              <option>Bếp trưởng</option>
-              <option>Phụ bếp</option>
-              <option>Nhân viên phục vụ</option>
-              <option>Quản lý nhà hàng</option>
-              <option>Lễ tân</option>
+              <option value="">Chọn vị trí</option>
+              <option value="Quản lí">Quản lí</option>
+              <option value="Thu ngân">Thu ngân</option>
+              <option value="Nhân viên kho">Nhân viên kho</option>
+              <option value="Nhân viên order">Nhân viên order</option>
             </select>
             {errors.workPosition && (
               <p className="mt-2 text-sm text-red-600">
                 {errors.workPosition.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="employStatus"
+              className="text-sm font-medium text-gray-700"
+            >
+              Trạng thái làm việc:
+            </label>
+            <select
+              className="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none"
+              {...register("employStatus", {
+                required: "Trạng thái làm việc là bắt buộc",
+              })}
+            >
+              <option value="">Chọn trạng thái</option>
+              <option value="ACTIVE">Đang làm việc</option>
+              <option value="LEAVED">Đã nghỉ việc</option>
+            </select>
+            {errors.employStatus && (
+              <p className="mt-2 text-sm text-red-600">
+                {errors.employStatus.message}
               </p>
             )}
           </div>

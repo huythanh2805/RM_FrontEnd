@@ -92,12 +92,48 @@ const WorkScheduleList = () => {
         <p className="text-3xl font-semibold text-gray-800">
           Danh sách lịch làm việc
         </p>
-        <input
-          type="text"
-          placeholder="Tìm kiếm nhân viên..."
-          className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full max-w-sm p-2.5"
-          onChange={handleSearchValue}
-        />
+        <Link to="/admin/addWorkSchedule">
+          <div className="bg-green-200 text-green-800 px-6 py-2 rounded-md text-sl font-semibold hover:bg-green-300 transition">
+            Thêm lịch làm việc +
+          </div>
+        </Link>
+      </div>
+
+      <div className="mb-4">
+        <div className="relative w-full max-w-sm min-w-[200px]">
+          <label htmlFor="Search" className="sr-only">
+            Search
+          </label>
+
+          <input
+            type="text"
+            id="Search"
+            placeholder="Tìm kiếm..."
+            className="bg-white border border-gray-300 text-gray-900 text-sl rounded-lg w-full p-2.5"
+            onChange={handleSearchValue}
+          />
+
+          <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
+            <button type="button" className="text-gray-600 hover:text-gray-700">
+              <span className="sr-only">Search</span>
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="size-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                />
+              </svg>
+            </button>
+          </span>
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-xl border border-[#d5d5d5]">
@@ -141,14 +177,14 @@ const WorkScheduleList = () => {
                     <div className="flex items-center gap-3">
                       <Link to={`/admin/workSchedule/${schedule._id}/update`}>
                         <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">
-                          <FaPenToSquare />
+                          <FaPenToSquare size={18} />
                         </div>
                       </Link>
                       <div
                         className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-xs lg:text-base font-semibold hover:bg-red-300 transition"
                         onClick={() => handleDelete(schedule._id)}
                       >
-                        <FaRegTrashCan />
+                        <FaRegTrashCan size={18} />
                       </div>
                     </div>
                   </td>
