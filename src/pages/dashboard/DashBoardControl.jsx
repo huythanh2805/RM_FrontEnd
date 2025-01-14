@@ -1,32 +1,27 @@
-import React, { useEffect, useState } from "react"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import DatePicker from "react-datepicker"
+import { CalendarRange } from "lucide-react"
+import { Input } from "@/components/ui/input";
+
 function DashBoardControl({ startDate, setStartDate, endDate, setEndDate }) {
   return (
     <div className="flex items-center gap-5">
-      <div className="max-w-fit">
-      <DatePicker
-          className="w-full bg-light-bg dark:bg-dark-bg focus:outline-none px-3 py-2 border border-gray-200 dark:border-gray-800 rounded-md focus:border-b-blue-1"
-          placeholderText="Chọn ngày"
-          selected={startDate}
-          onChange={(date) => setStartDate(date)}
-          dateFormat={"dd/MM/yyyy"}
+      <div className="relative">
+        <Input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="pl-10"
         />
+        <CalendarRange className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
       </div>
-      <div className="max-w-fit">
-        <DatePicker
-          className="w-full bg-light-bg dark:bg-dark-bg focus:outline-none px-3 py-2 border border-gray-200 dark:border-gray-800 rounded-md  focus:border-b-blue-1"
-          placeholderText="Chọn ngày"
-          selected={endDate}
-          onChange={(date) => setEndDate(date)}
-          dateFormat={"dd/MM/yyyy"}
+
+      <div className="relative">
+        <Input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="pl-10"
         />
+        <CalendarRange className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
       </div>
     </div>
   )

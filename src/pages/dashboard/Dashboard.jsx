@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { FaCalculator, FaMoneyBillAlt, FaSyncAlt } from "react-icons/fa";
 import { TbTruckDelivery } from "react-icons/tb";
 import FavorFoodChart from "./charts/FavorFoodChart";
+import { StockListDashboard } from "./charts/ListStock";
 import ReserVationChart from "./charts/ReservationChart";
 import RevenueChart from "./charts/RevenueChart";
 import Top5UserOrderTable from "./charts/Top5UserOrderTable";
@@ -179,16 +180,14 @@ const Dashboard = () => {
     fetData();
   }, [startDate, endDate]);
   return (
-
-    <div className="px-5">
-      <div className="w-full flex items-center justify-between">
+    <div className="px-4 mx-auto">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-4">
-          <p className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 via-teal-400 to-purple-500 text-transparent bg-clip-text drop-shadow-md">
-            Thống Kê
+          <p className="text-3xl font-bold">
+            Thống kê
           </p>
         </div>
-
-
         <DashBoardControl
           startDate={startDate}
           setStartDate={setStartDate}
@@ -197,9 +196,10 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4 2xl:gap-8 py-4">
+      {/* Stats Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6 mb-8">
         <DashBoardCard
-          title={"Doanh số"}
+          title="Doanh thu"
           value={formatCurrency(revenueCard)}
           icon={
             <div className="flex h-10 w-10 rounded-full bg-gradient-to-r from-blue-1 to-blue-500 p-3">
@@ -207,21 +207,21 @@ const Dashboard = () => {
             </div>
           }
           data={allBillByMonth}
-          type={"revenue"}
+          type="revenue"
         />
         <DashBoardCard
-          title={"Đơn đặt bàn"}
+          title="Đơn đặt bàn"
           value={successedReserCard + canceledReserCard}
           icon={
-            <div className="flex h-10 w-10 rounded-full bg-gradient-to-r  from-purple-400 to-pink-500 p-3">
+            <div className="flex h-10 w-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 p-3">
               <FaCalculator size={18} color="white" />
             </div>
           }
           data={reservationStatusChart}
-          type={"toalReser"}
+          type="toalReser"
         />
         <DashBoardCard
-          title={"Đơn thành công"}
+          title="Đơn thành công"
           value={successedReserCard}
           icon={
             <div className="flex h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-teal-400 p-3">
@@ -229,10 +229,10 @@ const Dashboard = () => {
             </div>
           }
           data={reservationStatusChart}
-          type={"successReser"}
+          type="successReser"
         />
         <DashBoardCard
-          title={"Đơn hủy"}
+          title="Đơn hủy"
           value={canceledReserCard}
           icon={
             <div className="flex h-10 w-10 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 p-3">
@@ -240,29 +240,37 @@ const Dashboard = () => {
             </div>
           }
           data={reservationStatusChart}
-          type={"canceledReser"}
+          type="canceledReser"
         />
       </div>
 
-      <div class="grid grid-cols-4 gap-4">
-        <div class="col-span-3 ">
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6">
+        {/* Revenue Chart - Spans 3 columns on large screens */}
+        <div className="lg:col-span-3 bg-white rounded-lg shadow-sm p-4">
           <RevenueChart
             allBillByMonth={allBillByMonth}
             startTime={formatDateNoTime(startDate)}
             endTime={formatDateNoTime(endDate)}
           />
         </div>
-        <div class="col-span-1">
+
+        {/* Top 5 Users - Spans 1 column */}
+        <div className="lg:col-span-1 bg-white rounded-lg shadow-sm p-4">
           <Top5UserOrderTable top5UserOrder={top5UserOrder} />
         </div>
-        <div class="col-span-1 ">
+
+        {/* Favorite Food Chart - Spans 1 column */}
+        <div className="lg:col-span-1 bg-white rounded-lg shadow-sm p-4">
           <FavorFoodChart
             top5Dishes={top5Dishes}
             startTime={formatDateNoTime(startDate)}
             endTime={formatDateNoTime(endDate)}
           />
         </div>
-        <div class="col-span-3">
+
+        {/* Reservation Chart - Spans 3 columns on large screens */}
+        <div className="lg:col-span-3 bg-white rounded-lg shadow-sm p-4">
           <ReserVationChart
             reservationStatusChart={reservationStatusChart}
             startTime={formatDateNoTime(startDate)}
@@ -270,6 +278,19 @@ const Dashboard = () => {
           />
         </div>
       </div>
+      <div className="mt-6">
+        {/* Reservation Chart - Spans 3 columns on large screens */}
+        <div className="lg:col-span-3 bg-white rounded-lg shadow-sm w-full">
+          <StockListDashboard
+            reservationStatusChart={reservationStatusChart}
+            startTime={formatDateNoTime(startDate)}
+            endTime={formatDateNoTime(endDate)}
+          />
+        </div>
+      </div>
+
+
+
     </div>
 
   );
