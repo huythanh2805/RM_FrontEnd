@@ -12,6 +12,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useList } from "@/hooks/dashboard/stocks/useList";
+import { formatDateNoTime } from "@/utilities/utils";
 import {
     Clock
 } from "lucide-react";
