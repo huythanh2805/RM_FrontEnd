@@ -57,7 +57,9 @@ export function AppSidebar() {
     ],
     ORDER: [
       { title: "Trang chủ", url: "/admin", icon: Home },
+      { title: "Danh sách đặt bàn", url: "/admin/listReser", icon: List },
       { title: "Bàn", url: "/admin/tables", icon: Table },
+      { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
     ],
     WAREHOUSE: [
       { title: "Trang chủ", url: "/admin", icon: Home },
@@ -66,6 +68,7 @@ export function AppSidebar() {
     CASHIER: [
       { title: "Trang chủ", url: "/admin", icon: Home },
       { title: "Danh sách đặt bàn", url: "/admin/listReser", icon: List },
+      { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
     ],
   };
 

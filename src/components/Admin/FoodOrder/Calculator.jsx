@@ -31,6 +31,7 @@ import { Check, ChevronRight } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { io } from "socket.io-client"
 import { cn } from "@/lib/utils"
+import useGetCurrentUser from "@/hooks/auth/useGetCurrentUser"
 
 const statusOptions = [
   {
@@ -71,6 +72,7 @@ const Calculator = ({
   const [groupFoods, setGroupFoods] = useState([])
   const [isNotForPayment, setIsNotForPayment] = useState(false)
   const navigate = useNavigate()
+  const user = useGetCurrentUser()
 
   const totalPrice = orderedFoods.reduce((sum, item) => {
     if (item.status === "ISCANCELED") return sum + 0
@@ -394,9 +396,9 @@ const Calculator = ({
           </Button>
 
           <Dialog>
-            <DialogTrigger disabled={isNotForPayment} className="flex-1">
+            <DialogTrigger disabled={isNotForPayment || user.role === "ORDER" || totalPrice === 0} className="flex-1">
               <Button
-                disabled={isNotForPayment}
+                disabled={isNotForPayment || user.role === "ORDER" || totalPrice === 0}
                 className="w-full py-6 text-[17px] text-white dark:text-white bg-green-1 dark:bg-green-1 hover:scale-95 transition-transform duration-150 ease-linear"
               >
                 Thanh toán

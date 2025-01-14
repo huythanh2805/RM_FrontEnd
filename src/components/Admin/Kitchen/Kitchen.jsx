@@ -203,8 +203,8 @@ function Kitchen() {
                               <div className="font-medium w-[300px] text-start px-4">
                                 {item.userName}
                               </div>
-                              <div className="font-medium text-start px-4 flex-1">
-                                {item.table_id.name}
+                            <div className="font-medium text-start px-4 flex-1">
+                                {item.table_id?.name}
                               </div>
                               <div className="font-medium text-start px-4 ">
                                 {

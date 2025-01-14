@@ -141,6 +141,12 @@ const Header = () => {
                     <DropdownMenuItem className="hover:bg-gray-100 text-gray-800">
                       <Link to={`/history/${user?._id}`}>Lịch sử đặt bàn</Link>
                     </DropdownMenuItem>
+                    {
+                      user && user.role !== "CLIENT" &&
+                    <DropdownMenuItem className="hover:bg-gray-100 text-gray-800">
+                      <Link to={`/admin`}>Quản trị</Link>
+                    </DropdownMenuItem>
+                    }
                     <DropdownMenuItem
                       onClick={() => {
                         Swal.fire({

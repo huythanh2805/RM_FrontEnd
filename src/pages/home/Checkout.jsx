@@ -95,7 +95,7 @@ export const Checkout = () => {
       setTotalDeposit((pre) => pre + vat);
     }
   }, [prePayment]);
-console.log(cart.length)
+console.log({reservationDetails})
   const handlePayment = async () => {
     if (!reservationDetails) {
       return toast({
