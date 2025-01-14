@@ -1,5 +1,5 @@
 import { useDetailImportNotes } from "@/hooks/dashboard/import-notes/useDetail";
-import { formatCurrency } from "@/utilities/utils";
+import { formatCurrency, formatDate } from "@/utilities/utils";
 import { Link } from "react-router-dom";
 
 export const ImportNotesDetail = () => {
@@ -80,6 +80,7 @@ export const ImportNotesDetail = () => {
                 <th className="py-3 px-4 lg:px-6">Tên SP</th>
                 <th className="py-3 px-4 lg:px-6 text-center">Giá</th>
                 <th className="py-3 px-4 lg:px-6 text-center">Số lượng</th>
+                <th className="py-3 px-4 lg:px-6 text-center">Hạn sử dụng</th>
                 <th className="py-3 px-4 lg:px-6 text-center">Tổng</th>
               </tr>
             </thead>
@@ -94,6 +95,7 @@ export const ImportNotesDetail = () => {
                   <td className="py-4 px-6 text-sl font-medium text-[#202224]">{product?.product.name}</td>
                   <td className="py-4 px-6 text-sl text-center">{formatCurrency(product?.price)}</td>
                   <td className="py-4 px-6 text-sl text-center">{product?.quantity}</td>
+                  <td className="py-4 px-6 text-sl text-center">{formatDate(product?.expiryDate)}</td>
                   <td className="py-4 px-6 text-sl text-center">
                     {formatCurrency(product?.price * product?.quantity)}
                   </td>

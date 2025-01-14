@@ -30,16 +30,18 @@ export const ImportNotesList = () => {
 
   // Lọc dữ liệu dựa trên tìm kiếm, nhà cung cấp, người tạo và khoảng thời gian
   const filteredImportNotes = useMemo(() => {
-    return importNotesData?.filter((note) => {
-      const matchesCode = note?.code?.toLowerCase().includes(searchValue.toLowerCase());
-      const matchesSupplier = !filterSupplier || note?.seller?.name === filterSupplier;
-      const matchesCreator = !filterCreator || note?.createdBy?.userName === filterCreator;
-      const matchesDate =
-        (!startDate || new Date(note.createdAt).setHours(0, 0, 0, 0) >= new Date(startDate).setHours(0, 0, 0, 0)) &&
-        (!endDate || new Date(note.createdAt).setHours(23, 59, 59, 999) <= new Date(endDate).setHours(23, 59, 59, 999));
+    return importNotesData
+      ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sắp xếp giảm dần theo ngày tạo
+      ?.filter((note) => {
+        const matchesCode = note?.code?.toLowerCase().includes(searchValue.toLowerCase());
+        const matchesSupplier = !filterSupplier || note?.seller?.name === filterSupplier;
+        const matchesCreator = !filterCreator || note?.createdBy?.userName === filterCreator;
+        const matchesDate =
+          (!startDate || new Date(note.createdAt).setHours(0, 0, 0, 0) >= new Date(startDate).setHours(0, 0, 0, 0)) &&
+          (!endDate || new Date(note.createdAt).setHours(23, 59, 59, 999) <= new Date(endDate).setHours(23, 59, 59, 999));
 
-      return matchesCode && matchesSupplier && matchesCreator && matchesDate;
-    });
+        return matchesCode && matchesSupplier && matchesCreator && matchesDate;
+      });
   }, [importNotesData, searchValue, filterSupplier, filterCreator, startDate, endDate]);
 
   // Tính tổng số tiền của các phiếu nhập sau khi lọc

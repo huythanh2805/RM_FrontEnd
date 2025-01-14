@@ -66,6 +66,8 @@ export const ExportNotesList = () => {
       { header: "Người tạo", key: "createdBy", width: 15 },
       { header: "Tên Sản phẩm", key: "productName", width: 25 },
       { header: "Số lượng", key: "quantity", width: 10 },
+      { header: "Giá nhập", key: "price", width: 10 },
+      { header: "Thành tiền", key: "totalProduct", width: 10 },
     ];
 
     // Định dạng tiêu đề
@@ -95,6 +97,8 @@ export const ExportNotesList = () => {
           createdBy: note?.createdBy?.userName,
           productName: stock?.stock?.product?.name || "N/A",
           quantity: stock?.quantity,
+          price: formatCurrency(stock?.price),
+          totalProduct: formatCurrency(stock?.quantity * stock?.price),
         });
         currentRowIndex++;
       });
