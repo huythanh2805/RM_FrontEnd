@@ -9,7 +9,7 @@ export function RoleProtectComponentAdmin({ children, isRoleRequiredArrays }) {
     return jwtDecode(token);
   });
   const isAuthenticated = token; // Có token => đã đăng nhập
-  const roleRequired = isRoleRequiredArrays.includes(token.role);
+  const roleRequired = isRoleRequiredArrays.includes(token?.role);
   if (!isAuthenticated || !roleRequired) {
     // Chuyển hướng đến trang login nếu chưa đăng nhập
     return <Navigate to="/admin" replace />;
@@ -24,7 +24,7 @@ export function RoleProtectComponentClient({ children, isRoleRequiredArrays }) {
     return jwtDecode(token);
   });
   const isAuthenticated = token; // Có token => đã đăng nhập
-  const roleRequired = isRoleRequiredArrays.includes(token.role);
+  const roleRequired = isRoleRequiredArrays.includes(token?.role);
   if (!isAuthenticated || !roleRequired) {
     // Chuyển hướng đến trang login nếu chưa đăng nhập
     return <Navigate to="/" replace />;

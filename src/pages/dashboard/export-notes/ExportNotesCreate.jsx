@@ -55,7 +55,6 @@ export const ExportNotesCreate = () => {
       const productName = item.product?.name?.toLowerCase() || "";
       const productCode = item.product?.code?.toLowerCase() || "";
       const keyword = searchKeyword.toLowerCase();
-
       return productName.includes(keyword) || productCode.includes(keyword);
     })
     : [];
