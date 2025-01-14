@@ -38,6 +38,7 @@ import {
   Search
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import * as XLSX from "xlsx";
 
 const calculateTimeLeft = (expiryDate) => {
@@ -241,6 +242,8 @@ export const StockList = () => {
                   <TableHead>Tên SP</TableHead>
                   <TableHead>Số lượng tồn</TableHead>
                   <TableHead>Hạn sử dụng</TableHead>
+                  <TableHead>Hành động</TableHead>
+
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -255,6 +258,13 @@ export const StockList = () => {
                         <Clock className="h-4 w-4" />
                         {calculateTimeLeft(stock?.expiryDate).text}
                       </span>
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/admin/history-take-inventory/${stock._id}`}>
+                        <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                          Lịch sử kiểm kê
+                        </button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}
