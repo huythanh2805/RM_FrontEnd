@@ -89,7 +89,7 @@ function Kitchen() {
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold text-gray-800">
-            Danh sách đánh giá
+            Nhà bếp
           </p>
           {/* Thông báo */}
           <div className="relative cursor-pointer">

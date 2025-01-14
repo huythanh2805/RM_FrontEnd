@@ -75,11 +75,11 @@ export default function LocationComponent(Props) {
       className="relative rounded-md"
     >
       <Dialog>
-        <DialogTrigger className="absolute top-0 right-0 z-30  translate-x-[50%] translate-y-[-50%] hover:scale-90 hover:rotate-45 transition-all duration-300 ease-in-out">
+        {/* <DialogTrigger className="absolute top-0 right-0 z-30  translate-x-[50%] translate-y-[-50%] hover:scale-90 hover:rotate-45 transition-all duration-300 ease-in-out">
           <div className=" px-2 py-2 rounded-full bg-red-1 border-none text-white dark:text-white">
             <Trash width={20} height={20} />
           </div>
-        </DialogTrigger>
+        </DialogTrigger> */}
         <DialogContent className="bg-light-bg_2 dark:bg-dark-bg_2 text-light-text dark:text-dark-text">
           <DialogHeader>
             <DialogTitle>Bạn có chắc muốn xóa không?</DialogTitle>

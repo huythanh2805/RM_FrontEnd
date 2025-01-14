@@ -326,7 +326,7 @@ export default function TableManagement() {
   return (
     <div >
       <div className="px-5 ">
-        <p className="text-3xl font-extrabold bg-gradient-to-r from-black text-transparent bg-clip-text drop-shadow-md">
+        <p className="text-3xl font-semibold pb-3">
           Danh sách bàn
         </p>
       </div>

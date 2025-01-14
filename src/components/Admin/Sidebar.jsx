@@ -11,6 +11,7 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import jwtDecode from "jwt-decode";
 import {
+  Beef,
   Calendar,
   ChefHat,
   ChevronDown,
@@ -18,18 +19,23 @@ import {
   DollarSign,
   Grid,
   Home,
+  HousePlug,
   Layers,
   List,
+  ListOrdered,
   MessageCircle,
   Salad,
   Soup,
   Table,
   Ticket,
+  TicketMinus,
   TicketPlus,
   User,
+  Warehouse,
 } from "lucide-react";
 import { useState } from "react";
 import { CiViewList } from "react-icons/ci";
+import { TbHomePlus } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 
 export function AppSidebar() {
@@ -89,12 +95,12 @@ export function AppSidebar() {
   ];
 
   const warehouseItems = [
-    { title: "Nhà cung cấp", url: "/admin/sellers", icon: Salad },
-    { title: "Thực phẩm", url: "/admin/products", icon: Salad },
-    { title: "Tồn kho", url: "/admin/stocks", icon: Salad },
-    { title: "Kiểm kê số lượng", url: "/admin/take-inventory", icon: Salad },
-    { title: "Phiếu nhập", url: "/admin/import-notes", icon: Salad },
-    { title: "Phiếu xuất", url: "/admin/export-notes", icon: Salad },
+    { title: "Nhà cung cấp", url: "/admin/sellers", icon: HousePlug },
+    { title: "Thực phẩm", url: "/admin/products", icon: Beef},
+    { title: "Tồn kho", url: "/admin/stocks", icon: Warehouse },
+    { title: "Kiểm kê số lượng", url: "/admin/take-inventory", icon: ListOrdered },
+    { title: "Phiếu nhập", url: "/admin/import-notes", icon: TicketPlus },
+    { title: "Phiếu xuất", url: "/admin/export-notes", icon: TicketMinus },
   ];
 
   const isActive = (path) => location.pathname === path;
