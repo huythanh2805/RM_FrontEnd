@@ -105,7 +105,7 @@ export const getListTakeInventoryByStockID = async (id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data;
+    return response.data || [];
   } catch (error) {
     throw error;
   }
