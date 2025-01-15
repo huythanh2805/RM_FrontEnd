@@ -7,6 +7,7 @@ import BASE_URL from "@/configs";
 import CLOUDINARY_URL from "@/configs/cloudinary_api";
 import { toast } from "@/hooks/use-toast";
 import Pagination from "@/components/Pagination";
+import { formatCurrency } from "@/utilities/utils";
 
 const SetComboAdd = () => {
   const {
@@ -21,6 +22,7 @@ const SetComboAdd = () => {
   const [dishImage, setDishImage] = useState([]); // Ảnh của sản phẩm đã chọn
   const [images, setImages] = useState([]);
   const [imagesErr, setImagesErr] = useState(false);
+  const [selectDishErr, setSelectDishErr] = useState(false);
   const [imagesUpload, setImagesUpload] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemPerPage = 9;
@@ -85,7 +87,7 @@ const SetComboAdd = () => {
   };
 
   const handleSelectDish = (dishId) => {
-    console.log(dishId);
+    setSelectDishErr(false);
     setSelectDish((prev) =>
       prev.includes(dishId)
         ? prev.filter((id) => id !== dishId)
@@ -98,9 +100,11 @@ const SetComboAdd = () => {
     const selectedDish = dishes.filter((dish) => selectDish.includes(dish._id));
     console.log(selectedDish);
     // Map ra lấy ảnh của những sản phẩm được chọn
-    const selectedImage = selectedDish.map((item) => item.images[0]);
-    console.log(selectedImage);
-    setDishImage(selectedImage);
+    const selectedData = selectedDish.map((item) => ({
+      image: item.images[0],
+      price: item.price,
+    }));
+    setDishImage(selectedData);
     setIsMenu(false);
   };
 
@@ -108,7 +112,11 @@ const SetComboAdd = () => {
     try {
       if (images.length === 0) {
         setImagesErr(true);
-        // console.log(imagesErr);
+        return;
+      }
+
+      if (selectDish.length === 0) {
+        setSelectDishErr(true);
         return;
       }
 
@@ -264,16 +272,21 @@ const SetComboAdd = () => {
                 {dishImage.map((url, index) => (
                   <div key={index} className="relative mt-2">
                     <img
-                      src={url}
+                      src={url.image}
                       alt={`Uploaded ${index}`}
                       className="w-24 h-24 object-cover rounded"
                     />
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded">
+                      <span className="text-white font-bold text-sm">
+                        {formatCurrency(url.price)}
+                      </span>
+                    </div>
                   </div>
                 ))}
 
                 {/* Nút hình ảnh */}
                 <div
-                  className={`flex items-center justify-center mt-2 w-24 h-24 border-2 border-gray-400 border-dashed rounded bg-white`}
+                  className={`flex items-center justify-center mt-2 w-24 h-24 border-2 border-dashed rounded bg-white`}
                   onClick={() => handleOpenMenu()}
                 >
                   <FaPlus
@@ -284,14 +297,22 @@ const SetComboAdd = () => {
               </div>
             ) : (
               <div
-                className={`flex items-center justify-center mt-2 w-24 h-24 border-2 border-gray-400 border-dashed rounded bg-white`}
+                className={`flex items-center justify-center mt-2 w-24 h-24 border-2 border-gray-400 ${
+                    selectDishErr ? "border-red-400" : "border-gray-400"
+                  } border-dashed rounded bg-white`}
                 onClick={() => handleOpenMenu()}
               >
                 <FaPlus
                   size={40}
-                  className={imagesErr ? "text-red-600" : "text-gray-600"}
+                  className={selectDishErr ? "text-red-600" : "text-gray-600"}
                 />
               </div>
+            )}
+
+            {selectDishErr && (
+              <p className="mt-2 text-sl text-red-600">
+                Vui lòng chọn ít nhất một món ăn trong combo.
+              </p>
             )}
 
             {/* Modal Menu */}
@@ -321,6 +342,9 @@ const SetComboAdd = () => {
                             {selectDish.includes(dish._id)
                               ? "Đã chọn"
                               : dish.name}
+                          </p>
+                          <p className="mb-2 text-center text-sm">
+                            {formatCurrency(dish.price)}
                           </p>
                         </div>
                       </div>

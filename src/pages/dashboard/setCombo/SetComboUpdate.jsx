@@ -24,6 +24,7 @@ const SetComboUpdate = () => {
   const [dishImage, setDishImage] = useState([]);
   const [images, setImages] = useState([]);
   const [imagesErr, setImagesErr] = useState(false);
+  const [selectDishErr, setSelectDishErr] = useState(false);
   const [imagesUpload, setImagesUpload] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemPerPage = 9;
@@ -108,6 +109,7 @@ const SetComboUpdate = () => {
   };
 
   const handleSelectDish = (dishId) => {
+    setSelectDishErr(false);
     setSelectDish((prev) =>
       prev.includes(dishId)
         ? prev.filter((id) => id !== dishId)
@@ -126,6 +128,11 @@ const SetComboUpdate = () => {
     try {
       if (images.length === 0) {
         setImagesErr(true);
+        return;
+      }
+
+      if (selectDish.length === 0) {
+        setSelectDishErr(true);
         return;
       }
 
@@ -300,14 +307,22 @@ const SetComboUpdate = () => {
               </div>
             ) : (
               <div
-                className={`flex items-center justify-center mt-2 w-24 h-24 border-2 border-gray-400 border-dashed rounded bg-white`}
+                className={`flex items-center justify-center mt-2 w-24 h-24 border-2 ${
+                  selectDishErr ? "border-red-400" : "border-gray-400"
+                } border-dashed rounded bg-white`}
                 onClick={() => handleOpenMenu()}
               >
                 <FaPlus
                   size={40}
-                  className={imagesErr ? "text-red-600" : "text-gray-600"}
+                  className={selectDishErr ? "text-red-600" : "text-gray-600"}
                 />
               </div>
+            )}
+
+            {selectDishErr && (
+              <p className="mt-2 text-sl text-red-600">
+                Vui lòng chọn ít nhất một món ăn trong combo.
+              </p>
             )}
 
             {/* Modal Menu */}

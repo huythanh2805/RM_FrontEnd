@@ -26,7 +26,7 @@ const SetComboDetail = () => {
 
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Xác nhận xóa?",
+      title: "Xác nhận xóa ?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -36,8 +36,12 @@ const SetComboDetail = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(BASE_URL + `/setCombos/${id}`)
-          .then(() => {
+          .put(`${import.meta.env.VITE_API_BASE_URL}/setCombos/${id}`, {
+            isDelete: true,
+            isShow: false,
+          })
+          .then((res) => {
+            console.log(res);
             Swal.fire({
               title: "Đã xóa!",
               text: "Combo đã được xóa thành công.",
@@ -110,11 +114,11 @@ const SetComboDetail = () => {
                   Trạng thái:
                   {dataCombo.isShow ? (
                     <span className="bg-green-200 text-green-600 px-2 py-0.5 rounded-sm ml-2">
-                      Có sẵn
+                      Hiển thị
                     </span>
                   ) : (
                     <span className="bg-gray-200 text-gray-600 px-2 py-0.5 rounded-sm ml-2">
-                      Hết hàng
+                      Tạm ẩn
                     </span>
                   )}
                 </div>
