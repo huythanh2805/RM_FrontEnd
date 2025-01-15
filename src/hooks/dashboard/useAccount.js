@@ -3,7 +3,6 @@ import {
   addUserService,
   getUserByIdService,
   getUserByRoleService,
-  updateUserIsDelete,
   updateUserService,
   userListService,
 } from "@/services/users";
@@ -157,19 +156,6 @@ export const useUser = (id, form) => {
     },
   });
 
-  const deleteUserMutation = useMutation((userId) => updateUserIsDelete(userId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["userListService"]);
-      toast({ variant: "success", title: "Xóa tài khoản thành công" });
-    },
-    onError: (error) => {
-      const errorMessage = error.response?.data?.message || "Lỗi xóa tài khoản";
-      toast({
-        variant: "destructive",
-        title: errorMessage,
-      });
-    },
-  });
 
   const handleAdd = (data) => {
     addUserMutation.mutate(data);
@@ -187,7 +173,7 @@ export const useUser = (id, form) => {
     handleImageChange,
     selectedImage,
     imageFile,
-    deleteUser: deleteUserMutation.mutateAsync,
+
     handleAdd,
     handleUpdate,
     resetForm, listRole

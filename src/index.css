@@ -2,11 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-.swiper-button-next:after, .swiper-rtl .swiper-button-prev:after {
-  display: none
+.swiper-button-next:after,
+.swiper-rtl .swiper-button-prev:after {
+  display: none;
 }
-.swiper-button-prev:after, .swiper-rtl .swiper-button-next:after {
-  display: none
+.swiper-button-prev:after,
+.swiper-rtl .swiper-button-next:after {
+  display: none;
 }
 @layer base {
   section {
@@ -20,7 +22,7 @@
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
     --sidebar-background: 240 5.9% 10%;
@@ -30,7 +32,7 @@
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 @layer components {
@@ -43,11 +45,11 @@
   .text__para {
     @apply text-[18px] leading-[30px] font-[400] text-light-textSoft dark:text-dark-textSoft mt-[18px];
   }
-  .separate_line{
-    @apply bg-gradient-to-r from-transparent via-gray-400 dark:via-[#FFFFFF66] opacity-75 to-transparent w-full h-[1px] border-none
+  .separate_line {
+    @apply bg-gradient-to-r from-transparent via-gray-400 dark:via-[#FFFFFF66] opacity-75 to-transparent w-full h-[1px] border-none;
   }
-  .ver_separate_line{
-    @apply bg-gradient-to-b from-transparent via-gray-400 dark:via-[#FFFFFF66] opacity-75 to-transparent h-full w-[1px] border-none
+  .ver_separate_line {
+    @apply bg-gradient-to-b from-transparent via-gray-400 dark:via-[#FFFFFF66] opacity-75 to-transparent h-full w-[1px] border-none;
   }
 }
 
@@ -61,7 +63,6 @@
 }
 
 @media only screen and (max-width: 768px) {
-  
   .container {
     @apply px-3;
   }

@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import { loginService } from "@/services/auth-service";
 import jwtDecode from "jwt-decode";
 import { useState } from "react";
@@ -14,7 +15,7 @@ export const useLogin = (setIsLoggedIn) => {
   const navigate = useNavigate();
 
   const handleLoginSubmit = async (data) => {
-    setError(null);
+    setError(null); // Xóa lỗi trước đó
     try {
       const response = await loginService(data);
       const token = response.data.token;
@@ -22,16 +23,21 @@ export const useLogin = (setIsLoggedIn) => {
       const role = decodedToken?.role;
       localStorage.setItem("token", token);
       setIsLoggedIn(true);
+
+      toast({ variant: "success", title: "Đăng nhập thành công" })
+
       if (role === "ADMIN") {
         navigate("/admin");
       } else {
         navigate("/");
       }
-    } catch (error) {
-      setError(error.response?.data?.message || "Đăng nhập thất bại");
-      console.error(error);
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || "Đăng nhập thất bại";
+      setError(errorMessage); // Gắn lỗi vào state
+      toast({ variant: "destructive", title: errorMessage });
     }
   };
+
 
   return { register, handleSubmit, handleLoginSubmit, error, errors };
 };
