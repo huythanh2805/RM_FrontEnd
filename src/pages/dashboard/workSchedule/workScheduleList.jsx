@@ -148,6 +148,7 @@ const WorkScheduleList = () => {
               <th className="py-3 px-6 font-bold">Tuần 2</th>
               <th className="py-3 px-6 font-bold">Tuần 3</th>
               <th className="py-3 px-6 font-bold">Tuần 4</th>
+              <th className="py-3 px-6 font-bold">Trạng thái</th>
               <th className="py-3 px-6 font-bold">Hành động</th>
             </tr>
           </thead>
@@ -173,20 +174,32 @@ const WorkScheduleList = () => {
                   <td className="py-3 px-6">{mapShift(schedule.week_2)}</td>
                   <td className="py-3 px-6">{mapShift(schedule.week_3)}</td>
                   <td className="py-3 px-6">{mapShift(schedule.week_4)}</td>
+                  <td
+                    className={`py-3 px-6 ${
+                      schedule.isShow ? "text-red-800 font-semibold" : "text-green-800 font-semibold"
+                    }`}
+                  >
+                    {schedule.isShow ? "Đã nghỉ việc" : "Đang làm việc"}
+                  </td>
+
                   <td className="py-3 px-6">
-                    <div className="flex items-center gap-3">
-                      <Link to={`/admin/workSchedule/${schedule._id}/update`}>
-                        <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">
-                          <FaPenToSquare size={18} />
-                        </div>
-                      </Link>
-                      <div
-                        className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-xs lg:text-base font-semibold hover:bg-red-300 transition"
-                        onClick={() => handleDelete(schedule._id)}
-                      >
-                        <FaRegTrashCan size={18} />
+                    {schedule.isShow == false ? (
+                      <div className="flex items-center gap-3">
+                        <Link to={`/admin/workSchedule/${schedule._id}/update`}>
+                          <div className="bg-blue-200 text-blue-800 px-3 py-1 rounded-lg text-xs lg:text-base font-semibold hover:bg-blue-300 transition">
+                            <FaPenToSquare size={18} />
+                          </div>
+                        </Link>
+                        {/* <div
+                            className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-xs lg:text-base font-semibold hover:bg-red-300 transition"
+                            onClick={() => handleDelete(schedule._id)}
+                          >
+                            <FaRegTrashCan size={18} />
+                          </div> */}
                       </div>
-                    </div>
+                    ) : (
+                      <div></div>
+                    )}
                   </td>
                 </tr>
               ))

@@ -1,9 +1,11 @@
 import Pagination from "@/components/Pagination";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FaPenToSquare, FaRegTrashCan } from "react-icons/fa6";
+import { FaPenToSquare } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Switch } from "@/components/ui/switch";
+import { TableCell } from "@/components/ui/table";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
@@ -17,7 +19,8 @@ const EmployeeList = () => {
       .get(`${import.meta.env.VITE_API_BASE_URL}/employees`)
       .then((res) => {
         setEmployees(res.data.filter((item) => item.isDelete == false));
-        console.log(res.d);
+        console.log(res.data);
+        
       })
       .catch((err) => {
         console.log(err);
@@ -54,9 +57,46 @@ const EmployeeList = () => {
   const handlePageChange = (e) => {
     setCurrentPage(e.selected + 1);
   };
-  const handleDelete = (id) => {
+
+  // const handleDelete = (id) => {
+  //   Swal.fire({
+  //     title: "Xác nhận xóa?",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Xác nhận",
+  //     cancelButtonText: "Hủy",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       axios
+  //         .put(`${import.meta.env.VITE_API_BASE_URL}/employees/${id}`, {
+  //           isDelete: true,
+  //         })
+  //         .then(() => {
+  //           Swal.fire({
+  //             title: "Đã xóa!",
+  //             text: "Nhân viên đã được xóa thành công!",
+  //             icon: "success",
+  //           });
+  //           fetchData();
+  //         })
+  //         .catch((err) => {
+  //           console.error(err);
+  //           Swal.fire({
+  //             title: "Lỗi!",
+  //             text: "Không thể xóa nhân viên!",
+  //             icon: "error",
+  //           });
+  //         });
+  //     }
+  //   });
+  // };
+  const toggleEmployeeStatus = (id, currentStatus) => {
+    const newStatus = currentStatus === "ACTIVE" ? "LEAVED" : "ACTIVE";
+  
     Swal.fire({
-      title: "Xác nhận xóa?",
+      title: "Xác nhận thay đổi trạng thái?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -67,27 +107,43 @@ const EmployeeList = () => {
       if (result.isConfirmed) {
         axios
           .put(`${import.meta.env.VITE_API_BASE_URL}/employees/${id}`, {
-            isDelete: true,
+            employStatus: newStatus,
           })
-          .then(() => {
-            Swal.fire({
-              title: "Đã xóa!",
-              text: "Nhân viên đã được xóa thành công!",
-              icon: "success",
-            });
-            fetchData();
+          .then((response) => {
+            axios
+              .put(`${import.meta.env.VITE_API_BASE_URL}/workSchedules`, {
+                employee_id: id,
+                isShow: newStatus === "LEAVED" ? true : false,
+              })
+              .then(() => {
+                Swal.fire({
+                  title: "Thành công!",
+                  text: "Trạng thái đã được thay đổi và lịch làm việc đã được cập nhật.",
+                  icon: "success",
+                });
+                fetchData(); 
+              })
+              .catch((err) => {
+                console.log(err);
+                Swal.fire({
+                  title: "Lỗi!",
+                  text: "Cập nhật lịch làm việc thất bại.",
+                  icon: "error",
+                });
+              });
           })
           .catch((err) => {
             console.error(err);
             Swal.fire({
               title: "Lỗi!",
-              text: "Không thể xóa nhân viên!",
+              text: "Không thể thay đổi trạng thái nhân viên!",
               icon: "error",
             });
           });
       }
     });
   };
+  
 
   return (
     <div className="w-full min-h-screen bg-[#f5f6fa]">
@@ -169,7 +225,7 @@ const EmployeeList = () => {
                 <th className="py-3 px-6 font-bold">Số điện thoại</th>
                 <th className="py-3 px-6 font-bold">Vị trí công việc</th>
                 <th className="py-3 px-6 font-bold">Trạng thái</th>
-                <th className="py-3 px-6 font-bold"></th>
+                <th className="py-3 px-6 font-bold">Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -179,7 +235,6 @@ const EmployeeList = () => {
                   key={employee._id}
                 >
                   <td className="py-4 px-6 text-[#202224]">
-                    {" "}
                     {startIndex + index + 1}
                   </td>
                   <td className="py-4 px-6 text-[#202224]">{employee._id}</td>
@@ -212,22 +267,39 @@ const EmployeeList = () => {
                         <FaPenToSquare size={18} />
                       </div>
                     </Link>
-                    <div
+                    {/* <div
                       className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-xs lg:text-base font-semibold hover:bg-red-300 transition"
                       onClick={() => handleDelete(employee._id)}
                     >
                       <FaRegTrashCan size={18} />
-                    </div>
+                    </div> */}
+                    <TableCell className="text-center text-xl">
+                      <Switch
+                        className={`${
+                          employee.employStatus === "ACTIVE"
+                            ? "bg-green-200"
+                            : "bg-red-200"
+                        } transition`}
+                        checked={employee.employStatus === "ACTIVE"}
+                        onCheckedChange={() =>
+                          toggleEmployeeStatus(
+                            employee._id,
+                            employee.employStatus
+                          )
+                        }
+                      />
+                    </TableCell>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {/* Phân trang */}
-          {pageCount > 1 && (
-            <Pagination pageCount={pageCount} onPageChange={handlePageChange} />
-          )}
         </div>
+        <Pagination
+          currentPage={currentPage}
+          pageCount={pageCount}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );

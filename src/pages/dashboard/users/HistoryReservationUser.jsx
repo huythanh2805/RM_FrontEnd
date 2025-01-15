@@ -134,7 +134,7 @@ export const UserReservations = () => {
                                             </div>
                                         </div>
 
-                                        <div className="flex flex-col gap-2 w-full md:w-auto">
+                                        {/* <div className="flex flex-col gap-2 w-full md:w-auto">
                                             {reservation.status === "ISWAITING" && (
                                                 <>
                                                     <Link to={`/history-details/${reservation?._id}`}>
@@ -151,7 +151,7 @@ export const UserReservations = () => {
                                                     </button>
                                                 </Link>
                                             )}
-                                        </div>
+                                        </div> */}
                                     </div>
                                 );
                             })}

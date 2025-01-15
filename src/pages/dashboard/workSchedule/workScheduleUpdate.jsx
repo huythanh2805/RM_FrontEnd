@@ -10,53 +10,39 @@ const WorkScheduleUpdate = () => {
   const [employees, setEmployees] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [month, setMonth] = useState("");
-  const [week1, setWeek1] = useState("");
-  const [week2, setWeek2] = useState("");
-  const [week3, setWeek3] = useState("");
-  const [week4, setWeek4] = useState("");
+  const [weeks, setWeeks] = useState(["", "", "", ""]);
 
   useEffect(() => {
-    const fetchEmployees = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
+        // Lấy danh sách nhân viên
+        const employeesResponse = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/employees`
         );
-
-        if (Array.isArray(response.data)) {
-          const activeEmployees = response.data.filter(
-            (item) => !item.isDelete
-          );
-
-          setEmployees(
-            activeEmployees.map((employee) => ({
-              value: employee._id,
-              label: employee.name,
-            }))
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-      }
-    };
-
-    const fetchWorkSchedule = async () => {
-      try {
-        const response = await axios.get(
+        const activeEmployees = employeesResponse.data.filter(
+          (employee) => employee.employStatus === "ACTIVE"
+        );
+        setEmployees(
+          activeEmployees.map((employee) => ({
+            value: employee._id,
+            label: employee.name,
+          }))
+        );
+    
+        // Lấy thông tin lịch làm việc của nhân viên
+        const scheduleResponse = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/workSchedules/${id}`
         );
-        const schedule = response.data;
-
+        const schedule = scheduleResponse.data;
+    
         setSelectedEmployee({
           value: schedule.employee_id._id,
           label: schedule.employee_id.name,
         });
         setMonth(schedule.month);
-        setWeek1(schedule.week_1);
-        setWeek2(schedule.week_2);
-        setWeek3(schedule.week_3);
-        setWeek4(schedule.week_4);
+        setWeeks([schedule.week_1 || "", schedule.week_2 || "", schedule.week_3 || "", schedule.week_4 || ""]);
       } catch (error) {
-        console.error("Error fetching work schedule:", error);
+        console.error("Error fetching data:", error);
         toast({
           variant: "destructive",
           title: "Lỗi",
@@ -64,9 +50,9 @@ const WorkScheduleUpdate = () => {
         });
       }
     };
+    
 
-    fetchEmployees();
-    fetchWorkSchedule();
+    fetchData();
   }, [id]);
 
   const handleSubmit = async (e) => {
@@ -80,17 +66,28 @@ const WorkScheduleUpdate = () => {
       return;
     }
 
+    const selectedDate = new Date(`${month}-01`);
+    const currentDate = new Date();
+    if (selectedDate < new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)) {
+      toast({
+        variant: "destructive",
+        title: "Tháng đã qua!",
+        description: "Không thể sửa ca làm trong thời gian đã qua.",
+      });
+      return;
+    }
+
     try {
       const updatedSchedule = {
         employee_id: selectedEmployee.value,
         month,
-        week_1: week1,
-        week_2: week2,
-        week_3: week3,
-        week_4: week4,
+        week_1: weeks[0] || null,
+        week_2: weeks[1] || null,
+        week_3: weeks[2] || null,
+        week_4: weeks[3] || null,
       };
 
-      const response = await axios.put(
+      await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/workSchedules/${id}`,
         updatedSchedule
       );
@@ -103,9 +100,9 @@ const WorkScheduleUpdate = () => {
       if (error.response?.status === 400) {
         const message = error.response.data.message || "";
         if (message.includes("already has a work schedule")) {
-          toast({
-            variant: "destructive",
-            title: "Cập nhật ca làm thất bại!",
+      toast({
+        variant: "destructive",
+        title: "Cập nhật ca làm thất bại!",
             description: `Nhân viên "${selectedEmployee.label}" đã có ca làm trong tháng ${month}. Vui lòng kiểm tra lại.`,
           });
         } else {
@@ -120,23 +117,18 @@ const WorkScheduleUpdate = () => {
           variant: "destructive",
           title: "Cập nhật ca làm thất bại!",
           description: "Đã xảy ra lỗi trong quá trình cập nhật ca làm.",
-        });
+      });
       }
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
-        Cập nhật ca làm
-      </h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">Cập nhật ca làm</h1>
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label
-            htmlFor="ten-nhan-vien"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
+          <label htmlFor="ten-nhan-vien" className="block text-sm font-medium text-gray-700 mb-2">
             Tên nhân viên
           </label>
           <Select
@@ -153,10 +145,7 @@ const WorkScheduleUpdate = () => {
         </div>
 
         <div className="mb-4">
-          <label
-            htmlFor="thang"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
+          <label htmlFor="thang" className="block text-sm font-medium text-gray-700 mb-2">
             Tháng
           </label>
           <input
@@ -169,24 +158,19 @@ const WorkScheduleUpdate = () => {
           />
         </div>
 
-        {[week1, week2, week3, week4].map((week, index) => (
+        {weeks.map((week, index) => (
           <div className="mb-4" key={index}>
-            <label
-              htmlFor={`tuan-${index + 1}`}
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
+            <label htmlFor={`tuan-${index + 1}`} className="block text-sm font-medium text-gray-700 mb-2">
               Tuần {index + 1}
             </label>
-
             <select
               id={`tuan-${index + 1}`}
               name={`tuan-${index + 1}`}
               value={week}
               onChange={(e) => {
-                if (index === 0) setWeek1(e.target.value);
-                if (index === 1) setWeek2(e.target.value);
-                if (index === 2) setWeek3(e.target.value);
-                if (index === 3) setWeek4(e.target.value);
+                const updatedWeeks = [...weeks];
+                updatedWeeks[index] = e.target.value;
+                setWeeks(updatedWeeks);
               }}
               className="block w-32 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             >
