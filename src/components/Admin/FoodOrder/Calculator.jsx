@@ -187,6 +187,7 @@ const Calculator = ({
     handlePaymentMethodChange(value)
   }
   const handlePayment = async () => {
+    if(Number(neededPaid) < 0) return toast({title: "Số tiền cần thanh toán không thể nhỏ hơn 0", variant:"destructive"})
     if (paymentMethod === "cash") {
       try {
         const res = await fetch(`${ServerUrl}/api/bills`, {
