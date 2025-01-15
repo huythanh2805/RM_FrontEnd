@@ -1,19 +1,37 @@
 import Pagination from "@/components/Pagination";
-import { useUser } from "@/hooks/dashboard/useAccount";
+import { Switch } from "@/components/ui/switch";
+import { useUser } from "@/hooks/dashboard/useAccount"; // Sử dụng hook useUser
+import { useQueryClient } from "@tanstack/react-query";
 import { debounce } from "lodash";
 import { useState } from "react";
 import { FaEllipsisV, FaEye } from "react-icons/fa";
-import { FaRegTrashCan } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+
+
+// API Function to update user status
+const updateUserStatus = async (userId, isdelete) => {
+  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/admin/delete/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    method: "PATCH",
+    body: JSON.stringify({ isdelete }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Error updating user status");
+  return data;
+};
 
 const UserList = () => {
-  const { list, isLoading, error, deleteUser } = useUser();
+  const { list: users = [], isLoading, error } = useUser(); // Lấy dữ liệu từ useUser hook
   const [selectedRole, setSelectedRole] = useState("Tất cả");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const handleSearchValueDebounced = debounce((value) => {
     setSearchValue(value);
   }, 300);
@@ -27,40 +45,17 @@ const UserList = () => {
     setCurrentPage(1); // Reset về trang đầu tiên khi lọc
   };
 
-  // Xử lý khi dữ liệu đang tải hoặc gặp lỗi
-  if (isLoading) return <p className="text-center text-blue-600">Loading...</p>;
-  if (error) return <p className="text-center text-red-600">Error loading user list.</p>;
+  const handleDeleteUser = async (userId, currentIsDelete) => {
+    try {
+      const newStatus = currentIsDelete === 1 ? 0 : 1;
+      await updateUserStatus(userId, newStatus);
 
-  // Hàm xóa người dùng
-  const handleDelete = (userId) => {
-    Swal.fire({
-      title: "Xác nhận xóa người dùng?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Xác nhận",
-      cancelButtonText: "Hủy",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteUser(userId)
-          .then(() => {
-            Swal.fire({
-              title: "Đã xóa!",
-              text: "Người dùng đã được xóa thành công.",
-              icon: "success",
-            });
-          })
-          .catch((err) => {
-            Swal.fire({
-              title: "Lỗi!",
-              text: "Không thể xóa người dùng. Vui lòng thử lại.",
-              icon: "error",
-            });
-            console.error(err);
-          });
-      }
-    });
+      // Làm mới dữ liệu danh sách người dùng
+      queryClient.invalidateQueries("usersList");
+      toast({ variant: "success", title: "Cập nhật trạng thái thành công !" })
+    } catch (error) {
+      toast({ variant: "destructive", title: "Cập nhật trạng thái thất bại" })
+    }
   };
 
   const roleMapping = {
@@ -72,7 +67,7 @@ const UserList = () => {
   };
 
   // Lọc người dùng theo vai trò và tìm kiếm
-  const filteredUsers = list
+  const filteredUsers = users
     .filter((user) => selectedRole === "Tất cả" || user.role === selectedRole)
     .filter((user) => user.userName.toLowerCase().includes(searchValue.toLowerCase()));
 
@@ -82,15 +77,16 @@ const UserList = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
 
-  // Xử lý khi thay đổi trang
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected + 1);
   };
 
-
   const goToUserReservations = (userId) => {
-    navigate(`reservations/${userId}`); // Điều hướng đến trang lịch sử đặt bàn
+    navigate(`reservations/${userId}`);
   };
+
+  if (isLoading) return <p className="text-center text-blue-600">Loading...</p>;
+  if (error) return <p className="text-center text-red-600">Error loading user list.</p>;
   return (
     <div className="w-full min-h-screen bg-[#f9fafb]">
       <div className="px-5 py-5">
@@ -177,12 +173,11 @@ const UserList = () => {
                         <FaEye size={18} />
                       </div>
                     </Link>
-                    <div
-                      className="bg-red-200 text-red-800 px-3 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-red-300 transition"
-                      onClick={() => handleDelete(user._id)}
-                    >
-                      <FaRegTrashCan size={18} />
-                    </div>
+                    <Switch
+                      className={'bg-blue-1'}
+                      checked={user.isdelete === 0}
+                      onCheckedChange={() => handleDeleteUser(user._id, user.isdelete)}
+                    />
                     <div
                       className="bg-gray-200 text-gray-800 px-3 py-1 rounded-lg cursor-pointer text-sl font-semibold hover:bg-gray-300 transition"
                       onClick={() => goToUserReservations(user._id)}
