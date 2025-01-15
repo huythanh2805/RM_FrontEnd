@@ -1,3 +1,4 @@
+import DialogComponent from "@/components/DialogComponent";
 import Pagination from "@/components/Pagination";
 import { toast } from "@/hooks/use-toast";
 import { useFetchData } from "@/hooks/useFetchData";
@@ -345,17 +346,20 @@ function OrderHistory() {
                 <td className="h-full py-3 px-6 text-sl  gap-3">
                   {
                     item.currentStatus !== "ISCANCELED" && !item.isRequiredToCancel
-                    && (<Button
-                      onClick={() => {
-                        item.ordered_dish ?
-                          handleChangeStatusDish(item.ordered_dish._id, item.reservation_id, item.code, "ISCANCELED", item._id, item.quantity) :
-                          handleChangeStatusCombo(item.ordered_combo._id, item.reservation_id, item.code, "ISCANCELED", item._id, item.quantity)
-                      }}
-                      type="button"
-                      className="mr-4 font-medium text-[16px] bg-red-1 text-white hover:opacity-80 transition-all duration-300 ease-in-out"
-                    >
-                      Hủy món
-                    </Button>)
+                    && (<DialogComponent
+                        onClick={() => {
+                          item.ordered_dish ?
+                            handleChangeStatusDish(item.ordered_dish._id, item.reservation_id, item.code, "ISCANCELED", item._id, item.quantity) :
+                            handleChangeStatusCombo(item.ordered_combo._id, item.reservation_id, item.code, "ISCANCELED", item._id, item.quantity)
+                        }}
+                        >
+                        <Button
+                        type="button"
+                        className="mr-4 font-medium text-[16px] bg-red-1 text-white hover:opacity-80 transition-all duration-300 ease-in-out"
+                        >
+                        Hủy món
+                        </Button>
+                    </DialogComponent>)
                   }
                 </td>
               </tr>

@@ -149,6 +149,12 @@ function Kitchen() {
                                   {notification.message}
                                 </p>
                                 <div className="text-end">
+                                <div className="space-x-3">
+                                <DialogTrigger>
+                                    <Button >
+                                      Thoát
+                                    </Button>
+                                  </DialogTrigger>
                                   <DialogTrigger>
                                     <Button
                                       onClick={() =>
@@ -158,6 +164,7 @@ function Kitchen() {
                                       Xác nhận
                                     </Button>
                                   </DialogTrigger>
+                                </div>
                                 </div>
                               </div>
                             </DialogDescription>

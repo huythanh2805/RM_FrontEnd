@@ -36,6 +36,7 @@ export function AppSidebar() {
   const location = useLocation(); // Lấy URL hiện tại
   const [isDishesOpen, setIsDishesOpen] = useState(false);
   const [isDiscountOpen, setIsDiscountOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isWarehouseOpen, setIsWarehouseOpen] = useState(false);
 
   const decodedToken = (() => {
@@ -152,14 +153,14 @@ export function AppSidebar() {
                 </Collapsible>
               )}
               {decodedToken.role === "ADMIN" && (
-                <Collapsible open={isDiscountOpen} onOpenChange={setIsDiscountOpen}>
+                <Collapsible open={isAccountOpen} onOpenChange={setIsAccountOpen}>
                   <SidebarMenuItem>
                     <CollapsibleTrigger className="w-full px-4 py-3 flex items-center justify-between rounded-lg hover:bg-gray-200 transition">
                       <div className="flex items-center gap-4">
                         <User className="w-5 h-5" />
                         <span className="text-base font-medium">Tài khoản</span>
                       </div>
-                      <ChevronDown className={`w-5 h-5 transition-transform ${isDiscountOpen ? "rotate-180" : ""}`} />
+                      <ChevronDown className={`w-5 h-5 transition-transform ${isAccountOpen ? "rotate-180" : ""}`} />
                     </CollapsibleTrigger>
                   </SidebarMenuItem>
                   <CollapsibleContent>
