@@ -100,7 +100,7 @@ const deleteDiscountById = async (id) =>{
                 discounts.map((discount) => (
                   <TableRow>
                     <TableCell className="text-lg">
-                      {discount.createdBy.userName}
+                      {discount.createdBy?.userName}
                     </TableCell>
                     <TableCell className="text-lg">
                       {discount.discountType === "FIXEDAMOUNT"
