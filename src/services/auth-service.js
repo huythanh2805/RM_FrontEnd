@@ -12,7 +12,11 @@ export const registerService = async (request = {}) => {
 
 export const loginService = async (request = {}) => {
   try {
-    const response = await apiClient.post("users/login", request);
+    const response = await apiClient.post("users/login", request, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return response; // Trả về phản hồi khi đăng nhập thành công
   } catch (error) {
     console.error(error);

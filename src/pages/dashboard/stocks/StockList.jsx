@@ -38,6 +38,7 @@ import {
   Search
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import * as XLSX from "xlsx";
 
 const calculateTimeLeft = (expiryDate) => {
@@ -89,6 +90,10 @@ export const StockList = () => {
   }, [initialStocksData, stocksData]);
 
   const filteredStocks = useMemo(() => {
+    if (expiryFilter === "all") {
+      return stocksData
+    }
+
     return stocksData?.filter((stock) => {
       const matchesFilterCode = !filterCode || stock?.product?.code === filterCode;
       const matchesSearchName = !searchName || stock?.product?.name?.toLowerCase().includes(searchName.toLowerCase());
@@ -172,22 +177,6 @@ export const StockList = () => {
         <CardContent>
           {/* Filters */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
-            <Select value={filterCode} onValueChange={setFilterCode}>
-              <SelectTrigger>
-                <SelectValue placeholder="Chọn mã SP" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tất cả</SelectItem> {/* Thay đổi từ "" thành "all" */}
-                {filteredStocks &&
-                  [...new Set(filteredStocks.map((stock) => stock?.product?.code))]
-                    .filter(code => code) // Lọc bỏ các giá trị null/undefined/empty
-                    .map((code) => (
-                      <SelectItem key={code} value={code}>
-                        {code}
-                      </SelectItem>
-                    ))}
-              </SelectContent>
-            </Select>
             {/* Và tương tự cho Select của expiryFilter */}
             <Select value={expiryFilter} onValueChange={setExpiryFilter}>
               <SelectTrigger>
@@ -237,16 +226,26 @@ export const StockList = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[100px] text-center">STT</TableHead>
+                  <TableHead>Mã phiếu nhập</TableHead>
                   <TableHead>Mã SP</TableHead>
                   <TableHead>Tên SP</TableHead>
                   <TableHead>Số lượng tồn</TableHead>
                   <TableHead>Hạn sử dụng</TableHead>
+                  <TableHead>Thời gian nhập</TableHead>
+                  <TableHead>Hành động</TableHead>
+
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {currentItems?.map((stock, index) => (
                   <TableRow key={stock._id}>
                     <TableCell className="text-center">{index + 1 + startIndex}</TableCell>
+                    <TableCell> <Link to={`/admin/import-notes/${stock?.codeImport}`}>
+                      <div style={{ color: "blue", textDecoration: "underline" }}>
+                        {stock?.codeImport}
+                      </div>
+
+                    </Link></TableCell>
                     <TableCell>{stock?.product?.code}</TableCell>
                     <TableCell>{stock?.product?.name}</TableCell>
                     <TableCell>{stock?.quantity}</TableCell>
@@ -255,6 +254,14 @@ export const StockList = () => {
                         <Clock className="h-4 w-4" />
                         {calculateTimeLeft(stock?.expiryDate).text}
                       </span>
+                    </TableCell>
+                    <TableCell>{formatDateNoTime(stock?.createdAt)}</TableCell>
+                    <TableCell>
+                      <Link to={`/admin/history-take-inventory/${stock._id}`}>
+                        <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                          Lịch sử kiểm kê
+                        </button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}

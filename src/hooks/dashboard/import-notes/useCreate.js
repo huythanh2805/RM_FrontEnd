@@ -92,7 +92,7 @@ export const useCreateImportNotes = () => {
           const errorMessage = error.response?.data?.message || error.message || "Vui lòng kiểm tra lại thông tin";
           toast({
             variant: "destructive",
-            title: "Lỗi khi thêm nhà cung cấp",
+            title: "Lỗi khi thêm phiếu nhập",
             description: errorMessage,
           });
         });

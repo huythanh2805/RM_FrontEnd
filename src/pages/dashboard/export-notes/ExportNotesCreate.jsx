@@ -55,7 +55,6 @@ export const ExportNotesCreate = () => {
       const productName = item.product?.name?.toLowerCase() || "";
       const productCode = item.product?.code?.toLowerCase() || "";
       const keyword = searchKeyword.toLowerCase();
-
       return productName.includes(keyword) || productCode.includes(keyword);
     })
     : [];
@@ -169,6 +168,12 @@ export const ExportNotesCreate = () => {
                     dataIndex: "price",
                     key: "price",
                     render: (_, record) => record?.price,
+                  },
+                  {
+                    title: "Số lượng hiện có",
+                    dataIndex: "export_quantity",
+                    key: "export_quantity",
+                    render: (_, record) => record?.quantity,
                   },
                   {
                     title: "Số lượng",

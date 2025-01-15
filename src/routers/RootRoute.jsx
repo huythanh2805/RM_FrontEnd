@@ -48,7 +48,9 @@ import SetComboAdd from "@/pages/dashboard/setCombo/SetComboAdd";
 import SetComboDetail from "@/pages/dashboard/setCombo/SetComboDetail";
 import SetComboList from "@/pages/dashboard/setCombo/SetComboList";
 import SetComboUpdate from "@/pages/dashboard/setCombo/SetComboUpdate";
+import { HistoryTakeInventory } from "@/pages/dashboard/stocks/HistoryTakeInventory";
 import { StockList } from "@/pages/dashboard/stocks/StockList";
+import { TakeInventory } from "@/pages/dashboard/stocks/TakeInventory";
 import { UserReservations } from "@/pages/dashboard/users/HistoryReservationUser";
 import UserAdd from "@/pages/dashboard/users/UserAdd";
 import UserList from "@/pages/dashboard/users/Userlist";
@@ -488,6 +490,20 @@ const router = createBrowserRouter([
         element:  <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
         <ExportNotesCreate />
       </RoleProtectComponentAdmin>,
+      },
+      {
+        path: "take-inventory",
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <TakeInventory />
+          </RoleProtectComponentAdmin>,
+      },
+      {
+        path: "history-take-inventory/:id",
+        element:
+          <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN", "WAREHOUSE"]}>
+            <HistoryTakeInventory />
+          </RoleProtectComponentAdmin>,
       },
     ],
   },
