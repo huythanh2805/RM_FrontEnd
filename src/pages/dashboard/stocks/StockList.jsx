@@ -32,6 +32,7 @@ import { useList } from "@/hooks/dashboard/stocks/useList";
 import { formatCurrency, formatDateNoTime } from "@/utilities/utils";
 import { FileDown } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import * as XLSX from "xlsx";
 
 // Hàm tính toán thời gian còn lại đến ngày hết hạn
