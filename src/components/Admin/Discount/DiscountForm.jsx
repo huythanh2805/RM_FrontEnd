@@ -23,7 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { useNavigate } from "react-router-dom"
-import { ServerUrl } from "@/utilities/utils"
+import { formatCurrency, ServerUrl } from "@/utilities/utils"
 import { toast } from "@/hooks/use-toast"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
@@ -291,7 +291,7 @@ export default function DiscountForm({ discount, id }) {
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle className="font-normal leading-7 px-3">
-                      Bạn có chắc muốn tạo phiếu với mức giảm cố định {Number(form.getValues("discountValue"))}k không ?
+                      Bạn có chắc muốn tạo phiếu với mức giảm cố định {formatCurrency(Number(form.getValues("discountValue")))} không ?
                       </DialogTitle>
                       <div className="w-full flex items-center justify-end">
                       <DialogTrigger>

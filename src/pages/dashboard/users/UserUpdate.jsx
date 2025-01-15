@@ -3,7 +3,7 @@ import { Camera } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
 
-const UserUpdate = () => {
+const UserUpdate = ({type}) => {
   const { id } = useParams();
 
   const form = useForm({
@@ -43,7 +43,9 @@ const UserUpdate = () => {
                   <label className="cursor-pointer flex flex-col items-center">
                     <Camera className="w-12 h-12 text-gray-400" />
                     <span className="text-sm text-gray-500 mt-2">No photo</span>
-                    <input disabled type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
+                    <input 
+                     disabled={type === "user" ? true : false}
+                     type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
                   </label>
                 )}
               </div>
@@ -66,7 +68,7 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="userName">Họ tên</label>
                   <input
-                    disabled
+                    disabled={type === "user" ? true : false}
                     type="text"
                     id="userName"
                     {...register("userName", {
@@ -79,7 +81,7 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="email">Email</label>
                   <input
-                    disabled
+                    disabled={type === "user" ? true : false}
                     type="email"
                     id="email"
                     {...register("email", { required: "Vui lòng nhập email" })}
@@ -93,7 +95,7 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="role">Vai trò</label>
                   <select
-                    disabled
+                    disabled={type === "user" ? true : false}
                     id="role"
                     defaultValue=""
                     {...register("role")}
@@ -111,7 +113,7 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="phoneNumber">Số điện thoại</label>
                   <input
-                    disabled
+                    disabled={type === "user" ? true : false}
                     type="tel"
                     id="phoneNumber"
                     {...register("phoneNumber", {
@@ -126,7 +128,7 @@ const UserUpdate = () => {
               <div>
                 <label htmlFor="address">Địa chỉ</label>
                 <input
-                  disabled
+                  disabled={type === "user" ? true : false}
                   type="text"
                   id="address"
                   {...register("address", {
@@ -139,12 +141,15 @@ const UserUpdate = () => {
 
               {/* Buttons Section */}
               <div className="flex justify-end mt-8">
-                {/* <button
+                {
+                  type === "staff" && 
+                  <button
                   type="submit"
                   className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
                   Cập nhật
-                </button> */}
+                </button>
+                }
                 <Link
                   to="/admin/users"
                   className="ml-2 px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"

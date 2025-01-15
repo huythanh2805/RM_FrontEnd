@@ -184,7 +184,7 @@ const UserListRole = () => {
                                         {user.isdelete === 0 ? "Hoạt động" : "Ngừng hoạt động"}
                                     </td>
                                     <td className="py-3 px-6 text-sl flex items-center gap-3">
-                                        <Link to={`/admin/users/edit/${user._id}`}>
+                                        <Link to={`/admin/staff/edit/${user._id}`}>
                                             <div className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-lg text-sl font-semibold hover:bg-yellow-300 transition">
                                                 <FaPenToSquare size={18} />
                                             </div>

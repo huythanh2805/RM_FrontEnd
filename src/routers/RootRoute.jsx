@@ -11,6 +11,8 @@ import UpdateReservation from "@/components/Admin/Reservation/UpdateReservation"
 import TableManagement from "@/components/Admin/TableManagement";
 import ProductDetail from "@/components/layouts/ProductDetail";
 import { RoleProtectComponentAdmin, RoleProtectComponentClient } from "@/components/ProtectedComponent";
+import UpdateStaff from "@/components/UpdateStaff";
+import UpdateUser from "@/components/UpdateUser";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { ForgotPasswordPage } from "@/pages/auth/PasswordPage";
 import { RegisterPage } from "@/pages/auth/Register";
@@ -346,7 +348,13 @@ const router = createBrowserRouter([
       {
         path: "users/edit/:id",
         element:  <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
-        <UserUpdate />
+        <UpdateUser />
+      </RoleProtectComponentAdmin>,
+      },
+      {
+        path: "staff/edit/:id",
+        element:  <RoleProtectComponentAdmin isRoleRequiredArrays={["ADMIN"]}>
+        <UpdateStaff />
       </RoleProtectComponentAdmin>,
       },
       {
