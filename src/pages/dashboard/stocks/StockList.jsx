@@ -220,6 +220,7 @@ export const StockList = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>STT</TableHead>
+                <TableHead>Mã phiếu nhập</TableHead>
                 <TableHead>Mã SP</TableHead>
                 <TableHead>Tên SP</TableHead>
                 <TableHead>Số lượng tồn</TableHead>
@@ -231,6 +232,12 @@ export const StockList = () => {
               {currentItems?.map((stock, index) => (
                 <TableRow key={stock._id}>
                   <TableCell>{index + 1 + startIndex}</TableCell>
+                  <TableCell> <Link to={`/admin/import-notes/${stock?.codeImport}`}>
+                    <div style={{ color: "blue", textDecoration: "underline" }}>
+                      {stock?.codeImport}
+                    </div>
+
+                  </Link></TableCell>
                   <TableCell>{stock?.product?.code}</TableCell>
                   <TableCell>{stock?.product?.name}</TableCell>
                   <TableCell>{stock?.quantity}</TableCell>
