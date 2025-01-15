@@ -23,9 +23,10 @@ const DishDetail = () => {
       });
   }, []);
 
+  // Xóa món ăn
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Xác nhận xóa ?",
+      title: "Xác nhận xóa?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -35,18 +36,15 @@ const DishDetail = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(BASE_URL + `/dishes/${id}`)
+          .put(`${import.meta.env.VITE_API_BASE_URL}/dishes/${id}`, {
+            isDelete: true,
+            isShow: false,
+          })
           .then(() => {
-            Swal.fire({
-              title: "Đã xóa!",
-              text: "Món ăn đã được xóa thành công.",
-              icon: "success",
-            });
+            Swal.fire("Đã xóa!", "Món ăn đã được xóa.", "success");
             navigate("/admin/dishes");
           })
-          .catch((err) => {
-            console.log(err);
-          });
+          .catch((err) => console.log(err));
       }
     });
   };
@@ -122,11 +120,11 @@ const DishDetail = () => {
                   Trạng thái:
                   {dataDish.isShow ? (
                     <span className="bg-green-200 text-green-600 px-2 py-0.5 rounded-sm ml-2">
-                      Có sẵn
+                      Hiển thị
                     </span>
                   ) : (
                     <span className="bg-gray-200 text-gray-600 px-2 py-0.5 rounded-sm ml-2">
-                      Hết hàng
+                      Tạm ẩn
                     </span>
                   )}
                 </div>
