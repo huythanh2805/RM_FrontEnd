@@ -89,7 +89,7 @@ function Kitchen() {
       <div className="px-5 py-5">
         <div className="flex items-center justify-between mb-3">
           <p className="text-3xl font-semibold text-gray-800">
-            Danh sách đánh giá
+            Nhà bếp
           </p>
           {/* Thông báo */}
           <div className="relative cursor-pointer">
@@ -149,6 +149,12 @@ function Kitchen() {
                                   {notification.message}
                                 </p>
                                 <div className="text-end">
+                                <div className="space-x-3">
+                                <DialogTrigger>
+                                    <Button >
+                                      Thoát
+                                    </Button>
+                                  </DialogTrigger>
                                   <DialogTrigger>
                                     <Button
                                       onClick={() =>
@@ -158,6 +164,7 @@ function Kitchen() {
                                       Xác nhận
                                     </Button>
                                   </DialogTrigger>
+                                </div>
                                 </div>
                               </div>
                             </DialogDescription>
@@ -203,8 +210,8 @@ function Kitchen() {
                               <div className="font-medium w-[300px] text-start px-4">
                                 {item.userName}
                               </div>
-                              <div className="font-medium text-start px-4 flex-1">
-                                {item.table_id.name}
+                            <div className="font-medium text-start px-4 flex-1">
+                                {item.table_id?.name}
                               </div>
                               <div className="font-medium text-start px-4 ">
                                 {

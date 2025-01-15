@@ -42,22 +42,22 @@ const UserUpdate = () => {
                 ) : (
                   <label className="cursor-pointer flex flex-col items-center">
                     <Camera className="w-12 h-12 text-gray-400" />
-                    <span className="text-sm text-gray-500 mt-2">Upload photo</span>
+                    <span className="text-sm text-gray-500 mt-2">No photo</span>
                     <input disabled type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
                   </label>
                 )}
               </div>
-              <label className="cursor-pointer">
+              {/* <label className="cursor-pointer">
                 <span className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                   Change Photo
                 </span>
                 <input disabled type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
-              </label>
-              <div className="text-xs text-gray-500 text-center mt-3">
+              </label> */}
+              {/* <div className="text-xs text-gray-500 text-center mt-3">
                 Allowed *.jpeg, *.jpg, *.png, *.gif
                 <br />
                 max size of 3 Mb
-              </div>
+              </div> */}
             </div>
 
             {/* Form Fields Section */}
@@ -66,6 +66,7 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="userName">Họ tên</label>
                   <input
+                    disabled
                     type="text"
                     id="userName"
                     {...register("userName", {
@@ -78,6 +79,7 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="email">Email</label>
                   <input
+                    disabled
                     type="email"
                     id="email"
                     {...register("email", { required: "Vui lòng nhập email" })}
@@ -91,6 +93,7 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="role">Vai trò</label>
                   <select
+                    disabled
                     id="role"
                     defaultValue=""
                     {...register("role")}
@@ -108,6 +111,7 @@ const UserUpdate = () => {
                 <div>
                   <label htmlFor="phoneNumber">Số điện thoại</label>
                   <input
+                    disabled
                     type="tel"
                     id="phoneNumber"
                     {...register("phoneNumber", {
@@ -122,6 +126,7 @@ const UserUpdate = () => {
               <div>
                 <label htmlFor="address">Địa chỉ</label>
                 <input
+                  disabled
                   type="text"
                   id="address"
                   {...register("address", {
@@ -134,12 +139,12 @@ const UserUpdate = () => {
 
               {/* Buttons Section */}
               <div className="flex justify-end mt-8">
-                <button
+                {/* <button
                   type="submit"
                   className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
                   Cập nhật
-                </button>
+                </button> */}
                 <Link
                   to="/admin/users"
                   className="ml-2 px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"

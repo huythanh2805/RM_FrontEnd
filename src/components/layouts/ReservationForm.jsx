@@ -136,7 +136,6 @@ const ReservationForm = () => {
       couponValue,
       isOrderedOnline: true
     };
-    //  if(cart.length === 0) return createOrderFunction(postData)
     
       if (localStorage.getItem("postData")) {
         // Nếu có, xóa 'postData' cũ
@@ -241,6 +240,8 @@ const ReservationForm = () => {
                   onChange={(time) => setTimePicker(time)}
                   showTimeSelect
                   showTimeSelectOnly
+                  minTime={new Date().setHours(new Date().getHours() + 1)}
+                  maxTime={new Date().setHours(23, 59)}
                   timeIntervals={15}
                   timeCaption="Giờ"
                   dateFormat="hh:mm aa"

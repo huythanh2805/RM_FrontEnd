@@ -194,7 +194,7 @@ export default function ListReservation() {
     <div  >
       <div className="px-5 ">
 
-        <p className="text-3xl font-extrabold bg-gradient-to-r from-black text-transparent bg-clip-text drop-shadow-md pb-5">
+        <p className="text-3xl font-semibold pb-3">
           Danh sách đơn đặt bàn
         </p>
 

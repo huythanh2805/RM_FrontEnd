@@ -65,6 +65,7 @@
     "react-slick": "^0.30.2",
     "react-spinners": "^0.14.1",
     "react-to-print": "^2.15.1",
+    "react-toastify": "^11.0.2",
     "recharts": "^2.13.3",
     "run-parallel": "^1.2.0",
     "slick-carousel": "^1.8.1",

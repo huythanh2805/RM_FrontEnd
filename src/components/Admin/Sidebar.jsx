@@ -11,6 +11,7 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import jwtDecode from "jwt-decode";
 import {
+  Beef,
   Calendar,
   ChefHat,
   ChevronDown,
@@ -18,24 +19,30 @@ import {
   DollarSign,
   Grid,
   Home,
+  HousePlug,
   Layers,
   List,
+  ListOrdered,
   MessageCircle,
   Salad,
   Soup,
   Table,
   Ticket,
+  TicketMinus,
   TicketPlus,
   User,
+  Warehouse,
 } from "lucide-react";
 import { useState } from "react";
 import { CiViewList } from "react-icons/ci";
+import { TbHomePlus } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 
 export function AppSidebar() {
   const location = useLocation(); // Lấy URL hiện tại
   const [isDishesOpen, setIsDishesOpen] = useState(false);
   const [isDiscountOpen, setIsDiscountOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isWarehouseOpen, setIsWarehouseOpen] = useState(false);
 
   const decodedToken = (() => {
@@ -57,7 +64,9 @@ export function AppSidebar() {
     ],
     ORDER: [
       { title: "Trang chủ", url: "/admin", icon: Home },
+      { title: "Danh sách đặt bàn", url: "/admin/listReser", icon: List },
       { title: "Bàn", url: "/admin/tables", icon: Table },
+      { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
     ],
     WAREHOUSE: [
       { title: "Trang chủ", url: "/admin", icon: Home },
@@ -66,6 +75,7 @@ export function AppSidebar() {
     CASHIER: [
       { title: "Trang chủ", url: "/admin", icon: Home },
       { title: "Danh sách đặt bàn", url: "/admin/listReser", icon: List },
+      { title: "Hóa đơn", url: "/admin/bills", icon: DollarSign },
     ],
   };
 
@@ -86,12 +96,12 @@ export function AppSidebar() {
   ];
 
   const warehouseItems = [
-    { title: "Nhà cung cấp", url: "/admin/sellers", icon: Salad },
-    { title: "Thực phẩm", url: "/admin/products", icon: Salad },
-    { title: "Tồn kho", url: "/admin/stocks", icon: Salad },
-    { title: "Kiểm kê số lượng", url: "/admin/take-inventory", icon: Salad },
-    { title: "Phiếu nhập", url: "/admin/import-notes", icon: Salad },
-    { title: "Phiếu xuất", url: "/admin/export-notes", icon: Salad },
+    { title: "Nhà cung cấp", url: "/admin/sellers", icon: HousePlug },
+    { title: "Thực phẩm", url: "/admin/products", icon: Beef},
+    { title: "Tồn kho", url: "/admin/stocks", icon: Warehouse },
+    { title: "Kiểm kê số lượng", url: "/admin/take-inventory", icon: ListOrdered },
+    { title: "Phiếu nhập", url: "/admin/import-notes", icon: TicketPlus },
+    { title: "Phiếu xuất", url: "/admin/export-notes", icon: TicketMinus },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -150,14 +160,14 @@ export function AppSidebar() {
                 </Collapsible>
               )}
               {decodedToken.role === "ADMIN" && (
-                <Collapsible open={isDiscountOpen} onOpenChange={setIsDiscountOpen}>
+                <Collapsible open={isAccountOpen} onOpenChange={setIsAccountOpen}>
                   <SidebarMenuItem>
                     <CollapsibleTrigger className="w-full px-4 py-3 flex items-center justify-between rounded-lg hover:bg-gray-200 transition">
                       <div className="flex items-center gap-4">
                         <User className="w-5 h-5" />
                         <span className="text-base font-medium">Tài khoản</span>
                       </div>
-                      <ChevronDown className={`w-5 h-5 transition-transform ${isDiscountOpen ? "rotate-180" : ""}`} />
+                      <ChevronDown className={`w-5 h-5 transition-transform ${isAccountOpen ? "rotate-180" : ""}`} />
                     </CollapsibleTrigger>
                   </SidebarMenuItem>
                   <CollapsibleContent>

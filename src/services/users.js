@@ -28,19 +28,8 @@ export const addUserService = async (formData) => {
   }
 };
 
-export const updateUserIsDelete = async (userId) => {
-  const token = localStorage.getItem("token");
-  console.log(token);
-  return await apiClient.put(
-    `/users/admin/delete/${userId}`,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-};
+
+
 // Lấy thông tin một người dùng theo ID
 export const getUserByIdService = async (userId) => {
   try {
