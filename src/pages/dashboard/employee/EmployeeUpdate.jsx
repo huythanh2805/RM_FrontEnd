@@ -149,7 +149,7 @@ const EmployeeUpdate = () => {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <label
               htmlFor="employStatus"
               className="text-sm font-medium text-gray-700"
@@ -171,7 +171,7 @@ const EmployeeUpdate = () => {
                 {errors.employStatus.message}
               </p>
             )}
-          </div>
+          </div> */}
 
           <div className="flex justify-end space-x-2">
             <Link
